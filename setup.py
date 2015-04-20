@@ -35,21 +35,21 @@ setup(
     long_description=__doc__,
     author='Janos Sallai, Christoph Klein',
     author_email='janos.sallai@vanderbilt.edu, christoph.klein@vanderbilt.edu',
-    url='https://github.com/ctk3b/foyer',
-    download_url='https://github.com/ctk3b/foyer/tarball/{}'.format(
+    url='https://github.com/iModels/foyer',
+    download_url='https://github.com/iModels/foyer/tarball/{}'.format(
         foyer.version.short_version),
     packages=find_packages(),
     package_dir={'foyer': 'foyer'},
     include_package_data=True,
     install_requires=requirements,
-    license="LGPLv2.1+",
+    license="MIT",
     zip_safe=False,
     keywords='foyer',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)',
+        'License :: OSI Approved :: MIT License,'
         'Natural Language :: English',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
