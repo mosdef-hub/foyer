@@ -17,6 +17,8 @@ NEIGHBOR_WHITELIST_MAP = dict()
 # Used for more descriptive output when sanitizing rules.
 RULE_NUMBER_TO_DOC_STRING = dict()
 
+OPLS_ALIASES = ('opls-aa', 'oplsaa', 'opls')
+
 
 def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
     """Determine atomtypes for all atoms.
@@ -56,12 +58,12 @@ def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
     if debug:
         _sanitize()
     _iterate_rules(atoms, max_iter=10)
-    _resolve_atomtypes(atoms, forcefield)
+    _resolve_atomtypes(atoms, forcefield.lower())
 
 
 def _load_rules(forcefield):
     """Populate a mapping of rule numbers to rule functions. """
-    if forcefield in ('opls-aa', 'oplsaa', 'opls'):
+    if forcefield in OPLS_ALIASES:
         import foyer.oplsaa.rules as oplsaa
         # Build a map to all of the supported opls_* functions.
         for func_name, func in sys.modules[oplsaa.__name__].__dict__.items():
@@ -157,7 +159,8 @@ def _resolve_atomtypes(atoms, forcefield):
     for i, atom in enumerate(atoms):
         atomtype = atom.whitelist - atom.blacklist
         atomtype = [a for a in atomtype]
-        if forcefield.lower() == 'opls-aa':
+
+        if forcefield in OPLS_ALIASES:
             prefix = 'opls_'
         else:
             prefix = ''
