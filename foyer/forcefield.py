@@ -2,7 +2,7 @@ import itertools
 
 import simtk.unit as units
 
-from mbuild.orderedset import OrderedSet
+from foyer.orderedset import OrderedSet
 from foyer.atomtyper import find_atomtypes
 
 

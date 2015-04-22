@@ -6,12 +6,6 @@ from warnings import warn
 import matplotlib.pyplot as plt
 import networkx as nx
 
-
-
-
-
-
-
 # Map rule ids to the functions that check for them (see `find_atomtypes()`).
 RULE_NUMBER_TO_RULE = dict()
 # Organizes the rules (see `builrule_map()`).
@@ -466,14 +460,7 @@ def sanitize():
             if len(nx.descendants(graph, node)) == 0:
                 sinks.append(node)
         if len(sinks) > 1:
-            # Cases with multiple sinks that we can safely ignore.
-            # TODO: Provide more robust way to add approved exceptions.
-            if '141' in sinks and '142' in sinks and '145' in graph.nodes():
-                # This case occurs because 145 requires AT LEAST 2 carbon
-                # neighbors (3 total) and thus can match multiple patterns.
-                continue
-            draw_rule_graph('multiple_sinks', graph, element_type, pattern,
-                            sinks=sinks)
+            draw_rule_graph('multiple_sinks', graph, element_type, pattern, sinks)
 
         # Check for multiple sources. This is not necessarily incorrect.
         sources = []
@@ -481,8 +468,7 @@ def sanitize():
             if len(nx.ancestors(graph, node)) == 0:
                 sources.append(node)
         if len(sources) > 1:
-            draw_rule_graph('multiple_sources', graph, element_type, pattern,
-                            sources=sources)
+            draw_rule_graph('multiple_sources', graph, element_type, pattern, sources)
 
 
 def find_all_supported_elements():
@@ -706,5 +692,4 @@ def draw_rule_graph(issue, graph, element, pattern, sinks=None, sources=None):
     plt.savefig(fig_name)
     plt.clf()
 
-    warn("{} connected to {} {}. See '{}'".format(
-        element, pattern, phrase, fig_name))
+    warn("{element} connected to {pattern} {phrase}. See '{fig_name}'".format(**locals()))
