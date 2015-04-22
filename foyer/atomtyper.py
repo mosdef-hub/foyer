@@ -40,7 +40,7 @@ def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
     See also
     --------
     forcefield.prepare_atoms
-    sanitize
+    _sanitize
 
     """
     # Reset all the global variables - required if running atomtyper multiple
@@ -51,7 +51,17 @@ def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
     NEIGHBOR_WHITELIST_MAP.clear()
     RULE_NUMBER_TO_DOC_STRING.clear()
 
-    if forcefield.lower() == 'opls-aa':
+    _load_rules(forcefield.lower())
+    _build_rule_map()
+    if debug:
+        _sanitize()
+    _iterate_rules(atoms, max_iter=10)
+    _resolve_atomtypes(atoms, forcefield)
+
+
+def _load_rules(forcefield):
+    """Populate a mapping of rule numbers to rule functions. """
+    if forcefield in ('opls-aa', 'oplsaa', 'opls'):
         import foyer.oplsaa.rules as oplsaa
         # Build a map to all of the supported opls_* functions.
         for func_name, func in sys.modules[oplsaa.__name__].__dict__.items():
@@ -65,14 +75,8 @@ def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
             if func_name.startswith('uff_'):
                 RULE_NUMBER_TO_RULE[func_name.split("_")[1]] = func
 
-    build_rule_map()
-    if debug:
-        sanitize()
-    iterate_rules(atoms, max_iter=10)
-    resolve_atomtypes(atoms, forcefield)
 
-
-def build_rule_map():
+def _build_rule_map():
     """Build up a tree of element types-->neighbor counts-->rules. """
     for rule_number, rule in RULE_NUMBER_TO_RULE.items():
         decorators = get_decorator_objects_by_type(rule, RuleDecorator)
@@ -96,7 +100,7 @@ def build_rule_map():
         RULE_MAP[element_type][neighbor_count].append(rule_number)
 
 
-def iterate_rules(atoms, max_iter=10):
+def _iterate_rules(atoms, max_iter=10):
     """Iteratively run all the rules until the white- and backlists converge.
 
     Parameters
@@ -148,7 +152,7 @@ def run_rule(atom, rule_id):
         rule_fn(atom)
 
 
-def resolve_atomtypes(atoms, forcefield):
+def _resolve_atomtypes(atoms, forcefield):
     """Determine the final atomtypes from the white- and blacklists."""
     for i, atom in enumerate(atoms):
         atomtype = atom.whitelist - atom.blacklist
@@ -416,7 +420,7 @@ class Blacklist(RuleDecorator):
 # ------------------------------------- #
 
 
-def sanitize():
+def _sanitize():
     """Analyze all rules for possible inconsistencies.
 
     This function serves primarily as a tool for developers who intend to add
