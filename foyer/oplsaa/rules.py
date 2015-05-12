@@ -364,6 +364,7 @@ def opls_288(atom):
     """N (R4N+)  JPC,90,2174 (1986) """
     return True
 
+
 @Element('C')
 @NeighborCount(4)
 @NeighborsExactly('N', 1)
@@ -372,6 +373,7 @@ def opls_288(atom):
 def opls_291(atom):
     """C in CH3NH3+ """
     return True
+
 
 @Element('C')
 @NeighborCount(4)

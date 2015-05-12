@@ -53,7 +53,9 @@ formamide  3
 
 ; Added DvdS 2010-12-21
 2 1 4 3 1     180     4.6     2 
-4 5 6 2 1     180     4.6     2 [ system ]
+4 5 6 2 1     180     4.6     2 
+
+[ system ]
 formamide GAS
 [ molecules ]
 formamide 1

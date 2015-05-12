@@ -165,16 +165,12 @@ def _resolve_atomtypes(atoms, forcefield):
         else:
             prefix = ''
 
-        if atom.atomtype == atom.name:  # It hasn't been set manually.
-            if len(atomtype) == 1:
-                atom.atomtype = prefix + atomtype[0]
-            else:
-                warn("CHECK YOUR TOPOLOGY. Found multiple or no types for atom "
-                     "{0} ({1}): {2}.".format(i, atom.name, atomtype))
-                atom.atomtype = ', '.join(atomtype)
+        if len(atomtype) == 1:
+            atom.atomtype = (0, prefix + atomtype[0])
         else:
-            warn("Using user provided atomtype of {0} for atom {1}.".format(
-                atom.atomtype, atom))
+            warn("CHECK YOUR TOPOLOGY. Found multiple or no types for atom "
+                 "{0} ({1}): {2}.".format(i, atom.name, atomtype))
+            atom.atomtype = (0, ', '.join(atomtype))
 
 
 def neighbor_element_types(atom):
@@ -467,7 +463,7 @@ def _sanitize():
             if len(nx.descendants(graph, node)) == 0:
                 sinks.append(node)
         if len(sinks) > 1:
-            draw_rule_graph('multiple_sinks', graph, element_type, pattern, sinks)
+            draw_rule_graph('multiple_sinks', graph, element_type, pattern, sinks=sinks)
 
         # Check for multiple sources. This is not necessarily incorrect.
         sources = []
@@ -475,7 +471,7 @@ def _sanitize():
             if len(nx.ancestors(graph, node)) == 0:
                 sources.append(node)
         if len(sources) > 1:
-            draw_rule_graph('multiple_sources', graph, element_type, pattern, sources)
+            draw_rule_graph('multiple_sources', graph, element_type, pattern, sources=sources)
 
 
 def find_all_supported_elements():

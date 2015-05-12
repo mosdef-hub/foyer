@@ -1,28 +1,28 @@
 import itertools
+import os
 
-import simtk.unit as units
+from intermol.gromacs.gromacs_parser import GromacsParser, default_gromacs_include_dir
 
 from foyer.orderedset import OrderedSet
 from foyer.atomtyper import find_atomtypes
 
 
-def apply_forcefield(topology, forcefield, debug=True):
+def apply_forcefield(intermol_system, forcefield, debug=True):
     """Apply a forcefield to a Topology. """
-    if forcefield.lower() == 'opls-aa':
-        from foyer.oplsaa.forcefield import OPLSForcefield
-        ff = OPLSForcefield(topology)
+    if forcefield.lower() in ['opls-aa', 'oplsaa', 'opls']:
+        ff = Forcefield('oplsaa')
     else:
         raise ValueError("Unsupported forcefield: '{0}'".format(forcefield))
 
-    bond_graph = prepare_atoms(topology)
-    find_atomtypes(topology._atoms, forcefield, debug=debug)
-    ff.resolve_bondtypes()
-    enumerate_forcefield_terms(topology, bond_graph)
-    topology.gen_pairs(n_excl=4)
+    bond_graph = prepare_atoms(intermol_system)
+    find_atomtypes(list(intermol_system.atoms), forcefield, debug=debug)
+    ff.resolve_bondingtypes()
+    enumerate_forcefield_terms(intermol_system, bond_graph)
+    intermol_system.gen_pairs(n_excl=4)
     ff = ff.prune()
 
 
-def prepare_atoms(topology):
+def prepare_atoms(intermol_system):
     """Add neighbors and white- and blacklists to each atom.
 
     Note
@@ -38,7 +38,7 @@ def prepare_atoms(topology):
         bonded to.
 
     """
-    bond_graph = topology.to_bondgraph()
+    bond_graph = intermol_system.to_bondgraph()
     for atom in bond_graph.nodes_iter():
         atom.neighbors = bond_graph.neighbors(atom)
         atom.whitelist = OrderedSet()
@@ -129,20 +129,38 @@ def enumerate_impropers(topology, node, neighbors):
                 triplet[2], triplet[1], triplet[0], node))
 
 
-class Forcefield(object):
-    """ """
-    def __init__(self, topology):
-        self.topology = self.top = topology
-        self.atomtypes = dict()
+class Forcefield(GromacsParser):
+    """A container class for the OPLS forcefield."""
+
+    def __init__(self, forcefield_string):
+        """Populate the database using files bundled with GROMACS."""
+        ff_file = os.path.join(default_gromacs_include_dir(),
+                               '{0}.ff/forcefield.itp'.format(forcefield_string))
+        super(Forcefield, self).__init__(ff_file, None)
+
+    def read(self):
+        """ """
+        self.current_directive = None
+        self.if_stack = list()
+        self.else_stack = list()
+
+        self.atomtypes = self.system.atomtypes
         self.bondtypes = dict()
         self.angletypes = dict()
         self.dihedraltypes = dict()
-        self.impropertypes = dict()
+        self.implicittypes = dict()
+        self.pairtypes = dict()
+        self.cmaptypes = dict()
+        self.nonbondedtypes = dict()
 
-    def resolve_bondtypes(self):
+        # Parse the itp file into a set of plain text, intermediate
+        # TopMoleculeType objects.
+        self.process_file(self.top_filename)
+
+    def resolve_bondingtypes(self):
         """ """
         for atom in self.top.atoms:
-            if atom.atomtype not in self.atomtypes:
+            if atom.atomtype[0] not in self.atomtypes:
                 print("Could not find atomtype: '{0}' in forcefield.".format(atom.atomtype))
             else:
                 atom.bondtype = self.atomtypes[atom.atomtype].bondtype
@@ -234,143 +252,3 @@ class Forcefield(object):
         #         triplet = (atom_type1, atom_type2, atom_type3)
         #         ff.angletypes[triplet] = angle_type
         # return ff
-
-
-class ForcefieldAtomtype(object):
-    """
-    """
-    def __init__(self, atomtype, bondtype, atomic_number=0,
-                 mass=0.0 * units.amu,
-                 charge=0.0 * units.elementary_charge,
-                 sigma=0.0 * units.angstroms,
-                 epsilon=0.0 * units.kilojoules_per_mole):
-        self.atomtype = atomtype
-        self.bondtype = bondtype
-        self.atomic_number = atomic_number
-        self.mass = mass
-        self.charge = charge
-        self.sigma = sigma
-        self.epsilon = epsilon
-
-
-class ForcefieldBond(object):
-    """Connection between two Atoms.
-
-    Attributes
-    ----------
-    atom1 : mb.Atom
-        First Atom in the bond.
-    atom2 : mb.Atom
-        Second Atom in the bond.
-    kind : str, optional, default='atom1.bondtype-atom2.bondtype'
-        Descriptive name for the bond.
-
-    """
-    def __init__(self, atom1, atom2, kind=None):
-        self.atom1 = atom1
-        self.atom2 = atom2
-        if kind:
-            self.kind = kind
-        else:
-            self.kind = (atom1.bondtype, atom2.bondtype)
-
-    def __repr__(self):
-        return "Bond{0}({1}, {2})".format(id(self), self.atom1, self.atom2)
-
-
-class ForcefieldAngle(object):
-    """Triplet formed by three Atoms and two consecutive Bonds.
-
-    Attributes
-    ----------
-    atom1 : mb.Atom
-        First Atom in the angle.
-    atom2 : mb.Atom
-        Second Atom in the angle.
-    atom3 : mb.Atom
-        Second Atom in the angle.
-    kind : str, optional, default='atom1.bondtype-atom2.bondtype-atom3.bondtype'
-        Descriptive name for the angle.
-    """
-
-    def __init__(self, atom1, atom2, atom3, kind=None):
-        self.atom1 = atom1
-        self.atom2 = atom2
-        self.atom3 = atom3
-        if kind:
-            self.kind = kind
-        else:
-            self.kind = (atom1.bondtype, atom2.bondtype, atom3.bondtype)
-
-    def __repr__(self):
-        return "Angle{0}({1}, {2}, {3})".format(
-            id(self), self.atom1, self.atom2, self.atom3)
-
-
-class ForcefieldDihedral(object):
-    """Quadruplet formed by four Atoms, three Bonds and two angles.
-
-    Attributes
-    ----------
-    atom1 : mb.Atom
-        First Atom in the dihedral.
-    atom2 : mb.Atom
-        Second Atom in the dihedral.
-    atom3 : mb.Atom
-        Second Atom in the dihedral.
-    atom4 : mb.Atom
-        Second Atom in the dihedral.
-    kind : str, optional, default='atom1.bondtype-atom2.bondtype-atom3.bondtype-atom4.bondtype'
-        Descriptive name for the dihedral.
-
-    """
-
-    def __init__(self, atom1, atom2, atom3, atom4, kind=None):
-        self.atom1 = atom1
-        self.atom2 = atom2
-        self.atom3 = atom3
-        self.atom4 = atom4
-        if kind:
-            self.kind = kind
-        else:
-            self.kind = (atom1.bondtype, atom2.bondtype, atom3.bondtype, atom4.bondtype)
-
-    def __repr__(self):
-        return "Dihedral{0}({1}, {2}, {3}, {4})".format(
-            id(self), self.atom1, self.atom2, self.atom3, self.atom4)
-
-
-class ForcefieldImproper(object):
-    """Quadruplet formed by four Atoms, three Bonds and two angles.
-
-    Attributes
-    ----------
-    atom1 : mb.Atom
-        First Atom in the dihedral.
-    atom2 : mb.Atom
-        Second Atom in the dihedral.
-    atom3 : mb.Atom
-        Second Atom in the dihedral.
-    atom4 : mb.Atom
-        Second Atom in the dihedral.
-    kind : str, optional, default='atom1.bondtype-atom2.bondtype-atom3.bondtype-atom4.bondtype'
-        Descriptive name for the dihedral.
-
-    """
-
-    def __init__(self, atom1, atom2, atom3, atom4, kind=None):
-        self.atom1 = atom1
-        self.atom2 = atom2
-        self.atom3 = atom3
-        self.atom4 = atom4
-        if kind:
-            self.kind = kind
-        else:
-            self.kind = (atom1.bondtype, atom2.bondtype, atom3.bondtype, atom4.bondtype)
-
-    def update_kind(self):
-        self.kind = (self.atom1.bondtype, self.atom2.bondtype, self.atom3.bondtype, self.atom4.bondtype)
-
-    def __repr__(self):
-        return "Dihedral{0}({1}, {2}, {3}, {4})".format(
-            id(self), self.atom1, self.atom2, self.atom3, self.atom4)
