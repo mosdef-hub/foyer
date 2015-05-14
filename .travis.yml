@@ -34,7 +34,7 @@ install:
   - python setup.py install
 
 script:
-  - coverage run --rcfile=.coveragerc --source=mbuild setup.py test
+  - coverage run --rcfile=.coveragerc --source=foyer setup.py test
 
 after_success:
   - coveralls

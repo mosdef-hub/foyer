@@ -30,6 +30,7 @@ def opls_112(atom):
 @NeighborCount(4)
 @NeighborsExactly('C', 1)
 @NeighborsExactly('H', 3)
+#@NeighborsExactly('Si', 1)
 @Whitelist(135)
 def opls_135(atom):
     """alkane CH3 """
@@ -648,6 +649,23 @@ def opls_777(atom):
 @Blacklist(145)
 def opls_916(atom):
     """C(NH2) aniline """
+    return True
+
+@Element('Si')
+@NeighborCount(4)
+@NeighborsExactly('C', 2)
+@NeighborsExactly('O', 2)
+@Whitelist(1000)
+def opls_1000(atom):
+    """OMCTS Si fudged"""
+    return True
+
+@Element('O')
+@NeighborCount(2)
+@NeighborsExactly('Si', 2)
+@Whitelist(1001)
+def opls_1001(atom):
+    """OMCTS O fudged"""
     return True
 
 
