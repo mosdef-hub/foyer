@@ -8,10 +8,9 @@ import pytest
 from foyer.utils.io import load_top_opls
 from foyer.forcefield import prepare_atoms, apply_forcefield
 from foyer.atomtyper import find_atomtypes
-from mbuild.tests.base_test import BaseTest
 
 
-class TestOPLS(BaseTest):
+class TestOPLS():
 
     def test_atomtyping(self, only_run=None):
         resource_dir = resource_filename('foyer', '../opls_validation')
