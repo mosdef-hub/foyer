@@ -43,6 +43,7 @@ install:
   - echo %PATH%
   - conda config --add channels https://conda.anaconda.org/imodels
   - conda config --add channels http://conda.anaconda.org/omnia
+  - conda config --add channels https://conda.anaconda.org/patrickfuller
 
 build: false
 
