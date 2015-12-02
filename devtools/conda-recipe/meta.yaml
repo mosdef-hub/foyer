@@ -15,6 +15,7 @@ requirements:
 test:
   requires:
     - pytest
+    - mbuild
   commands:
     - py.test --pyargs foyer
 

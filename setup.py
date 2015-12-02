@@ -17,7 +17,7 @@ else:
     __version__ = VERSION + '.dev0'
 #####################################
 
-with open('mbuild/version.py', 'w') as version_file:
+with open('foyer/version.py', 'w') as version_file:
     version_file.write('version="{0}"\n'.format(__version__))
 
 with open('__conda_version__.txt', 'w') as conda_version:
