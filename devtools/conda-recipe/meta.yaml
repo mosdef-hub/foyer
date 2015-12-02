@@ -1,0 +1,24 @@
+package:
+  name: foyer-dev
+  version: !!str 0.1.0.dev0
+
+requirements:
+  build:
+    - python
+
+  run:
+    - python
+    - matplotlib
+    - networkx
+    - openmm
+
+test:
+  requires:
+    - pytest
+  commands:
+    - py.test --pyargs foyer
+
+about:
+  home: http://imodels.github.io/foyer
+  license: MIT
+  summary: Atomtyping and forcefield applying.

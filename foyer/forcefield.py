@@ -13,6 +13,8 @@ def apply_forcefield(intermol_system, forcefield, debug=True):
     """Apply a forcefield to a Topology. """
     if forcefield.lower() in ['opls-aa', 'oplsaa', 'opls']:
         ff = Forcefield('oplsaa')
+    elif forcefield.lower() in ['trappeua']:
+        ff = Forcefield('trappeua')
     else:
         raise ValueError("Unsupported forcefield: '{0}'".format(forcefield))
 
@@ -23,9 +25,16 @@ def apply_forcefield(intermol_system, forcefield, debug=True):
     ff.resolve_bondingtypes(bondgraph)
     propogate_atomtyping(intermol_system)
     enumerate_forcefield_terms(intermol_system, bondgraph, ff)
-    import ipdb; ipdb.set_trace()
-    intermol_system.gen_pairs(n_excl=4)
-    ff = ff.prune()
+
+    # Copy over defaults.
+    intermol_system.nonbonded_function = ff.system.nonbonded_function
+    intermol_system.combination_rule = ff.system.combination_rule
+    intermol_system.genpairs = ff.system.genpairs
+    intermol_system.lj_correction = ff.system.lj_correction
+    intermol_system.coulomb_correction = ff.system.coulomb_correction
+
+    #intermol_system.gen_pairs(n_excl=4)
+    #ff = ff.prune()
 
 
 def propogate_atomtyping(intermol_system):
@@ -69,7 +78,7 @@ def prepare_atoms(intermol_system):
 
 
 def enumerate_forcefield_terms(intermol_system, bondgraph, forcefield, angles=True,
-                               dihedrals=False, impropers=False):
+                               dihedrals=True, impropers=False):
     """Convert Bonds to ForcefieldBonds and find angles and dihedrals. """
     create_bonds(intermol_system, forcefield)
 
@@ -106,7 +115,7 @@ def create_bonds(intermol_system, forcefield):
                         bondtype = forcefield.bondtypes[bondingtypes[::-1]]
                     except KeyError:
                         raise ValueError('No bondtype exists for bondingtypes {0}'.format(bondingtypes))
-                bond.bondtype = bondtype
+                bond.forcetype = bondtype
             break  # Only loop through one of the molecules.
 
 
@@ -129,7 +138,7 @@ def create_angles(intermol_system, forcefield, node, neighbors):
             except KeyError:
                 raise ValueError('No angletype exists for bondingtypes {0}'.format(bondingtypes))
         angle = Angle(atom1.index, atom2.index, atom3.index)
-        angle.angletype = angletype
+        angle.forcetype = angletype
 
         intermol_system.angletypes[bondingtypes] = angletype
         mol_type.angles.add(angle)
@@ -151,20 +160,23 @@ def create_dihedrals(intermol_system, forcefield, node_1, neighbors_1, node_2, n
         if pair[0] != pair[1]:
             atom1 = pair[0]
             atom4 = pair[1]
-            bondingtypes = tuple([atom1.bondingtype, atom2.bondingtype, atom3.bondingtype, atom4.bondingtype])
             # TODO: Hide lookup logic.
             try:
+                bondingtypes = tuple([atom1.bondingtype, atom2.bondingtype, atom3.bondingtype, atom4.bondingtype, False])
                 dihedraltype = forcefield.dihedraltypes[bondingtypes]
             except KeyError:
                 try:
-                    dihedraltype = forcefield.dihedraltypes[bondingtypes[::-1]]
+                    bondingtypes = tuple([atom4.bondingtype, atom3.bondingtype, atom2.bondingtype, atom1.bondingtype, False])
+                    dihedraltype = forcefield.dihedraltypes[bondingtypes]
                 except KeyError:
                     warnings.warn('No dihedraltype exists for bondingtypes {0}'.format(bondingtypes))
                     continue
             dihedral = Dihedral(atom1.index, atom2.index, atom3.index, atom4.index)
-            dihedral.dihedraltype = dihedraltype
+            if len(dihedraltype) == 1:
+                dihedral.forcetype = next(iter(dihedraltype))
+            else:
+                raise NotImplementedError
 
-            import pdb; pdb.set_trace()
             intermol_system.dihedraltypes[bondingtypes] = dihedraltype
             mol_type.dihedrals.add(dihedral)
 
@@ -212,13 +224,16 @@ class Forcefield(GromacsParser):
 
     def resolve_bondingtypes(self, bondgraph):
         """ """
-        for atom, _ in bondgraph.nodes():
+        for n, (atom, _) in enumerate(bondgraph.nodes()):
             if atom.atomtype[0] not in self.atomtypes:
                 print("Could not find atomtype: '{0}' in forcefield.".format(atom.atomtype[0]))
             else:
                 atom.bondingtype = self.atomtypes[atom.atomtype[0]].bondtype
-                if not hasattr(atom, 'charge') or not atom.charge:
+                atom.cgnr = n
+                if not atom.charge:
                     atom.charge = (0, self.atomtypes[atom.atomtype[0]].charge)
+                if not atom.mass:
+                    atom.mass = (0, self.atomtypes[atom.atomtype[0]].mass)
 
     # def find_atom_types(self, bondtype):
     #     """If the id is the atom type, return the AtomType object. """

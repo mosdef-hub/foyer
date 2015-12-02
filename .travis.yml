@@ -1,40 +1,29 @@
-language: python
+language: c
 
-python:
-  # We don't actually use the Travis Python, but this keeps it organized.
-  - "2.7"
-  - "3.3"
-  - "3.4"
+sudo: false
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
 
 install:
-  - sudo apt-get update
-  # You may want to periodically update this, although the conda update
-  # conda line below will keep everything up-to-date.  We do this
-  # conditionally because it saves us some downloading if the version is
-  # the same.
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget http://repo.continuum.io/miniconda/Miniconda-3.4.2-Linux-x86_64.sh -O miniconda.sh;
-    else
-      wget http://repo.continuum.io/miniconda/Miniconda3-3.4.2-Linux-x86_64.sh -O miniconda.sh;
-    fi
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  # Useful for debugging any issues with conda
-  - conda info -a
-
-  # Replace dep1 dep2 ... with your dependencies
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
-  - source activate test-environment
-  - conda install future coverage pytest
-  - pip install coveralls
-  - pip install -e git://github.com/shirtsgroup/InterMol.git@develop#egg=intermol
-  - python setup.py install
+  - source devtools/travis-ci/install.sh
 
 script:
-  - coverage run --rcfile=.coveragerc --source=foyer setup.py test
+  - conda build devtools/conda-recipe
+
+env:
+  matrix:
+    - python=2.7  CONDA_PY=27
+    - python=3.4  CONDA_PY=34
+    - python=3.5  CONDA_PY=35
+
+  global:
+    # BINSTAR
+    - secure: "Rbt/6qSNB/6hvDKboKqo7iS1I+Zhye5u9k/RxNZCpaUQUiledjuzsBo+vppYskb7vHS+QRT+leDm7gUo/ZOv0DahLi4ScCIhvPSYTtWu+hKlp7TcI0woi5H7gCmGvP8bEYVPlHm3AT54xh7dzpfOca5eHpo8dVtvJhNTqbY8jPw="
+    # GITHUB
+    - secure: "gtj9VfJQzQb4KL23+aRfimQgXBK88JHEqmN6zi+MCCLrjhnXs7+qWoAGi4kqwNeNd9fXSK5Wk+PfPHEPjP8MFyjEhWBL9LD9ct+59RVx8bf3pe2WOWktpf440XxwpLuDEWrV01Ly4FKRqYTOvtz7pYV5y/JgCyCP76MwkWhZvG4="
 
 after_success:
-  - coveralls
+  - source devtools/travis-ci/post_binstar.sh
+  - source devtools/travis-ci/create_docs.sh

@@ -69,19 +69,26 @@ def _load_rules(forcefield):
         for func_name, func in sys.modules[oplsaa.__name__].__dict__.items():
             if func_name.startswith('opls_'):
                 RULE_NUMBER_TO_RULE[func_name.split("_")[1]] = func
-
     elif forcefield == 'uff':
         import foyer.uff.rules as uff
         # Build a map to all of the supported uff_* functions.
         for func_name, func in sys.modules[uff.__name__].__dict__.items():
             if func_name.startswith('uff_'):
                 RULE_NUMBER_TO_RULE[func_name.split("_")[1]] = func
+    elif forcefield == 'trappeua':
+        import foyer.trappeua.rules as trappeua
+        # Build a map to all of the supported trappeua_* functions.
+        for func_name, func in sys.modules[trappeua.__name__].__dict__.items():
+            if func_name.startswith('trappeua_'):
+                RULE_NUMBER_TO_RULE[func_name.split("_", maxsplit=1)[1]] = func
+    else:
+        raise ValueError("Unsupported forcefield: '{0}'".format(forcefield))
 
 
 def _build_rule_map():
     """Build up a tree of element types-->neighbor counts-->rules. """
     for rule_number, rule in RULE_NUMBER_TO_RULE.items():
-        decorators = get_decorator_objects_by_type(rule, RuleDecorator)
+        decorators = get_decorators(rule)
         element_type = None
         neighbor_count = None
         for dec in decorators:
@@ -258,6 +265,7 @@ class RuleDecorator(object):
 class Element(RuleDecorator):
     """Designate the element that this rule applies to. """
     def __init__(self, element_type):
+        super(Element, self).__init__()
         self.element_type = element_type
 
     def __call__(self, func):
@@ -272,6 +280,7 @@ class Element(RuleDecorator):
 class InWhitelist(RuleDecorator):
     """Checks if this atom already has different rule whitelisted. """
     def __init__(self, element_type):
+        super(InWhitelist, self).__init__()
         self.element_type = element_type
 
     def __call__(self, func):
@@ -286,6 +295,7 @@ class InWhitelist(RuleDecorator):
 class NeighborCount(RuleDecorator):
     """Designate the number of neighbors an atom must have for this rule. """
     def __init__(self, count):
+        super(NeighborCount, self).__init__()
         self.count = count
 
     def __call__(self, func):
@@ -300,6 +310,8 @@ class NeighborCount(RuleDecorator):
 class NeighborsBase(RuleDecorator):
     """Super class for rule decorators that count types of neighbors. """
     def __init__(self, neighbor_type, count):
+        super(NeighborsBase, self).__init__()
+        self.count = count
         neighbor_type = str(neighbor_type)
         self.neighbor_type = neighbor_type
         self.count = count
@@ -368,6 +380,7 @@ class NeighborsAtMost(NeighborsBase):
 class Whitelist(RuleDecorator):
     """Whitelist an atomtype for an atom. """
     def __init__(self, rule_number):
+        super(Whitelist, self).__init__()
         if isinstance(rule_number, (list, tuple, set)):
             warn("Rules should only whitelist themselves.")
         else:
@@ -391,6 +404,7 @@ class Whitelist(RuleDecorator):
 class Blacklist(RuleDecorator):
     """Blacklist an atomtype for an atom. """
     def __init__(self, rule_numbers):
+        super(Blacklist, self).__init__()
         if isinstance(rule_numbers, (list, tuple, set)):
             self.rule_numbers = list(map(str, rule_numbers))
             self.rule_numbers.sort()
@@ -442,8 +456,7 @@ def _sanitize():
         for rule_number in rules:
             graph.add_node(rule_number)
             blacklisted_rules = set()
-            decorators = get_decorator_objects_by_type(
-                RULE_NUMBER_TO_RULE[rule_number], RuleDecorator)
+            decorators = get_decorators(RULE_NUMBER_TO_RULE[rule_number])
 
             for dec in decorators:
                 if isinstance(dec, Blacklist):
@@ -484,7 +497,7 @@ def find_all_supported_elements():
     """
     supported_elements = set()
     for rule_number, rule in RULE_NUMBER_TO_RULE.items():
-        decorators = get_decorator_objects_by_type(rule, RuleDecorator)
+        decorators = get_decorators(rule)
 
         element_type = None
         for dec in decorators:
@@ -522,7 +535,7 @@ def find_all_rule_matches(supported_elements):
     """
     rule_matches = dict()
     for rule_number, rule in RULE_NUMBER_TO_RULE.items():
-        decorators = get_decorator_objects_by_type(rule, RuleDecorator)
+        decorators = get_decorators(rule)
 
         element_type = None
         neighbor_count = None
@@ -561,7 +574,7 @@ def find_all_rule_matches(supported_elements):
     return rule_matches
 
 
-def get_decorator_objects_by_type(decorated_function, decorator_type):
+def get_decorators(function):
     """Find all decorators of a particular type on a function.
 
     Parameters
@@ -577,18 +590,20 @@ def get_decorator_objects_by_type(decorated_function, decorator_type):
     decorators = []
     # Find an object of decorator_type in the function's closure. There should
     # be only one.
-    for cell in decorated_function.__closure__:
+    for cell in function.__closure__:
         closure_entry = cell.cell_contents
-        if isinstance(closure_entry, decorator_type):
+        if isinstance(closure_entry, RuleDecorator):
             decorators.append(closure_entry)
             break
+    else:
+        warn('Found no RuleDecorators on function: {}'.format(function))
+        return decorators
     # Find a function called `wrapper` in the function's closure, and recurse.
-    for cell in decorated_function.__closure__:
+    for cell in function.__closure__:
         closure_entry = cell.cell_contents
         if hasattr(closure_entry, '__name__') and closure_entry.__name__ is "wrapped":
-            wrapped_decorator_objects = get_decorator_objects_by_type(
-                closure_entry, decorator_type)
-            decorators += wrapped_decorator_objects
+            wrapped_decorators = get_decorators(closure_entry)
+            decorators.extend(wrapped_decorators)
             break
     return decorators
 
