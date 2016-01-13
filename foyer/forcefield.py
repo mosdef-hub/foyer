@@ -4,8 +4,8 @@ import warnings
 
 from intermol.forces import *
 from intermol.gromacs.gromacs_parser import GromacsParser, default_gromacs_include_dir
+from oset import oset as OrderedSet
 
-from foyer.orderedset import OrderedSet
 from foyer.atomtyper import find_atomtypes
 
 

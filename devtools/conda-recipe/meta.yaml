@@ -11,6 +11,7 @@ requirements:
     - matplotlib
     - networkx
     - openmm
+    - oset
 
 test:
   requires:

@@ -17,7 +17,7 @@ else:
     __version__ = VERSION + '.dev0'
 #####################################
 
-with open('mbuild/version.py', 'w') as version_file:
+with open('foyer/version.py', 'w') as version_file:
     version_file.write('version="{0}"\n'.format(__version__))
 
 with open('__conda_version__.txt', 'w') as conda_version:
@@ -51,8 +51,8 @@ setup(
     long_description=__doc__,
     author='Janos Sallai, Christoph Klein',
     author_email='janos.sallai@vanderbilt.edu, christoph.klein@vanderbilt.edu',
-    url='https://github.com/iModels/foyer',
-    download_url='https://github.com/iModels/foyer/tarball/{}'.format(__version__),
+    url='https://github.com/imodels/foyer',
+    download_url='https://github.com/imodels/foyer/tarball/{}'.format(__version__),
     packages=find_packages(),
     package_dir={'foyer': 'foyer'},
     include_package_data=True,
