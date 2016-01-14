@@ -10,7 +10,7 @@ from six import string_types
 from foyer.atomtyper import find_atomtypes
 
 
-def apply_forcefield(structure, forcefield, debug=True):
+def apply_forcefield(structure, forcefield, debug=False):
     """Apply a forcefield to a Topology. """
     if isinstance(forcefield, string_types):
         if forcefield.lower() in ['opls-aa', 'oplsaa', 'opls']:
@@ -71,8 +71,10 @@ def create_dihedrals(structure, node_1, neighbors_1, node_2, neighbors_2):
     for pair in itertools.product(neighbors_1, neighbors_2):
         if pair[0] != pair[1]:
             dihedral = pmd.Dihedral(pair[0], node_1, node_2, pair[1])
-            structure.dihedrals.append(dihedral)
-            structure.rb_torsions.append(dihedral)
+            if structure.parameterset.dihedral_types:
+                structure.dihedrals.append(dihedral)
+            if structure.parameterset.rb_torsion_types:
+                structure.rb_torsions.append(dihedral)
 
 
 def create_impropers(structure, node, neighbors):

@@ -22,6 +22,23 @@ class TestOPLS(BaseTest):
     correctly_implemented_mol_names = {x[0] for x in correctly_implemented}
     correctly_implemented_top_files = {x[1] for x in correctly_implemented}
 
+    def find_topfile_by_mol_name(self, mol_name):
+        for top_file in self.top_files:
+            with open(top_file) as fh:
+                if mol_name in fh.read():
+                    return top_file
+
+    def find_correctly_implemented(self):
+        with open(self.implemented_tests_path, 'a') as fh:
+            for top in self.top_files:
+                try:
+                    mol_name = self.test_atomtyping(top)
+                except:
+                    continue
+                else:
+                    if top not in self.correctly_implemented_top_files:
+                        fh.write('{} {}\n'.format(mol_name, top))
+
     @pytest.mark.parametrize('top_path', correctly_implemented_top_files)
     def test_atomtyping(self, top_path, only_run=None):
         base_path, top_filename = os.path.split(top_path)
@@ -55,33 +72,16 @@ class TestOPLS(BaseTest):
 
     def test_full_parameterization(self, ethane):
         structure = ethane.to_parmed(title='ethane')
-        parameterized = apply_forcefield(structure, forcefield='opls-aa', debug=False)
+        parametrized = apply_forcefield(structure, forcefield='opls-aa', debug=False)
 
-        assert sum((1 for at in parameterized.atoms if at.type == 'opls_135')) == 2
-        assert sum((1 for at in parameterized.atoms if at.type == 'opls_140')) == 6
-        assert len(parameterized.bonds) == 7
-        assert all(x.type for x in parameterized.bonds)
-        assert len(parameterized.angles) == 12
-        assert all(x.type for x in parameterized.angles)
-        assert len(parameterized.rb_torsions) == 9
-        assert all(x.type for x in parameterized.dihedrals)
-
-    def find_topfile_by_mol_name(self, mol_name):
-        for top_file in self.top_files:
-            with open(top_file) as fh:
-                if mol_name in fh.read():
-                    return top_file
-
-    def find_correctly_implemented(self):
-        with open(self.implemented_tests_path, 'a') as fh:
-            for top in self.top_files:
-                try:
-                    mol_name = self.test_atomtyping(top)
-                except:
-                    continue
-                else:
-                    if top not in self.correctly_implemented_top_files:
-                        fh.write('{} {}\n'.format(mol_name, top))
+        assert sum((1 for at in parametrized.atoms if at.type == 'opls_135')) == 2
+        assert sum((1 for at in parametrized.atoms if at.type == 'opls_140')) == 6
+        assert len(parametrized.bonds) == 7
+        assert all(x.type for x in parametrized.bonds)
+        assert len(parametrized.angles) == 12
+        assert all(x.type for x in parametrized.angles)
+        assert len(parametrized.rb_torsions) == 9
+        assert all(x.type for x in parametrized.dihedrals)
 
 
 if __name__ == "__main__":
