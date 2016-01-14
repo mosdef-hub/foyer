@@ -60,8 +60,7 @@ benzonitrile                 3
     10      9
     11      1     9    12    13
     12     11    13    1      9
-    13     13    12    11
-    14     14
+    13     12    11
 
 [ angles ]
 ;  ai    aj    ak funct            c0            c1            c2            c3
