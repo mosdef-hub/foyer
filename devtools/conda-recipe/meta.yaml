@@ -9,6 +9,7 @@ requirements:
   run:
     - python
     - matplotlib
+    - parmed
     - networkx
     - oset
     - six
@@ -16,6 +17,7 @@ requirements:
 test:
   requires:
     - pytest
+    - mbuild
   commands:
     - py.test -v --tb=short --pyargs foyer
 
