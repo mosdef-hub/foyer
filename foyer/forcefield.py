@@ -25,6 +25,7 @@ def apply_forcefield(structure, forcefield, debug=False):
 
     find_atomtypes(structure.atoms, forcefield, debug=debug)
 
+    ff.box = structure.box
     ff.atoms = structure.atoms
     ff.bonds = structure.bonds
     create_bonded_forces(ff)
