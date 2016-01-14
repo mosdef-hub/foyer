@@ -1,4 +1,4 @@
 matplotlib
 networkx
 oset
-simtk.units
+six

@@ -10,14 +10,14 @@ requirements:
     - python
     - matplotlib
     - networkx
-    - openmm
     - oset
+    - six
 
 test:
   requires:
     - pytest
   commands:
-    - py.test --pyargs foyer
+    - py.test -v --pyargs foyer
 
 about:
   home: http://imodels.github.io/foyer
