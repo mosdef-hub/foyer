@@ -1,75 +1,81 @@
 import glob
 import os
 
-from six import string_types
+from mbuild.tests.base_test import BaseTest
+import parmed as pmd
 from pkg_resources import resource_filename
 import pytest
 
-from foyer.utils.io import load_top_opls
-from foyer.forcefield import prepare_atoms, apply_forcefield
+from foyer.forcefield import apply_forcefield
 from foyer.atomtyper import find_atomtypes
 
 
-class TestOPLS():
+class TestOPLS(BaseTest):
 
-    def test_atomtyping(self, only_run=None):
-        resource_dir = resource_filename('foyer', '../opls_validation')
-        top_files = glob.glob(os.path.join(resource_dir, '*.top'))
+    resource_dir = resource_filename('foyer', '../opls_validation')
+    top_files = glob.glob(os.path.join(resource_dir, '*.top'))
 
-        # Please update this file if you implement atom typing for a test case.
-        implemented_tests_path = os.path.join(os.path.dirname(__file__), 'implemented_opls_tests.txt')
-        correctly_implemented = [line.strip() for line in open(implemented_tests_path)]
+    # Please update this file if you implement atom typing for a test case.
+    implemented_tests_path = os.path.join(os.path.dirname(__file__), 'implemented_opls_tests.txt')
+    correctly_implemented = [line.strip() for line in open(implemented_tests_path)]
 
-        for top in top_files:
-            top_name = os.path.split(top)[-1]
-            system, known_opls_types, mol_name = load_top_opls(top, only_run)
+    @pytest.mark.parametrize('top_path', top_files)
+    def test_atomtyping(self, top_path, only_run=None):
+        base_path, top_filename = os.path.split(top_path)
+        gro_file = '{}-gas.gro'.format(top_filename[:-4])
+        gro_path = os.path.join(base_path, gro_file)
 
-            if only_run and only_run != mol_name:
-                continue
-            elif mol_name not in correctly_implemented:
-                continue
+        structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path)
+        structure.title = structure.title.replace(' GAS', '')
+        known_opls_types = [atom.type for atom in structure.atoms]
 
-            print("Typing {} ({})...".format(mol_name, top_name))
-            prepare_atoms(system)
-            find_atomtypes(list(system.atoms), forcefield='OPLS-AA', debug=False)
+        #if structure.title not in self.correctly_implemented:
+        #    raise NotImplementedError('"{}" has not yet been correctly implemented'.format(structure.title))
 
-            generated_opls_types = list()
+        print("Typing {} ({})...".format(structure.title, top_filename))
+        find_atomtypes(structure.atoms, forcefield='OPLS-AA', debug=False)
 
-            for i, atom in enumerate(system.atoms):
-                message = ('Found multiple or no OPLS types for atom {} in {} ({}): {}\n'
-                           'Should be atomtype: {}'.format(
-                    i, mol_name, top_name, atom.atomtype[0], known_opls_types[i]))
-                assert isinstance(atom.atomtype[0], string_types), message
-                generated_opls_types.append(atom.atomtype[0])
-            both = zip(generated_opls_types, known_opls_types)
-            message = "Found inconsistent OPLS types in {} ({}): {}".format(
-                mol_name, top_name, list(zip(range(len(generated_opls_types)),
-                                        generated_opls_types,
-                                        known_opls_types)))
+        generated_opls_types = list()
 
-            assert all([a == b for a, b in both]), message
-            print("Passed.\n")
+        for i, atom in enumerate(structure.atoms):
+            message = ('Found multiple or no OPLS types for atom {} in {} ({}): {}\n'
+                       'Should be atomtype: {}'.format(
+                i, structure.title, top_filename, atom.type, known_opls_types[i]))
+            assert atom.type, message
 
-    @pytest.mark.skipif(True, reason='Not implemented yet')
+            generated_opls_types.append(atom.type)
+        both = zip(generated_opls_types, known_opls_types)
+
+        n_types = range(len(generated_opls_types))
+        message = "Found inconsistent OPLS types in {} ({}): {}".format(
+            structure.title, top_filename,
+            list(zip(n_types, generated_opls_types, known_opls_types)))
+
+        assert all([a == b for a, b in both]), message
+        if structure.title not in self.correctly_implemented:
+            print('New one!')
+        print("Passed!")
+
     def test_full_parameterization(self, ethane):
-        #ethane.save('ethane.gro', forcefield='opls-aa')
+        structure = ethane.to_parmed(title='ethane')
+        parameterized = apply_forcefield(structure, forcefield='opls-aa', debug=False)
 
-        intermol_ethane = ethane._to_intermol(molecule_types=[type(ethane)])
-        apply_forcefield(intermol_ethane, forcefield='opls-aa', debug=False)
-        # detect file extension
-        # save to that MD engine from intermol
+        assert sum((1 for at in parameterized.atoms if at.type == 'opls_135')) == 2
+        assert sum((1 for at in parameterized.atoms if at.type == 'opls_140')) == 6
+        assert len(parameterized.bonds) == 7
 
+    def find_topfile_by_mol_name(self, mol_name):
+        for top_file in self.top_files:
+            with open(top_file) as fh:
+                if mol_name in fh.read():
+                    return top_file
 
 if __name__ == "__main__":
-    # TestOPLS().test_atomtyping('benzene')
-    # TestOPLS().test_atomtyping()
+    test_class = TestOPLS()
 
-    from mbuild.examples.ethane.ethane import Ethane
-    import mbuild as mb
-    ethanes = mb.Compound()
-    for _ in range(3):
-        ethanes.add(Ethane())
+    mol = 'benzen'
+    top_path = test_class.find_topfile_by_mol_name('benzene')
+    test_class.test_atomtyping(top_path, only_run='benzene')
 
-    intermol_ethane = ethanes._to_intermol(molecule_types=[Ethane])
-    apply_forcefield(intermol_ethane, forcefield='opls-aa', debug=False)
-    # TestOPLS().test_full_parameterization(ethanes)
+    # test_class.test_atomtyping()
+
