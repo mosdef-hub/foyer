@@ -6,7 +6,6 @@ from __future__ import print_function
 import os
 import sys
 from setuptools import setup, find_packages
-from setuptools.command.test import test as TestCommand
 
 #####################################
 VERSION = "0.1.0"
@@ -27,22 +26,8 @@ if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
     sys.exit()
 
-
-class PyTest(TestCommand):
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        import pytest
-        errcode = pytest.main(['foyer'])
-        sys.exit(errcode)
-
-
 with open('requirements.txt') as reqs_file:
     reqs = [line.strip() for line in reqs_file]
-
 
 setup(
     name='foyer',
@@ -76,6 +61,4 @@ setup(
         'Operating System :: MacOS',
     ],
     test_suite='tests',
-    cmdclass={'test': PyTest},
-    extras_require={'utils': ['pytest']},
 )

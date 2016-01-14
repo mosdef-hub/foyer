@@ -12,7 +12,6 @@ install:
 script:
   - conda config --add channels https://conda.anaconda.org/imodels
   - conda config --add channels https://conda.anaconda.org/omnia
-  - conda config --add channels https://conda.anaconda.org/patrickfuller
   - conda build devtools/conda-recipe
 
 env:
