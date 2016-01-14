@@ -20,7 +20,7 @@ class Rings(object):
 
     def step(self, atom):
         """Take one step along the graph from atom. """
-        neighbors = atom.neighbors
+        neighbors = atom.bond_partners
         if len(neighbors) > 1:
             for neighbor in neighbors:
                 # Check to see if we found a ring.
@@ -52,7 +52,7 @@ def benzene(atom):
     # 2 rings, because we count the traversal in both directions.
     if len(ring) == 2:
         for ring_atom in ring[0]:
-            if not (ring_atom.name == 'C' and len(ring_atom.neighbors) == 3):
+            if not (ring_atom.name == 'C' and len(ring_atom.bond_partners) == 3):
                 break
         else:
             return ring[0]  # Only return one direction of the ring.

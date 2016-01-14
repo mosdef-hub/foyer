@@ -63,7 +63,7 @@ def trappeua_O_C(atom):
 @Whitelist('O_est')
 @Blacklist('O_C')
 def trappeua_O_est(atom):
-    for neighbor in atom.neighbors:
+    for neighbor in atom.bond_partners:
         if check_atom(neighbor, 'C2_est'):
             return True
     return False

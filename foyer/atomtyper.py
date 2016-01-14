@@ -5,6 +5,7 @@ from warnings import warn
 
 import matplotlib.pyplot as plt
 import networkx as nx
+from oset import oset as OrderedSet
 
 # Map rule ids to the functions that check for them (see `find_atomtypes()`).
 RULE_NUMBER_TO_RULE = dict()
@@ -52,6 +53,10 @@ def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
     NEIGHBOR_TYPES_MAP.clear()
     NEIGHBOR_WHITELIST_MAP.clear()
     RULE_NUMBER_TO_DOC_STRING.clear()
+
+    for atom in atoms:
+        atom.whitelist = OrderedSet()
+        atom.blacklist = OrderedSet()
 
     _load_rules(forcefield.lower())
     _build_rule_map()
@@ -132,12 +137,12 @@ def _iterate_rules(atoms, max_iter=10):
 
             # Only run rules with matching element and neighbor counts.
             if atom.name in RULE_MAP:
-                if len(atom.neighbors) in RULE_MAP[atom.name]:
-                    for rule in RULE_MAP[atom.name][len(atom.neighbors)]:
+                if len(atom.bond_partners) in RULE_MAP[atom.name]:
+                    for rule in RULE_MAP[atom.name][len(atom.bond_partners)]:
                         run_rule(atom, rule)
                 else:
                     warn("No rule for {}-neighbor '{}' atom".format(
-                        len(atom.neighbors), atom.name))
+                        len(atom.bond_partners), atom.name))
             else:
                 warn("No rule for atom name '{}'".format(atom.name))
 
@@ -173,11 +178,11 @@ def _resolve_atomtypes(atoms, forcefield):
             prefix = ''
 
         if len(atomtype) == 1:
-            atom.atomtype = (0, prefix + atomtype[0])
+            atom.type = prefix + atomtype[0]
         else:
             warn("CHECK YOUR TOPOLOGY. Found multiple or no types for atom "
                  "{0} ({1}): {2}.".format(i, atom.name, atomtype))
-            atom.atomtype = (0, ', '.join(atomtype))
+            atom.type = ', '.join(atomtype)
 
 
 def neighbor_element_types(atom):
@@ -194,7 +199,7 @@ def neighbor_element_types(atom):
     """
     if atom not in NEIGHBOR_TYPES_MAP:
         neighbors = defaultdict(int)
-        for neighbor in atom.neighbors:
+        for neighbor in atom.bond_partners:
             name = neighbor.name
             neighbors[name] += 1
         NEIGHBOR_TYPES_MAP[atom] = neighbors
@@ -224,7 +229,7 @@ def neighbor_whitelist_types(atom):
 
 def increment_neighbor_whitelist(atom, whitelist_type):
     """Increment the counts in an atom's `NEIGHBOR_WHITELIST_MAP` entry. """
-    for neighbor in atom.neighbors:
+    for neighbor in atom.bond_partners:
         if neighbor not in NEIGHBOR_WHITELIST_MAP:
             NEIGHBOR_WHITELIST_MAP[neighbor] = defaultdict(int)
         NEIGHBOR_WHITELIST_MAP[neighbor][whitelist_type] += 1
@@ -302,7 +307,7 @@ class NeighborCount(RuleDecorator):
         self.extract_doc_string(func)
 
         def wrapped(atom):  # this must be called 'wrapped'
-            if len(atom.neighbors) == self.count:
+            if len(atom.bond_partners) == self.count:
                 return func(atom)
         return wrapped
 

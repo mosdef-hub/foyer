@@ -22,21 +22,3 @@ def uff_C_3(atom):
 def uff_H_(atom):
     """ """
     return True
-
-
-if __name__ == "__main__":
-
-    from foyer.atomtyper import find_atomtypes
-    from foyer.forcefield import prepare_atoms
-
-    from mbuild.examples.methane.methane import Methane
-
-    m = Methane()
-    # m = Ethane()
-
-    traj = m.to_trajectory()
-    prepare_atoms(traj.top)
-    find_atomtypes(traj.top._atoms, forcefield='UFF')
-
-    for atom in traj.top._atoms:
-        print("Atom name={}, opls_type={}".format(atom.name, atom.atomtype))
