@@ -1,6 +1,6 @@
 # Create the docs and push them to github pages
 # ---------------------------------------------
-conda install --yes sphinx numpydoc openmm networkx matplotlib ipython-notebook
+conda install --yes sphinx numpydoc networkx matplotlib ipython-notebook
 
 python setup.py develop
 
