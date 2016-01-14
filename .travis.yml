@@ -10,9 +10,11 @@ install:
   - source devtools/travis-ci/install.sh
 
 script:
-  - conda config --add channels https://conda.anaconda.org/imodels
-  - conda config --add channels https://conda.anaconda.org/omnia
-  - conda config --add channels https://conda.anaconda.org/patrickfuller
+  - conda config --add channels imodels
+  - conda config --add channels omnia
+  - conda config --add channels patrickfuller
+  - conda update conda
+  - conda update -y conda-build
   - conda build devtools/conda-recipe
 
 env:
