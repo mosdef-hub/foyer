@@ -13,13 +13,16 @@ from foyer.atomtyper import find_atomtypes
 class TestOPLS(BaseTest):
 
     resource_dir = resource_filename('foyer', '../opls_validation')
-    top_files = glob.glob(os.path.join(resource_dir, '*.top'))
+    top_files = set(glob.glob(os.path.join(resource_dir, '*.top')))
 
     # Please update this file if you implement atom typing for a test case.
-    implemented_tests_path = os.path.join(os.path.dirname(__file__), 'implemented_opls_tests.txt')
-    correctly_implemented = [line.strip() for line in open(implemented_tests_path)]
+    implemented_tests_path = os.path.join(os.path.dirname(__file__),
+                                          'implemented_opls_tests.txt')
+    correctly_implemented = [line.split() for line in open(implemented_tests_path)]
+    correctly_implemented_mol_names = {x[0] for x in correctly_implemented}
+    correctly_implemented_top_files = {x[1] for x in correctly_implemented}
 
-    @pytest.mark.parametrize('top_path', top_files)
+    @pytest.mark.parametrize('top_path', correctly_implemented_top_files)
     def test_atomtyping(self, top_path, only_run=None):
         base_path, top_filename = os.path.split(top_path)
         gro_file = '{}-gas.gro'.format(top_filename[:-4])
@@ -29,14 +32,10 @@ class TestOPLS(BaseTest):
         structure.title = structure.title.replace(' GAS', '')
         known_opls_types = [atom.type for atom in structure.atoms]
 
-        #if structure.title not in self.correctly_implemented:
-        #    raise NotImplementedError('"{}" has not yet been correctly implemented'.format(structure.title))
-
         print("Typing {} ({})...".format(structure.title, top_filename))
         find_atomtypes(structure.atoms, forcefield='OPLS-AA', debug=False)
 
         generated_opls_types = list()
-
         for i, atom in enumerate(structure.atoms):
             message = ('Found multiple or no OPLS types for atom {} in {} ({}): {}\n'
                        'Should be atomtype: {}'.format(
@@ -52,9 +51,7 @@ class TestOPLS(BaseTest):
             list(zip(n_types, generated_opls_types, known_opls_types)))
 
         assert all([a == b for a, b in both]), message
-        if structure.title not in self.correctly_implemented:
-            print('New one!')
-        print("Passed!")
+        return structure.title
 
     def test_full_parameterization(self, ethane):
         structure = ethane.to_parmed(title='ethane')
@@ -63,6 +60,11 @@ class TestOPLS(BaseTest):
         assert sum((1 for at in parameterized.atoms if at.type == 'opls_135')) == 2
         assert sum((1 for at in parameterized.atoms if at.type == 'opls_140')) == 6
         assert len(parameterized.bonds) == 7
+        assert all(x.type for x in parameterized.bonds)
+        assert len(parameterized.angles) == 12
+        assert all(x.type for x in parameterized.angles)
+        assert len(parameterized.rb_torsions) == 9
+        assert all(x.type for x in parameterized.dihedrals)
 
     def find_topfile_by_mol_name(self, mol_name):
         for top_file in self.top_files:
@@ -70,12 +72,24 @@ class TestOPLS(BaseTest):
                 if mol_name in fh.read():
                     return top_file
 
+    def find_correctly_implemented(self):
+        with open(self.implemented_tests_path, 'a') as fh:
+            for top in self.top_files:
+                try:
+                    mol_name = self.test_atomtyping(top)
+                except:
+                    continue
+                else:
+                    if top not in self.correctly_implemented_top_files:
+                        fh.write('{} {}\n'.format(mol_name, top))
+
+
 if __name__ == "__main__":
     test_class = TestOPLS()
 
-    mol = 'benzene'
-    top_path = test_class.find_topfile_by_mol_name(mol)
-    test_class.test_atomtyping(top_path, only_run=mol)
+    # mol = 'ethylbenzene'
+    # top_path = test_class.find_topfile_by_mol_name(mol)
+    # test_class.test_atomtyping(top_path, only_run=mol)
 
-    # test_class.test_atomtyping()
+    test_class.find_correctly_implemented()
 

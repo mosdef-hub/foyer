@@ -1,14 +1,24 @@
-ethylbenzene
-styrene
-benzyl-alcohol
-benzylaldehyde
-biphenyl
-benzene
-nitrobenzene
-acetophenone
-isopropylbenzene
-trifluoromethyl-benzene
-ethylene-carbonate
-gamma-butyrolactone
-124-trimethylbenzene
-anisole
+triethyl-phosphate /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/78-40-0.top
+o-xylene /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/95-47-6.top
+ethylbenzene /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/100-41-4.top
+dimethylether /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/115-10-6.top
+ethyl-propanoate /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/105-37-3.top
+styrene /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/100-42-5.top
+benzyl-alcohol /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/100-51-6.top
+nitrobenzene /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/98-95-3.top
+124-trimethylbenzene /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/95-63-6.top
+benzene /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/benzene.top
+biphenyl /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/biphenyl.top
+gamma-butyrolactone /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/96-48-0.top
+E-hex-2-ene /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/4050-45-7.top
+acetophenone /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/98-86-2.top
+ethylene-carbonate /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/96-49-1.top
+ethyl-acetate /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/141-78-6.top
+acetic-anhydride /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/108-24-7.top
+isobutane /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/75-28-5.top
+trifluoromethyl-benzene /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/98-08-8.top
+benzaldehyde /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/100-52-7.top
+toluene /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/108-88-3.top
+12-dimethoxybenzene /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/91-16-7.top
+isopropylbenzene /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/98-82-8.top
+anisole /Users/ctk3b/science/python/imodels/foyer/foyer/../opls_validation/100-66-3.top

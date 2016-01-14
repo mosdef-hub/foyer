@@ -17,7 +17,7 @@ test:
   requires:
     - pytest
   commands:
-    - py.test -v --pyargs foyer
+    - py.test -v --tb=short --pyargs foyer
 
 about:
   home: http://imodels.github.io/foyer

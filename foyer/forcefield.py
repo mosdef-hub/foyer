@@ -71,8 +71,6 @@ def create_dihedrals(structure, node_1, neighbors_1, node_2, neighbors_2):
     for pair in itertools.product(neighbors_1, neighbors_2):
         if pair[0] != pair[1]:
             dihedral = pmd.Dihedral(pair[0], node_1, node_2, pair[1])
-            import pdb; pdb.set_trace()
-            # CHECK WHAT HAPPENS IN PARAMETERIZE AFTER LOOKING AT DIH AND THEN RB
             structure.dihedrals.append(dihedral)
             structure.rb_torsions.append(dihedral)
 
