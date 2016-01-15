@@ -44,8 +44,7 @@ acetonitrile                 3
      3      1
      4      1
      5      1     6  2 3 4 
-     6      6     5  1
-     7      7
+     6      5  1
 
 [ angles ]
 ;  ai    aj    ak funct            c0            c1            c2            c3

@@ -1,2 +1,1 @@
-short_version = "0.1.0"
-version = short_version + "dev0"
+version="0.1.0.dev0"

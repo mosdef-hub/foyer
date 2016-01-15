@@ -122,7 +122,7 @@ def opls_144(atom):
     """alkene H (H-C=) """
     # Make sure that the carbon is an alkene carbon.
     rule_ids = [141, 142, 143]
-    return check_atom(atom.neighbors[0], rule_ids)
+    return check_atom(atom.bond_partners[0], rule_ids)
 
 
 @Element('C')
@@ -238,7 +238,7 @@ def opls_181(atom):
 def opls_185(atom):
     """H(COR): alpha H ether """
     rule_ids = [181, 182, 183, 184]
-    return check_atom(atom.neighbors[0], rule_ids)
+    return check_atom(atom.bond_partners[0], rule_ids)
 
 
 @Element('C')
@@ -322,7 +322,7 @@ def opls_263(atom):
 @Whitelist(264)
 def opls_264(atom):
     """Cl chlorobenzene """
-    return benzene(atom.neighbors[0])
+    return benzene(atom.bond_partners[0])
 
 
 @Element('O')
@@ -343,7 +343,7 @@ def opls_278(atom):
 def opls_279(atom):
     """AA H-alpha in aldehyde & formamide """
     # TODO: 232 needs to blacklist 277
-    return check_atom(atom.neighbors[0], [232, 277])
+    return check_atom(atom.bond_partners[0], [232, 277])
     #return True
 
 
@@ -589,8 +589,8 @@ def opls_768(atom):
 @Blacklist(278)
 def opls_771(atom):
     """propylene carbonate O """
-    if dioxolane13(atom.neighbors[0]):
-        for neighbors_neighbor in atom.neighbors[0].neighbors:
+    if dioxolane13(atom.bond_partners[0]):
+        for neighbors_neighbor in atom.bond_partners[0].bond_partners:
             if neighbors_neighbor.name != 'O':
                 return False
         else:

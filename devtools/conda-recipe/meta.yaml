@@ -9,15 +9,17 @@ requirements:
   run:
     - python
     - matplotlib
+    - parmed
     - networkx
-    - openmm
+    - oset
+    - six
 
 test:
   requires:
     - pytest
     - mbuild
   commands:
-    - py.test --pyargs foyer
+    - py.test -v --tb=short --pyargs foyer
 
 about:
   home: http://imodels.github.io/foyer
