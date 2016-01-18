@@ -36,11 +36,14 @@ class TestOPLS(BaseTest):
                 except:
                     continue
                 else:
-                    if top not in self.correctly_implemented_top_files:
-                        fh.write('{} {}\n'.format(mol_name, top))
+                    basename = os.path.basename(top)
+                    if basename not in self.correctly_implemented_top_files:
+                        fh.write('{} {}\n'.format(mol_name, basename))
 
     @pytest.mark.parametrize('top_path', correctly_implemented_top_files)
     def test_atomtyping(self, top_path, only_run=None):
+        top_path = os.path.join(self.resource_dir, top_path)
+
         base_path, top_filename = os.path.split(top_path)
         gro_file = '{}-gas.gro'.format(top_filename[:-4])
         gro_path = os.path.join(base_path, gro_file)
