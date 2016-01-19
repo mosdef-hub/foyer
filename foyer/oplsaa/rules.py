@@ -680,7 +680,7 @@ def get_opls_fn(name):
     import os
     from pkg_resources import resource_filename
 
-    fn = resource_filename('mbuild',
+    fn = resource_filename('foyer',
                            os.path.join('..', 'opls_validation', name))
     if not os.path.exists(fn):
         raise ValueError('Sorry! {} does not exists. If you just '
@@ -690,8 +690,7 @@ def get_opls_fn(name):
 
 if __name__ == "__main__":
     import mbuild as mb
-    from foyer.atomtyper import find_atomtypes
-    from foyer.forcefield import prepare_atoms
+    from foyer.forcefield import apply_forcefield
 
     # m = Methane()
     # m = Ethane()
@@ -702,9 +701,8 @@ if __name__ == "__main__":
     # m = mb.load(get_opls_fn('1-propene.pdb'))
     # m = mb.load(get_opls_fn('biphenyl.pdb'))
 
-    traj = m.to_trajectory()
-    prepare_atoms(traj.top)
-    find_atomtypes(traj.top._atoms, forcefield='OPLS-AA')
+    struct = m.to_parmed()
+    apply_forcefield(struct, forcefield='OPLS-AA')
 
-    for i, a in enumerate(traj.top._atoms):
-        print("Atom name={}, opls_type={}".format(a.name, a.atomtype))
+    for i, a in enumerate(struct.atoms):
+        print("Atom name={}, opls_type={}".format(a.name, a.atom_type))
