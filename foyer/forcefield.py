@@ -28,7 +28,7 @@ def apply_forcefield(structure, forcefield, debug=False):
 
     find_atomtypes(structure.atoms, forcefield, debug=debug)
 
-    if structure.box.any():
+    if hasattr(structure, 'box'):
         ff.box = structure.box
     ff.atoms = structure.atoms
     ff.bonds = structure.bonds
