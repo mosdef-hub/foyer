@@ -4,7 +4,7 @@
 ; Carl Caleman, Paul J. van Maaren, Minyan Hong, Jochen S. Hub, Luciano T. Costa and David van der Spoel, Force Field Benchmark of Organic Liquids: Density, Enthalpy of Vaporization, Heat Capacities, Surface Tension, Isothermal Compressibility, Volumetric Expansion Coefficient, and Dielectric Constant, J. Chem. Theor. Comput. 8 (2012) http://dx.doi.org/10.1021/ct200731v
 ;
 ;
-#include "oplsaaff.itp"
+#include "oplsaa.ff/forcefield.itp"
 [ moleculetype ]
 ; Name            nrexcl
 2-heptanone  3
