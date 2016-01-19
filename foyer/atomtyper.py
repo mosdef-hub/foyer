@@ -6,6 +6,7 @@ from warnings import warn
 import matplotlib.pyplot as plt
 import networkx as nx
 from oset import oset as OrderedSet
+import parmed.periodic_table as pt
 
 # Map rule ids to the functions that check for them (see `find_atomtypes()`).
 RULE_NUMBER_TO_RULE = dict()
@@ -57,6 +58,7 @@ def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
     for atom in atoms:
         atom.whitelist = OrderedSet()
         atom.blacklist = OrderedSet()
+        atom.element_name = pt.Element[atom.element]
 
     _load_rules(forcefield.lower())
     _build_rule_map()
@@ -136,15 +138,15 @@ def _iterate_rules(atoms, max_iter=10):
             old_len += len(atom.blacklist)
 
             # Only run rules with matching element and neighbor counts.
-            if atom.name in RULE_MAP:
-                if len(atom.bond_partners) in RULE_MAP[atom.name]:
-                    for rule in RULE_MAP[atom.name][len(atom.bond_partners)]:
+            if atom.element_name in RULE_MAP:
+                if len(atom.bond_partners) in RULE_MAP[atom.element_name]:
+                    for rule in RULE_MAP[atom.element_name][len(atom.bond_partners)]:
                         run_rule(atom, rule)
                 else:
                     warn("No rule for {}-neighbor '{}' atom".format(
-                        len(atom.bond_partners), atom.name))
+                        len(atom.bond_partners), atom.element_name))
             else:
-                warn("No rule for atom name '{}'".format(atom.name))
+                warn("No rule for atom name '{}'".format(atom.element_name))
 
             new_len += len(atom.whitelist)
             new_len += len(atom.blacklist)
@@ -181,7 +183,7 @@ def _resolve_atomtypes(atoms, forcefield):
             atom.type = prefix + atomtype[0]
         else:
             warn("CHECK YOUR TOPOLOGY. Found multiple or no types for atom "
-                 "{0} ({1}): {2}.".format(i, atom.name, atomtype))
+                 "{0} ({1}): {2}.".format(i, atom.element_name, atomtype))
             atom.type = ', '.join(atomtype)
 
 
@@ -277,7 +279,7 @@ class Element(RuleDecorator):
         self.extract_doc_string(func)
 
         def wrapped(atom):  # this must be called 'wrapped'
-            if atom.name == self.element_type:
+            if atom.element_name == self.element_type:
                 return func(atom)
         return wrapped
 
