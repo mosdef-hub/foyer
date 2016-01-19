@@ -1,5 +1,6 @@
 import itertools
 import os
+from warnings import warn
 
 import networkx as nx
 import parmed.gromacs as gmx
@@ -12,6 +13,8 @@ from foyer.atomtyper import find_atomtypes
 
 def apply_forcefield(structure, forcefield, debug=False):
     """Apply a forcefield to a Topology. """
+    if not structure.bonds:
+        warn('Structure contains no bonds: \n{}\n'.format(structure))
     if isinstance(forcefield, string_types):
         if forcefield.lower() in ['opls-aa', 'oplsaa', 'opls']:
             ff_path = os.path.join(gmx.GROMACS_TOPDIR, 'oplsaa.ff/forcefield.itp')
@@ -25,7 +28,8 @@ def apply_forcefield(structure, forcefield, debug=False):
 
     find_atomtypes(structure.atoms, forcefield, debug=debug)
 
-    ff.box = structure.box
+    if structure.box.any():
+        ff.box = structure.box
     ff.atoms = structure.atoms
     ff.bonds = structure.bonds
     create_bonded_forces(ff)
