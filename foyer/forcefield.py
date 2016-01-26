@@ -17,7 +17,10 @@ def apply_forcefield(structure, forcefield, debug=False):
         warn('Structure contains no bonds: \n{}\n'.format(structure))
     if isinstance(forcefield, string_types):
         if forcefield.lower() in ['opls-aa', 'oplsaa', 'opls']:
-            ff_path = os.path.join(gmx.GROMACS_TOPDIR, 'oplsaa.ff/forcefield.itp')
+            if os.path.isdir('oplsaa.ff'):
+                ff_path = 'oplsaa.ff/forcefield.itp'
+            else:
+                ff_path = os.path.join(gmx.GROMACS_TOPDIR, 'oplsaa.ff/forcefield.itp')
         elif forcefield.lower() in ['trappeua']:
             ff_path = os.path.join(gmx.GROMACS_TOPDIR, 'trappeua.ff/forcefield.itp')
         else:

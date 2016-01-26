@@ -90,9 +90,9 @@ class TestOPLS(BaseTest):
 if __name__ == "__main__":
     test_class = TestOPLS()
 
-    mol = 'anisole'
-    top_path = test_class.find_topfile_by_mol_name(mol)
-    test_class.test_atomtyping(top_path, only_run=mol)
+    # mol = 'anisole'
+    # top_path = test_class.find_topfile_by_mol_name(mol)
+    # test_class.test_atomtyping(top_path, only_run=mol)
 
-    #test_class.find_correctly_implemented()
+    test_class.find_correctly_implemented()
 
