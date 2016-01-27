@@ -22,3 +22,6 @@ trifluoromethyl-benzene 98-08-8.top
 acetophenone 98-86-2.top
 E-hex-2-ene 4050-45-7.top
 o-xylene 95-47-6.top
+tetrahydrofuran 109-99-9.top
+dibutyl-ether 142-96-1.top
+diethylene-glycol-dimethyl-ether 111-96-6.top

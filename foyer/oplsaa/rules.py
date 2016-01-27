@@ -230,6 +230,38 @@ def opls_181(atom):
     return True
 
 
+@Element('C')
+@NeighborCount(4)
+@NeighborsExactly('H', 2)
+@NeighborsExactly(180, 1)
+@NeighborsExactly('C', 1)
+@Whitelist(182)
+def opls_182(atom):
+    """C(H2OR): ethyl ether """
+    return True
+
+
+@Element('C')
+@NeighborCount(3)
+@NeighborsExactly('H', 1)
+@NeighborsExactly(180, 1)
+@NeighborsExactly('C', 1)
+@Whitelist(183)
+def opls_183(atom):
+    """C(HOR): i-PR ether, allose"""
+    return True
+
+
+@Element('C')
+@NeighborCount(2)
+@NeighborsExactly('O', 1)
+@NeighborsExactly('C', 1)
+@Whitelist(184)
+def opls_184(atom):
+    """C(OR): t-Bu ether """
+    return True
+
+
 @Element('H')
 @NeighborCount(1)
 @NeighborsExactly('C', 1)
@@ -237,7 +269,7 @@ def opls_181(atom):
 @Blacklist([140, 144])
 def opls_185(atom):
     """H(COR): alpha H ether """
-    rule_ids = [181, 182, 183, 184]
+    rule_ids = [181, 182, 183]
     return check_atom(atom.bond_partners[0], rule_ids)
 
 
@@ -261,6 +293,7 @@ def opls_199(atom):
 @NeighborsExactly(145, 1)
 @NeighborsExactly('H', 2)
 @Whitelist(218)
+@Blacklist(182)
 def opls_218(atom):
     """C in CH2OH - benzyl alcohols """
     return True
@@ -286,6 +319,7 @@ def opls_221(atom):
 @NeighborsExactly('O', 1)
 @NeighborsExactly(278, 1)
 @Whitelist(232)
+@Blacklist(277)
 def opls_232(atom):
     """C: C=0 in benzaldehyde, acetophenone (CH) """
     return True
@@ -325,6 +359,16 @@ def opls_264(atom):
     return benzene(atom.bond_partners[0])
 
 
+@Element('C')
+@NeighborCount(3)
+@NeighborsExactly('O', 1)
+@NeighborsExactly('H', 1)
+@Whitelist(277)
+def opls_277(atom):
+    """AA C: aldehyde """
+    return True
+
+
 @Element('O')
 @NeighborCount(1)
 @NeighborsExactly('C', 1)
@@ -337,14 +381,11 @@ def opls_278(atom):
 @Element('H')
 @NeighborCount(1)
 @NeighborsExactly('C', 1)
-#@NeighborsExactly(277, 1)
 @Whitelist(279)
-@Blacklist(140)
+@Blacklist([140, 185])
 def opls_279(atom):
     """AA H-alpha in aldehyde & formamide """
-    # TODO: 232 needs to blacklist 277
     return check_atom(atom.bond_partners[0], [232, 277])
-    #return True
 
 
 @Element('O')
@@ -421,6 +462,7 @@ def opls_442(atom):
 @NeighborsExactly(442, 1)
 @NeighborsAtLeast('H', 2)
 @Whitelist(443)
+@Blacklist(182)
 def opls_443(atom):
     """C in Me2PO4-, Me2PO4H   dimethylphosphate """
     # TODO: check validity of using this for -CH2-O-P(=O)(-O^-)-O-CH2-
@@ -432,7 +474,7 @@ def opls_443(atom):
 @NeighborsExactly('C', 1)
 @NeighborsExactly(443, 1)
 @Whitelist(444)
-@Blacklist([140, 144])
+@Blacklist([140, 144, 185])
 def opls_444(atom):
     """H in Me2PO4-, Me2PO4H   6-31+G* CHELPG """
     # TODO: check validity of using this for -CH2-O-P(=O)(-O^-)-O-CH2-
@@ -487,7 +529,7 @@ def opls_468(atom):
 @NeighborsExactly('C', 1)
 @NeighborsExactly(490, 1)
 @Whitelist(469)
-@Blacklist(140)
+@Blacklist([140, 185])
 def opls_469(atom):
     """methoxy Hs in esters """
     return True
@@ -500,6 +542,7 @@ def opls_469(atom):
 @NeighborsExactly(467, 1)
 @NeighborsExactly('H', 2)
 @Whitelist(490)
+@Blacklist(182)
 def opls_490(atom):
     """C(H2OS) ethyl ester """
     return True
@@ -623,7 +666,7 @@ def opls_773(atom):
 @NeighborsExactly('O', 1)
 @NeighborsExactly('H', 2)
 @Whitelist(774)
-@Blacklist([218, 490])
+@Blacklist([182, 218, 490])
 def opls_774(atom):
     """propylene carbonate C in CH2 """
     return dioxolane13(atom)
@@ -634,7 +677,7 @@ def opls_774(atom):
 @NeighborsExactly('C', 1)
 @NeighborsExactly('774', 1)
 @Whitelist(777)
-@Blacklist(140)
+@Blacklist([140, 185])
 def opls_777(atom):
     """propylene carbonate H in CH2 """
     return True
@@ -649,23 +692,6 @@ def opls_777(atom):
 @Blacklist(145)
 def opls_916(atom):
     """C(NH2) aniline """
-    return True
-
-@Element('Si')
-@NeighborCount(4)
-@NeighborsExactly('C', 2)
-@NeighborsExactly('O', 2)
-@Whitelist(1000)
-def opls_1000(atom):
-    """OMCTS Si fudged"""
-    return True
-
-@Element('O')
-@NeighborCount(2)
-@NeighborsExactly('Si', 2)
-@Whitelist(1001)
-def opls_1001(atom):
-    """OMCTS O fudged"""
     return True
 
 

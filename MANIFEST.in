@@ -1,2 +1,2 @@
-global-include *.pdb *.mol2
+include opls_validation/*
 include requirements.txt
