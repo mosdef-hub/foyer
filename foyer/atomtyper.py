@@ -43,7 +43,6 @@ def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
 
     See also
     --------
-    forcefield.prepare_atoms
     _sanitize
 
     """
@@ -58,7 +57,11 @@ def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
     for atom in atoms:
         atom.whitelist = OrderedSet()
         atom.blacklist = OrderedSet()
-        atom.element_name = pt.Element[atom.element]
+        if atom.element:
+            atom.element_name = pt.Element[atom.element]
+        else:
+            # TODO: more robust element detection
+            atom.element_name = atom.name
 
     _load_rules(forcefield.lower())
     _build_rule_map()
@@ -202,7 +205,7 @@ def neighbor_element_types(atom):
     if atom not in NEIGHBOR_TYPES_MAP:
         neighbors = defaultdict(int)
         for neighbor in atom.bond_partners:
-            name = neighbor.name
+            name = neighbor.element_name
             neighbors[name] += 1
         NEIGHBOR_TYPES_MAP[atom] = neighbors
     return NEIGHBOR_TYPES_MAP[atom]

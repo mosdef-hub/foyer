@@ -2,6 +2,7 @@ import glob
 import os
 
 from mbuild.tests.base_test import BaseTest
+import numpy as np
 import parmed as pmd
 from pkg_resources import resource_filename
 import pytest
@@ -65,12 +66,17 @@ class TestOPLS(BaseTest):
             generated_opls_types.append(atom.type)
         both = zip(generated_opls_types, known_opls_types)
 
-        n_types = range(len(generated_opls_types))
+        n_types = np.array(range(len(generated_opls_types)))
+        known_opls_types = np.array(known_opls_types)
+        generated_opls_types = np.array(generated_opls_types)
+
+        non_matches = np.array([a != b for a, b in both])
         message = "Found inconsistent OPLS types in {} ({}): {}".format(
             structure.title, top_filename,
-            list(zip(n_types, generated_opls_types, known_opls_types)))
-
-        assert all([a == b for a, b in both]), message
+            list(zip(n_types[non_matches],
+                     generated_opls_types[non_matches],
+                     known_opls_types[non_matches])))
+        assert not non_matches.any(), message
         return structure.title
 
     def test_full_parameterization(self, ethane):
@@ -90,9 +96,10 @@ class TestOPLS(BaseTest):
 if __name__ == "__main__":
     test_class = TestOPLS()
 
-    mol = 'anisole'
-    top_path = test_class.find_topfile_by_mol_name(mol)
-    test_class.test_atomtyping(top_path, only_run=mol)
+    # mol = 'acetophenone'
+    # mol = 'benzyl-alcohol'
+    # top_path = test_class.find_topfile_by_mol_name(mol)
+    # test_class.test_atomtyping(top_path, only_run=mol)
 
-    #test_class.find_correctly_implemented()
+    test_class.find_correctly_implemented()
 
