@@ -35,6 +35,7 @@ def apply_forcefield(structure, forcefield, debug=False):
         ff.box = structure.box
     ff.atoms = structure.atoms
     ff.bonds = structure.bonds
+    ff.residues = structure.residues
     create_bonded_forces(ff)
     ff.parametrize()
     return ff
