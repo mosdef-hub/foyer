@@ -427,28 +427,35 @@ def opls_292(atom):
     """C in RCH2NH3+ """
     return True
 
+
 @Element('P')
 @NeighborCount(4)
 @NeighborsExactly('O', 4)
 @Whitelist(440)
 def opls_440(atom):
     """P in Me2PO4-, Me2PO4H """
-    return True
+    carbons_two_bonds_away = 0
+    for neighbor in atom.bond_partners:
+        for neighbors_neighbor in neighbor.bond_partners:
+            if neighbors_neighbor.element_name == 'C':
+                carbons_two_bonds_away += 1
+
+    if carbons_two_bonds_away >= 2:
+        return True
 
 
 @Element('O')
 @NeighborCount(1)
-@NeighborsExactly('P', 1)
+@NeighborsExactly(440, 1)
 @Whitelist(441)
 def opls_441(atom):
     """O= in Me2PO4-, Me2PO4H """
-    # TODO: check validity of using this for -CH2-O-P(=O)(-O^-)-O-CH2-
     return True
 
 
 @Element('O')
 @NeighborCount(2)
-@NeighborsExactly('P', 1)
+@NeighborsExactly(440, 1)
 @NeighborsExactly('C', 1)
 @Whitelist(442)
 def opls_442(atom):
@@ -465,19 +472,73 @@ def opls_442(atom):
 @Blacklist(182)
 def opls_443(atom):
     """C in Me2PO4-, Me2PO4H   dimethylphosphate """
-    # TODO: check validity of using this for -CH2-O-P(=O)(-O^-)-O-CH2-
     return True
 
 
 @Element('H')
 @NeighborCount(1)
-@NeighborsExactly('C', 1)
 @NeighborsExactly(443, 1)
 @Whitelist(444)
 @Blacklist([140, 144, 185])
 def opls_444(atom):
     """H in Me2PO4-, Me2PO4H   6-31+G* CHELPG """
-    # TODO: check validity of using this for -CH2-O-P(=O)(-O^-)-O-CH2-
+    return True
+
+
+@Element('P')
+@NeighborCount(4)
+@NeighborsExactly('O', 4)
+@Whitelist(445)
+def opls_445(atom):
+    """P in MeOPO3-, MeOPO3H2"""
+    carbons_two_bonds_away = 0
+    for neighbor in atom.bond_partners:
+        for neighbors_neighbor in neighbor.bond_partners:
+            if neighbors_neighbor.element_name == 'C':
+                carbons_two_bonds_away += 1
+
+    if carbons_two_bonds_away == 1:
+        return True
+
+
+@Element('O')
+@NeighborCount(1)
+@NeighborsExactly(445, 1)
+@Whitelist(446)
+def opls_446(atom):
+    """O= in MeOPO3-, MeOPO3H """
+    return True
+
+
+@Element('O')
+@NeighborCount(2)
+@NeighborsExactly(445, 1)
+@NeighborsExactly('C', 1)
+@Whitelist(447)
+def opls_447(atom):
+    """OMe in MeOPO3-, MeOPO3H   dimethylphosphate """
+    return True
+
+
+@Element('C')
+@NeighborCount(4)
+@NeighborsExactly('O', 1)
+@NeighborsExactly(447, 1)
+@NeighborsAtLeast('H', 2)
+@Whitelist(448)
+@Blacklist(182)
+def opls_448(atom):
+    """C in MeOPO3-, MeOPO3H """
+    return True
+
+
+@Element('H')
+@NeighborCount(1)
+@NeighborsExactly(448, 1)
+@Whitelist(449)
+@Blacklist([140, 144, 185])
+def opls_449(atom):
+    """H in MeOPO3-, MeOPO3H """
     return True
 
 
@@ -695,40 +756,123 @@ def opls_916(atom):
     return True
 
 
-def get_opls_fn(name):
-    """Get the full path to a file used to validate the OPLS-aa atomtyper.
-
-    In the mbuild source distribution, these files are in ``opls_validation``.
-
-    Args:
-        name (str): Name of the file to load.
-    """
-    import os
-    from pkg_resources import resource_filename
-
-    fn = resource_filename('foyer',
-                           os.path.join('..', 'opls_validation', name))
-    if not os.path.exists(fn):
-        raise ValueError('Sorry! {} does not exists. If you just '
-                         'added it, you\'ll have to re-install'.format(fn))
-    return fn
+@Element('O')
+@NeighborCount(2)
+@NeighborsExactly('Si', 2)
+@Whitelist(1001)
+def opls_1001(atom):
+    """Bulk silica oxygen """
+    return True
 
 
-if __name__ == "__main__":
-    import mbuild as mb
-    from foyer.forcefield import apply_forcefield
+@Element('Si')
+@NeighborCount(4)
+@NeighborsExactly('O', 4)
+@Whitelist(1002)
+def opls_1002(atom):
+    """Bulk silica silicon """
+    return True
 
-    # m = Methane()
-    # m = Ethane()
-    # m = mb.load(get_opls_fn('isopropane.pdb'))
-    # m = mb.load(get_opls_fn('cyclohexane.pdb'))
-    # m = mb.load(get_opls_fn('neopentane.pdb'))
-    m = mb.load(get_opls_fn('benzene.pdb'))
-    # m = mb.load(get_opls_fn('1-propene.pdb'))
-    # m = mb.load(get_opls_fn('biphenyl.pdb'))
 
-    struct = m.to_parmed()
-    apply_forcefield(struct, forcefield='OPLS-AA')
+@Element('Si')
+@NeighborCount(3)
+@NeighborsExactly('O', 3)
+@Whitelist(1003)
+def opls_1003(atom):
+    """Bulk silica silicon """
+    return True
 
-    for i, a in enumerate(struct.atoms):
-        print("Atom name={}, opls_type={}".format(a.name, a.atom_type))
+
+@Element('Si')
+@NeighborCount(4)
+@NeighborsExactly('C', 1)
+@NeighborsExactly('O', 3)
+@Whitelist(1004)
+def opls_1004(atom):
+    """Silane silicon """
+    return True
+
+
+@Element('C')
+@NeighborCount(4)
+@NeighborsExactly('C', 1)
+@NeighborsExactly('Si', 1)
+@NeighborsExactly('H', 2)
+@Whitelist(1005)
+def opls_1005(atom):
+    """Alkane carbon bound to silane """
+    return True
+
+
+@Element('O')
+@NeighborCount(2)
+@NeighborsExactly('Si', 2)
+@Whitelist(1006)
+@Blacklist(1001)
+def opls_1006(atom):
+    """Silica surface oxygen bound to silane """
+    for neighbor in atom.bond_partners:
+        for neighbors_neighbor in neighbor.bond_partners:
+            if neighbors_neighbor.element_name != 'O':
+                return True
+
+
+@Element('O')
+@NeighborCount(2)
+@NeighborsExactly('Si', 1)
+@NeighborsExactly('H', 1)
+@Whitelist(1007)
+@Blacklist(154)
+def opls_1007(atom):
+    """Silica surface hydroxyl oxygen """
+    for neighbor in atom.bond_partners:
+        if neighbor.element_name == 'Si':
+            # Check all neighbors of the silicon...
+            for si_neighbor in neighbor.bond_partners:
+                # ...except myself...
+                if si_neighbor is atom:
+                    continue
+                # ...make sure they've been marked as bulk silica oxygen.
+                if not check_atom(si_neighbor, 1001):
+                    return False
+    return True
+
+
+@Element('H')
+@NeighborCount(1)
+@NeighborsExactly(1007, 1)
+@Whitelist(1008)
+@Blacklist(155)
+def opls_1008(atom):
+    """Silica surface hydroxyl hydrogen """
+    return True
+
+
+# @Element('O')
+# @NeighborCount(2)
+# @NeighborsExactly('Si', 1)
+# @NeighborsExactly('H', 1)
+# @Whitelist(1011)
+# @Blacklist(154)
+# def opls_1011(atom):
+#     rule_ids = [1002]
+#     check = check_atom(atom.bond_partners[0], rule_ids)
+#     if not check:
+#         check = check_atom(atom.bond_partners[1], rule_ids)
+#     return check
+
+
+# @Element('O')
+# @NeighborCount(2)
+# @NeighborsExactly('Si', 2)
+# @Whitelist(1009)
+# @Blacklist(1001)
+# def opls_1009(atom):
+#     rule_ids = [1004]
+#     check = check_atom(atom.bond_partners[0], rule_ids)
+#     if not check:
+#         check = check_atom(atom.bond_partners[1], rule_ids)
+#     return check
+
+
+

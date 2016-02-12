@@ -1,5 +1,4 @@
-"""Foyer: Atomtyping and forcefield applying.
-"""
+"""Foyer: Atomtyping and forcefield applying. """
 
 from __future__ import print_function
 
@@ -32,7 +31,7 @@ with open('requirements.txt') as reqs_file:
 setup(
     name='foyer',
     version=__version__,
-    description=__doc__.split('\n'),
+    description=__doc__.split('\n')[0],
     long_description=__doc__,
     author='Janos Sallai, Christoph Klein',
     author_email='janos.sallai@vanderbilt.edu, christoph.klein@vanderbilt.edu',
