@@ -17,6 +17,7 @@ def apply_forcefield(structure, forcefield, debug=False):
         warn('Structure contains no bonds: \n{}\n'.format(structure))
     if isinstance(forcefield, string_types):
         if forcefield.lower() in ['opls-aa', 'oplsaa', 'opls']:
+            # print("Current dir is:" + os.getcwd())
             if os.path.isdir('oplsaa.ff'):
                 ff_path = 'oplsaa.ff/forcefield.itp'
             else:
