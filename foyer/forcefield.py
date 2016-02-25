@@ -17,13 +17,14 @@ def apply_forcefield(structure, forcefield, debug=False):
         warn('Structure contains no bonds: \n{}\n'.format(structure))
     if isinstance(forcefield, string_types):
         if forcefield.lower() in ['opls-aa', 'oplsaa', 'opls']:
-            # print("Current dir is:" + os.getcwd())
             if os.path.isdir('oplsaa.ff'):
                 ff_path = 'oplsaa.ff/forcefield.itp'
             else:
-                ff_path = os.path.join(gmx.GROMACS_TOPDIR, 'oplsaa.ff/forcefield.itp')
+                ff_path = os.path.join(gmx.GROMACS_TOPDIR,
+                                       'oplsaa.ff/forcefield.itp')
         elif forcefield.lower() in ['trappeua']:
-            ff_path = os.path.join(gmx.GROMACS_TOPDIR, 'trappeua.ff/forcefield.itp')
+            ff_path = os.path.join(gmx.GROMACS_TOPDIR,
+                                   'trappeua.ff/forcefield.itp')
         else:
             raise ValueError("Unsupported forcefield: '{0}'".format(forcefield))
         ff = GromacsTopologyFile(ff_path, parametrize=False)
@@ -43,7 +44,7 @@ def apply_forcefield(structure, forcefield, debug=False):
 
 
 def create_bonded_forces(structure, angles=True, dihedrals=True,
-                         impropers=False):
+                         impropers=False, pairs=True):
     """Convert Bonds to ForcefieldBonds and find angles and dihedrals. """
     bondgraph = nx.Graph()
     bondgraph.add_edges_from(((b.atom1, b.atom2) for b in structure.bonds))
@@ -59,7 +60,8 @@ def create_bonded_forces(structure, angles=True, dihedrals=True,
                         if node_2.idx > node_1.idx:
                             neighbors_2 = bondgraph.neighbors(node_2)
                             if len(neighbors_2) > 1:
-                                create_dihedrals(structure, node_1, neighbors_1, node_2, neighbors_2)
+                                create_dihedrals(structure, node_1, neighbors_1,
+                                                 node_2, neighbors_2, pairs)
                 if impropers and len(neighbors_1) >= 3:
                     create_impropers(structure, node_1, neighbors_1)
 
@@ -71,7 +73,8 @@ def create_angles(structure, node, neighbors):
         structure.angles.append(angle)
 
 
-def create_dihedrals(structure, node_1, neighbors_1, node_2, neighbors_2):
+def create_dihedrals(structure, node_1, neighbors_1, node_2, neighbors_2,
+                     pairs=True):
     """Add all possible dihedrals around a pair of nodes to a structure. """
     # We need to make sure we don't remove the node from the neighbor lists
     # that we will be re-using in the following iterations.
@@ -85,6 +88,9 @@ def create_dihedrals(structure, node_1, neighbors_1, node_2, neighbors_2):
                 structure.dihedrals.append(dihedral)
             if structure.parameterset.rb_torsion_types:
                 structure.rb_torsions.append(dihedral)
+            if pairs:
+                pair = pmd.NonbondedException(pair[0], pair[1])
+                structure.adjusts.append(pair)
 
 
 def create_impropers(structure, node, neighbors):
