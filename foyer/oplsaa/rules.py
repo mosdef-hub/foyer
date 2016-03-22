@@ -808,7 +808,7 @@ def opls_1005(atom):
 @NeighborCount(2)
 @NeighborsExactly('Si', 2)
 @Whitelist(1006)
-@Blacklist(1001)
+@Blacklist([1001,1011])
 def opls_1006(atom):
     """Silica surface oxygen bound to silane """
     for neighbor in atom.bond_partners:
@@ -826,16 +826,8 @@ def opls_1006(atom):
 def opls_1007(atom):
     """Silica surface hydroxyl oxygen """
     for neighbor in atom.bond_partners:
-        if neighbor.element_name == 'Si':
-            # Check all neighbors of the silicon...
-            for si_neighbor in neighbor.bond_partners:
-                # ...except myself...
-                if si_neighbor is atom:
-                    continue
-                # ...make sure they've been marked as bulk silica oxygen.
-                if not check_atom(si_neighbor, 1001):
-                    return False
-    return True
+        if check_atom(neighbor, [1002,1003,1009,1010,1012]):
+            return True
 
 
 @Element('H')
@@ -847,6 +839,38 @@ def opls_1008(atom):
     """Silica surface hydroxyl hydrogen """
     return True
 
+
+@Element('Si')
+@NeighborCount(5)
+@NeighborsExactly('O', 5)
+@Whitelist(1009)
+def opls_1009(atom):
+    """Bulk silica silicon, overcoordinated """
+    return True
+
+@Element('Si')
+@NeighborCount(2)
+@NeighborsExactly('O', 2)
+@Whitelist(1010)
+def opls_1010(atom):
+    """Bulk silica silicon, undercoordinated """
+    return True
+
+@Element('O')
+@NeighborCount(1)
+@NeighborsExactly('Si', 1)
+@Whitelist(1011)
+def opls_1011(atom):
+    """Bulk silica silicon, undercoordinated """
+    return True
+
+@Element('Si')
+@NeighborCount(1)
+@NeighborsExactly('O', 1)
+@Whitelist(1012)
+def opls_1012(atom):
+    """Bulk silica silicon, undercoordinated """
+    return True
 
 # @Element('O')
 # @NeighborCount(2)
