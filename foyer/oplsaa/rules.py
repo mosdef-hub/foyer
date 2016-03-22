@@ -777,7 +777,7 @@ def opls_1002(atom):
 @Element('Si')
 @NeighborCount(3)
 @NeighborsExactly('O', 3)
-@Whitelist(1002)
+@Whitelist(1003)
 def opls_1003(atom):
     """Bulk silica silicon """
     return True
