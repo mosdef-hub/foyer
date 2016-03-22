@@ -828,16 +828,6 @@ def opls_1007(atom):
     for neighbor in atom.bond_partners:
         if check_atom(neighbor, [1002,1003,1009,1010,1012]):
             return True
-        '''
-        # Check all neighbors of the silicon...
-        for si_neighbor in neighbor.bond_partners:
-            # ...except myself...
-            if si_neighbor is atom:
-                continue
-            # ...make sure they've been marked as bulk silica oxygen.
-            if not check_atom(si_neighbor, [1001,1011]):
-                return False
-        '''
 
 
 @Element('H')
