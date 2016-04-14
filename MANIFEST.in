@@ -1,2 +1,2 @@
-include opls_validation/*
+recursive-include opls_validation *.itp *.gro *.top
 include requirements.txt
