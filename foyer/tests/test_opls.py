@@ -1,7 +1,6 @@
 import glob
 import os
 
-from mbuild.tests.base_test import BaseTest
 import numpy as np
 import parmed as pmd
 from pkg_resources import resource_filename
@@ -11,7 +10,11 @@ from foyer.forcefield import apply_forcefield
 from foyer.atomtyper import find_atomtypes
 
 
-class TestOPLS(BaseTest):
+class TestOPLS(object):
+
+    @pytest.fixture(autouse=True)
+    def initdir(self, tmpdir):
+        tmpdir.chdir()
 
     resource_dir = resource_filename('foyer', '../opls_validation')
     top_files = set(glob.glob(os.path.join(resource_dir, '*.top')))
@@ -80,17 +83,19 @@ class TestOPLS(BaseTest):
         assert not non_matches.any(), message
         return structure.title
 
-    def test_full_parameterization(self, ethane):
-        structure = ethane.to_parmed(title='ethane')
+    def test_full_parametrization(self):
+        top = os.path.join(self.resource_dir, 'benzene.top')
+        gro = os.path.join(self.resource_dir, 'benzene.gro')
+        structure = pmd.load_file(top, xyz=gro)
         parametrized = apply_forcefield(structure, forcefield='opls-aa', debug=False)
 
-        assert sum((1 for at in parametrized.atoms if at.type == 'opls_135')) == 2
-        assert sum((1 for at in parametrized.atoms if at.type == 'opls_140')) == 6
-        assert len(parametrized.bonds) == 7
+        assert sum((1 for at in parametrized.atoms if at.type == 'opls_145')) == 6
+        assert sum((1 for at in parametrized.atoms if at.type == 'opls_146')) == 6
+        assert len(parametrized.bonds) == 12
         assert all(x.type for x in parametrized.bonds)
-        assert len(parametrized.angles) == 12
+        assert len(parametrized.angles) == 18
         assert all(x.type for x in parametrized.angles)
-        assert len(parametrized.rb_torsions) == 9
+        assert len(parametrized.rb_torsions) == 24
         assert all(x.type for x in parametrized.dihedrals)
 
 
