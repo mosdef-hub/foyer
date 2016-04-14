@@ -8,7 +8,9 @@ from parmed.gromacs import GromacsTopologyFile
 import parmed as pmd
 from six import string_types
 
-from foyer.atomtyper import find_atomtypes
+from foyer.atomtyper import find_atomtypes, OPLS_ALIASES
+
+OPLS_ALIASES = ('opls-aa', 'oplsaa', 'opls')
 
 
 def apply_forcefield(structure, forcefield, debug=False):
@@ -26,10 +28,13 @@ def apply_forcefield(structure, forcefield, debug=False):
             ff_path = os.path.join(gmx.GROMACS_TOPDIR,
                                    'trappeua.ff/forcefield.itp')
         else:
-            raise ValueError("Unsupported forcefield: '{0}'".format(forcefield))
+            ff_path = forcefield
+            # TODO: this is a patchwork fix until rules and FF files become one
+            forcefield = forcefield.lower()
+            for alias in OPLS_ALIASES:
+                if alias in forcefield:
+                    forcefield = 'oplsaa'
         ff = GromacsTopologyFile(ff_path, parametrize=False)
-    elif isinstance(forcefield, pmd.Structure):
-        ff = forcefield
 
     find_atomtypes(structure.atoms, forcefield, debug=debug)
 
