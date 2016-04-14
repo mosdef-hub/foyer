@@ -42,14 +42,15 @@ class TestOPLS(BaseTest):
                         fh.write('{} {}\n'.format(mol_name, basename))
 
     @pytest.mark.parametrize('top_path', correctly_implemented_top_files)
-    def test_atomtyping(self, top_path, only_run=None):
+    def test_atomtyping(self, top_path):
         top_path = os.path.join(self.resource_dir, top_path)
 
         base_path, top_filename = os.path.split(top_path)
         gro_file = '{}-gas.gro'.format(top_filename[:-4])
         gro_path = os.path.join(base_path, gro_file)
 
-        structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path)
+        structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path,
+                                                    parametrize=False)
         structure.title = structure.title.replace(' GAS', '')
         known_opls_types = [atom.type for atom in structure.atoms]
 
@@ -99,7 +100,7 @@ if __name__ == "__main__":
     # mol = 'acetophenone'
     # mol = 'benzyl-alcohol'
     # top_path = test_class.find_topfile_by_mol_name(mol)
-    # test_class.test_atomtyping(top_path, only_run=mol)
+    # test_class.test_atomtyping(top_path)
 
     test_class.find_correctly_implemented()
 
