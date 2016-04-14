@@ -12,9 +12,9 @@ ElementNames = [ 'EP',
 
 Symbols = ['(', ')']
 
-class Smiles(object):
-    def __init__(self, smiles_string, identifiers=None):
-        self.s = smiles_string
+class Smarts(object):
+    def __init__(self, smarts_string, identifiers=None):
+        self.s = smarts_string
 
         if not identifiers:
             self.identifiers = []
@@ -32,7 +32,10 @@ class Smiles(object):
         return self.tokens[0]
 
     def next_branch(self, tokens):
+        """Given a list of tokens, find the next branch.
 
+        Returns a tuple of the next branch (parentheses stripped if necessary), and the number of tokens in that branch
+        """
         if not tokens:
             return [], 0
 
@@ -54,6 +57,7 @@ class Smiles(object):
 
     @property
     def neighbors(self):
+        """Return the number of neighbors of the anchor atom."""
         i = 1
         neighbors = []
         while True:
@@ -66,36 +70,73 @@ class Smiles(object):
                 break
         return neighbors
 
-    def next_symbol(self, s):
+    def next_symbol(self, i):
+        """Find the next symbol (identifier, element name, parenthesis).
+
+        Identifiers may be followed by an arbitrary number of digits.
+
+        Returns a tuple of the string found, and the number of characters processed, or (None, None) if nothing was
+        found"""
+        s = self.s[i:]
         for id in self.symbols:
             if s.startswith(id):
-                # look for a number following the ID
                 digit_cnt = 0
-                for ch in s[len(id):]:
-                    if ch.isdigit():
-                        digit_cnt += 1
-                    else:
-                        break
-                return s[0:len(id)+digit_cnt]
-        return None
+                if id not in Symbols:
+                    # look for a number following the ID
+                    for ch in s[len(id):]:
+                        if ch.isdigit():
+                            digit_cnt += 1
+                        else:
+                            break
+                return s[0:len(id)+digit_cnt], len(id) + digit_cnt
+        return None, None
+
+    def next_bracketed(self, i):
+        """Find the bracketed string.
+
+        Returns a tuple of the string found (brackets stripped), and the number of characters processed, or
+        (None, None) if nothing was found"""
+        s = self.s[i:]
+        if s.startswith('['):
+            start_idx = 1
+            end_idx = s.rfind(']')
+            if end_idx == -1:
+                raise SyntaxError("Cannot find closing bracket in {} )".format(s))
+            token = s[start_idx:end_idx]
+            return token, end_idx + 1
+        return None, None
 
     def tokenize(self):
+        """Tokenize a smarts string.
+
+        Returns a list of tokens."""
         self.tokens = []
         i=0
         s=self.s
         while i < len(s):
-            token = self.next_symbol(s[i:])
+            # try to find an identifier in brackets
+            token, char_cnt = self.next_bracketed(i)
             if token:
                 self.tokens += [token]
-                i += len(token)
+                i += char_cnt
                 continue
-            else:
-                raise SyntaxError("Error tokenizing {} at index {}".format(self.s, i))
+
+            # try to get a symbol
+            token, char_cnt = self.next_symbol(i)
+            if token:
+                self.tokens += [token]
+                i += char_cnt
+                continue
+
+            # couldn't find anything syntactically correct
+            raise SyntaxError("Error tokenizing {} at index {} ([...]{})".format(self.s, i, self.s[i:]))
 
 if __name__ == '__main__':
     # s = Smiles('C(H)(H)(C)C', identifiers=['Cat'])
     # s = Smiles('CatCa12345C(H)', identifiers=['Cat'])
-    s = Smiles('C(OH)(H)(H)Opls123', identifiers=[])
+    #s = Smiles('C(OH)(H)(H)Opls123', identifiers=[])
+    # s = Smarts('C(OH)(H)(H)123', identifiers=[])
+    s = Smarts('C(OH)(H)(H)[123]C456', identifiers=[])
     print("Tokens: {}".format(s.tokens))
     print("Anchor: {}".format(s.anchor))
     print("Neighbors of the anchor: {}".format(s.neighbors))
