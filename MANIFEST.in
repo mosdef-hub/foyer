@@ -1,2 +1,3 @@
-recursive-include opls_validation *.itp *.gro *.top
+graft opls_validation
+include foyer/tests/*.txt
 include requirements.txt

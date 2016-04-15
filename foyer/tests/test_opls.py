@@ -20,6 +20,8 @@ class TestOPLS(object):
     top_files = set(glob.glob(os.path.join(resource_dir, '*.top')))
 
     # Please update this file if you implement atom typing for a test case.
+    # You can automatically update the files by running the below function
+    # `find_correctly_implemented`.
     implemented_tests_path = os.path.join(os.path.dirname(__file__),
                                           'implemented_opls_tests.txt')
     correctly_implemented = [line.split() for line in open(implemented_tests_path)]
@@ -86,8 +88,9 @@ class TestOPLS(object):
     def test_full_parametrization(self):
         top = os.path.join(self.resource_dir, 'benzene.top')
         gro = os.path.join(self.resource_dir, 'benzene.gro')
+        ff = os.path.join(self.resource_dir, 'oplsaa.ff/forcefield.itp')
         structure = pmd.load_file(top, xyz=gro)
-        parametrized = apply_forcefield(structure, forcefield='opls-aa', debug=False)
+        parametrized = apply_forcefield(structure, forcefield=ff, debug=False)
 
         assert sum((1 for at in parametrized.atoms if at.type == 'opls_145')) == 6
         assert sum((1 for at in parametrized.atoms if at.type == 'opls_146')) == 6

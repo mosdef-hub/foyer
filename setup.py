@@ -38,6 +38,11 @@ setup(
     url='https://github.com/imodels/foyer',
     download_url='https://github.com/imodels/foyer/tarball/{}'.format(__version__),
     packages=find_packages(),
+    package_data={'foyer': ['tests/*.txt',
+                            '../opls_validation/*.top',
+                            '../opls_validation/*.gro',
+                            '../opls_validation/oplsaa.ff/*',
+                            ]},
     package_dir={'foyer': 'foyer'},
     include_package_data=True,
     install_requires=reqs,
@@ -59,5 +64,4 @@ setup(
         'Operating System :: Unix',
         'Operating System :: MacOS',
     ],
-    test_suite='tests',
 )
