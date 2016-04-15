@@ -8,6 +8,8 @@ import networkx as nx
 from oset import oset as OrderedSet
 import parmed.periodic_table as pt
 
+OPLS_ALIASES = ('opls-aa', 'oplsaa', 'opls')
+
 # Map rule ids to the functions that check for them (see `find_atomtypes()`).
 RULE_NUMBER_TO_RULE = dict()
 # Organizes the rules (see `builrule_map()`).
@@ -18,8 +20,6 @@ NEIGHBOR_TYPES_MAP = dict()
 NEIGHBOR_WHITELIST_MAP = dict()
 # Used for more descriptive output when sanitizing rules.
 RULE_NUMBER_TO_DOC_STRING = dict()
-
-OPLS_ALIASES = ('opls-aa', 'oplsaa', 'opls')
 
 
 def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
