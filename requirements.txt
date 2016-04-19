@@ -3,3 +3,4 @@ networkx
 oset
 parmed
 six
+openmm
