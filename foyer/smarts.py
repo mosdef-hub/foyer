@@ -1,40 +1,70 @@
-ElementNames = [ 'EP',
-            'H' ,'He','Li','Be','B' ,'C' ,'N' ,'O' ,'F' ,'Ne','Na','Mg',
-            'Al','Si','P' ,'S' ,'Cl','Ar','K' ,'Ca','Sc','Ti','V' ,'Cr',
-            'Mn','Fe','Co','Ni','Cu','Zn','Ga','Ge','As','Se','Br','Kr',
-            'Rb','Sr','Y' ,'Zr','Nb','Mo','Tc','Ru','Rh','Pd','Ag','Cd',
-            'In','Sn','Sb','Te','I' ,'Xe','Cs','Ba','La','Ce','Pr','Nd',
-            'Pm','Sm','Eu','Gd','Tb','Dy','Ho','Er','Tm','Yb','Lu','Hf',
-            'Ta','W' ,'Re','Os','Ir','Pt','Au','Hg','Tl','Pb','Bi','Po',
-            'At','Rn','Fr','Ra','Ac','Th','Pa','U' ,'Np','Pu','Am','Cm',
-            'Bk','Cf','Es','Fm','Md','No','Lr','Rf','Db','Sg','Bh','Hs',
-            'Mt','Ds','Rg','Cn','Uut','Uuq','Uup','Uuh','Uus','Uuo' ]
+from parmed.periodic_table import Element
 
-Symbols = ['(', ')']
+SYMBOLS = ['(', ')']
+
 
 class Smarts(object):
-    def __init__(self, smarts_string, identifiers=None):
-        self.s = smarts_string
+    """
+
+    Attributes
+    ----------
+    string : str
+
+    symbols : list of str
+
+    identifiers : list of str
+
+    tokens : list of str
+
+    """
+    def __init__(self, smarts_string, identifiers=None, tokenize=True):
+        self.string = smarts_string
 
         if not identifiers:
             self.identifiers = []
         else:
             self.identifiers = identifiers
 
-        self.symbols = ElementNames + Symbols + identifiers
+        self.symbols = Element + SYMBOLS + identifiers
         self.symbols.sort()
         self.symbols.reverse()
 
-        self.tokenize()
+        if tokenize:
+            self.tokens = self.tokenize()
 
     @property
     def anchor(self):
         return self.tokens[0]
 
-    def next_branch(self, tokens):
-        """Given a list of tokens, find the next branch.
+    @property
+    def neighbors(self):
+        """Return the number of neighbors of the anchor atom."""
+        position = 1
+        neighbors = []
+        while True:
+            branch, branch_token_cnt = self.next_branch(self.tokens[position:])
+            if branch:
+                neighbors.append(branch[0])
+                position += branch_token_cnt
+            else:
+                assert position == len(self.tokens)
+                break
+        return neighbors
 
-        Returns a tuple of the next branch (parentheses stripped if necessary), and the number of tokens in that branch
+    def next_branch(self, tokens):
+        """Find the next branch in a list of tokens.
+
+        Parameters
+        ----------
+        tokens : list of str
+            The tokens to find the next branch in.
+
+        Returns
+        -------
+        branch : list of str
+            The next branch with parentheses stripped if necessary.
+        len_branch : int
+            The number of tokens in the branch.
         """
         if not tokens:
             return [], 0
@@ -55,88 +85,88 @@ class Smarts(object):
                     branch += t
         raise SyntaxError("Unbalanced parentheses")
 
-    @property
-    def neighbors(self):
-        """Return the number of neighbors of the anchor atom."""
-        i = 1
-        neighbors = []
-        while True:
-            branch, branch_token_cnt = self.next_branch(self.tokens[i:])
-            if branch:
-                neighbors += [ branch[0] ]
-                i += branch_token_cnt
-            else:
-                assert i == len(self.tokens)
-                break
-        return neighbors
+    def tokenize(self):
+        """Tokenize a SMARTS string.
 
-    def next_symbol(self, i):
+        Returns
+        -------
+        tokens : list of str
+        """
+        tokens = []
+        position = 0
+        len_smarts = len(self.string)
+        while position < len_smarts:
+            # Try to find an identifier in brackets.
+            token, char_cnt = self.next_bracketed(position)
+            if token:
+                tokens.append(token)
+                position += char_cnt
+                continue
+
+            # Try to get a symbol.
+            token, char_cnt = self.next_symbol(position)
+            if token:
+                tokens.append(token)
+                position += char_cnt
+                continue
+
+            raise SyntaxError("Error tokenizing {} at index {} ([...]{})".format(
+                self.string, position, self.string[position:]))
+        return tokens
+
+    def next_symbol(self, position):
         """Find the next symbol (identifier, element name, parenthesis).
 
         Identifiers may be followed by an arbitrary number of digits.
 
-        Returns a tuple of the string found, and the number of characters processed, or (None, None) if nothing was
-        found"""
-        s = self.s[i:]
+        Returns
+        -------
+        symbol : str
+            The next symbol or '' if nothing was found.
+        len_characters : int
+            The number of characters processed or 0 if nothing was found.
+        """
+        symbol = self.string[position:]
         for id in self.symbols:
-            if s.startswith(id):
+            if symbol.startswith(id):
                 digit_cnt = 0
-                if id not in Symbols:
-                    # look for a number following the ID
-                    for ch in s[len(id):]:
+                if id not in SYMBOLS:
+                    # Look for a number following the ID.
+                    for ch in symbol[len(id):]:
                         if ch.isdigit():
                             digit_cnt += 1
                         else:
                             break
-                return s[0:len(id)+digit_cnt], len(id) + digit_cnt
-        return None, None
+                return symbol[0:len(id)+digit_cnt], len(id) + digit_cnt
+        return '', 0
 
-    def next_bracketed(self, i):
-        """Find the bracketed string.
+    def next_bracketed(self, position):
+        """Find the next bracketed token.
 
-        Returns a tuple of the string found (brackets stripped), and the number of characters processed, or
-        (None, None) if nothing was found"""
-        s = self.s[i:]
-        if s.startswith('['):
+        Returns
+        -------
+        token : str
+            The token with brackets stripped or '' if nothing was found.
+        len_characters : int
+            The number of characters processed or 0 if nothing was found.
+        """
+        sub_string = self.string[position:]
+        if sub_string.startswith('['):
             start_idx = 1
-            end_idx = s.rfind(']')
+            end_idx = sub_string.rfind(']')
             if end_idx == -1:
-                raise SyntaxError("Cannot find closing bracket in {} )".format(s))
-            token = s[start_idx:end_idx]
+                raise SyntaxError("Cannot find closing bracket in {} )".format(sub_string))
+            token = sub_string[start_idx:end_idx]
             return token, end_idx + 1
-        return None, None
+        return '', 0
 
-    def tokenize(self):
-        """Tokenize a smarts string.
-
-        Returns a list of tokens."""
-        self.tokens = []
-        i=0
-        s=self.s
-        while i < len(s):
-            # try to find an identifier in brackets
-            token, char_cnt = self.next_bracketed(i)
-            if token:
-                self.tokens += [token]
-                i += char_cnt
-                continue
-
-            # try to get a symbol
-            token, char_cnt = self.next_symbol(i)
-            if token:
-                self.tokens += [token]
-                i += char_cnt
-                continue
-
-            # couldn't find anything syntactically correct
-            raise SyntaxError("Error tokenizing {} at index {} ([...]{})".format(self.s, i, self.s[i:]))
 
 if __name__ == '__main__':
-    # s = Smiles('C(H)(H)(C)C', identifiers=['Cat'])
-    # s = Smiles('CatCa12345C(H)', identifiers=['Cat'])
-    #s = Smiles('C(OH)(H)(H)Opls123', identifiers=[])
+    # s = Smarts('C(H)(H)(C)C', identifiers=['Cat'])
+    s = Smarts('CatCa12345C(H)', identifiers=['Cat'])
+    #s = Smarts('C(OH)(H)(H)Opls123', identifiers=[])
     # s = Smarts('C(OH)(H)(H)123', identifiers=[])
-    s = Smarts('C(OH)(H)(H)[123]C456', identifiers=[])
+    #s = Smarts('C(OH)(H)(H)[123]C456', identifiers=[])
     print("Tokens: {}".format(s.tokens))
     print("Anchor: {}".format(s.anchor))
     print("Neighbors of the anchor: {}".format(s.neighbors))
