@@ -12,21 +12,15 @@
         <Type name="144" class="HC" element="C" mass="1.00800"   def="H(141|142|143)" overrides="140"/>
     </AtomTypes>
     <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
-        <Atom type="135" charge="-0.180" sigma="" epsilon=""/>
-        <Atom type="136" charge="-0.120" sigma="" epsilon=""/>
-        <Atom type="137" charge="-0.060" sigma="" epsilon=""/>
-        <Atom type="138" charge="-0.240" sigma="" epsilon=""/>
-        <Atom type="139" charge="0.000"  sigma="" epsilon=""/>
-        <Atom type="140" charge="0.060"  sigma="" epsilon=""/>
-        <Atom type="141" charge="0.000"  sigma="" epsilon=""/>
-        <Atom type="142" charge="-0.115" sigma="" epsilon=""/>
-        <Atom type="143" charge="-0.230" sigma="" epsilon=""/>
-        <Atom type="144" charge="0.115"  sigma="" epsilon=""/>
+        <Atom type="135" charge="-0.180" sigma="1" epsilon="1"/>
+        <Atom type="136" charge="-0.120" sigma="1" epsilon="1"/>
+        <Atom type="137" charge="-0.060" sigma="1" epsilon="1"/>
+        <Atom type="138" charge="-0.240" sigma="1" epsilon="1"/>
+        <Atom type="139" charge="0.000"  sigma="1" epsilon="1"/>
+        <Atom type="140" charge="0.060"  sigma="1" epsilon="1"/>
+        <Atom type="141" charge="0.000"  sigma="1" epsilon="1"/>
+        <Atom type="142" charge="-0.115" sigma="1" epsilon="1"/>
+        <Atom type="143" charge="-0.230" sigma="1" epsilon="1"/>
+        <Atom type="144" charge="0.115"  sigma="1" epsilon="1"/>
     </NonbondedForce>
-    <HarmonicBondForce>
-        <Bond class1="" class2="" length="" k=""/>
-    </HarmonicBondForce>
-    <HarmonicAngleForce>
-        <Angle class1="" class2="" class2="" angle="" k=""/>
-    </HarmonicAngleForce>
 </ForceField>

@@ -96,6 +96,13 @@ class Smarts(object):
         position = 0
         len_smarts = len(self.string)
         while position < len_smarts:
+            # Try to find an identifier in curly braces.
+            token, char_cnt = self.next_curlybraced(position)
+            if token:
+                tokens.append(token)
+                position += char_cnt
+                continue
+
             # Try to find an identifier in brackets.
             token, char_cnt = self.next_bracketed(position)
             if token:
@@ -153,12 +160,34 @@ class Smarts(object):
         sub_string = self.string[position:]
         if sub_string.startswith('['):
             start_idx = 1
-            end_idx = sub_string.rfind(']')
+            end_idx = sub_string.find(']')
             if end_idx == -1:
                 raise SyntaxError("Cannot find closing bracket in {} )".format(sub_string))
             token = sub_string[start_idx:end_idx]
             return token, end_idx + 1
         return '', 0
+
+    def next_curlybraced(self, position):
+        """Find the next token in curly braces.
+
+        Returns
+        -------
+        token : str
+            The token with brackets stripped or '' if nothing was found.
+        len_characters : int
+            The number of characters processed or 0 if nothing was found.
+        """
+        sub_string = self.string[position:]
+        if sub_string.startswith('{'):
+            start_idx = 1
+            end_idx = sub_string.find('}')
+            if end_idx == -1:
+                raise SyntaxError("Cannot find closing curly brace in {} )".format(sub_string))
+            token = sub_string[start_idx:end_idx]
+
+            return token, end_idx + 1
+        return '', 0
+
 
 
 if __name__ == '__main__':
@@ -167,6 +196,7 @@ if __name__ == '__main__':
     #s = Smarts('C(OH)(H)(H)Opls123', identifiers=[])
     # s = Smarts('C(OH)(H)(H)123', identifiers=[])
     #s = Smarts('C(OH)(H)(H)[123]C456', identifiers=[])
+    s = Smarts('C(OH)(H)(H){ 123 }{_44}', identifiers=[])
     print("Tokens: {}".format(s.tokens))
     print("Anchor: {}".format(s.anchor))
     print("Neighbors of the anchor: {}".format(s.neighbors))

@@ -6,9 +6,13 @@ import networkx as nx
 import parmed.gromacs as gmx
 from parmed.gromacs import GromacsTopologyFile
 import parmed as pmd
+from simtk.openmm.app.forcefield import _convertParameterToNumber
+import simtk.openmm.app.element as elem
+
 from six import string_types
 
 from foyer.atomtyper import find_atomtypes, OPLS_ALIASES
+from simtk.openmm import app
 
 OPLS_ALIASES = ('opls-aa', 'oplsaa', 'opls')
 
@@ -103,3 +107,61 @@ def create_impropers(structure, node, neighbors):
     for triplet in itertools.combinations(neighbors, 3):
         improper = pmd.Improper(node, triplet[0], triplet[1], triplet[2])
         structure.impropers.append(improper)
+
+
+def registerAtomType(self, parameters):
+    """Register a new atom type."""
+    name = parameters['name']
+    if name in self._atomTypes:
+        raise ValueError('Found multiple definitions for atom type: '+name)
+    atomClass = parameters['class']
+    mass = _convertParameterToNumber(parameters['mass'])
+    element = None
+    if 'element' in parameters:
+        element = parameters['element']
+        if not isinstance(element, elem.Element):
+            element = elem.get_by_symbol(element)
+    self._atomTypes[name] = (atomClass, mass, element)
+    if atomClass in self._atomClasses:
+        typeSet = self._atomClasses[atomClass]
+    else:
+        typeSet = set()
+        self._atomClasses[atomClass] = typeSet
+    typeSet.add(name)
+    self._atomClasses[''].add(name)
+
+    # foyer requires that ForceField should have a _atomTypeDefinitions property
+    if not hasattr(self, '_atomTypeDefinitions'):
+        self._atomTypeDefinitions = dict()
+    if not hasattr(self, '_atomTypeOverrides'):
+        self._atomTypeOverrides = dict()
+    if not hasattr(self, '_atomTypeDesc'):
+        self._atomTypeDesc = dict()
+
+
+    if 'def' in parameters:
+        self._atomTypeDefinitions[name] = parameters['def']
+
+    if 'overrides' in parameters:
+        self._atomTypeOverrides[name] = parameters['overrides']
+
+    if 'des' in parameters:
+        self._atomTypeDesc[name] = parameters['desc']
+
+
+def _loadFile(*args, **kwargs):
+    slf = args[0]
+    args = args[1:]
+    return slf.orig_loadFile(*args, **kwargs)
+
+def load(forcefield_xml):
+    orig_loadFile = app.ForceField.loadFile
+    app.ForceField.orig_loadFile = orig_loadFile
+    app.ForceField.loadFile = _loadFile
+    app.ForceField.registerAtomType = registerAtomType
+    ff = app.ForceField(forcefield_xml)
+    return ff
+
+# if __name__ == '__main__':
+#     ff = load(os.path.join(os.path.split(__file__)[0], 'oplsaa', 'oplsaa.xml'))
+#     print(ff)
