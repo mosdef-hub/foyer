@@ -8,10 +8,12 @@ import networkx as nx
 from oset import oset as OrderedSet
 import parmed.periodic_table as pt
 
+from foyer.smarts import Smarts
+
 OPLS_ALIASES = ('opls-aa', 'oplsaa', 'opls')
 
 # Map rule ids to the functions that check for them (see `find_atomtypes()`).
-RULE_NUMBER_TO_RULE = dict()
+RULE_NAME_TO_RULE = dict()
 # Organizes the rules (see `builrule_map()`).
 RULE_MAP = dict()
 # Global neighbor information (see `neighbor_types()`).
@@ -22,7 +24,7 @@ NEIGHBOR_WHITELIST_MAP = dict()
 RULE_NUMBER_TO_DOC_STRING = dict()
 
 
-def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
+def find_atomtypes(atoms, forcefield, debug=False):
     """Determine atomtypes for all atoms.
 
     This function is fairly general in that it can function on any list of atom
@@ -35,8 +37,8 @@ def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
     ----------
     atoms : list of Atom objects
         The atoms whose atomtypes you are looking for.
-    forcefield : str, default='OPLS-AA'
-        The forcefield to apply.
+    forcefield : simtk.openmm.app.Forcefield object
+        The forcefield object.
     debug : bool, default=True
         Provides debug information about the logical consistency of the
         atomtyping rules.
@@ -48,7 +50,7 @@ def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
     """
     # Reset all the global variables - required if running atomtyper multiple
     # times within one python instance.
-    RULE_NUMBER_TO_RULE.clear()
+    RULE_NAME_TO_RULE.clear()
     RULE_MAP.clear()
     NEIGHBOR_TYPES_MAP.clear()
     NEIGHBOR_WHITELIST_MAP.clear()
@@ -63,60 +65,32 @@ def find_atomtypes(atoms, forcefield='OPLS-AA', debug=True):
             # TODO: more robust element detection
             atom.element_name = atom.name
 
-    _load_rules(forcefield.lower())
+    _load_rules(forcefield)
     _build_rule_map()
     if debug:
         _sanitize()
     _iterate_rules(atoms, max_iter=10)
-    _resolve_atomtypes(atoms, forcefield.lower())
+    _resolve_atomtypes(atoms)
 
 
 def _load_rules(forcefield):
-    """Populate a mapping of rule numbers to rule functions. """
-    if forcefield in OPLS_ALIASES:
-        import foyer.oplsaa.rules as oplsaa
-        # Build a map to all of the supported opls_* functions.
-        for func_name, func in sys.modules[oplsaa.__name__].__dict__.items():
-            if func_name.startswith('opls_'):
-                RULE_NUMBER_TO_RULE[func_name.split("_")[1]] = func
-    elif forcefield == 'uff':
-        import foyer.uff.rules as uff
-        # Build a map to all of the supported uff_* functions.
-        for func_name, func in sys.modules[uff.__name__].__dict__.items():
-            if func_name.startswith('uff_'):
-                RULE_NUMBER_TO_RULE[func_name.split("_")[1]] = func
-    elif forcefield == 'trappeua':
-        import foyer.trappeua.rules as trappeua
-        # Build a map to all of the supported trappeua_* functions.
-        for func_name, func in sys.modules[trappeua.__name__].__dict__.items():
-            if func_name.startswith('trappeua_'):
-                RULE_NUMBER_TO_RULE[func_name.split("_", maxsplit=1)[1]] = func
-    else:
-        raise ValueError("Unsupported forcefield: '{0}'".format(forcefield))
+    all_names = forcefield._atomTypeDefinitions.keys()
+    for rule_name, smarts in forcefield._atomTypeDefinitions.items():
+        overrides = forcefield._atomTypeOverrides.get(rule_name)
+        RULE_NAME_TO_RULE[rule_name] = Smarts(smarts, name=rule_name, overrides=overrides, identifiers=all_names)
 
 
 def _build_rule_map():
     """Build up a tree of element types-->neighbor counts-->rules. """
-    for rule_number, rule in RULE_NUMBER_TO_RULE.items():
-        decorators = get_decorators(rule)
-        element_type = None
-        neighbor_count = None
-        for dec in decorators:
-            if isinstance(dec, Element):
-                element_type = dec.element_type
-            if isinstance(dec, NeighborCount):
-                neighbor_count = dec.count
-
-        if not element_type:
-            warn('Rule {} has no element type'.format(rule_number))
-        if not neighbor_count:
-            warn('Rule {} has no neighbor count'.format(rule_number))
+    for rule_name, smarts in RULE_NAME_TO_RULE.items():
+        element_type = smarts.anchor
+        neighbor_count = smarts.n_neighbors
 
         if element_type not in RULE_MAP:
             RULE_MAP[element_type] = dict()
         if neighbor_count not in RULE_MAP[element_type]:
             RULE_MAP[element_type][neighbor_count] = []
-        RULE_MAP[element_type][neighbor_count].append(rule_number)
+        RULE_MAP[element_type][neighbor_count].append(rule_name)
 
 
 def _iterate_rules(atoms, max_iter=10):
@@ -161,29 +135,24 @@ def _iterate_rules(atoms, max_iter=10):
         warn("Reached maximum iterations. Something probably went wrong.")
 
 
-def run_rule(atom, rule_id):
+def run_rule(atom, rule_name):
     """Execute the rule function for a specified atomtype. """
-    if rule_id not in atom.whitelist:
+    if rule_name not in atom.whitelist:
         try:
-            rule_fn = RULE_NUMBER_TO_RULE[str(rule_id)]
+            smarts = RULE_NAME_TO_RULE[rule_name]
         except KeyError:
-            raise KeyError('Rule for {} not implemented'.format(rule_id))
-        rule_fn(atom)
+            raise KeyError('Rule for {} not implemented'.format(rule_name))
+        smarts.match(atom)
 
 
-def _resolve_atomtypes(atoms, forcefield):
+def _resolve_atomtypes(atoms):
     """Determine the final atomtypes from the white- and blacklists."""
     for i, atom in enumerate(atoms):
         atomtype = atom.whitelist - atom.blacklist
         atomtype = [a for a in atomtype]
 
-        if forcefield in OPLS_ALIASES:
-            prefix = 'opls_'
-        else:
-            prefix = ''
-
         if len(atomtype) == 1:
-            atom.type = prefix + atomtype[0]
+            atom.type = atomtype[0]
         else:
             warn("CHECK YOUR TOPOLOGY. Found multiple or no types for atom "
                  "{0} ({1}): {2}.".format(i, atom.element_name, atomtype))
@@ -466,7 +435,7 @@ def _sanitize():
         for rule_number in rules:
             graph.add_node(rule_number)
             blacklisted_rules = set()
-            decorators = get_decorators(RULE_NUMBER_TO_RULE[rule_number])
+            decorators = get_decorators(RULE_NAME_TO_RULE[rule_number])
 
             for dec in decorators:
                 if isinstance(dec, Blacklist):
@@ -506,7 +475,7 @@ def find_all_supported_elements():
         A sorted list of all the supported elements.
     """
     supported_elements = set()
-    for rule_number, rule in RULE_NUMBER_TO_RULE.items():
+    for rule_number, rule in RULE_NAME_TO_RULE.items():
         decorators = get_decorators(rule)
 
         element_type = None
@@ -544,7 +513,7 @@ def find_all_rule_matches(supported_elements):
 
     """
     rule_matches = dict()
-    for rule_number, rule in RULE_NUMBER_TO_RULE.items():
+    for rule_number, rule in RULE_NAME_TO_RULE.items():
         decorators = get_decorators(rule)
 
         element_type = None

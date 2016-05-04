@@ -199,6 +199,17 @@ def opls_155(atom):
     """all-atom H(O): mono alcohols, OP(=O)2 """
     return True
 
+@Element('C')
+@NeighborCount(4)
+@NeighborsExactly('C', 1)
+@NeighborsExactly('H', 2)
+@NeighborsExactly('154', 1)
+#@Blacklist(157)
+@Whitelist(157)
+def opls_157(atom):
+    """alkane CH3 """
+    return True
+
 
 @Element('O')
 @NeighborCount(2)
