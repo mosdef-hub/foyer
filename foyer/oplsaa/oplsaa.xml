@@ -9,7 +9,11 @@
         <Type name="141" class="CM" element="C" mass="12.01100"  def="C(C)(C)C"/>
         <Type name="142" class="CM" element="C" mass="12.01100"  def="C(C)(H)C"/>
         <Type name="143" class="CM" element="C" mass="12.01100"  def="C(H)(H)C"/>
-        <Type name="144" class="HC" element="C" mass="1.00800"   def="H(141|142|143)" overrides="140"/>
+        <!--<Type name="144" class="HC" element="C" mass="1.00800"   def="H(141|142|143)" overrides="140"/>-->
+        <Type name="144" class="HC" element="C" mass="1.00800"   def="H(141)" overrides="140"/>
+        <Type name="154" class="OH" element="O" mass="1.00800"   def="O(H)C"/>
+        <Type name="155" class="HO" element="H" mass="1.00800"   def="H(154)"/>
+        <Type name="157" class="CT" element="C" mass="1.00800"   def="C(154)(H)(H)*"/>
     </AtomTypes>
     <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
         <Atom type="135" charge="-0.180" sigma="1" epsilon="1"/>

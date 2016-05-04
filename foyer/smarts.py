@@ -1,6 +1,8 @@
+from collections import Counter
 from parmed.periodic_table import Element
+from oset import oset as OrderedSet
 
-SYMBOLS = ['(', ')']
+SYMBOLS = ['(', ')', '*']
 
 
 class Smarts(object):
@@ -17,24 +19,39 @@ class Smarts(object):
     tokens : list of str
 
     """
-    def __init__(self, smarts_string, identifiers=None, tokenize=True):
+    def __init__(self, smarts_string, name="", identifiers=None, tokenize=True, overrides=None):
         self.string = smarts_string
+        self.name = name
 
         if not identifiers:
             self.identifiers = []
         else:
             self.identifiers = identifiers
 
+        if not overrides:
+            self.overrides = OrderedSet()
+        else:
+            self.overrides = OrderedSet(overrides)
+
         self.symbols = Element + SYMBOLS + identifiers
         self.symbols.sort()
         self.symbols.reverse()
+
+        self._n_neighbors = None
 
         if tokenize:
             self.tokens = self.tokenize()
 
     @property
     def anchor(self):
+        # TODO: enforce that anchor is an element
         return self.tokens[0]
+
+    @property
+    def n_neighbors(self):
+        if not self._n_neighbors:
+            self._n_neighbors = len(self.neighbors)
+        return self._n_neighbors
 
     @property
     def neighbors(self):
@@ -82,7 +99,7 @@ class Smarts(object):
                     if in_branch == 0:
                         return branch, len(branch) + 2
                 else:
-                    branch += t
+                    branch.append(t)
         raise SyntaxError("Unbalanced parentheses")
 
     def tokenize(self):
@@ -189,14 +206,39 @@ class Smarts(object):
         return '', 0
 
 
+    def match(self, atom):
+        # atom is a parmed atom object
+
+        # check atom type
+        if self.anchor != atom.element_name:
+            return False
+
+        # check number of neighbors
+        if self.n_neighbors != len(atom.bond_partners):
+            return False
+
+        # TODO: smart.neighbors returns tokens, it should return the element type instead
+        smarts_counter = Counter([x.element_name for x in self.neighbors])
+        atom_counter = Counter([x.element_name for x in atom.bond_partners])
+
+
+        if smarts_counter != atom_counter:
+            return False
+
+        atom.whitelist.add(self.name)
+        atom.blacklist |= self.overrides
+
+        return True
+
 
 if __name__ == '__main__':
     # s = Smarts('C(H)(H)(C)C', identifiers=['Cat'])
-    s = Smarts('CatCa12345C(H)', identifiers=['Cat'])
+    # s = Smarts('CatCa12345C(H)', identifiers=['Cat'])
     #s = Smarts('C(OH)(H)(H)Opls123', identifiers=[])
     # s = Smarts('C(OH)(H)(H)123', identifiers=[])
-    #s = Smarts('C(OH)(H)(H)[123]C456', identifiers=[])
-    s = Smarts('C(OH)(H)(H){ 123 }{_44}', identifiers=[])
+    # s = Smarts('C(OH)(H)(H)[123]C456', identifiers=[])
+    # s = Smarts('C(OH)(H)(H){ 123 }{_44}', identifiers=[])
+    s = Smarts('H(141)', identifiers=['141'])
     print("Tokens: {}".format(s.tokens))
     print("Anchor: {}".format(s.anchor))
     print("Neighbors of the anchor: {}".format(s.neighbors))
