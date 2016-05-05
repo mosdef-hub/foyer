@@ -1,4 +1,6 @@
 from collections import Counter
+import itertools as it
+
 from parmed.periodic_table import Element
 from oset import oset as OrderedSet
 
@@ -31,7 +33,7 @@ class Smarts(object):
             overrides = OrderedSet()
         self.overrides = OrderedSet(overrides)
 
-        self.symbols = Element + SYMBOLS + identifiers
+        self.symbols = list(it.chain(Element, SYMBOLS, identifiers))
         self.symbols.sort()
         self.symbols.reverse()
 
