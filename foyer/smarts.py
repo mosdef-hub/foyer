@@ -4,7 +4,7 @@ import itertools as it
 from parmed.periodic_table import Element
 from oset import oset as OrderedSet
 
-SYMBOLS = ['(', ')', '*']
+SYMBOLS = ['(', ')', '*', '|']
 
 
 class Smarts(object):
@@ -56,20 +56,22 @@ class Smarts(object):
 
     @property
     def neighbors(self):
-        """Return the number of neighbors of the anchor atom."""
+        """Return neighbors of the anchor atom as a list of lists (alternatives).
+        """
         if self._neighbors is None:
             position = 1
             neighbors = []
             while True:
                 branch, branch_token_cnt = self.next_branch(self.tokens[position:])
                 if branch:
-                    neighbors.append(branch[0])
+                    neighbors.append(self._branch_head(branch))
                     position += branch_token_cnt
                 else:
                     assert position == len(self.tokens)
                     break
             self._neighbors = neighbors
         return self._neighbors
+
 
     def next_branch(self, tokens):
         """Find the next branch in a list of tokens.
@@ -104,6 +106,18 @@ class Smarts(object):
                 else:
                     branch.append(t)
         raise SyntaxError("Unbalanced parentheses")
+
+    def _branch_head(self, branch):
+        # return the alternatives for the first element of the branch
+        head = []
+        for i,token in enumerate(branch):
+            if token == '|':
+                continue
+            head.append(token)
+            if len(branch) > i+1 and branch[i+1] != '|':
+                break
+        return head
+
 
     def tokenize(self):
         """Tokenize a SMARTS string.
@@ -209,18 +223,18 @@ class Smarts(object):
         return '', 0
 
 
-    def _match_neighbors(self, neighbor_labels, neighbor_atoms):
+    def _match_neighbors(self, neighbor_label_alternatives, neighbor_atoms):
 
-        if not neighbor_labels and not neighbor_atoms:
+        if not neighbor_label_alternatives and not neighbor_atoms:
             return True
 
-        label = neighbor_labels[0]
-        neighbor_labels = neighbor_labels[1:]
+        label_alternatives = neighbor_label_alternatives[0]
+        neighbor_label_alternatives = neighbor_label_alternatives[1:]
         for atom in neighbor_atoms:
-            if label == '*' or label == atom.element_name or label in atom.whitelist:
+            if '*' in label_alternatives or atom.element_name in label_alternatives or set(label_alternatives) & set(atom.whitelist):
                 nonmatched_neighbor_atoms = neighbor_atoms
                 nonmatched_neighbor_atoms.remove(atom)
-                success = self._match_neighbors(neighbor_labels, nonmatched_neighbor_atoms)
+                success = self._match_neighbors(neighbor_label_alternatives, nonmatched_neighbor_atoms)
                 if success:
                     return True
         return False
@@ -255,7 +269,8 @@ if __name__ == '__main__':
     # s = Smarts('C(OH)(H)(H)123', identifiers=[])
     # s = Smarts('C(OH)(H)(H)[123]C456', identifiers=[])
     # s = Smarts('C(OH)(H)(H){ 123 }{_44}', identifiers=[])
-    s = Smarts('H(141)', identifiers=['141'])
+    # s = Smarts('H(141)', identifiers=['141'])
+    s = Smarts('H({141}|{122}CH)*', identifiers=['141'])
     print("Tokens: {}".format(s.tokens))
     print("Anchor: {}".format(s.anchor))
     print("Neighbors of the anchor: {}".format(s.neighbors))
