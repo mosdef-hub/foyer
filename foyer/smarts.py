@@ -24,19 +24,18 @@ class Smarts(object):
         self.name = name
 
         if not identifiers:
-            self.identifiers = []
-        else:
-            self.identifiers = identifiers
+            identifiers = []
+        self.identifiers = identifiers
 
         if not overrides:
-            self.overrides = OrderedSet()
-        else:
-            self.overrides = OrderedSet(overrides)
+            overrides = OrderedSet()
+        self.overrides = OrderedSet(overrides)
 
         self.symbols = Element + SYMBOLS + identifiers
         self.symbols.sort()
         self.symbols.reverse()
 
+        self._neighbors = None
         self._n_neighbors = None
 
         if tokenize:
@@ -49,24 +48,26 @@ class Smarts(object):
 
     @property
     def n_neighbors(self):
-        if not self._n_neighbors:
+        if self._n_neighbors is None:
             self._n_neighbors = len(self.neighbors)
         return self._n_neighbors
 
     @property
     def neighbors(self):
         """Return the number of neighbors of the anchor atom."""
-        position = 1
-        neighbors = []
-        while True:
-            branch, branch_token_cnt = self.next_branch(self.tokens[position:])
-            if branch:
-                neighbors.append(branch[0])
-                position += branch_token_cnt
-            else:
-                assert position == len(self.tokens)
-                break
-        return neighbors
+        if self._neighbors is None:
+            position = 1
+            neighbors = []
+            while True:
+                branch, branch_token_cnt = self.next_branch(self.tokens[position:])
+                if branch:
+                    neighbors.append(branch[0])
+                    position += branch_token_cnt
+                else:
+                    assert position == len(self.tokens)
+                    break
+            self._neighbors = neighbors
+        return self._neighbors
 
     def next_branch(self, tokens):
         """Find the next branch in a list of tokens.
@@ -232,6 +233,8 @@ class Smarts(object):
 
 
 if __name__ == '__main__':
+    # TODO: unit tests
+
     # s = Smarts('C(H)(H)(C)C', identifiers=['Cat'])
     # s = Smarts('CatCa12345C(H)', identifiers=['Cat'])
     #s = Smarts('C(OH)(H)(H)Opls123', identifiers=[])
