@@ -206,6 +206,23 @@ class Smarts(object):
         return '', 0
 
 
+    def _match_neighbors(self, neighbor_labels, neighbor_atoms):
+
+        if not neighbor_labels and not neighbor_atoms:
+            return True
+
+        label = neighbor_labels[0]
+        neighbor_labels = neighbor_labels[1:]
+        for atom in neighbor_atoms:
+            if label == '*' or label == atom.element_name or label in atom.whitelist:
+                nonmatched_neighbor_atoms = neighbor_atoms
+                nonmatched_neighbor_atoms.remove(atom)
+                success = self._match_neighbors(neighbor_labels, nonmatched_neighbor_atoms)
+                if success:
+                    return True
+        return False
+
+
     def match(self, atom):
         # atom is a parmed atom object
 
@@ -217,12 +234,7 @@ class Smarts(object):
         if self.n_neighbors != len(atom.bond_partners):
             return False
 
-        # TODO: smart.neighbors returns tokens, it should return the element type instead
-        smarts_counter = Counter([x.element_name for x in self.neighbors])
-        atom_counter = Counter([x.element_name for x in atom.bond_partners])
-
-
-        if smarts_counter != atom_counter:
+        if not self._match_neighbors(self.neighbors, atom.bond_partners):
             return False
 
         atom.whitelist.add(self.name)
