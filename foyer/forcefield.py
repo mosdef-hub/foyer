@@ -47,14 +47,14 @@ def apply_forcefield(structure, forcefield, debug=False):
     ff.atoms = structure.atoms
     ff.bonds = structure.bonds
     ff.residues = structure.residues
-    create_bonded_forces(ff)
+    create_forces(ff)
     ff.parametrize()
     return ff
 
 
-def create_bonded_forces(structure, angles=True, dihedrals=True,
-                         impropers=False, pairs=True):
-    """Convert Bonds to ForcefieldBonds and find angles and dihedrals. """
+def create_forces(structure, angles=True, dihedrals=True,
+                  impropers=False, pairs=True):
+    """Generate all possible angles, dihedrals and 1-4 pairs. """
     bondgraph = nx.Graph()
     bondgraph.add_edges_from(((b.atom1, b.atom2) for b in structure.bonds))
 
