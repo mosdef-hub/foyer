@@ -10,6 +10,7 @@
         <Type name="142" class="CM" element="C" mass="12.01100"  def="C(C)(H)C"/>
         <Type name="143" class="CM" element="C" mass="12.01100"  def="C(H)(H)C"/>
         <Type name="144" class="HC" element="C" mass="1.00800"   def="H({141}|{142}|{143})" overrides="140"/>
+        <Type name="145" class="CT" element="C" mass="12.01100"  def="c1ccccc1"/>
         <Type name="154" class="OH" element="O" mass="1.00800"   def="O(H)C"/>
         <Type name="155" class="HO" element="H" mass="1.00800"   def="H({154})"/>
         <Type name="157" class="CT" element="C" mass="1.00800"   def="C({154})(H)(H)*"/>
