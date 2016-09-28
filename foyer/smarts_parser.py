@@ -1,6 +1,7 @@
 
-import re, collections
 import plyplus
+import parmed.periodic_table as pt
+
 
 smarts_grammar = plyplus.Grammar("""
     start: string;
@@ -17,7 +18,8 @@ smarts_grammar = plyplus.Grammar("""
     ?and_expression: (and_expression and_symbol)? atom_id;
     @and_symbol: SEMI | AMP;
     @or_symbol: COMMA;
-    atom_id: atom_symbol | HASH atomic_num | any_atom | DOLLAR LPAR matches_string RPAR | has_label | 'D' neighbor_count | 'R' ring_size;
+    //atom_id: atom_symbol | HASH atomic_num | any_atom | DOLLAR LPAR matches_string RPAR | has_label | 'D' neighbor_count | 'R' ring_size;
+    atom_id: atom_symbol | HASH atomic_num | any_atom | has_label | 'D' neighbor_count | 'R' ring_size;
     atom_symbol: SYMBOL;
     atomic_num: NUM;
     any_atom: STAR;
@@ -47,6 +49,7 @@ smarts_grammar = plyplus.Grammar("""
 
 def parse(expr):
     tree = smarts_grammar.parse(expr)
+    assert tree.tail
     return tree
 
 def show_result(s):
@@ -54,60 +57,71 @@ def show_result(s):
     print("parsing: {}\nresult :{}\n".format(s,t))
 
 
+def find_atomtypes(atoms, rules):
+    for atom in atoms:
+        atom.whitelist = set()
+        atom.blacklist = set()
+
+    found_something = True
+    while(found_something):
+        for atom in atoms:
+            for rule in rules:
+                if rule not in atom.whitelist or rule not in atom.blacklist:
+                    if rule.matches(atom):
+                        atom.whitelist.add(rule)
+                        atom.blacklist |= rule.overrides
+                        found_something = True
+        found_something = False
+
+
+class Rule(object):
+    def __init__(self, name, smarts_string, overrides=None):
+        self.name = name
+        self.smarts_string = smarts_string
+        self.ast = smarts_grammar.parse(smarts_string)
+        if overrides:
+            self.overrides = set(overrides)
+        else:
+            self.overrides = set()
+
+    def __repr__(self):
+        return 'Rule({},{},{})'.format(self.name, self.smarts_string, self.overrides)
+
+    def start_atom_expr(self):
+        assert self.ast.tail[0].head == 'atom'
+        assert self.ast.tail[0].tail
+        assert len(self.ast.tail[0].tail) == 1
+        return self.ast.tail[0].tail[0]
+
+    def matches(self, atom):
+        return self._atom_expr_matches(self.start_atom_expr(), atom)
+
+    def _atom_expr_matches(self, atom_expr, atom):
+        if atom_expr.head == 'and_expression':
+            return self._atom_expr_matches(atom_expr.tail[0], atom) and self._atom_expr_matches(atom_expr.tail[1], atom)
+        elif atom_expr.head == 'or_expression':
+            return self._atom_expr_matches(atom_expr.tail[0], atom) or self._atom_expr_matches(atom_expr.tail[1], atom)
+        elif atom_expr.head == 'atom_id':
+            return self._atom_id_matches(atom_expr.tail[0], atom)
+        else:
+            raise TypeError('Expected and_expression, or_expression, or atom_id, got {}'.format(atom_expr.head))
+
+    def _atom_id_matches(self, atom_id, atom):
+        if atom_id.head == 'any_atom':
+            return True
+        elif atom_id.head == 'atomic_num':
+            return atom.atomic_number == int(atom_id.tail[0])
+        elif atom_id.head == 'atom_symbol':
+            return atom.atomic_number == pt.AtomicNum[str(atom_id.tail[0])]
+        elif atom_id.head == 'has_label':
+            return atom_id.tail[0] in atom.whitelist
+        elif atom_id.head == 'neighbor_count':
+            return len(atom.bond_partners) == int(atom_id.tail[0])
+        elif atom_id.head == 'ring_size':
+            raise NotImplementedError('ring_size feature is not yet implemented')
+
 
 if __name__ == '__main__':
-    # """O TIP3P Water """
-    opls_111 = '[#12&D2]([#1])[#1]'
-    show_result(opls_111)
-
-    # """H TIP3P Water """
-    opls_112 = '[#1][%opls_111]'
-    show_result(opls_112)
-
-    # """alkane CH3 """
-    opls_135 = '[#12&D4]([#12])([#1])([#1])([#1])'
-    show_result(opls_135)
-
-    # """alkane CH2 """
-    opls_136 = '[#12&D4]([#12])([#12])([#1])([#1])'
-    show_result(opls_136)
-
-    # """alkane CH """
-    opls_137 = '[#12&D4]([#12])([#12])([#12])([#1])'
-    show_result(opls_137)
-
-    # """alkane CH4 """
-    opls_138 = '[#12&D4]([#1])([#1])([#1])([#1])'
-    show_result(opls_138)
-
-    """alkane C """
-    opls_139 = '[#12&D4]([#12])([#12])([#12])([#12])'
-    show_result(opls_139)
-
-    # TODO: be specific about alkane C (not just simply C)
-    # """alkane H """
-    opls_140 = '[#1][#12]'
-    show_result(opls_140)
-
-    # NOTE: this catches benzene C as well
-    # """alkene C (R2-C=) """
-    opls_141 = '[#12&D3]([#12])([#12])([#12])'
-    show_result(opls_141)
-
-    # NOTE: this catches benzene C as well
-    # """alkene C (RH-C=) """
-    opls_142 = '[#12&D3]([#12])([#12])([#1])'
-    show_result(opls_142)
-
-    # NOTE: this catches benzene C as well
-    # """alkene C (H2-C=) """
-    opls_143 = '[#12&D3]([#12])([#1])([#1])'
-    show_result(opls_143)
-
-    # """alkene H (H-C=) """
-    # NOTE: We make sure that the carbon is an alkene carbon.
-    opls_144 = '[#1]([#12&%opls_141,#12&%opls_142,#12&%opls_143])'
-    show_result(opls_144)
 
     # TODO: set up test cases to catch precedence issues
     # x = '[#1&#2,#3]'
@@ -115,53 +129,14 @@ if __name__ == '__main__':
     # y = '[#1,#2&#3]'
     # show_result(y)
 
-    # TODO: @Blacklist([141, 142])
-    # """Benzene C - 12 site JACS,112,4768-90. Use #145B for biphenyl """
-    opls_145 = '[#12&D3&R6]([#12&R6])([#12&R6])'
-    show_result(opls_145)
+    from topos import Topos
+    topos = Topos()
 
-    # TODO: @Blacklist([145])
-    # """Biphenyl C1 """
-    opls_145B = '[#12&D3]([#12&%opls_145])([#12&%opls_145])([#12&%opls_145])'
-    show_result(opls_145B)
+    ethanol = topos.load_topo("64-17-5")
 
+    from smarts_opls import opls_rules
 
-    # TODO: @Blacklist([140, 144])
-    # """Benzene H - 12 site. """
-    opls_146 = '[#1]([#12&%opls_145])'
-    show_result(opls_146)
+    find_atomtypes(ethanol.atoms, opls_rules)
 
-    # TODO: @Blacklist(135)
-    # """C: CH3, toluene """
-    opls_148 = '[#12&D4]([#12&%opls_145])([#1])([#1])([#1])'
-    show_result(opls_148)
-
-    # TODO: @Blacklist(136)
-    # """C: CH2, ethyl benzene """
-    opls_149 = '[#12&D4]([#12&%opls_145])([#12])([#1])([#1])'
-    show_result(opls_149)
-
-
-    # TODO: make sure it doesn't catch water
-    # """all-atom O: mono alcohols """
-    opls_154 = '[#8&D2]([#1])'
-    show_result(opls_154)
-
-    # """all-atom H(O): mono alcohols, OP(=O)2 """
-    opls_155 = '[H][#8&%opls_154]'
-    show_result(opls_155)
-
-    # """alkane CH3 """
-    opls_157 = '[C&D4]([H])([H])([O])([O&%opls_154])'
-    show_result(opls_154)
-
-    # TODO: @Blacklist(180)
-    # """O: anisole """
-    opls_179 = '[O&D2]([C&%opls_145])([C])'
-    show_result(opls_179)
-
-    # """O: dialkyl ether """
-    opls_180 = '[O&D2]([C])([C])'
-    show_result(opls_180)
-
-    all_topos()
+    for atom in ethanol.atoms:
+        print("{}: {}".format(atom, atom.whitelist - atom.blacklist))
