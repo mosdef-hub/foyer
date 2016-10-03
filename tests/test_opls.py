@@ -100,15 +100,3 @@ class TestOPLS(object):
         assert all(x.type for x in parametrized.angles)
         assert len(parametrized.rb_torsions) == 24
         assert all(x.type for x in parametrized.dihedrals)
-
-
-if __name__ == "__main__":
-    test_class = TestOPLS()
-
-    # mol = 'acetophenone'
-    # mol = 'benzyl-alcohol'
-    # top_path = test_class.find_topfile_by_mol_name(mol)
-    # test_class.test_atomtyping(top_path)
-
-    test_class.find_correctly_implemented()
-
