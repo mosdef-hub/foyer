@@ -1,29 +1,21 @@
-language: c
+language: generic
 
 sudo: false
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
+
+
+matrix:
+  include:
+    - { os: linux, env: PYTHON_VERSION=3.4 }
+    - { os: linux, env: PYTHON_VERSION=3.5 }
+    - { os: osx, env: PYTHON_VERSION=3.4 }
+    - { os: osx, env: PYTHON_VERSION=3.5 }
 
 install:
-  - source devtools/travis-ci/install.sh
-  - conda config --add channels omnia
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install md5sha1sum; fi
+    - source devtools/travis-ci/install_conda.sh
+    - conda config --add channels omnia
+    - conda install -yq parmed libpng=1.6.22 matplotlib networkx oset six pytest
+    - pip install -e .
 
 script:
-  - conda build devtools/conda-recipe
-
-env:
-  matrix:
-    - python=2.7  CONDA_PY=27
-    - python=3.4  CONDA_PY=34
-
-  global:
-    # BINSTAR
-    - secure: "Rbt/6qSNB/6hvDKboKqo7iS1I+Zhye5u9k/RxNZCpaUQUiledjuzsBo+vppYskb7vHS+QRT+leDm7gUo/ZOv0DahLi4ScCIhvPSYTtWu+hKlp7TcI0woi5H7gCmGvP8bEYVPlHm3AT54xh7dzpfOca5eHpo8dVtvJhNTqbY8jPw="
-    # GITHUB
-    - secure: "gtj9VfJQzQb4KL23+aRfimQgXBK88JHEqmN6zi+MCCLrjhnXs7+qWoAGi4kqwNeNd9fXSK5Wk+PfPHEPjP8MFyjEhWBL9LD9ct+59RVx8bf3pe2WOWktpf440XxwpLuDEWrV01Ly4FKRqYTOvtz7pYV5y/JgCyCP76MwkWhZvG4="
-
-after_success:
-  - source devtools/travis-ci/post_binstar.sh
-  - source devtools/travis-ci/create_docs.sh
+    - py.test -v --tb=short
