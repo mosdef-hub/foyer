@@ -3,13 +3,12 @@ import glob
 import parmed as pmd
 from pkg_resources import resource_filename
 
-
-class Topos(object):
+class Topology(object):
 
     def __init__(self):
-        self.topo_dict = self.all_topos()
+        self.topo_dict = self._all_topos()
 
-    def all_topos(self):
+    def _all_topos(self):
 
         resource_dir = resource_filename('foyer', '../opls_validation')
         top_files = set(glob.glob(os.path.join(resource_dir, '*.top')))
@@ -25,7 +24,7 @@ class Topos(object):
 
         return topo_dict
 
-    def load_topo(self, basename):
+    def load(self, basename):
 
         top_path, gro_path = self.topo_dict[basename]
         structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path,

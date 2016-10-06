@@ -6,7 +6,7 @@ from pkg_resources import resource_filename
 from foyer.atomtyper import find_atomtypes
 from foyer.forcefield import load
 
-from foyer.smarts import Smarts
+from foyer.rule import Smarts
 
 
 if __name__ == '__main__':
@@ -21,9 +21,9 @@ if __name__ == '__main__':
     structure.title = structure.title.replace(' GAS', '')
     known_opls_types = [atom.type for atom in structure.atoms]
 
-    forcefield_resource_dir = resource_filename('foyer', 'oplsaa')
+    forcefield_resource_dir = resource_filename('foyer', 'ff')
 
-    forcefield = load(os.path.join(forcefield_resource_dir, 'oplsaa.xml'))
+    forcefield = load(os.path.join(forcefield_resource_dir, 'ff.xml'))
 
     find_atomtypes(structure.atoms, forcefield, debug=False)
 

@@ -41,7 +41,7 @@ setup(
     package_data={'foyer': ['tests/*.txt',
                             '../opls_validation/*.top',
                             '../opls_validation/*.gro',
-                            '../opls_validation/oplsaa.ff/*',
+                            '../opls_validation/ff.ff/*',
                             ]},
     package_dir={'foyer': 'foyer'},
     include_package_data=True,

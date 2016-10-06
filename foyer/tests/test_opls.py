@@ -88,7 +88,7 @@ class TestOPLS(object):
     def test_full_parametrization(self):
         top = os.path.join(self.resource_dir, 'benzene.top')
         gro = os.path.join(self.resource_dir, 'benzene.gro')
-        ff = os.path.join(self.resource_dir, 'oplsaa.ff/forcefield.itp')
+        ff = os.path.join(self.resource_dir, 'ff.ff/forcefield.itp')
         structure = pmd.load_file(top, xyz=gro)
         parametrized = apply_forcefield(structure, forcefield=ff, debug=False)
 
