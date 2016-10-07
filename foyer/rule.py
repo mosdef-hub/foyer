@@ -38,7 +38,7 @@ SMARTS_GRAMMAR = plyplus.Grammar("""
     STAR: '\*';
     DOLLAR: '\$';
     NUM: '[\d]+';
-    LABEL: '\%[a-z_]+([0-9][a-z_]?)*' ;
+    LABEL: '\%[a-z_0-9]+';
     // Tokens for chemical elements
     SYMBOL: 'C[laroudsemf]?|Os?|N[eaibdpos]?|S[icernbmg]?|P[drmtboau]?|H[eofgas]?|A[lrsgutcm]|B[eraik]?|Dy|E[urs]|F[erm]?|G[aed]|I[nr]?|Kr?|L[iaur]|M[gnodt]|R[buhenaf]|T[icebmalh]|U|V|W|Xe|Yb?|Z[nr]';
 
