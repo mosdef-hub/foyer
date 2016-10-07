@@ -1,17 +1,21 @@
 import os
 import glob
-import parmed as pmd
+from functools import lru_cache
 from pkg_resources import resource_filename
+import parmed as pmd
 
-class Topology(object):
+class Topology(pmd.Structure):
 
     def __init__(self):
-        self.topo_dict = self._all_topos()
+        super(Topology, self).__init__()
 
-    def _all_topos(self):
+    @classmethod
+    @lru_cache(maxsize=32)
+    def available(cls):
 
         resource_dir = resource_filename('foyer', '../opls_validation')
         top_files = set(glob.glob(os.path.join(resource_dir, '*.top')))
+
 
         topo_dict = {}
 
@@ -24,9 +28,10 @@ class Topology(object):
 
         return topo_dict
 
-    def load(self, basename):
+    @classmethod
+    def by_name(cls, basename):
 
-        top_path, gro_path = self.topo_dict[basename]
+        top_path, gro_path = cls.available()[basename]
         structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path,
                                                     parametrize=False)
         structure.title = structure.title.replace(' GAS', '')

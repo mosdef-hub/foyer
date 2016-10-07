@@ -121,10 +121,6 @@ opls_180 = '[O&D2]([C])([C])'
 
 
 
-# -------------- #
-# House of rules #
-# -------------- #
-
 @Element('O')
 @NeighborCount(2)
 @NeighborsExactly('H', 2)

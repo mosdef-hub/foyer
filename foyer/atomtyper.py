@@ -1,7 +1,7 @@
 from warnings import warn
 from oset import oset as OrderedSet
 import parmed.periodic_table as pt
-from rule import Rule
+from foyer.rule import Rule
 RULE_NAME_TO_RULE = dict()
 
 def find_atomtypes(atoms, forcefield, debug=False):

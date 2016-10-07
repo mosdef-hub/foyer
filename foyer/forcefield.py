@@ -24,7 +24,6 @@ class Forcefield(app.ForceField):
         super(Forcefield, self).__init__(*files)
 
     @classmethod
-    @property
     @lru_cache(maxsize=32)
     def _available(cls):
         resource_extension = '.xml'
@@ -33,21 +32,20 @@ class Forcefield(app.ForceField):
 
         resource_dict = {}
         for resource_path in resource_files:
-            base_path, resource_filename = os.path.split(resource_path)
-            basename = resource_filename[:-len(resource_extension)]
+            base_path, resource_fn = os.path.split(resource_path)
+            basename = resource_fn[:-len(resource_extension)]
             resource_dict[basename] = resource_path
 
         return resource_dict
 
     @classmethod
-    @property
     def available(cls):
-        return Forcefield._available.keys()
+        return Forcefield._available().keys()
 
     @classmethod
     def by_name(cls, forcefield_name):
-        if forcefield_name in cls.available:
-            return Forcefield(cls._available[forcefield_name])
+        if forcefield_name in cls.available():
+            return Forcefield(cls._available()[forcefield_name])
         else:
             raise IOError('Forcefield {} cannot be found'.format(forcefield_name))
 
@@ -98,7 +96,10 @@ class Forcefield(app.ForceField):
 
         self.find_atomtypes(structure.atoms, debug=debug)
         self.create_forces(structure)
-        self.parametrize(structure)
+        # self.parametrize(structure)
+
+    def find_atomtypes(self, atoms, debug=False):
+        return find_atomtypes(atoms, self, debug=debug)
 
     def create_forces(self, structure, angles=True, dihedrals=True,
                       impropers=False, pairs=True):
