@@ -17,6 +17,7 @@ from six import string_types
 from foyer.atomtyper import find_atomtypes
 from simtk.openmm import app
 import networkx as nx
+import parmed.periodic_table as pt
 
 
 class Forcefield(app.ForceField):
@@ -88,15 +89,32 @@ class Forcefield(app.ForceField):
         if 'des' in parameters:
             self._atomTypeDesc[name] = parameters['desc']
 
-    def apply(self, structure, debug=False):
+    def apply(self, structure, in_place=True, debug=False):
         """Apply a forcefield to a Topology. """
 
         if not structure.bonds:
             warn('Structure contains no bonds: \n{}\n'.format(structure))
 
+        if not in_place:
+            structure = structure.copy(structure.__class__)
+
+        # set atomic numbers if needed
+        for atom in structure.atoms:
+            if atom.atomic_number == 0:
+                if atom.name in pt.AtomicNum:
+                    atom.atomic_number = pt.AtomicNum[str(atom.name)]
+                else:
+                    try:
+                        atom.atomic_number = int(atom.name)
+                    except ValueError:
+                        warn('Cannot set atomic number. Element name: {}\n'.format(atom.name))
+
+
         self.find_atomtypes(structure.atoms, debug=debug)
-        self.create_forces(structure)
+        # self.create_forces(structure)
         # self.parametrize(structure)
+
+        return structure
 
     def find_atomtypes(self, atoms, debug=False):
         return find_atomtypes(atoms, self, debug=debug)
@@ -156,9 +174,6 @@ def create_impropers(structure, node, neighbors):
     for triplet in itertools.combinations(neighbors, 3):
         improper = pmd.Improper(node, triplet[0], triplet[1], triplet[2])
         structure.impropers.append(improper)
-
-
-
 
 def _loadFile(*args, **kwargs):
     slf = args[0]

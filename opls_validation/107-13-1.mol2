@@ -1,0 +1,30 @@
+@<TRIPOS>MOLECULE
+MOL
+8 4 8 0 1
+BIOPOLYMER
+USER_CHARGES
+@<TRIPOS>CRYSIN
+  100.0000   100.0000   100.0000    90.0000    90.0000    90.0000  1  1
+@<TRIPOS>ATOM
+       1 C           50.1200    50.2900    48.7200 opls_143      1 MOL       -0.230000
+       2 H           50.0100    49.3800    48.1500 opls_144      2 MOL        0.115000
+       3 H           50.0600    51.1800    48.1100 opls_144      3 MOL        0.115000
+       4 C           50.4100    50.4300    50.1200 opls_260      4 MOL       -0.025000
+       5 H           51.1500    51.1100    50.5000 opls_140      5 MOL        0.060000
+       6 C           49.7300    49.5800    51.0400 opls_261      6 MOL        0.395000
+       7 N           49.1700    48.9000    51.7900 opls_262      7 MOL       -0.430000
+       8 ML          49.3500    49.1200    51.5500 ML            8 MOL        0.000000
+@<TRIPOS>BOND
+       1        1        2 1
+       2        1        3 1
+       3        1        4 1
+       4        4        5 1
+@<TRIPOS>SUBSTRUCTURE
+       1 MOL             1 RESIDUE    0 **** ROOT      3
+       2 MOL             2 RESIDUE    0 **** ROOT      1
+       3 MOL             3 RESIDUE    0 **** ROOT      1
+       4 MOL             4 RESIDUE    0 **** ROOT      2
+       5 MOL             5 RESIDUE    0 **** ROOT      1
+       6 MOL             6 RESIDUE    0 **** ROOT      0
+       7 MOL             7 RESIDUE    0 **** ROOT      0
+       8 MOL             8 RESIDUE    0 **** ROOT      0

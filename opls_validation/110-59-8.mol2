@@ -1,0 +1,54 @@
+@<TRIPOS>MOLECULE
+MOL
+16 12 16 0 1
+BIOPOLYMER
+USER_CHARGES
+@<TRIPOS>CRYSIN
+  100.0000   100.0000   100.0000    90.0000    90.0000    90.0000  1  1
+@<TRIPOS>ATOM
+       1 C           49.6000    48.5600    51.0100 opls_139      1 MOL       -0.180000
+       2 H           49.0300    47.6300    51.0200 opls_140      2 MOL        0.060000
+       3 H           50.4500    48.4400    51.6800 opls_140      3 MOL        0.060000
+       4 H           48.8900    49.2400    51.4700 opls_140      4 MOL        0.060000
+       5 C           50.1800    48.8100    49.6200 opls_139      5 MOL       -0.120000
+       6 H           49.3100    48.7700    48.9700 opls_140      6 MOL        0.060000
+       7 H           50.7600    47.9300    49.3200 opls_140      7 MOL        0.060000
+       8 C           51.0400    50.0700    49.5100 opls_139      8 MOL       -0.120000
+       9 H           51.8800    49.8600    48.8400 opls_140      9 MOL        0.060000
+      10 H           51.6100    50.2200    50.4300 opls_140     10 MOL        0.060000
+      11 C           50.2800    51.3600    49.2000 opls_756     11 MOL       -0.020000
+      12 H           49.8600    51.3300    48.2000 opls_759     12 MOL        0.060000
+      13 H           50.9400    52.2200    49.2100 opls_759     13 MOL        0.060000
+      14 C           49.1900    51.7000    50.1000 opls_754     14 MOL        0.460000
+      15 N           48.3200    51.9800    50.8100 opls_753     15 MOL       -0.560000
+      16 ML          48.6000    51.8900    50.5800 ML           16 MOL        0.000000
+@<TRIPOS>BOND
+       1        1        2 1
+       2        1        3 1
+       3        1        4 1
+       4        1        5 1
+       5        5        6 1
+       6        5        7 1
+       7        5        8 1
+       8        8        9 1
+       9        8       10 1
+      10        8       11 1
+      11       11       12 1
+      12       11       13 1
+@<TRIPOS>SUBSTRUCTURE
+       1 MOL             1 RESIDUE    0 **** ROOT      4
+       2 MOL             2 RESIDUE    0 **** ROOT      1
+       3 MOL             3 RESIDUE    0 **** ROOT      1
+       4 MOL             4 RESIDUE    0 **** ROOT      1
+       5 MOL             5 RESIDUE    0 **** ROOT      4
+       6 MOL             6 RESIDUE    0 **** ROOT      1
+       7 MOL             7 RESIDUE    0 **** ROOT      1
+       8 MOL             8 RESIDUE    0 **** ROOT      4
+       9 MOL             9 RESIDUE    0 **** ROOT      1
+      10 MOL            10 RESIDUE    0 **** ROOT      1
+      11 MOL            11 RESIDUE    0 **** ROOT      3
+      12 MOL            12 RESIDUE    0 **** ROOT      1
+      13 MOL            13 RESIDUE    0 **** ROOT      1
+      14 MOL            14 RESIDUE    0 **** ROOT      0
+      15 MOL            15 RESIDUE    0 **** ROOT      0
+      16 MOL            16 RESIDUE    0 **** ROOT      0

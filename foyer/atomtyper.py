@@ -103,7 +103,7 @@ def _iterate_rules(atoms, max_iter=10):
 def _resolve_atomtypes(atoms):
     """Determine the final atomtypes from the white- and blacklists."""
     for i, atom in enumerate(atoms):
-        atomtype = atom.whitelist - atom.blacklist
+        atomtype = [rule.name for rule in atom.whitelist - atom.blacklist]
 
         if len(atomtype) == 1:
             atom.type = atomtype[0]
