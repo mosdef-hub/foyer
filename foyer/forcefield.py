@@ -3,6 +3,8 @@ import os
 from warnings import warn
 import glob
 from functools import lru_cache
+
+from parmed.gromacs.gromacstop import GromacsTopologyFile
 from pkg_resources import resource_filename
 
 import parmed as pmd
@@ -75,6 +77,12 @@ class Forcefield(app.ForceField):
         if not in_place:
             structure = structure.copy(structure.__class__)
 
+        # cast structure to a gromacs topology
+        structure = GromacsTopologyFile.from_structure(structure)
+
+        # copy forcefield parameterset to structure
+        # structure.parameterset = self.parameterset
+
         # set atomic numbers if needed
         for atom in structure.atoms:
             if atom.atomic_number == 0:
@@ -120,7 +128,10 @@ class Forcefield(app.ForceField):
                         create_impropers(structure, node_1, neighbors_1)
 
     def parameterize(self, structure):
-        pass
+        try:
+            structure.parametrize()
+        except:
+            warn("Internal error parametrizing structure...")
 
 
 def create_angles(structure, node, neighbors):
