@@ -1,7 +1,7 @@
 import os
 import pytest
 from foyer.forcefield import Forcefield
-from foyer.tests.topology import Topology
+from foyer.tests.test_structure import TestStructure
 
 
 class TestOPLS(object):
@@ -25,8 +25,8 @@ class TestOPLS(object):
         if expected_result is not True:
             return
 
-        known_structure = Topology.by_name(name, parameterized=True)
-        untyped_structure = Topology.by_name(name, parameterized=False)
+        known_structure = TestStructure.by_name(name, parameterized=True)
+        untyped_structure = TestStructure.by_name(name, parameterized=False)
         typed_structure = Forcefield.by_name('oplsaa').apply(untyped_structure, in_place=False, debug=False)
 
         atomtyping_errors = find_atomtyping_errors(typed_structure, known_structure)

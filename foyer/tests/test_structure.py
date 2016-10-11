@@ -4,10 +4,10 @@ from functools import lru_cache
 from pkg_resources import resource_filename
 import parmed as pmd
 
-class Topology(pmd.Structure):
+class TestStructure(pmd.Structure):
 
     def __init__(self):
-        super(Topology, self).__init__()
+        super(TestStructure, self).__init__()
 
     @classmethod
     @lru_cache(maxsize=32)

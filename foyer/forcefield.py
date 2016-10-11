@@ -5,15 +5,9 @@ import glob
 from functools import lru_cache
 from pkg_resources import resource_filename
 
-# import networkx as nx
-import parmed.gromacs as gmx
-from parmed.gromacs import GromacsTopologyFile
 import parmed as pmd
 from simtk.openmm.app.forcefield import _convertParameterToNumber
 import simtk.openmm.app.element as elem
-
-from six import string_types
-
 from foyer.atomtyper import find_atomtypes
 from simtk.openmm import app
 import networkx as nx
@@ -52,24 +46,7 @@ class Forcefield(app.ForceField):
 
     def registerAtomType(self, parameters):
         """Register a new atom type."""
-        name = parameters['name']
-        if name in self._atomTypes:
-            raise ValueError('Found multiple definitions for atom type: '+name)
-        atomClass = parameters['class']
-        mass = _convertParameterToNumber(parameters['mass'])
-        element = None
-        if 'element' in parameters:
-            element = parameters['element']
-            if not isinstance(element, elem.Element):
-                element = elem.get_by_symbol(element)
-        self._atomTypes[name] = (atomClass, mass, element)
-        if atomClass in self._atomClasses:
-            typeSet = self._atomClasses[atomClass]
-        else:
-            typeSet = set()
-            self._atomClasses[atomClass] = typeSet
-        typeSet.add(name)
-        self._atomClasses[''].add(name)
+        super(Forcefield, self).registerAtomType(parameters)
 
         # foyer requires that ForceField should have a _atomTypeDefinitions property
         if not hasattr(self, '_atomTypeDefinitions'):
@@ -79,7 +56,7 @@ class Forcefield(app.ForceField):
         if not hasattr(self, '_atomTypeDesc'):
             self._atomTypeDesc = dict()
 
-
+        name = parameters['name']
         if 'def' in parameters:
             self._atomTypeDefinitions[name] = parameters['def']
 
@@ -111,16 +88,17 @@ class Forcefield(app.ForceField):
 
 
         self.find_atomtypes(structure.atoms, debug=debug)
-        # self.create_forces(structure)
-        # self.parametrize(structure)
+        self.create_bonded_interactions(structure)
+        self.parameterize(structure)
 
         return structure
 
     def find_atomtypes(self, atoms, debug=False):
+        # call the atomtyper
         return find_atomtypes(atoms, self, debug=debug)
 
-    def create_forces(self, structure, angles=True, dihedrals=True,
-                      impropers=False, pairs=True):
+    def create_bonded_interactions(self, structure, angles=True, dihedrals=True,
+                                   impropers=False, pairs=True):
         """Generate all possible angles, dihedrals and 1-4 pairs. """
         bondgraph = nx.Graph()
         bondgraph.add_edges_from(((b.atom1, b.atom2) for b in structure.bonds))
@@ -141,6 +119,9 @@ class Forcefield(app.ForceField):
                     if impropers and len(neighbors_1) >= 3:
                         create_impropers(structure, node_1, neighbors_1)
 
+    def parameterize(self, structure):
+        pass
+
 
 def create_angles(structure, node, neighbors):
     """Add all possible angles around a node to a structure. """
@@ -152,18 +133,19 @@ def create_angles(structure, node, neighbors):
 def create_dihedrals(structure, node_1, neighbors_1, node_2, neighbors_2,
                      pairs=True):
     """Add all possible dihedrals around a pair of nodes to a structure. """
-    # We need to make sure we don't remove the node from the neighbor lists
-    # that we will be re-using in the following iterations.
     neighbors_1 = set(neighbors_1) - {node_2}
-    neighbors_2.remove(node_1)
+    neighbors_2 = set(neighbors_2) - {node_1}
 
     for pair in itertools.product(neighbors_1, neighbors_2):
         if pair[0] != pair[1]:
             dihedral = pmd.Dihedral(pair[0], node_1, node_2, pair[1])
-            if structure.parameterset.dihedral_types:
+            if hasattr(structure, 'parameterset'):
+                if structure.parameterset.dihedral_types:
+                    structure.dihedrals.append(dihedral)
+                if structure.parameterset.rb_torsion_types:
+                    structure.rb_torsions.append(dihedral)
+            else:
                 structure.dihedrals.append(dihedral)
-            if structure.parameterset.rb_torsion_types:
-                structure.rb_torsions.append(dihedral)
             if pairs:
                 pair = pmd.NonbondedException(pair[0], pair[1])
                 structure.adjusts.append(pair)
@@ -175,12 +157,3 @@ def create_impropers(structure, node, neighbors):
         improper = pmd.Improper(node, triplet[0], triplet[1], triplet[2])
         structure.impropers.append(improper)
 
-def _loadFile(*args, **kwargs):
-    slf = args[0]
-    args = args[1:]
-    return slf.orig_loadFile(*args, **kwargs)
-
-
-# if __name__ == '__main__':
-#     ff = load(os.path.join(os.path.split(__file__)[0], 'ff', 'ff.xml'))
-#     print(ff)
