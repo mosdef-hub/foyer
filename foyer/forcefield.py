@@ -2,7 +2,10 @@ import itertools
 import os
 from warnings import warn
 import glob
-from functools import lru_cache
+try:
+    from functools import lru_cache
+except:
+    from functools32 import lru_cache
 
 from parmed.gromacs.gromacstop import GromacsTopologyFile
 from pkg_resources import resource_filename
@@ -128,10 +131,8 @@ class Forcefield(app.ForceField):
                         create_impropers(structure, node_1, neighbors_1)
 
     def parameterize(self, structure):
-        try:
-            structure.parametrize()
-        except:
-            warn("Internal error parametrizing structure...")
+        pass
+        # structure.parametrize()
 
 
 def create_angles(structure, node, neighbors):

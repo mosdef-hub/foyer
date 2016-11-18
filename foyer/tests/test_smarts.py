@@ -6,7 +6,6 @@ from pkg_resources import resource_filename
 from foyer.atomtyper import find_atomtypes
 from foyer.forcefield import load
 
-from foyer.rule import Smarts
 
 
 if __name__ == '__main__':
