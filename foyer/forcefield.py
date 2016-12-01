@@ -2,7 +2,10 @@ import itertools
 import os
 from warnings import warn
 import glob
-from functools import lru_cache
+try:
+    from functools import lru_cache
+except:
+    from functools32 import lru_cache
 
 from parmed.gromacs.gromacstop import GromacsTopologyFile
 from parmed.parameters import ParameterSet
@@ -127,53 +130,8 @@ class Forcefield(app.ForceField):
                         create_impropers(structure, node_1, neighbors_1)
 
     def parameterize(self, structure):
-        # Add forces to the System
-        if structure.parameterset is not None:
-            structure.parameterset = ParameterSet()
-
-        for force in self._forces:
-            if isinstance(force, HarmonicBondGenerator):
-                structure.paraeterset.
-                pass
-            if isinstance(force, HarmonicAngleGenerator):
-                pass
-            if isinstance(force, NonbondedGenerator):
-                pass
-
-
-        # try:
+        pass
         # structure.parametrize()
-        # except:
-        #     warn("Internal error parametrizing structure...")
-
-    def atomTypes(self):
-        # TODO: what if ffatomtype.element is not defined???
-        # TODO: where are chadges coming from?
-        topAtomTypes = dict()
-        for number, ffatomtype in enumerate(self._atomTypes):
-            topAtomTypes[ffatomtype] = AtomType(ffatomtype.name, number, ffatomtype.mass, ffatomtype.element.atomic_number, bond_type=None,
-                 charge=0.0)
-
-        for clazz, ffatomtypes in self._atomClasses.items():
-            for ffatomtype in ffatomtypes:
-                topAtomTypes[ffatomtype].bond_type = clazz
-
-        return topAtomTypes.values()
-
-    def bondTypes(self):
-        topBondTypes = list()
-
-        for item in self._forces:
-            if isinstance(item, HarmonicBondGenerator):
-                hbg = item
-                break
-
-        for type1, type2, length, k in zip(hbg.types1, hbg.types2, hbg.length, hbg.k):
-            topBondTypes.append(BondType(k, length))
-
-        return topBondTypes
-
-
 
 
 def create_angles(structure, node, neighbors):

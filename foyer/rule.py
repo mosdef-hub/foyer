@@ -1,54 +1,13 @@
 import itertools
-import plyplus
 import parmed.periodic_table as pt
+from smarts import parse
 
-SMARTS_GRAMMAR = plyplus.Grammar("""
-    start: string;
-
-    // Rules
-    @string: chain nonlastbranch* lastbranch?;
-    @chain: atom chain | atom;
-    @nonlastbranch: LPAR branch RPAR;
-    @lastbranch: branch;
-    branch: string;
-    atom: LBRACKET or_expression RBRACKET atom_label?;
-    atom_label: NUM;
-    ?or_expression: (or_expression or_symbol)? and_expression;
-    ?and_expression: (and_expression and_symbol)? atom_id;
-    @and_symbol: SEMI | AMP;
-    @or_symbol: COMMA;
-    atom_id: atom_symbol | HASH atomic_num | any_atom | DOLLAR LPAR matches_string RPAR | has_label | 'D' neighbor_count | 'R' ring_size;
-    atom_symbol: SYMBOL;
-    atomic_num: NUM;
-    any_atom: STAR;
-    matches_string: string ;
-    has_label: LABEL ;
-    neighbor_count: NUM;
-    ring_size: NUM;
-
-    // Tokens
-    HASH: '\#';
-    LBRACKET: '\[';
-    RBRACKET: '\]';
-    LPAR: '\(';
-    RPAR: '\)';
-    COMMA: '\,';
-    SEMI: '\;';
-    AMP: '\&';
-    STAR: '\*';
-    DOLLAR: '\$';
-    NUM: '[\d]+';
-    LABEL: '\%[a-z_0-9]+';
-    // Tokens for chemical elements
-    SYMBOL: 'C[laroudsemf]?|Os?|N[eaibdpos]?|S[icernbmg]?|P[drmtboau]?|H[eofgas]?|A[lrsgutcm]|B[eraik]?|Dy|E[urs]|F[erm]?|G[aed]|I[nr]?|Kr?|L[iaur]|M[gnodt]|R[buhenaf]|T[icebmalh]|U|V|W|Xe|Yb?|Z[nr]';
-
-""")
 
 class Rule(object):
     def __init__(self, name, smarts_string, overrides=None):
         self.name = name
         self.smarts_string = smarts_string
-        self.ast = SMARTS_GRAMMAR.parse(smarts_string)
+        self.ast = parse(smarts_string)
         self.ast.calc_parents()
         if overrides:
             self.overrides = set(overrides)
