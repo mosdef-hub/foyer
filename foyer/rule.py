@@ -1,6 +1,6 @@
 import itertools
 import parmed.periodic_table as pt
-from smarts import parse
+from foyer.smarts import parse
 
 
 class Rule(object):
@@ -112,9 +112,9 @@ class Rule(object):
         if atom_id.head == 'any_atom':
             return True
         elif atom_id.head == 'atomic_num':
-            return atom.atomic_number == int(atom_id.tail[0])
+            return atom.element._atomic_number == int(atom_id.tail[0])
         elif atom_id.head == 'atom_symbol':
-            return atom.atomic_number == pt.AtomicNum[str(atom_id.tail[0])]
+            return atom.element._atomic_number == pt.AtomicNum[str(atom_id.tail[0])]
         elif atom_id.head == 'has_label':
             label = atom_id.tail[0][1:] # cut the % sign from the beginning
             return label in (rule.name for rule in atom.whitelist)

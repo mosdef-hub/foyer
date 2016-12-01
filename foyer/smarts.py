@@ -16,7 +16,7 @@ SMARTS_GRAMMAR = plyplus.Grammar("""
     ?and_expression: (and_expression and_symbol)? atom_id;
     @and_symbol: SEMI | AMP;
     @or_symbol: COMMA;
-    ?atom_id: atom_symbol | HASH atomic_num | any_atom | DOLLAR LPAR matches_string RPAR | has_label | 'D' neighbor_count | 'R' ring_size;
+    atom_id: atom_symbol | HASH atomic_num | any_atom | DOLLAR LPAR matches_string RPAR | has_label | 'D' neighbor_count | 'R' ring_size;
     atom_symbol: SYMBOL;
     atomic_num: NUM;
     any_atom: STAR;
@@ -55,9 +55,9 @@ if __name__ == '__main__':
     assert ast.tail[0].tail[0].head == "atom_symbol"
     assert str(ast.tail[0].tail[0].tail[0]) == "O"
 
-    ast = parse('[#6&D2]1CCCCC1')
-    # g = ast2graph(ast)
-    # assert g.nodes[0].degree == 2
-
-
-    print(ast)
+    # ast = parse('[#6&D2]1CCCCC1')
+    # # g = ast2graph(ast)
+    # # assert g.nodes[0].degree == 2
+    #
+    #
+    # print(ast)

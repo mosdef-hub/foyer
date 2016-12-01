@@ -8,24 +8,24 @@ if __name__ == '__main__':
     ethane = pmd.load_file(mol2_path, structure=True)
 
     # apply forcefield
-    Forcefield.by_name('oplsaa').apply(ethane)
+    ethane = Forcefield.by_name('oplsaa').apply(ethane)
 
     # print atom types
     print("Atoms:")
-    for atom in ethane.atoms:
+    for atom in ethane.atoms():
         print('Atom {} is typed as {}'.format(atom, atom.type))
 
     # print bonds
     print("Bonds:")
-    for bond in ethane.bonds:
+    for bond in ethane.bonds():
         print('{} '.format(bond))
 
     # print angles
     print("Angles:")
-    for angle in ethane.angles:
+    for angle in ethane.angles():
         print('{} '.format(angle))    # print angles
 
     # print dihedrals
     print("Dihedrals:")
-    for dihedral in ethane.dihedrals:
+    for dihedral in ethane.dihedrals():
         print('{} '.format(dihedral))

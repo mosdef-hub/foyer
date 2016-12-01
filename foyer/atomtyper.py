@@ -33,11 +33,11 @@ def find_atomtypes(atoms, forcefield, debug=False):
     for atom in atoms:
         atom.whitelist = OrderedSet()
         atom.blacklist = OrderedSet()
-        if atom.element:
-            atom.element_name = pt.Element[atom.element]
-        else:
-            # TODO: more robust element detection
-            atom.element_name = atom.name
+        # if atom.element:
+        #     atom.element_name = pt.Element[atom.element]
+        # else:
+        #     # TODO: more robust element detection
+        #     atom.element_name = atom.name
 
     _load_rules(forcefield)
     # if debug:
