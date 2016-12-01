@@ -4,6 +4,7 @@ import parmed.periodic_table as pt
 from foyer.rule import Rule
 RULE_NAME_TO_RULE = dict()
 
+
 def find_atomtypes(atoms, forcefield, debug=False):
     """Determine atomtypes for all atoms.
 

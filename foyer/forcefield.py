@@ -5,10 +5,13 @@ import glob
 from functools import lru_cache
 
 from parmed.gromacs.gromacstop import GromacsTopologyFile
+from parmed.parameters import ParameterSet
+from parmed.topologyobjects import AtomType, BondType
 from pkg_resources import resource_filename
 
 import parmed as pmd
-from simtk.openmm.app.forcefield import _convertParameterToNumber
+from simtk.openmm.app.forcefield import _convertParameterToNumber, HarmonicBondGenerator, HarmonicAngleGenerator, \
+    NonbondedGenerator
 import simtk.openmm.app.element as elem
 from foyer.atomtyper import find_atomtypes
 from simtk.openmm import app
@@ -80,9 +83,6 @@ class Forcefield(app.ForceField):
         # cast structure to a gromacs topology
         structure = GromacsTopologyFile.from_structure(structure)
 
-        # copy forcefield parameterset to structure
-        # structure.parameterset = self.parameterset
-
         # set atomic numbers if needed
         for atom in structure.atoms:
             if atom.atomic_number == 0:
@@ -93,7 +93,6 @@ class Forcefield(app.ForceField):
                         atom.atomic_number = int(atom.name)
                     except ValueError:
                         warn('Cannot set atomic number. Element name: {}\n'.format(atom.name))
-
 
         self.find_atomtypes(structure.atoms, debug=debug)
         self.create_bonded_interactions(structure)
@@ -128,10 +127,53 @@ class Forcefield(app.ForceField):
                         create_impropers(structure, node_1, neighbors_1)
 
     def parameterize(self, structure):
-        try:
-            structure.parametrize()
-        except:
-            warn("Internal error parametrizing structure...")
+        # Add forces to the System
+        if structure.parameterset is not None:
+            structure.parameterset = ParameterSet()
+
+        for force in self._forces:
+            if isinstance(force, HarmonicBondGenerator):
+                structure.paraeterset.
+                pass
+            if isinstance(force, HarmonicAngleGenerator):
+                pass
+            if isinstance(force, NonbondedGenerator):
+                pass
+
+
+        # try:
+        # structure.parametrize()
+        # except:
+        #     warn("Internal error parametrizing structure...")
+
+    def atomTypes(self):
+        # TODO: what if ffatomtype.element is not defined???
+        # TODO: where are chadges coming from?
+        topAtomTypes = dict()
+        for number, ffatomtype in enumerate(self._atomTypes):
+            topAtomTypes[ffatomtype] = AtomType(ffatomtype.name, number, ffatomtype.mass, ffatomtype.element.atomic_number, bond_type=None,
+                 charge=0.0)
+
+        for clazz, ffatomtypes in self._atomClasses.items():
+            for ffatomtype in ffatomtypes:
+                topAtomTypes[ffatomtype].bond_type = clazz
+
+        return topAtomTypes.values()
+
+    def bondTypes(self):
+        topBondTypes = list()
+
+        for item in self._forces:
+            if isinstance(item, HarmonicBondGenerator):
+                hbg = item
+                break
+
+        for type1, type2, length, k in zip(hbg.types1, hbg.types2, hbg.length, hbg.k):
+            topBondTypes.append(BondType(k, length))
+
+        return topBondTypes
+
+
 
 
 def create_angles(structure, node, neighbors):
@@ -150,16 +192,16 @@ def create_dihedrals(structure, node_1, neighbors_1, node_2, neighbors_2,
     for pair in itertools.product(neighbors_1, neighbors_2):
         if pair[0] != pair[1]:
             dihedral = pmd.Dihedral(pair[0], node_1, node_2, pair[1])
-            if hasattr(structure, 'parameterset'):
-                if structure.parameterset.dihedral_types:
-                    structure.dihedrals.append(dihedral)
-                if structure.parameterset.rb_torsion_types:
-                    structure.rb_torsions.append(dihedral)
-            else:
-                structure.dihedrals.append(dihedral)
-            if pairs:
-                pair = pmd.NonbondedException(pair[0], pair[1])
-                structure.adjusts.append(pair)
+            # if hasattr(structure, 'parameterset'):
+            #     if structure.parameterset.dihedral_types:
+            #         structure.dihedrals.append(dihedral)
+            #     if structure.parameterset.rb_torsion_types:
+            #         structure.rb_torsions.append(dihedral)
+            # else:
+            structure.dihedrals.append(dihedral)
+            # if pairs:
+            #     pair = pmd.NonbondedException(pair[0], pair[1])
+            #     structure.adjusts.append(pair)
 
 
 def create_impropers(structure, node, neighbors):

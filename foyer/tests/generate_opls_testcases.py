@@ -26,18 +26,22 @@ def update_opls_test_case_list():
     with open(opls_test_case_list_path, 'w') as fh:
         for name, (mol2_path, top_path, gro_path) in TestStructure.available().items():
 
-            known_structure = TestStructure.by_name(name, parameterized=True)
-            untyped_structure = TestStructure.by_name(name, parameterized=False)
-            typed_structure = Forcefield.by_name('oplsaa').apply(untyped_structure, in_place=False, debug=False)
+            try:
+                known_structure = TestStructure.by_name(name, parameterized=True)
+                untyped_structure = TestStructure.by_name(name, parameterized=False)
+                typed_structure = Forcefield.by_name('oplsaa').apply(untyped_structure, in_place=False, debug=False)
 
-            atomtyping_errors = find_atomtyping_errors(typed_structure, known_structure)
+                atomtyping_errors = find_atomtyping_errors(typed_structure, known_structure)
 
-            if atomtyping_errors:
+                if atomtyping_errors:
+                    print('ERROR: {}'.format(atomtyping_errors))
+                    expected_result = False
+                else:
+                    print(' *** SUCCESS {}\n'.format(name))
+                    expected_result = True
+            except:
                 print('ERROR: {}'.format(atomtyping_errors))
                 expected_result = False
-            else:
-                print(' *** SUCCESS {}\n'.format(name))
-                expected_result = True
 
             basename = os.path.basename(top_path[:-4])
 

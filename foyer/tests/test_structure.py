@@ -35,7 +35,8 @@ class TestStructure(pmd.Structure):
 
         mol2_path, top_path, gro_path = cls.available()[basename]
         if parameterized:
-
+            # structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path,
+            #                                         parametrize=parameterized)
             structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path,
                                                     parametrize=False)
             structure.title = structure.title.replace(' GAS', '')
