@@ -66,6 +66,7 @@ def _load_rules(forcefield):
 #             RULE_MAP[element_type][neighbor_count] = []
 #         RULE_MAP[element_type][neighbor_count].append(rule_name)
 
+
 def _iterate_rules(atoms, max_iter=10):
     """Iteratively run all the rules until the white- and backlists converge.
 
