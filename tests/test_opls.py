@@ -6,11 +6,11 @@ import parmed as pmd
 from pkg_resources import resource_filename
 import pytest
 
-from foyer.forcefield import apply_forcefield
-from foyer.atomtyper import find_atomtypes
+from foyer import Forcefield
 
 
 class TestOPLS(object):
+    oplsaa = Forcefield.by_name('oplsaa')
 
     @pytest.fixture(autouse=True)
     def initdir(self, tmpdir):
@@ -60,16 +60,16 @@ class TestOPLS(object):
         known_opls_types = [atom.type for atom in structure.atoms]
 
         print("Typing {} ({})...".format(structure.title, top_filename))
-        find_atomtypes(structure.atoms, forcefield='OPLS-AA', debug=False)
+        typed_structure = self.oplsaa.apply(structure)
 
         generated_opls_types = list()
-        for i, atom in enumerate(structure.atoms):
+        for i, atom in enumerate(typed_structure.atoms):
             message = ('Found multiple or no OPLS types for atom {} in {} ({}): {}\n'
                        'Should be atomtype: {}'.format(
                 i, structure.title, top_filename, atom.type, known_opls_types[i]))
             assert atom.type, message
-
             generated_opls_types.append(atom.type)
+
         both = zip(generated_opls_types, known_opls_types)
 
         n_types = np.array(range(len(generated_opls_types)))
@@ -90,7 +90,7 @@ class TestOPLS(object):
         gro = os.path.join(self.resource_dir, 'benzene.gro')
         ff = os.path.join(self.resource_dir, 'oplsaa.ff/forcefield.itp')
         structure = pmd.load_file(top, xyz=gro)
-        parametrized = apply_forcefield(structure, forcefield=ff, debug=False)
+        parametrized = self.oplsaa.apply(structure)
 
         assert sum((1 for at in parametrized.atoms if at.type == 'opls_145')) == 6
         assert sum((1 for at in parametrized.atoms if at.type == 'opls_146')) == 6

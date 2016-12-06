@@ -1,7 +1,10 @@
 from warnings import warn
+
 from oset import oset as OrderedSet
-import parmed.periodic_table as pt
+
+from foyer.exceptions import FoyerError
 from foyer.rule import Rule
+
 RULE_NAME_TO_RULE = dict()
 
 
@@ -109,10 +112,10 @@ def _resolve_atomtypes(atoms):
 
         if len(atomtype) == 1:
             atom.type = atomtype[0]
+        elif len(atomtype) > 1:
+            raise FoyerError("Found multiple types for atom {0} ({1}): {2}.".format(i, atom.element.name, atomtype))
         else:
-            warn("CHECK YOUR TOPOLOGY. Found multiple or no types for atom "
-                 "{0} ({1}): {2}.".format(i, atom.element_name, atomtype))
-            atom.type = ', '.join(atomtype)
+            raise FoyerError("Found no types for atom {0} ({1}).".format(i, atom.element.name))
 
 # def neighbor_element_types(atom):
 #     """Returns the number of neighbors of each element type for an `atom`.
