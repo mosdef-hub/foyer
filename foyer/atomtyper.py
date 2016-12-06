@@ -86,13 +86,13 @@ def _iterate_rules(atoms, max_iter=10):
         found_something = False
         for atom in atoms:
             for rule in RULE_NAME_TO_RULE.values():
-                if rule not in atom.whitelist and rule not in atom.blacklist:
+                if rule.name not in atom.whitelist:
                     # # Only run rules with matching element and neighbor counts.
                     # if atom.element_name in RULE_MAP:
                     #     if len(atom.bond_partners) in RULE_MAP[atom.element_name]:
                     #         for rule in RULE_MAP[atom.element_name][len(atom.bond_partners)]:
                     if rule.matches(atom):
-                        atom.whitelist.add(rule)
+                        atom.whitelist.add(rule.name)
                         atom.blacklist |= rule.overrides
                         found_something = True
                     #     else:
@@ -108,7 +108,7 @@ def _iterate_rules(atoms, max_iter=10):
 def _resolve_atomtypes(atoms):
     """Determine the final atomtypes from the white- and blacklists."""
     for i, atom in enumerate(atoms):
-        atomtype = [rule.name for rule in atom.whitelist - atom.blacklist]
+        atomtype = [rule_name for rule_name in atom.whitelist - atom.blacklist]
 
         if len(atomtype) == 1:
             atom.type = atomtype[0]

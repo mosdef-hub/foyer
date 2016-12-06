@@ -16,7 +16,7 @@ SMARTS_GRAMMAR = plyplus.Grammar("""
     ?and_expression: (and_expression and_symbol)? atom_id;
     @and_symbol: SEMI | AMP;
     @or_symbol: COMMA;
-    atom_id: atom_symbol | HASH atomic_num | any_atom | DOLLAR LPAR matches_string RPAR | has_label | 'D' neighbor_count | 'R' ring_size;
+    atom_id: atom_symbol | HASH atomic_num | any_atom | DOLLAR LPAR matches_string RPAR | has_label | 'X' neighbor_count | 'R' ring_size;
     atom_symbol: SYMBOL;
     atomic_num: NUM;
     any_atom: STAR;

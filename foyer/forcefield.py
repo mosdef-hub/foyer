@@ -19,7 +19,7 @@ from simtk.openmm.app.forcefield import (NoCutoff, CutoffNonPeriodic,
 
 from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
-
+import networkx as nx
 
 def generate_topology(non_omm_topology):
     topology = app.Topology()
@@ -34,7 +34,7 @@ def generate_topology(non_omm_topology):
             if pmd_atom.atomic_number != 0:
                 element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
             else:  # TODO: more robust element detection or enforcement of symbols
-                element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
+                element = elem.Element.getBySymbol(pmd_atom.name)
 
             omm_atom = topology.addAtom(name, element, residue)
             atoms[pmd_atom] = omm_atom
@@ -115,7 +115,9 @@ class Forcefield(app.ForceField):
         if 'def' in parameters:
             self._atomTypeDefinitions[name] = parameters['def']
         if 'overrides' in parameters:
-            self._atomTypeOverrides[name] = parameters['overrides']
+            overrides = set(parameters['overrides'].split(","))
+            if overrides:
+                self._atomTypeOverrides[name] = overrides
         if 'des' in parameters:
             self._atomTypeDesc[name] = parameters['desc']
 
@@ -183,6 +185,19 @@ class Forcefield(app.ForceField):
                              '"openmm.app.Topology"'.format(topology))
 
         # Atomtype the system.
+
+        G = nx.Graph()
+        G.add_nodes_from(topology.atoms())
+        G.add_edges_from(topology.bonds())
+        cycles = nx.cycle_basis(G)
+
+        for atom in topology.atoms():
+            atom.cycles = set()
+
+        for cycle in cycles:
+            for atom in cycle:
+                atom.cycles.add(tuple(cycle))
+
         find_atomtypes(atoms=list(topology.atoms()),
                        forcefield=self,
                        debug=verbose)

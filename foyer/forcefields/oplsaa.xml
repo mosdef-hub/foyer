@@ -1,19 +1,20 @@
 <ForceField>
     <AtomTypes>
 
-        <Type name="opls_135" class="CT" element="C" mass="12.01100"  def="[C;D4]([C])([H])([H])([H])" desc="alkane CH3"/>
-        <Type name="opls_136" class="CT" element="C" mass="12.01100"  def="[C;D4]([C])([C])([#1])([#1])" desc="alkane CH2"/>
-        <Type name="opls_137" class="CT" element="C" mass="12.01100"  def="[C;D4]([C])([C])([C])([H])" desc="alkane CH"/>
-        <Type name="opls_138" class="CT" element="C" mass="12.01100"  def="[C;D4]([H])([H])([H])([H])" desc="alkane CH4"/>
-        <Type name="opls_139" class="CT" element="C" mass="12.01100"  def="[C;D4]([C])([C])([C])([C])" desc="alkane C"/>
-        <Type name="opls_140" class="HC" element="H" mass="1.00800"   def="[#1][C]" desc="alkane H"/>
-        <Type name="opls_141" class="CM" element="C" mass="12.01100"  def="[C;D3]([C])([C])([C])" desc="alkene C (R2-C=)"/>
-        <Type name="opls_142" class="CM" element="C" mass="12.01100"  def="[C;D3]([C])([C])([#1])" desc="alkene C (RH-C=)"/>
-        <Type name="opls_143" class="CM" element="C" mass="12.01100"  def="[C;D3]([C])([#1])([#1])" desc="alkene C (H2-C=)"/>
-        <Type name="opls_144" class="HC" element="C" mass="1.00800"   def="[#1]([C;%opls_141,C;%opls_142,C;%opls_143])" overrides="opls_140"/>
-        <Type name="opls_154" class="OH" element="O" mass="1.00800"   def="[O;D2]([C;D4])([H])" desc="all-atom O: mono alcohols"/>
+        <Type name="opls_135" class="CT" element="C" mass="12.01100"  def="[C;X4]([C])([H])([H])([H])" desc="alkane CH3"/>
+        <Type name="opls_136" class="CT" element="C" mass="12.01100"  def="[C;X4]([C])([C])([#1])([#1])" desc="alkane CH2"/>
+        <Type name="opls_137" class="CT" element="C" mass="12.01100"  def="[C;X4]([C])([C])([C])([H])" desc="alkane CH"/>
+        <Type name="opls_138" class="CT" element="C" mass="12.01100"  def="[C;X4]([H])([H])([H])([H])" desc="alkane CH4"/>
+        <Type name="opls_139" class="CT" element="C" mass="12.01100"  def="[C;X4]([C])([C])([C])([C])" desc="alkane C"/>
+        <Type name="opls_140" class="HC" element="H" mass="1.00800"   def="[H][C]" desc="alkane H"/>
+        <Type name="opls_141" class="CM" element="C" mass="12.01100"  def="[C;X3]([C])([C])([C])" desc="alkene C (R2-C=)"/>
+        <Type name="opls_142" class="CM" element="C" mass="12.01100"  def="[C;X3]([C])([C])([H])" desc="alkene C (RH-C=)"/>
+        <Type name="opls_143" class="CM" element="C" mass="12.01100"  def="[C;X3]([C])([H])([H])" desc="alkene C (H2-C=)"/>
+        <Type name="opls_144" class="HC" element="C" mass="1.00800"   def="[H]([C;%opls_141,C;%opls_142,C;%opls_143])" overrides="opls_140"/>
+        <Type name="opls_145" class="CT" element="C" mass="1.00800"   def="[C;X3;R6]1[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1" overrides="opls_142"/>
+        <Type name="opls_154" class="OH" element="O" mass="1.00800"   def="[O;X2]([C;X4])([H])" desc="all-atom O: mono alcohols"/>
         <Type name="opls_155" class="HO" element="H" mass="1.00800"   def="[H][O;%opls_154]" desc="all-atom H(O): mono alcohols, OP(=O)2"/>
-        <Type name="opls_157" class="CT" element="C" mass="1.00800"   def="[C;D4]([H])([H])([C])([O;%opls_154])"/>
+        <Type name="opls_157" class="CT" element="C" mass="1.00800"   def="[C;X4]([H])([H])([C])([O;%opls_154])"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="OW" class2="HW" length="0.09572000000000001" k="502079.9999999998"/>

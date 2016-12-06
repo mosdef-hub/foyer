@@ -117,10 +117,14 @@ class Rule(object):
             return atom.element._atomic_number == pt.AtomicNum[str(atom_id.tail[0])]
         elif atom_id.head == 'has_label':
             label = atom_id.tail[0][1:] # cut the % sign from the beginning
-            return label in (rule.name for rule in atom.whitelist)
+            return label in (rule_name for rule_name in atom.whitelist)
         elif atom_id.head == 'neighbor_count':
             return len(atom.bond_partners) == int(atom_id.tail[0])
         elif atom_id.head == 'ring_size':
-            raise NotImplementedError('ring_size feature is not yet implemented')
+            cycle_len = int(atom_id.tail[0])
+            for cycle in atom.cycles:
+                if len(cycle) == cycle_len:
+                    return True
+            return False
         elif atom_id.head == 'matches_string':
             raise NotImplementedError('matches_string feature is not yet implemented')
