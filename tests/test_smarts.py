@@ -1,30 +1,27 @@
 import os
 
-import numpy as np
 import parmed as pmd
 from pkg_resources import resource_filename
-from foyer.atomtyper import find_atomtypes
-from foyer.forcefield import load
+from foyer import Forcefield
 
 
 
-if __name__ == '__main__':
-
+def test_ethanol():
     resource_dir = resource_filename('foyer', '../opls_validation')
 
     top_path = os.path.join(resource_dir, '64-17-5.top')
     gro_path = os.path.join(resource_dir, '64-17-5-gas.gro')
 
-    structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path,
-                                                parametrize=False)
-    structure.title = structure.title.replace(' GAS', '')
-    known_opls_types = [atom.type for atom in structure.atoms]
+    ethanol = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path,
+                                              parametrize=False)
+    ethanol.title = ethanol.title.replace(' GAS', '')
 
-    forcefield_resource_dir = resource_filename('foyer', 'ff')
+    known_opls_types = [atom.type for atom in ethanol.atoms]
 
-    forcefield = load(os.path.join(forcefield_resource_dir, 'ff.xml'))
+    oplsaa = Forcefield.by_name('oplsaa')
 
-    find_atomtypes(structure.atoms, forcefield, debug=False)
+    typed_ethanol = oplsaa.apply(ethanol)
 
-    for atom in structure.atoms:
+
+    for atom in typed_ethanol:
         print("Atom {} is {}".format(atom, atom.type))

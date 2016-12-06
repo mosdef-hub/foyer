@@ -7,6 +7,7 @@ import itertools
 import os
 from pkg_resources import resource_filename
 
+import mbuild as mb
 import parmed as pmd
 import simtk.openmm.app.element as elem
 import simtk.unit as unit
@@ -33,7 +34,7 @@ def generate_topology(non_omm_topology):
             if pmd_atom.atomic_number != 0:
                 element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
             else:  # TODO: more robust element detection or enforcement of symbols
-                element = elem.Element.getBySymbol(pmd_atom.name)
+                element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
 
             omm_atom = topology.addAtom(name, element, residue)
             atoms[pmd_atom] = omm_atom
@@ -47,6 +48,29 @@ def generate_topology(non_omm_topology):
             atom1.bond_partners.append(atom2)
             atom2.bond_partners.append(atom1)
 
+    elif isinstance(non_omm_topology, mb.Compound):
+        residue = topology.addResidue(non_omm_topology.name, chain)
+        atoms = dict()  # mb.Particle: omm.Atom
+
+        # Create atoms in the residue.
+        for mb_particle in non_omm_topology.particles():
+            name = mb_particle.name
+            element = elem.Element.getBySymbol(mb_particle.name)
+
+            omm_atom = topology.addAtom(name, element, residue)
+            atoms[mb_particle] = omm_atom
+            omm_atom.bond_partners = []
+
+        # Create bonds.
+        for atom1, atom2 in non_omm_topology.bonds():
+            topology.addBond(atom1, atom2)
+            atom1.bond_partners.append(atom2)
+            atom2.bond_partners.append(atom1)
+    else:
+        raise FoyerError('Unknown topology format: {}\n'
+                         'Supported formats are: '
+                         '"parmed.Structure", '
+                         '"openmm.app.Topology"'.format(topology))
     return topology
 
 
@@ -96,15 +120,10 @@ class Forcefield(app.ForceField):
             self._atomTypeDesc[name] = parameters['desc']
 
     def apply(self, topology, *args, **kwargs):
-        if isinstance(topology, pmd.Structure):
+        if not isinstance(topology, app.Topology):
             topology = generate_topology(topology)
-        elif isinstance(topology, app.Topology):
-            pass
         else:
-            raise FoyerError('Unknown topology format: {}\n'
-                             'Supported formats are: '
-                             '"parmed.Structure", '
-                             '"openmm.app.Topology"'.format(topology))
+            pass
 
         system = self.createSystem(topology, *args, **kwargs)
         return pmd.openmm.load_topology(topology=topology, system=system)
