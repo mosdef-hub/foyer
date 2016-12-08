@@ -11,7 +11,8 @@
         <Type name="opls_142" class="CM" element="C" mass="12.01100"  def="[C;X3]([C])([C])([H])" desc="alkene C (RH-C=)"/>
         <Type name="opls_143" class="CM" element="C" mass="12.01100"  def="[C;X3]([C])([H])([H])" desc="alkene C (H2-C=)"/>
         <Type name="opls_144" class="HC" element="C" mass="1.00800"   def="[H]([C;%opls_141,C;%opls_142,C;%opls_143])" overrides="opls_140"/>
-        <Type name="opls_145" class="CT" element="C" mass="1.00800"   def="[C;X3;R6]1[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1" overrides="opls_142"/>
+        <Type name="opls_145" class="CA" element="C" mass="1.00800"   def="[C;X3;R6]1[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1" overrides="opls_142"/>
+        <Type name="opls_146" class="HC" element="H" mass="1.00800"   def="[H][C;%opls_145]" overrides="opls_144" desc="benzene H"/>
         <Type name="opls_154" class="OH" element="O" mass="1.00800"   def="[O;X2]([C;X4])([H])" desc="all-atom O: mono alcohols"/>
         <Type name="opls_155" class="HO" element="H" mass="1.00800"   def="[H][O;%opls_154]" desc="all-atom H(O): mono alcohols, OP(=O)2"/>
         <Type name="opls_157" class="CT" element="C" mass="1.00800"   def="[C;X4]([H])([H])([C])([O;%opls_154])"/>

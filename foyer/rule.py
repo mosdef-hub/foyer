@@ -1,5 +1,9 @@
-import itertools
+from copy import copy
+import itertools as it
+
 import parmed.periodic_table as pt
+from oset import oset as OrderedSet
+
 from foyer.smarts import parse
 
 
@@ -55,12 +59,13 @@ class Rule(object):
                 return neighbor_atom_exprs
 
     def matches(self, atom):
-        return self._matches(atom, self.start_atom_expr())
+        return self._matches(atom, self.start_atom_expr(), OrderedSet())
 
-    def _matches(self, atom, atom_expr):
+    def _matches(self, atom, atom_expr, visited_atoms):
 
         # check if atom matches atom_expr
         if self._atom_expr_matches(atom_expr, atom):
+            visited_atoms.add(atom)
             # let's check if neighbors match (recursively)
 
             # get all neighbors in rule
@@ -76,22 +81,29 @@ class Rule(object):
             neighbor_atoms = atom.bond_partners
 
             # compute all combinations of rule-atom to graph-atom pairings
-            assert(len(neighbor_atoms) >= len(neighbor_atom_exprs))
-            possible_match_sets = [zip(x, neighbor_atom_exprs) for x in itertools.permutations(neighbor_atoms, len(neighbor_atom_exprs))]
+            n_expr_neighbors = len(neighbor_atom_exprs)
+            if not len(neighbor_atoms) >= n_expr_neighbors:
+                visited_atoms.pop(atom)
+                return False
+
+            unvisited_neighbors = set(neighbor_atoms) - visited_atoms
+            possible_match_sets = [zip(x, neighbor_atom_exprs)
+                                   for x in it.permutations(unvisited_neighbors,
+                                                            n_expr_neighbors)]
 
             # for all possible matchings of neighbor atoms to neighbor expressions
             for possible_match_set in possible_match_sets:
-
                 # for all pair in a match set we check if all can be satisfied
                 for neighbor_atom, neighbor_atom_expr in possible_match_set:
                     # check recursively if they match
-                    if not self._matches(neighbor_atom, neighbor_atom_expr):
+                    if not self._matches(neighbor_atom, neighbor_atom_expr, visited_atoms):
                         break
                 else:
                     # we get here if we did not break in the loop
                     return True
 
             # none of the matchings work
+            visited_atoms.pop(atom)
             return False
 
         else:
