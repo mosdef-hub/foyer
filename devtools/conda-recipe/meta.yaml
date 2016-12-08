@@ -7,7 +7,6 @@ requirements:
     - python
 
   run:
-    - libpng 1.6.22
     - python
     - matplotlib
     - parmed

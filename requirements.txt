@@ -1,5 +1,7 @@
 matplotlib
 networkx
+openmm
 oset
 parmed
+plyplus
 six

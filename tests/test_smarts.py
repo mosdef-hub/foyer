@@ -2,26 +2,47 @@ import os
 
 import parmed as pmd
 from pkg_resources import resource_filename
-from foyer import Forcefield
 
+from foyer.forcefield import generate_topology
+from foyer.rule import Rule
 
+resource_dir = resource_filename('foyer', '../opls_validation')
 
-def test_ethanol():
-    resource_dir = resource_filename('foyer', '../opls_validation')
+def test_uniqueness():
+    mol2 = pmd.load_file(os.path.join(resource_dir, 'uniqueness_test.mol2'),
+                         structure=True)
+    top = generate_topology(mol2)
 
-    top_path = os.path.join(resource_dir, '64-17-5.top')
-    gro_path = os.path.join(resource_dir, '64-17-5-gas.gro')
+    atom1 = next(top.atoms())
+    rule = Rule('test', '[#6]1[#6][#6][#6][#6][#6]1')
+    result = rule.matches(atom1)
+    assert not result
 
-    ethanol = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path,
-                                              parametrize=False)
-    ethanol.title = ethanol.title.replace(' GAS', '')
+def test_ringness():
+    ring = pmd.load_file(os.path.join(resource_dir, 'ring.mol2'),
+                         structure=True)
+    top = generate_topology(ring)
+    atom1 = next(top.atoms())
+    rule = Rule('test', '[#6]1[#6][#6][#6][#6][#6]1')
+    assert rule.matches(atom1) == True
 
-    known_opls_types = [atom.type for atom in ethanol.atoms]
+    not_ring = pmd.load_file(os.path.join(resource_dir, 'not_ring.mol2'),
+                         structure=True)
+    top = generate_topology(not_ring)
+    atom1 = next(top.atoms())
+    rule = Rule('test', '[#6]1[#6][#6][#6][#6][#6]1')
+    assert rule.matches(atom1) == False
 
-    oplsaa = Forcefield.by_name('oplsaa')
+def test_fused_ring():
+    fused= pmd.load_file(os.path.join(resource_dir, 'fused.mol2'),
+                         structure=True)
+    top = generate_topology(fused)
+    atoms = list(top.atoms())
+    rule = Rule('test', '[#6]12[#6][#6][#6][#6][#6]1[#6][#6][#6][#6]2')
 
-    typed_ethanol = oplsaa.apply(ethanol)
+    assert rule.matches(atoms[2]) == False
+    for _ in range(10):  # Traversal order during matching is stochastic.
+        assert rule.matches(atoms[3]) == True
+        assert rule.matches(atoms[4]) == True
+    assert rule.matches(atoms[5]) == False
 
-
-    for atom in typed_ethanol:
-        print("Atom {} is {}".format(atom, atom.type))
