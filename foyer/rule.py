@@ -1,3 +1,4 @@
+from collections import defaultdict
 from copy import copy
 import itertools as it
 
@@ -21,10 +22,10 @@ class Rule(object):
     def __repr__(self):
         return 'Rule({},{},{})'.format(self.name, self.smarts_string, self.overrides)
 
-    def start_atom_expr(self):
-        return self.ast.tail[0].tail[0]
+    def start_atom_pattern(self):
+        return self.ast.tail[0]
 
-    def _neighbor_atom_exprs(self, atom_expr):
+    def _neighbor_atom_patterns(self, atom_expr):
         # the parent is an 'atom', which may have siblings
         atom = atom_expr.parent()
         if atom.is_last_kid:
@@ -34,7 +35,7 @@ class Rule(object):
             if atom.next_kid.head == 'atom':
                 # we only have one neighbor, which is an atom
                 # let's return the atom_expr it contains
-                return [atom.next_kid.tail[0]]
+                return [atom.next_kid]
             else:
                 # we may have multiple neighbors: one or more branches, possibly followed by an atom
                 assert atom.next_kid.head == 'branch'
@@ -43,10 +44,10 @@ class Rule(object):
                 while current_neighbor:
                     if current_neighbor.head == 'branch':
                         # add the expression of the first atom of the branch to the list
-                        neighbor_atom_exprs.append(current_neighbor.tail[0].tail[0])
+                        neighbor_atom_exprs.append(current_neighbor.tail[0])
                     if current_neighbor.head == 'atom':
                         # add the expression of the atom to the list
-                        neighbor_atom_exprs.append(current_neighbor.tail[0])
+                        neighbor_atom_exprs.append(current_neighbor)
                         # this is an atom after the last branch (or there was no branch), so there are no more neighbors
                         break
                     if current_neighbor.is_last_kid:
@@ -58,22 +59,43 @@ class Rule(object):
 
                 return neighbor_atom_exprs
 
-    def matches(self, atom):
-        return self._matches(atom, self.start_atom_expr(), OrderedSet())
+    def _split_pattern(self, pattern):
+        expr = pattern.tail[0]
+        if len(pattern.tail) == 2:
+            label = pattern.tail[1].tail[0]
+            label = [int(digit) for digit in label]
+        else:
+            label = []
+        return expr, label
 
-    def _matches(self, atom, atom_expr, visited_atoms):
+    def matches(self, atom):
+        return self._matches(atom,
+                             atom_pattern=self.start_atom_pattern(),
+                             visited_atoms=OrderedSet(),
+                             labeled_atoms=dict())
+
+    def _matches(self, atom, atom_pattern, visited_atoms, labeled_atoms):
+        # Extract label from SMARTS string if present.
+        atom_expr, label = self._split_pattern(atom_pattern)
+
+        for digit in label:
+            if digit in labeled_atoms:
+                if labeled_atoms[digit] not in atom.bond_partners:
+                     return False
+
+        if label:
+            for digit in label:
+                if digit not in labeled_atoms:
+                    labeled_atoms[digit] = atom
 
         # check if atom matches atom_expr
         if self._atom_expr_matches(atom_expr, atom):
             visited_atoms.add(atom)
-            # let's check if neighbors match (recursively)
 
             # get all neighbors in rule
-            neighbor_atom_exprs = self._neighbor_atom_exprs(atom_expr)
-            # print('Rule: {}'.format(self.smarts_string))
-            # print('Neighbor exprs of {} are {}'.format(atom_expr, neighbor_atom_exprs))
-
-            if not neighbor_atom_exprs:
+            neighbor_atom_patterns = self._neighbor_atom_patterns(atom_expr)
+            # print(neighbor_atom_patterns)
+            if not neighbor_atom_patterns:
                 # no expressions given for neighbor atoms: it's a match
                 return True
 
@@ -81,44 +103,56 @@ class Rule(object):
             neighbor_atoms = atom.bond_partners
 
             # compute all combinations of rule-atom to graph-atom pairings
-            n_expr_neighbors = len(neighbor_atom_exprs)
+            n_expr_neighbors = len(neighbor_atom_patterns)
             if not len(neighbor_atoms) >= n_expr_neighbors:
-                visited_atoms.pop(atom)
+                self._pop_atom(atom, visited_atoms, labeled_atoms)
                 return False
 
             unvisited_neighbors = set(neighbor_atoms) - visited_atoms
-            possible_match_sets = [zip(x, neighbor_atom_exprs)
+            possible_match_sets = [zip(x, neighbor_atom_patterns)
                                    for x in it.permutations(unvisited_neighbors,
                                                             n_expr_neighbors)]
 
             # for all possible matchings of neighbor atoms to neighbor expressions
             for possible_match_set in possible_match_sets:
                 # for all pair in a match set we check if all can be satisfied
-                for neighbor_atom, neighbor_atom_expr in possible_match_set:
-                    # check recursively if they match
-                    if not self._matches(neighbor_atom, neighbor_atom_expr, visited_atoms):
+                for neighbor_atom, neighbor_atom_pattern in possible_match_set:
+                    # Check recursively if the expressions match.
+                    if not self._matches(neighbor_atom,
+                                         atom_pattern=neighbor_atom_pattern,
+                                         visited_atoms=visited_atoms,
+                                         labeled_atoms=labeled_atoms):
                         break
                 else:
                     # we get here if we did not break in the loop
                     return True
 
             # none of the matchings work
-            visited_atoms.pop(atom)
+            self._pop_atom(atom, visited_atoms, labeled_atoms)
             return False
 
         else:
             # the current atom did not match
             return False
 
+    def _pop_atom(self, atom, visited_atoms, labeled_atoms):
+        visited_atoms.pop(atom)
+        for dig, labeled_atom in list(labeled_atoms.items()):
+            if labeled_atom == atom:
+                del labeled_atoms[dig]
+
     def _atom_expr_matches(self, atom_expr, atom):
         if atom_expr.head == 'and_expression':
-            return self._atom_expr_matches(atom_expr.tail[0], atom) and self._atom_expr_matches(atom_expr.tail[1], atom)
+            return self._atom_expr_matches(atom_expr.tail[0], atom) and \
+                   self._atom_expr_matches(atom_expr.tail[1], atom)
         elif atom_expr.head == 'or_expression':
-            return self._atom_expr_matches(atom_expr.tail[0], atom) or self._atom_expr_matches(atom_expr.tail[1], atom)
+            return self._atom_expr_matches(atom_expr.tail[0], atom) or \
+                   self._atom_expr_matches(atom_expr.tail[1], atom)
         elif atom_expr.head == 'atom_id':
             return self._atom_id_matches(atom_expr.tail[0], atom)
         else:
-            raise TypeError('Expected and_expression, or_expression, or atom_id, got {}'.format(atom_expr.head))
+            raise TypeError('Expected and_expression, or_expression,'
+                            ' or atom_id, got {}'.format(atom_expr.head))
 
     def _atom_id_matches(self, atom_id, atom):
         if atom_id.head == 'any_atom':
