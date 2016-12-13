@@ -148,6 +148,8 @@ class Rule(object):
                    self._atom_expr_matches(atom_expr.tail[1], atom)
         elif atom_expr.head == 'atom_id':
             return self._atom_id_matches(atom_expr.tail[0], atom)
+        elif atom_expr.head == 'atom_symbol':
+            return self._atom_id_matches(atom_expr, atom)
         else:
             raise TypeError('Expected and_expression, or_expression,'
                             ' or atom_id, got {}'.format(atom_expr.head))
