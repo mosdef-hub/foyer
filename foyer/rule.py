@@ -153,12 +153,13 @@ class Rule(object):
                             ' or atom_id, got {}'.format(atom_expr.head))
 
     def _atom_id_matches(self, atom_id, atom):
-        if atom_id.head == 'any_atom':
-            return True
-        elif atom_id.head == 'atomic_num':
+        if atom_id.head == 'atomic_num':
             return atom.element._atomic_number == int(atom_id.tail[0])
         elif atom_id.head == 'atom_symbol':
-            return atom.element._atomic_number == pt.AtomicNum[str(atom_id.tail[0])]
+            if str(atom_id.tail[0]) == '*':
+                return True
+            else:
+                return atom.element._atomic_number == pt.AtomicNum[str(atom_id.tail[0])]
         elif atom_id.head == 'has_label':
             label = atom_id.tail[0][1:] # cut the % sign from the beginning
             return label in (rule_name for rule_name in atom.whitelist)

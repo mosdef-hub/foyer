@@ -5,6 +5,7 @@ from pkg_resources import resource_filename
 
 from foyer.forcefield import generate_topology
 from foyer.rule import Rule
+from foyer.smarts import parse
 
 resource_dir = resource_filename('foyer', '../opls_validation')
 
@@ -46,3 +47,6 @@ def test_fused_ring():
         assert rule.matches(atoms[4]) == True
     assert rule.matches(atoms[5]) == False
 
+def test_parse():
+    smarts = "[O;X2]([C;X4](F)(*)(*))[C;X4]"
+    ast = parse(smarts)
