@@ -1,5 +1,3 @@
-from collections import defaultdict
-from copy import copy
 import itertools as it
 
 import parmed.periodic_table as pt
