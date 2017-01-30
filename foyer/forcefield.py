@@ -62,7 +62,9 @@ def generate_topology(non_omm_topology):
             omm_atom.bond_partners = []
 
         # Create bonds.
-        for atom1, atom2 in non_omm_topology.bonds():
+        for bond in non_omm_topology.bonds():
+            atom1 = atoms[bond[0]]
+            atom2 = atoms[bond[1]]
             topology.addBond(atom1, atom2)
             atom1.bond_partners.append(atom2)
             atom2.bond_partners.append(atom1)
