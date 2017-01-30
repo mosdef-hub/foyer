@@ -6,6 +6,7 @@ import glob
 import itertools
 import os
 from pkg_resources import resource_filename
+from warnings import warn
 
 import mbuild as mb
 import parmed as pmd
@@ -52,14 +53,26 @@ def generate_topology(non_omm_topology):
         residue = topology.addResidue(non_omm_topology.name, chain)
         atoms = dict()  # mb.Particle: omm.Atom
 
+        non_elements = set()
         # Create atoms in the residue.
         for mb_particle in non_omm_topology.particles():
             name = mb_particle.name
-            element = elem.Element.getBySymbol(mb_particle.name)
+
+            try:
+                element = elem.Element.getBySymbol(mb_particle.name)
+            except KeyError:
+                element = elem.Element(number=0,
+                                       mass=0,
+                                       name=mb_particle.name,
+                                       symbol=mb_particle.name)
+                non_elements.update((mb_particle.name,))
 
             omm_atom = topology.addAtom(name, element, residue)
             atoms[mb_particle] = omm_atom
             omm_atom.bond_partners = []
+
+        for not_found in non_elements:
+            warn("Element {0} not found.  Using {0} as element.".format(not_found))
 
         # Create bonds.
         for bond in non_omm_topology.bonds():
@@ -111,9 +124,17 @@ class Forcefield(app.ForceField):
 
     def registerAtomType(self, parameters):
         """Register a new atom type. """
+        actual_element = parameters['name']
+        parameters['element'] = 'H'
         super(Forcefield, self).registerAtomType(parameters)
 
         name = parameters['name']
+        element = elem.Element(number=0,
+                               mass=parameters['mass'],
+                               name=actual_element,
+                               symbol=actual_element)
+        self._atomTypes[parameters['name']].element = element
+
         if 'def' in parameters:
             self._atomTypeDefinitions[name] = parameters['def']
         if 'overrides' in parameters:
