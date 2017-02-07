@@ -130,7 +130,11 @@ class Forcefield(app.ForceField):
             pass
 
         system = self.createSystem(topology, *args, **kwargs)
-        return pmd.openmm.load_topology(topology=topology, system=system)
+        structure = pmd.openmm.load_topology(topology=topology, system=system)
+        type_dict = dict(zip([atom.atom_type for atom in structure.atoms],[atom.type for atom in topology.atoms()]))
+        for atype in set([atom.atom_type for atom in structure.atoms]):
+            atype.name = type_dict[atype]
+        return structure
 
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0*unit.nanometer, constraints=None,
