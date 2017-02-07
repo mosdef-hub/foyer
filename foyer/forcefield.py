@@ -131,6 +131,8 @@ class Forcefield(app.ForceField):
 
         system = self.createSystem(topology, *args, **kwargs)
         structure = pmd.openmm.load_topology(topology=topology, system=system)
+        for new_atom,old_atom in zip(structure.atoms,topology.atoms()):
+            new_atom.type = old_atom.type
         type_dict = dict(zip([atom.atom_type for atom in structure.atoms],[atom.type for atom in topology.atoms()]))
         for atype in set([atom.atom_type for atom in structure.atoms]):
             atype.name = type_dict[atype]
