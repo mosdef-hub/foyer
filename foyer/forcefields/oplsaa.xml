@@ -1,8 +1,8 @@
 <ForceField>
     <AtomTypes>
 
-        <Type name="opls_135" class="CT" element="C" mass="12.01100"  def="[C;X4]([C])([H])([H])([H])" desc="alkane CH3"/>
-        <Type name="opls_136" class="CT" element="C" mass="12.01100"  def="[C;X4]([C])([C])([#1])([#1])" desc="alkane CH2"/>
+        <Type name="opls_135" class="CT" element="C" mass="12.01100"  def="[C;X4]([C])([H])([H])([H])" desc="alkane CH3" overrides="opls_136"/>
+        <Type name="opls_136" class="CT" element="C" mass="12.01100"  def="[C;X4]([*])([*])([#1])([#1])" desc="alkane CH2"/>
         <Type name="opls_137" class="CT" element="C" mass="12.01100"  def="[C;X4]([C])([C])([C])([H])" desc="alkane CH"/>
         <Type name="opls_138" class="CT" element="C" mass="12.01100"  def="[C;X4]([H])([H])([H])([H])" desc="alkane CH4"/>
         <Type name="opls_139" class="CT" element="C" mass="12.01100"  def="[C;X4]([C])([C])([C])([C])" desc="alkane C"/>
@@ -11,11 +11,42 @@
         <Type name="opls_142" class="CM" element="C" mass="12.01100"  def="[C;X3]([C])([C])([H])" desc="alkene C (RH-C=)"/>
         <Type name="opls_143" class="CM" element="C" mass="12.01100"  def="[C;X3]([C])([H])([H])" desc="alkene C (H2-C=)"/>
         <Type name="opls_144" class="HC" element="C" mass="1.00800"   def="[H]([C;%opls_141,C;%opls_142,C;%opls_143])" overrides="opls_140"/>
-        <Type name="opls_145" class="CA" element="C" mass="1.00800"   def="[C;X3;R6]1[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1" overrides="opls_142"/>
+        <Type name="opls_145" class="CA" element="C" mass="12.01100"   def="[C;X3;R6]1[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1" overrides="opls_141,opls_142"/>
         <Type name="opls_146" class="HC" element="H" mass="1.00800"   def="[H][C;%opls_145]" overrides="opls_144" desc="benzene H"/>
-        <Type name="opls_154" class="OH" element="O" mass="1.00800"   def="[O;X2]([C;X4])([H])" desc="all-atom O: mono alcohols"/>
+        <Type name="opls_148" class="CT" element="C" mass="12.01100"   def="[C;X4]([C;%opls_145])([H])([H])([H])" desc="toluene CH3" overrides="opls_149"/>
+        <Type name="opls_149" class="CT" element="C" mass="12.01100"   def="[C;X4]([C;%opls_145])([H])([H])([*])" desc="ethyl benzene CH2" overrides="opls_136"/>
+        <Type name="opls_154" class="OH" element="O" mass="15.9994"   def="[O;X2]([C;X4])([H])" desc="all-atom O: mono alcohols"/>
         <Type name="opls_155" class="HO" element="H" mass="1.00800"   def="[H][O;%opls_154]" desc="all-atom H(O): mono alcohols, OP(=O)2"/>
-        <Type name="opls_157" class="CT" element="C" mass="1.00800"   def="[C;X4]([H])([H])([C])([O;%opls_154])"/>
+        <Type name="opls_157" class="CT" element="C" mass="12.01100"   def="[C;X4]([H])([H])([C])([O;%opls_154])" overrides="opls_136"/>
+        <Type name="opls_267" class="C" element="C" mass="12.01100"   def="[C;X3]([O;X1])OH" desc="Co in CCOOH"/>
+        <Type name="opls_268" class="OH" element="O" mass="15.9994"   def="[O;X2]([C;%opls_267])([H])" desc="Oh in CCOOH"/>
+        <Type name="opls_269" class="O_3" element="O" mass="15.9994"   def="[O;X1]([C;%opls_267])" desc="Oc in CCOOH"/>
+        <Type name="opls_270" class="HO" element="H" mass="1.00800"   def="[H;X1]([O;%opls_268])" desc="H in CCOOH"/>
+        <Type name="opls_277" class="C_2" element="C" mass="12.01100"   def="[C;X3]([O;X1])(C)(H)" desc="C in aldehyde"/>
+        <Type name="opls_278" class="O_2" element="O" mass="15.9994"   def="[O;X1]([C;%opls_277])" desc="O in aldehyde"/>
+        <Type name="opls_279" class="HC" element="H" mass="1.00800"   def="[H;X1]([C;%opls_277])" desc="H-alpha in aldehyde and formamide" overrides="opls_140"/>
+        <Type name="opls_280" class="C_2" element="C" mass="12.01100"   def="[C;X3]([O;X1])(C)(C)" desc="C in ketone"/>
+        <Type name="opls_281" class="O_2" element="O" mass="15.9994"   def="[O;X1]([C;%opls_280])" desc="O in ketone"/>
+        <Type name="opls_282" class="HC" element="H" mass="1.00800"   def="[H;X1](C[C;%opls_277,C;%opls_280])" desc="H on C-alpha in ketone and aldehyde" overrides="opls_140"/>
+        <Type name="opls_718" class="CA" element="C" mass="12.01100"   def="[C;X3;R6]1[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1([F])" overrides="opls_145"/>
+        <Type name="opls_719" class="F" element="F" mass="18.9984"   def="[F][C;%opls_718]" desc="fluorobenzene F"/>
+        <Type name="opls_753" class="NZ" element="N" mass="14.0067"   def="[N;X1]C" desc="N in RCN nitriles"/>
+        <Type name="opls_754" class="CZ" element="C" mass="12.01100"   def="[C;X2][N;%opls_753]" desc="C in RCN nitriles"/>
+        <Type name="opls_755" class="CT" element="C" mass="12.01100"   def="[C;X4][C;%opls_754](H)(H)(H)" desc="C of CH3 in CH3CN" overrides="opls_756"/>
+        <Type name="opls_756" class="CT" element="C" mass="12.01100"   def="[C;X4][C;%opls_754](H)(H)" desc="C of CH2 in RCH2CN" overrides="opls_757"/>
+        <Type name="opls_757" class="CT" element="C" mass="12.01100"   def="[C;X4][C;%opls_754](H)" desc="C of CH in R2CHCN" overrides="opls_758"/>
+        <Type name="opls_758" class="CT" element="C" mass="12.01100"   def="[C;X4][C;%opls_754]" desc="C of C in R3CCN"/>
+        <Type name="opls_759" class="HC" element="H" mass="1.00800"   def="[H;X1]C[C;%opls_754]" desc="HC-CT-CN alpha-H in nitriles" overrides="opls_140"/>
+        <Type name="opls_760" class="NO" element="N" mass="14.0067"   def="[N;X3]([O;X1])([O;X1])" desc="N in nitro R-NO2"/>
+        <Type name="opls_761" class="ON" element="O" mass="15.9994"   def="[O;X1][N][O;X1]" desc="O in nitro R-NO2"/>
+        <Type name="opls_762" class="CT" element="C" mass="12.01100"   def="[C;X4]([N;%opls_760])(H)(H)(H)" desc="CT-NO2 nitromethane"/>
+        <Type name="opls_763" class="HC" element="H" mass="1.00800"   def="[H;X1]([C;X4][N;%opls_760])" desc="HC-CT-NO2 alpha-H in nitroalkanes" overrides="opls_140"/>
+        <Type name="opls_764" class="CT" element="C" mass="12.01100"   def="[C;X4]([N;%opls_760])(C)(H)(H)" desc="CT-NO2 nitroethane" overrides="opls_136"/>
+        <Type name="opls_767" class="NO" element="N" mass="14.0067"   def="[N;X3]([O;X1])([O;X1])([C;X3;R6])" desc="N in nitro Ar-NO2" overrides="opls_760"/>
+        <Type name="opls_768" class="CA" element="C" mass="12.01100"   def="[C;X3;R6]([N;%opls_767])" desc="C(NO2) nitrobenzene" overrides="opls_145"/>
+        <Type name="opls_961" class="CT" element="C" mass="12.01100"  def="[C;X4]([*])([F])([F])([F])" desc="perfluoroalkane CF3" overrides="opls_962"/>
+        <Type name="opls_962" class="CT" element="C" mass="12.01100"  def="[C;X4]([*])([*])([F])([F])" desc="perfluoroalkane CF2"/>
+        <Type name="opls_965" class="F" element="F" mass="18.9984"  def="[F][C]" desc="perfluoroalkane F"/>
  </AtomTypes>
  <HarmonicBondForce>
   <Bond class1="OW" class2="HW" length="0.09572000000000001" k="502079.9999999998"/>
@@ -1252,689 +1283,688 @@
   <Angle class1="O2" class2="S" class3="CT" angle="1.8675022996339325" k="399.99999999999994"/>
  </HarmonicAngleForce>
  <NonbondedForce coulomb14scale="1.0" lj14scale="1.0">
-  <UseAttributeFromResidue name="charge"/>
-  <Atom type="opls_135" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_136" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_137" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_138" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_139" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_140" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_141" sigma="0.355" epsilon="0.317984"/>
-  <Atom type="opls_142" sigma="0.355" epsilon="0.317984"/>
-  <Atom type="opls_143" sigma="0.355" epsilon="0.317984"/>
-  <Atom type="opls_144" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_145" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_145B" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_146" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_147" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_148" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_149" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_150" sigma="0.355" epsilon="0.317984"/>
-  <Atom type="opls_151" sigma="0.3400000000000001" epsilon="1.2552"/>
-  <Atom type="opls_152" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_153" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_154" sigma="0.31200000000000006" epsilon="0.7112799999999999"/>
-  <Atom type="opls_155" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_156" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_157" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_158" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_159" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_160" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_161" sigma="0.325" epsilon="0.259408"/>
-  <Atom type="opls_162" sigma="0.307" epsilon="0.7112799999999999"/>
-  <Atom type="opls_163" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_164" sigma="0.294" epsilon="0.255224"/>
-  <Atom type="opls_165" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_166" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_167" sigma="0.307" epsilon="0.7112799999999999"/>
-  <Atom type="opls_168" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_169" sigma="0.307" epsilon="0.7112799999999999"/>
-  <Atom type="opls_170" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_171" sigma="0.307" epsilon="0.7112799999999999"/>
-  <Atom type="opls_172" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_173" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_174" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_175" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_176" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_178" sigma="0.355" epsilon="0.317984"/>
-  <Atom type="opls_179" sigma="0.29" epsilon="0.58576"/>
-  <Atom type="opls_180" sigma="0.29" epsilon="0.58576"/>
-  <Atom type="opls_181" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_182" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_183" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_184" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_185" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_186" sigma="0.29" epsilon="0.58576"/>
-  <Atom type="opls_187" sigma="0.307" epsilon="0.7112799999999999"/>
-  <Atom type="opls_188" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_189" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_190" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_191" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_192" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_193" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_194" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_195" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_196" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_197" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_198" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_199" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_200" sigma="0.36" epsilon="1.7782"/>
-  <Atom type="opls_201" sigma="0.37000000000000005" epsilon="1.046"/>
-  <Atom type="opls_202" sigma="0.36" epsilon="1.48532"/>
-  <Atom type="opls_203" sigma="0.355" epsilon="1.046"/>
-  <Atom type="opls_204" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_205" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_206" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_207" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_208" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_209" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_210" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_211" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_212" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_213" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_214" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_215" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_216" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_217" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_218" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_219" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_220" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_221" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_222" sigma="0.355" epsilon="1.046"/>
-  <Atom type="opls_223" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_223B" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_224" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_224B" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_225" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_225B" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_226" sigma="0.3400000000000001" epsilon="1.2552"/>
-  <Atom type="opls_227" sigma="0.355" epsilon="0.317984"/>
-  <Atom type="opls_228" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_229" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_230" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_231" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_232" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_233" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_234" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_235" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_236" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_237" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_238" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_239" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_240" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_241" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_242" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_243" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_244" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_245" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_246" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_247" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_248" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_249" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_250" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_251" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_252" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_253" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_254" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_255" sigma="0.25" epsilon="0.08368"/>
-  <Atom type="opls_256" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_257" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_258" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_259" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_260" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_261" sigma="0.365" epsilon="0.6276"/>
-  <Atom type="opls_262" sigma="0.32000000000000006" epsilon="0.7112799999999999"/>
-  <Atom type="opls_263" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_264" sigma="0.3400000000000001" epsilon="1.2552"/>
-  <Atom type="opls_265" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_266" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_267" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_268" sigma="0.30000000000000004" epsilon="0.7112799999999999"/>
-  <Atom type="opls_269" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_270" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_271" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_272" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_273" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_274" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_275" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_276" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_277" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_278" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_279" sigma="0.242" epsilon="0.06276"/>
-  <Atom type="opls_280" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_281" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_282" sigma="0.242" epsilon="0.06276"/>
-  <Atom type="opls_283" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_284" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_285" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_286" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_287" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_288" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_289" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_290" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_291" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_292" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_292B" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_293" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_293B" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_294" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_295" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_296" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_297" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_298" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_299" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_300" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_301" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_302" sigma="0.22500000000000006" epsilon="0.2092"/>
-  <Atom type="opls_303" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_304" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_305" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_306" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_307" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_308" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_309" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_310" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_311" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_312" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_313" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_314" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_315" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_316" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_317" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_318" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_319" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_319B" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_320" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_321" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_322" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_323" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_324" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_325" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_326" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_327" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_328" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_329" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_330" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_331" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_332" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_333" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_333B" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_334" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_335" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_336" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_337" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_338" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_339" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_340" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_341" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_342" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_343" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_344" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_345" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_346" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_347" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_348" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_349" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_350" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_351" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_352" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_353" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_354" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_354B" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_355" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_356" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_357" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_358" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_359" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_360" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_361" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_362" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_363" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_364" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_365" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_366" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_367" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_368" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_369" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_370" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_371" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_372" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_373" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_374" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_375" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_376" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_377" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_377B" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_378" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_379" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_380" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_381" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_382" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_383" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_384" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_385" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_386" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_387" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_388" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_389" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_390" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_391" sigma="0.35000000000000003" epsilon="0.33472"/>
-  <Atom type="opls_392" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_393" sigma="0.37400000000000005" epsilon="0.8368"/>
-  <Atom type="opls_394" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_395" sigma="0.30000000000000004" epsilon="0.7112799999999999"/>
-  <Atom type="opls_396" sigma="0.355" epsilon="0.276144"/>
-  <Atom type="opls_400" sigma="0.273295" epsilon="3.01248"/>
-  <Atom type="opls_401" sigma="0.441724" epsilon="0.492833"/>
-  <Atom type="opls_402" sigma="0.462376" epsilon="0.37656"/>
-  <Atom type="opls_403" sigma="0.54" epsilon="0.29288"/>
-  <Atom type="opls_404" sigma="0.125992" epsilon="26.15"/>
-  <Atom type="opls_405" sigma="0.18974400000000002" epsilon="6.72427"/>
-  <Atom type="opls_406" sigma="0.21264499999999997" epsilon="0.07647929999999999"/>
-  <Atom type="opls_407" sigma="0.33304500000000004" epsilon="0.011598"/>
-  <Atom type="opls_408" sigma="0.49346300000000004" epsilon="0.0013723499999999998"/>
-  <Atom type="opls_409" sigma="0.562177" epsilon="0.000715464"/>
-  <Atom type="opls_410" sigma="0.6716000000000001" epsilon="0.000338904"/>
-  <Atom type="opls_411" sigma="0.164447" epsilon="3.66118"/>
-  <Atom type="opls_412" sigma="0.24120300000000003" epsilon="1.88136"/>
-  <Atom type="opls_413" sigma="0.310269" epsilon="0.494658"/>
-  <Atom type="opls_414" sigma="0.38166100000000003" epsilon="0.19704999999999998"/>
-  <Atom type="opls_415" sigma="0.42000000000000004" epsilon="1.2552"/>
-  <Atom type="opls_416" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_417" sigma="0.42500000000000004" epsilon="2.092"/>
-  <Atom type="opls_418" sigma="0.42000000000000004" epsilon="1.2552"/>
-  <Atom type="opls_419" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_420" sigma="0.315" epsilon="1.046"/>
-  <Atom type="opls_421" sigma="0.42000000000000004" epsilon="1.2552"/>
-  <Atom type="opls_422" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_423" sigma="0.365" epsilon="0.6276"/>
-  <Atom type="opls_424" sigma="0.3400000000000001" epsilon="1.046"/>
-  <Atom type="opls_425" sigma="0.42000000000000004" epsilon="1.2552"/>
-  <Atom type="opls_426" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_427" sigma="0.3400000000000001" epsilon="1.046"/>
-  <Atom type="opls_428" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_429" sigma="0.42000000000000004" epsilon="1.2552"/>
-  <Atom type="opls_430" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_431" sigma="0.42000000000000004" epsilon="1.2552"/>
-  <Atom type="opls_432" sigma="0.25" epsilon="0.2092"/>
-  <Atom type="opls_433" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_434" sigma="0.32000000000000006" epsilon="1.046"/>
-  <Atom type="opls_435" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_436" sigma="0.28152400000000005" epsilon="1.6736"/>
-  <Atom type="opls_437" sigma="0.311815" epsilon="0.8368"/>
-  <Atom type="opls_440" sigma="0.37400000000000005" epsilon="0.8368"/>
-  <Atom type="opls_441" sigma="0.315" epsilon="0.8368"/>
-  <Atom type="opls_442" sigma="0.29" epsilon="0.58576"/>
-  <Atom type="opls_443" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_444" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_445" sigma="0.37400000000000005" epsilon="0.8368"/>
-  <Atom type="opls_446" sigma="0.315" epsilon="0.8368"/>
-  <Atom type="opls_447" sigma="0.29" epsilon="0.58576"/>
-  <Atom type="opls_448" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_449" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_450" sigma="0.37400000000000005" epsilon="0.8368"/>
-  <Atom type="opls_451" sigma="0.315" epsilon="0.8368"/>
-  <Atom type="opls_452" sigma="0.29" epsilon="0.58576"/>
-  <Atom type="opls_453" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_454" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_455" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_456" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_457" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_458" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_459" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_460" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_461" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_462" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_463" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_465" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_466" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_467" sigma="0.30000000000000004" epsilon="0.7112799999999999"/>
-  <Atom type="opls_468" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_469" sigma="0.242" epsilon="0.06276"/>
-  <Atom type="opls_470" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_471" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_472" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_473" sigma="0.30000000000000004" epsilon="0.7112799999999999"/>
-  <Atom type="opls_474" sigma="0.355" epsilon="1.046"/>
-  <Atom type="opls_475" sigma="0.296" epsilon="0.7112799999999999"/>
-  <Atom type="opls_476" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_477" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_478" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_479" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_480" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_481" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_482" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_483" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_484" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_485" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_486" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_487" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_488" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_490" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_491" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_492" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_493" sigma="0.355" epsilon="1.046"/>
-  <Atom type="opls_494" sigma="0.296" epsilon="0.7112799999999999"/>
-  <Atom type="opls_496" sigma="0.356" epsilon="1.65268"/>
-  <Atom type="opls_497" sigma="0.29300000000000004" epsilon="1.17152"/>
-  <Atom type="opls_498" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_499" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_500" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_501" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_502" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_503" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_504" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_505" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_506" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_507" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_508" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_509" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_510" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_511" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_512" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_513" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_514" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_515" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_516" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_517" sigma="0.355" epsilon="0.317984"/>
-  <Atom type="opls_518" sigma="0.355" epsilon="0.317984"/>
-  <Atom type="opls_520" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_521" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_522" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_523" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_524" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_525" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_526" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_527" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_528" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_529" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_530" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_531" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_532" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_533" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_534" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_535" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_536" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_537" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_538" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_539" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_540" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_541" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_542" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_543" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_544" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_545" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_546" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_547" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_548" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_549" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_550" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_551" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_552" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_553" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_554" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_555" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_556" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_557" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_558" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_559" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_560" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_561" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_562" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_563" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_564" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_565" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_566" sigma="0.29" epsilon="0.58576"/>
-  <Atom type="opls_567" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_568" sigma="0.355" epsilon="0.317984"/>
-  <Atom type="opls_569" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_570" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_571" sigma="0.29" epsilon="0.58576"/>
-  <Atom type="opls_572" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_573" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_574" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_575" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_576" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_577" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_578" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_579" sigma="0.29" epsilon="0.58576"/>
-  <Atom type="opls_580" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_581" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_582" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_583" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_584" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_585" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_586" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_587" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_588" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_589" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_590" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_591" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_592" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_593" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_594" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_595" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_596" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_597" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_598" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_599" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_600" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_601" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_602" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_603" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_604" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_605" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_606" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_607" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_608" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_609" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_610" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_611" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_612" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_613" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_614" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_615" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_616" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_617" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_618" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_619" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_620" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_621" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_622" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_623" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_624" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_625" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_626" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_627" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_628" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_629" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_630" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_631" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_632" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_633" sigma="0.355" epsilon="1.046"/>
-  <Atom type="opls_634" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_635" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_636" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_637" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_638" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_639" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_640" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_641" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_642" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_643" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_644" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_645" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_646" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_647" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_648" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_649" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_650" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_651" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_652" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_653" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_654" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_655" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_656" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_670" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_671" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_672" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_673" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_674" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_675" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_676" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_677" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_678" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_679" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_680" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_681" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_697" sigma="0.3473" epsilon="0.225936"/>
-  <Atom type="opls_698" sigma="0.33" epsilon="0.2092"/>
-  <Atom type="opls_699" sigma="0.33" epsilon="0.2092"/>
-  <Atom type="opls_700" sigma="0.355" epsilon="0.317984"/>
-  <Atom type="opls_701" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_702" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_703" sigma="0.375" epsilon="0.25104"/>
-  <Atom type="opls_704" sigma="0.3473" epsilon="0.225936"/>
-  <Atom type="opls_705" sigma="0.33" epsilon="0.2092"/>
-  <Atom type="opls_706" sigma="0.33" epsilon="0.2092"/>
-  <Atom type="opls_707" sigma="0.29500000000000004" epsilon="0.16736"/>
-  <Atom type="opls_708" sigma="0.355" epsilon="0.317984"/>
-  <Atom type="opls_709" sigma="0.3400000000000001" epsilon="1.2552"/>
-  <Atom type="opls_710" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_711" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_712" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_713" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_714" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_715" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_716" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_717" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_718" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_719" sigma="0.285" epsilon="0.255224"/>
-  <Atom type="opls_720" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_721" sigma="0.285" epsilon="0.255224"/>
-  <Atom type="opls_722" sigma="0.34700000000000003" epsilon="1.96648"/>
-  <Atom type="opls_724" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_725" sigma="0.325" epsilon="0.259408"/>
-  <Atom type="opls_726" sigma="0.294" epsilon="0.255224"/>
-  <Atom type="opls_727" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_728" sigma="0.285" epsilon="0.255224"/>
-  <Atom type="opls_729" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_730" sigma="0.34700000000000003" epsilon="1.96648"/>
-  <Atom type="opls_731" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_732" sigma="0.36700000000000005" epsilon="2.42672"/>
-  <Atom type="opls_733" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_734" sigma="0.355" epsilon="1.046"/>
-  <Atom type="opls_735" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_736" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_737" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_738" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_739" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_740" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_741" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_742" sigma="0.22500000000000006" epsilon="0.2092"/>
-  <Atom type="opls_743" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_744" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_745" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_746" sigma="0.242" epsilon="0.12552"/>
-  <Atom type="opls_747" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_748" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_749" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_750" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_751" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_752" sigma="0.22500000000000006" epsilon="0.2092"/>
-  <Atom type="opls_753" sigma="0.32000000000000006" epsilon="0.7112799999999999"/>
-  <Atom type="opls_754" sigma="0.33" epsilon="0.276144"/>
-  <Atom type="opls_755" sigma="0.33" epsilon="0.276144"/>
-  <Atom type="opls_756" sigma="0.33" epsilon="0.276144"/>
-  <Atom type="opls_757" sigma="0.33" epsilon="0.276144"/>
-  <Atom type="opls_758" sigma="0.33" epsilon="0.276144"/>
-  <Atom type="opls_759" sigma="0.25" epsilon="0.06276"/>
-  <Atom type="opls_760" sigma="0.325" epsilon="0.50208"/>
-  <Atom type="opls_761" sigma="0.296" epsilon="0.7112799999999999"/>
-  <Atom type="opls_762" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_763" sigma="0.25" epsilon="0.06276"/>
-  <Atom type="opls_764" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_765" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_766" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_767" sigma="0.325" epsilon="0.50208"/>
-  <Atom type="opls_768" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_771" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_772" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_773" sigma="0.30000000000000004" epsilon="0.7112799999999999"/>
-  <Atom type="opls_774" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_775" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_776" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_777" sigma="0.242" epsilon="0.06276"/>
-  <Atom type="opls_778" sigma="0.242" epsilon="0.06276"/>
-  <Atom type="opls_779" sigma="0.242" epsilon="0.06276"/>
-  <Atom type="opls_781" sigma="0.37400000000000005" epsilon="0.8368"/>
-  <Atom type="opls_782" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_783" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_784" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_785" sigma="0.37400000000000005" epsilon="0.8368"/>
-  <Atom type="opls_786" sigma="0.31181" epsilon="0.255224"/>
-  <Atom type="opls_787" sigma="0.315" epsilon="0.7112799999999999"/>
-  <Atom type="opls_788" sigma="0.286" epsilon="0.87864"/>
-  <Atom type="opls_795" sigma="0.3215" epsilon="0.58576"/>
-  <Atom type="opls_796" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_797" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_900" sigma="0.33" epsilon="0.7112799999999999"/>
-  <Atom type="opls_901" sigma="0.33" epsilon="0.7112799999999999"/>
-  <Atom type="opls_902" sigma="0.33" epsilon="0.7112799999999999"/>
-  <Atom type="opls_903" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_904" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_905" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_906" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_906B" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_907" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_908" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_909" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_910" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_911" sigma="0.25" epsilon="0.06276"/>
-  <Atom type="opls_912" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_912B" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_913" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_914" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_915" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_916" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_917" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_918" sigma="0.355" epsilon="0.29288"/>
-  <Atom type="opls_925" sigma="0.33" epsilon="0.359824"/>
-  <Atom type="opls_926" sigma="0.242" epsilon="0.06276"/>
-  <Atom type="opls_927" sigma="0.33" epsilon="0.87864"/>
-  <Atom type="opls_928" sigma="0.33" epsilon="0.5648399999999999"/>
-  <Atom type="opls_929" sigma="0.33" epsilon="0.4184"/>
-  <Atom type="opls_930" sigma="0.25" epsilon="0.06276"/>
-  <Atom type="opls_931" sigma="0.33" epsilon="0.87864"/>
-  <Atom type="opls_940" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_941" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_942" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_943" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_944" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_945" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_950" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_951" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_952" sigma="0.375" epsilon="0.43932"/>
-  <Atom type="opls_953" sigma="0.325" epsilon="0.7112799999999999"/>
-  <Atom type="opls_954" sigma="0.296" epsilon="0.87864"/>
-  <Atom type="opls_955" sigma="1.0" epsilon="0.0"/>
-  <Atom type="opls_956" sigma="0.294" epsilon="0.255224"/>
-  <Atom type="opls_957" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_958" sigma="0.25" epsilon="0.12552"/>
-  <Atom type="opls_959" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_960" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_961" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_962" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_963" sigma="0.35000000000000003" epsilon="0.276144"/>
-  <Atom type="opls_964" sigma="0.35000000000000003" epsilon="0.405848"/>
-  <Atom type="opls_965" sigma="0.29500000000000004" epsilon="0.221752"/>
-  <Atom type="MNH3" sigma="1.0" epsilon="0.0"/>
-  <Atom type="MNH2" sigma="1.0" epsilon="0.0"/>
-  <Atom type="MCH3A" sigma="1.0" epsilon="0.0"/>
-  <Atom type="MCH3B" sigma="1.0" epsilon="0.0"/>
-  <Atom type="MW" sigma="1.0" epsilon="0.0"/>
-  <Atom type="HW_tip4pew" sigma="1.0" epsilon="0.0"/>
-  <Atom type="OW_tip4pew" sigma="0.316435" epsilon="0.680946"/>
+  <Atom type="opls_135" charge="-0.18" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_136" charge="-0.12" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_137" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_138" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_139" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_140" charge="0.06" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_141" charge="0.0" sigma="0.355" epsilon="0.317984"/>
+  <Atom type="opls_142" charge="0.0" sigma="0.355" epsilon="0.317984"/>
+  <Atom type="opls_143" charge="0.0" sigma="0.355" epsilon="0.317984"/>
+  <Atom type="opls_144" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_145" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_145B" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_146" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_147" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_148" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_149" charge="-0.005" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_150" charge="0.0" sigma="0.355" epsilon="0.317984"/>
+  <Atom type="opls_151" charge="0.0" sigma="0.3400000000000001" epsilon="1.2552"/>
+  <Atom type="opls_152" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_153" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_154" charge="-0.683" sigma="0.31200000000000006" epsilon="0.7112799999999999"/>
+  <Atom type="opls_155" charge="0.418" sigma="0.0" epsilon="0.0"/>
+  <Atom type="opls_156" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_157" charge="0.145" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_158" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_159" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_160" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_161" charge="0.0" sigma="0.325" epsilon="0.259408"/>
+  <Atom type="opls_162" charge="0.0" sigma="0.307" epsilon="0.7112799999999999"/>
+  <Atom type="opls_163" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_164" charge="0.0" sigma="0.294" epsilon="0.255224"/>
+  <Atom type="opls_165" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_166" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_167" charge="0.0" sigma="0.307" epsilon="0.7112799999999999"/>
+  <Atom type="opls_168" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_169" charge="0.0" sigma="0.307" epsilon="0.7112799999999999"/>
+  <Atom type="opls_170" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_171" charge="0.0" sigma="0.307" epsilon="0.7112799999999999"/>
+  <Atom type="opls_172" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_173" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_174" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_175" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_176" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_178" charge="0.0" sigma="0.355" epsilon="0.317984"/>
+  <Atom type="opls_179" charge="0.0" sigma="0.29" epsilon="0.58576"/>
+  <Atom type="opls_180" charge="0.0" sigma="0.29" epsilon="0.58576"/>
+  <Atom type="opls_181" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_182" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_183" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_184" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_185" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_186" charge="0.0" sigma="0.29" epsilon="0.58576"/>
+  <Atom type="opls_187" charge="0.0" sigma="0.307" epsilon="0.7112799999999999"/>
+  <Atom type="opls_188" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_189" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_190" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_191" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_192" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_193" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_194" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_195" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_196" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_197" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_198" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_199" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_200" charge="0.0" sigma="0.36" epsilon="1.7782"/>
+  <Atom type="opls_201" charge="0.0" sigma="0.37000000000000005" epsilon="1.046"/>
+  <Atom type="opls_202" charge="0.0" sigma="0.36" epsilon="1.48532"/>
+  <Atom type="opls_203" charge="0.0" sigma="0.355" epsilon="1.046"/>
+  <Atom type="opls_204" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_205" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_206" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_207" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_208" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_209" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_210" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_211" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_212" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_213" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_214" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_215" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_216" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_217" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_218" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_219" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_220" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_221" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_222" charge="0.0" sigma="0.355" epsilon="1.046"/>
+  <Atom type="opls_223" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_223B" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_224" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_224B" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_225" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_225B" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_226" charge="0.0" sigma="0.3400000000000001" epsilon="1.2552"/>
+  <Atom type="opls_227" charge="0.0" sigma="0.355" epsilon="0.317984"/>
+  <Atom type="opls_228" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_229" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_230" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_231" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_232" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_233" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_234" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_235" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_236" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_237" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_238" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_239" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_240" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_241" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_242" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_243" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_244" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_245" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_246" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_247" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_248" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_249" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_250" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_251" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_252" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_253" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_254" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_255" charge="0.0" sigma="0.25" epsilon="0.08368"/>
+  <Atom type="opls_256" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_257" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_258" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_259" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_260" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_261" charge="0.0" sigma="0.365" epsilon="0.6276"/>
+  <Atom type="opls_262" charge="0.0" sigma="0.32000000000000006" epsilon="0.7112799999999999"/>
+  <Atom type="opls_263" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_264" charge="0.0" sigma="0.3400000000000001" epsilon="1.2552"/>
+  <Atom type="opls_265" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_266" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_267" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_268" charge="0.0" sigma="0.30000000000000004" epsilon="0.7112799999999999"/>
+  <Atom type="opls_269" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_270" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_271" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_272" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_273" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_274" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_275" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_276" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_277" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_278" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_279" charge="0.0" sigma="0.242" epsilon="0.06276"/>
+  <Atom type="opls_280" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_281" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_282" charge="0.0" sigma="0.242" epsilon="0.06276"/>
+  <Atom type="opls_283" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_284" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_285" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_286" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_287" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_288" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_289" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_290" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_291" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_292" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_292B" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_293" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_293B" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_294" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_295" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_296" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_297" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_298" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_299" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_300" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_301" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_302" charge="0.0" sigma="0.22500000000000006" epsilon="0.2092"/>
+  <Atom type="opls_303" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_304" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_305" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_306" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_307" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_308" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_309" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_310" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_311" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_312" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_313" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_314" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_315" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_316" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_317" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_318" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_319" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_319B" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_320" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_321" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_322" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_323" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_324" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_325" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_326" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_327" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_328" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_329" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_330" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_331" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_332" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_333" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_333B" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_334" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_335" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_336" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_337" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_338" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_339" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_340" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_341" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_342" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_343" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_344" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_345" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_346" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_347" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_348" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_349" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_350" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_351" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_352" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_353" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_354" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_354B" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_355" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_356" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_357" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_358" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_359" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_360" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_361" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_362" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_363" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_364" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_365" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_366" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_367" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_368" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_369" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_370" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_371" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_372" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_373" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_374" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_375" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_376" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_377" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_377B" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_378" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_379" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_380" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_381" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_382" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_383" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_384" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_385" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_386" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_387" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_388" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_389" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_390" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_391" charge="0.0" sigma="0.35000000000000003" epsilon="0.33472"/>
+  <Atom type="opls_392" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_393" charge="0.0" sigma="0.37400000000000005" epsilon="0.8368"/>
+  <Atom type="opls_394" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_395" charge="0.0" sigma="0.30000000000000004" epsilon="0.7112799999999999"/>
+  <Atom type="opls_396" charge="0.0" sigma="0.355" epsilon="0.276144"/>
+  <Atom type="opls_400" charge="0.0" sigma="0.273295" epsilon="3.01248"/>
+  <Atom type="opls_401" charge="0.0" sigma="0.441724" epsilon="0.492833"/>
+  <Atom type="opls_402" charge="0.0" sigma="0.462376" epsilon="0.37656"/>
+  <Atom type="opls_403" charge="0.0" sigma="0.54" epsilon="0.29288"/>
+  <Atom type="opls_404" charge="0.0" sigma="0.125992" epsilon="26.15"/>
+  <Atom type="opls_405" charge="0.0" sigma="0.18974400000000002" epsilon="6.72427"/>
+  <Atom type="opls_406" charge="0.0" sigma="0.21264499999999997" epsilon="0.07647929999999999"/>
+  <Atom type="opls_407" charge="0.0" sigma="0.33304500000000004" epsilon="0.011598"/>
+  <Atom type="opls_408" charge="0.0" sigma="0.49346300000000004" epsilon="0.0013723499999999998"/>
+  <Atom type="opls_409" charge="0.0" sigma="0.562177" epsilon="0.000715464"/>
+  <Atom type="opls_410" charge="0.0" sigma="0.6716000000000001" epsilon="0.000338904"/>
+  <Atom type="opls_411" charge="0.0" sigma="0.164447" epsilon="3.66118"/>
+  <Atom type="opls_412" charge="0.0" sigma="0.24120300000000003" epsilon="1.88136"/>
+  <Atom type="opls_413" charge="0.0" sigma="0.310269" epsilon="0.494658"/>
+  <Atom type="opls_414" charge="0.0" sigma="0.38166100000000003" epsilon="0.19704999999999998"/>
+  <Atom type="opls_415" charge="0.0" sigma="0.42000000000000004" epsilon="1.2552"/>
+  <Atom type="opls_416" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_417" charge="0.0" sigma="0.42500000000000004" epsilon="2.092"/>
+  <Atom type="opls_418" charge="0.0" sigma="0.42000000000000004" epsilon="1.2552"/>
+  <Atom type="opls_419" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_420" charge="0.0" sigma="0.315" epsilon="1.046"/>
+  <Atom type="opls_421" charge="0.0" sigma="0.42000000000000004" epsilon="1.2552"/>
+  <Atom type="opls_422" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_423" charge="0.0" sigma="0.365" epsilon="0.6276"/>
+  <Atom type="opls_424" charge="0.0" sigma="0.3400000000000001" epsilon="1.046"/>
+  <Atom type="opls_425" charge="0.0" sigma="0.42000000000000004" epsilon="1.2552"/>
+  <Atom type="opls_426" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_427" charge="0.0" sigma="0.3400000000000001" epsilon="1.046"/>
+  <Atom type="opls_428" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_429" charge="0.0" sigma="0.42000000000000004" epsilon="1.2552"/>
+  <Atom type="opls_430" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_431" charge="0.0" sigma="0.42000000000000004" epsilon="1.2552"/>
+  <Atom type="opls_432" charge="0.0" sigma="0.25" epsilon="0.2092"/>
+  <Atom type="opls_433" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_434" charge="0.0" sigma="0.32000000000000006" epsilon="1.046"/>
+  <Atom type="opls_435" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_436" charge="0.0" sigma="0.28152400000000005" epsilon="1.6736"/>
+  <Atom type="opls_437" charge="0.0" sigma="0.311815" epsilon="0.8368"/>
+  <Atom type="opls_440" charge="0.0" sigma="0.37400000000000005" epsilon="0.8368"/>
+  <Atom type="opls_441" charge="0.0" sigma="0.315" epsilon="0.8368"/>
+  <Atom type="opls_442" charge="0.0" sigma="0.29" epsilon="0.58576"/>
+  <Atom type="opls_443" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_444" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_445" charge="0.0" sigma="0.37400000000000005" epsilon="0.8368"/>
+  <Atom type="opls_446" charge="0.0" sigma="0.315" epsilon="0.8368"/>
+  <Atom type="opls_447" charge="0.0" sigma="0.29" epsilon="0.58576"/>
+  <Atom type="opls_448" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_449" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_450" charge="0.0" sigma="0.37400000000000005" epsilon="0.8368"/>
+  <Atom type="opls_451" charge="0.0" sigma="0.315" epsilon="0.8368"/>
+  <Atom type="opls_452" charge="0.0" sigma="0.29" epsilon="0.58576"/>
+  <Atom type="opls_453" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_454" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_455" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_456" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_457" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_458" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_459" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_460" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_461" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_462" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_463" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_465" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_466" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_467" charge="0.0" sigma="0.30000000000000004" epsilon="0.7112799999999999"/>
+  <Atom type="opls_468" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_469" charge="0.0" sigma="0.242" epsilon="0.06276"/>
+  <Atom type="opls_470" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_471" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_472" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_473" charge="0.0" sigma="0.30000000000000004" epsilon="0.7112799999999999"/>
+  <Atom type="opls_474" charge="0.0" sigma="0.355" epsilon="1.046"/>
+  <Atom type="opls_475" charge="0.0" sigma="0.296" epsilon="0.7112799999999999"/>
+  <Atom type="opls_476" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_477" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_478" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_479" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_480" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_481" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_482" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_483" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_484" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_485" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_486" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_487" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_488" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_490" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_491" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_492" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_493" charge="0.0" sigma="0.355" epsilon="1.046"/>
+  <Atom type="opls_494" charge="0.0" sigma="0.296" epsilon="0.7112799999999999"/>
+  <Atom type="opls_496" charge="0.0" sigma="0.356" epsilon="1.65268"/>
+  <Atom type="opls_497" charge="0.0" sigma="0.29300000000000004" epsilon="1.17152"/>
+  <Atom type="opls_498" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_499" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_500" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_501" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_502" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_503" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_504" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_505" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_506" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_507" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_508" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_509" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_510" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_511" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_512" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_513" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_514" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_515" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_516" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_517" charge="0.0" sigma="0.355" epsilon="0.317984"/>
+  <Atom type="opls_518" charge="0.0" sigma="0.355" epsilon="0.317984"/>
+  <Atom type="opls_520" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_521" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_522" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_523" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_524" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_525" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_526" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_527" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_528" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_529" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_530" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_531" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_532" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_533" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_534" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_535" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_536" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_537" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_538" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_539" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_540" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_541" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_542" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_543" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_544" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_545" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_546" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_547" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_548" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_549" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_550" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_551" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_552" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_553" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_554" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_555" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_556" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_557" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_558" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_559" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_560" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_561" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_562" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_563" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_564" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_565" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_566" charge="0.0" sigma="0.29" epsilon="0.58576"/>
+  <Atom type="opls_567" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_568" charge="0.0" sigma="0.355" epsilon="0.317984"/>
+  <Atom type="opls_569" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_570" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_571" charge="0.0" sigma="0.29" epsilon="0.58576"/>
+  <Atom type="opls_572" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_573" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_574" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_575" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_576" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_577" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_578" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_579" charge="0.0" sigma="0.29" epsilon="0.58576"/>
+  <Atom type="opls_580" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_581" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_582" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_583" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_584" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_585" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_586" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_587" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_588" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_589" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_590" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_591" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_592" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_593" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_594" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_595" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_596" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_597" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_598" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_599" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_600" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_601" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_602" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_603" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_604" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_605" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_606" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_607" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_608" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_609" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_610" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_611" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_612" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_613" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_614" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_615" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_616" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_617" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_618" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_619" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_620" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_621" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_622" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_623" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_624" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_625" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_626" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_627" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_628" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_629" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_630" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_631" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_632" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_633" charge="0.0" sigma="0.355" epsilon="1.046"/>
+  <Atom type="opls_634" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_635" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_636" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_637" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_638" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_639" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_640" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_641" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_642" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_643" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_644" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_645" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_646" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_647" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_648" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_649" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_650" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_651" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_652" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_653" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_654" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_655" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_656" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_670" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_671" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_672" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_673" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_674" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_675" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_676" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_677" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_678" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_679" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_680" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_681" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_697" charge="0.0" sigma="0.3473" epsilon="0.225936"/>
+  <Atom type="opls_698" charge="0.0" sigma="0.33" epsilon="0.2092"/>
+  <Atom type="opls_699" charge="0.0" sigma="0.33" epsilon="0.2092"/>
+  <Atom type="opls_700" charge="0.0" sigma="0.355" epsilon="0.317984"/>
+  <Atom type="opls_701" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_702" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_703" charge="0.0" sigma="0.375" epsilon="0.25104"/>
+  <Atom type="opls_704" charge="0.0" sigma="0.3473" epsilon="0.225936"/>
+  <Atom type="opls_705" charge="0.0" sigma="0.33" epsilon="0.2092"/>
+  <Atom type="opls_706" charge="0.0" sigma="0.33" epsilon="0.2092"/>
+  <Atom type="opls_707" charge="0.0" sigma="0.29500000000000004" epsilon="0.16736"/>
+  <Atom type="opls_708" charge="0.0" sigma="0.355" epsilon="0.317984"/>
+  <Atom type="opls_709" charge="0.0" sigma="0.3400000000000001" epsilon="1.2552"/>
+  <Atom type="opls_710" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_711" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_712" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_713" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_714" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_715" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_716" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_717" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_718" charge="0.22" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_719" charge="-0.22" sigma="0.285" epsilon="0.255224"/>
+  <Atom type="opls_720" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_721" charge="0.0" sigma="0.285" epsilon="0.255224"/>
+  <Atom type="opls_722" charge="0.0" sigma="0.34700000000000003" epsilon="1.96648"/>
+  <Atom type="opls_724" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_725" charge="0.0" sigma="0.325" epsilon="0.259408"/>
+  <Atom type="opls_726" charge="0.0" sigma="0.294" epsilon="0.255224"/>
+  <Atom type="opls_727" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_728" charge="0.0" sigma="0.285" epsilon="0.255224"/>
+  <Atom type="opls_729" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_730" charge="0.0" sigma="0.34700000000000003" epsilon="1.96648"/>
+  <Atom type="opls_731" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_732" charge="0.0" sigma="0.36700000000000005" epsilon="2.42672"/>
+  <Atom type="opls_733" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_734" charge="0.0" sigma="0.355" epsilon="1.046"/>
+  <Atom type="opls_735" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_736" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_737" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_738" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_739" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_740" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_741" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_742" charge="0.0" sigma="0.22500000000000006" epsilon="0.2092"/>
+  <Atom type="opls_743" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_744" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_745" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_746" charge="0.0" sigma="0.242" epsilon="0.12552"/>
+  <Atom type="opls_747" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_748" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_749" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_750" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_751" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_752" charge="0.0" sigma="0.22500000000000006" epsilon="0.2092"/>
+  <Atom type="opls_753" charge="0.0" sigma="0.32000000000000006" epsilon="0.7112799999999999"/>
+  <Atom type="opls_754" charge="0.0" sigma="0.33" epsilon="0.276144"/>
+  <Atom type="opls_755" charge="0.0" sigma="0.33" epsilon="0.276144"/>
+  <Atom type="opls_756" charge="0.0" sigma="0.33" epsilon="0.276144"/>
+  <Atom type="opls_757" charge="0.0" sigma="0.33" epsilon="0.276144"/>
+  <Atom type="opls_758" charge="0.0" sigma="0.33" epsilon="0.276144"/>
+  <Atom type="opls_759" charge="0.0" sigma="0.25" epsilon="0.06276"/>
+  <Atom type="opls_760" charge="0.0" sigma="0.325" epsilon="0.50208"/>
+  <Atom type="opls_761" charge="0.0" sigma="0.296" epsilon="0.7112799999999999"/>
+  <Atom type="opls_762" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_763" charge="0.0" sigma="0.25" epsilon="0.06276"/>
+  <Atom type="opls_764" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_765" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_766" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_767" charge="0.0" sigma="0.325" epsilon="0.50208"/>
+  <Atom type="opls_768" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_771" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_772" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_773" charge="0.0" sigma="0.30000000000000004" epsilon="0.7112799999999999"/>
+  <Atom type="opls_774" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_775" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_776" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_777" charge="0.0" sigma="0.242" epsilon="0.06276"/>
+  <Atom type="opls_778" charge="0.0" sigma="0.242" epsilon="0.06276"/>
+  <Atom type="opls_779" charge="0.0" sigma="0.242" epsilon="0.06276"/>
+  <Atom type="opls_781" charge="0.0" sigma="0.37400000000000005" epsilon="0.8368"/>
+  <Atom type="opls_782" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_783" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_784" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_785" charge="0.0" sigma="0.37400000000000005" epsilon="0.8368"/>
+  <Atom type="opls_786" charge="0.0" sigma="0.31181" epsilon="0.255224"/>
+  <Atom type="opls_787" charge="0.0" sigma="0.315" epsilon="0.7112799999999999"/>
+  <Atom type="opls_788" charge="0.0" sigma="0.286" epsilon="0.87864"/>
+  <Atom type="opls_795" charge="0.0" sigma="0.3215" epsilon="0.58576"/>
+  <Atom type="opls_796" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_797" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_900" charge="0.0" sigma="0.33" epsilon="0.7112799999999999"/>
+  <Atom type="opls_901" charge="0.0" sigma="0.33" epsilon="0.7112799999999999"/>
+  <Atom type="opls_902" charge="0.0" sigma="0.33" epsilon="0.7112799999999999"/>
+  <Atom type="opls_903" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_904" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_905" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_906" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_906B" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_907" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_908" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_909" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_910" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_911" charge="0.0" sigma="0.25" epsilon="0.06276"/>
+  <Atom type="opls_912" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_912B" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_913" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_914" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_915" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_916" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_917" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_918" charge="0.0" sigma="0.355" epsilon="0.29288"/>
+  <Atom type="opls_925" charge="0.0" sigma="0.33" epsilon="0.359824"/>
+  <Atom type="opls_926" charge="0.0" sigma="0.242" epsilon="0.06276"/>
+  <Atom type="opls_927" charge="0.0" sigma="0.33" epsilon="0.87864"/>
+  <Atom type="opls_928" charge="0.0" sigma="0.33" epsilon="0.5648399999999999"/>
+  <Atom type="opls_929" charge="0.0" sigma="0.33" epsilon="0.4184"/>
+  <Atom type="opls_930" charge="0.0" sigma="0.25" epsilon="0.06276"/>
+  <Atom type="opls_931" charge="0.0" sigma="0.33" epsilon="0.87864"/>
+  <Atom type="opls_940" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_941" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_942" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_943" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_944" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_945" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_950" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_951" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_952" charge="0.0" sigma="0.375" epsilon="0.43932"/>
+  <Atom type="opls_953" charge="0.0" sigma="0.325" epsilon="0.7112799999999999"/>
+  <Atom type="opls_954" charge="0.0" sigma="0.296" epsilon="0.87864"/>
+  <Atom type="opls_955" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="opls_956" charge="0.0" sigma="0.294" epsilon="0.255224"/>
+  <Atom type="opls_957" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_958" charge="0.0" sigma="0.25" epsilon="0.12552"/>
+  <Atom type="opls_959" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_960" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_961" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_962" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_963" charge="0.0" sigma="0.35000000000000003" epsilon="0.276144"/>
+  <Atom type="opls_964" charge="0.0" sigma="0.35000000000000003" epsilon="0.405848"/>
+  <Atom type="opls_965" charge="0.0" sigma="0.29500000000000004" epsilon="0.221752"/>
+  <Atom type="MNH3" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="MNH2" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="MCH3A" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="MCH3B" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="MW" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="HW_tip4pew" charge="0.0" sigma="1.0" epsilon="0.0"/>
+  <Atom type="OW_tip4pew" charge="0.0" sigma="0.316435" epsilon="0.680946"/>
  </NonbondedForce>
 </ForceField>
 <!--
