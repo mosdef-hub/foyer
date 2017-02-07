@@ -24,7 +24,7 @@ from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
 
-def generate_topology(non_omm_topology):
+def generate_topology(non_omm_topology, non_element_types=None):
     topology = app.Topology()
     chain = topology.addChain()
     if isinstance(non_omm_topology, pmd.Structure):
@@ -34,10 +34,13 @@ def generate_topology(non_omm_topology):
         # Create atoms in the residue.
         for pmd_atom in non_omm_topology.atoms:
             name = pmd_atom.name
-            if pmd_atom.atomic_number != 0:
-                element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
-            else:  # TODO: more robust element detection or enforcement of symbols
-                element = elem.Element.getBySymbol(pmd_atom.name)
+            if pmd_atom.element in non_element_types:
+                element = non_element_types[pmd_atom.element]
+            else:
+                if pmd_atom.atomic_number != 0:
+                    element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
+                else:  # TODO: more robust element detection or enforcement of symbols
+                    element = elem.Element.getBySymbol(pmd_atom.name)
 
             omm_atom = topology.addAtom(name, element, residue)
             atoms[pmd_atom] = omm_atom
@@ -58,7 +61,10 @@ def generate_topology(non_omm_topology):
         # Create atoms in the residue.
         for mb_particle in non_omm_topology.particles():
             name = mb_particle.name
-            element = elem.Element.getBySymbol(mb_particle.name)
+            if mb_particle.name in non_element_types:
+                element = non_element_types[mb_particle.name]
+            else:
+                element = elem.Element.getBySymbol(mb_particle.name)
 
             omm_atom = topology.addAtom(name, element, residue)
             atoms[mb_particle] = omm_atom
@@ -84,7 +90,7 @@ class Forcefield(app.ForceField):
         self._atomTypeDefinitions = dict()
         self._atomTypeOverrides = dict()
         self._atomTypeDesc = dict()
-        self.non_element_types = set()
+        self.non_element_types = dict()
         super(Forcefield, self).__init__(*files)
 
         self.parser = smarts.SMARTS(self.non_element_types)
@@ -133,11 +139,12 @@ class Forcefield(app.ForceField):
                     if element not in self.non_element_types:
                         warnings.warn('Non-atomistic element type detected. '
                                       'Creating custom element for {}'.format(element))
-                    self.non_element_types.add(element)
                     element = elem.Element(number=0,
                                            mass=parameters['mass'],
                                            name=element,
                                            symbol=element)
+                    self.non_element_types[element.name] = element
+
         self._atomTypes[name] = self.__class__._AtomType(name, atomClass, mass, element)
         if atomClass in self._atomClasses:
             typeSet = self._atomClasses[atomClass]
@@ -160,7 +167,7 @@ class Forcefield(app.ForceField):
     def apply(self, topology, *args, **kwargs):
         positions = topology.positions
         if not isinstance(topology, app.Topology):
-            topology = generate_topology(topology)
+            topology = generate_topology(topology, self.non_element_types)
         else:
             pass
 
@@ -263,6 +270,7 @@ class Forcefield(app.ForceField):
             data.atomBonds[bond.atom2].append(i)
 
         # TODO: Better way to lookup nonbonded parameters...?
+        nonbonded_params = None
         for generator in self.getGenerators():
             if isinstance(generator, NonbondedGenerator):
                 nonbonded_params = generator.params.paramsForType
@@ -272,8 +280,9 @@ class Forcefield(app.ForceField):
             for res in chain.residues():
                 for atom in res.atoms():
                     data.atomType[atom] = atom.id
-                    params = nonbonded_params[atom.id]
-                    data.atomParameters[atom] = params
+                    if nonbonded_params:
+                        params = nonbonded_params[atom.id]
+                        data.atomParameters[atom] = params
 
         # Create the System and add atoms
         sys = mm.System()

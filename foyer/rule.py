@@ -158,6 +158,8 @@ class Rule(object):
         elif atom_id.head == 'atom_symbol':
             if str(atom_id.tail[0]) == '*':
                 return True
+            elif str(atom_id.tail[0].startswith('_')):
+                return atom.element.name == str(atom_id.tail[0])
             else:
                 return atom.element._atomic_number == pt.AtomicNum[str(atom_id.tail[0])]
         elif atom_id.head == 'has_label':
