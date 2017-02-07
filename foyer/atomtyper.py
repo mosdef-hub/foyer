@@ -54,7 +54,7 @@ def _load_rules(forcefield):
     all_names = forcefield._atomTypeDefinitions.keys()
     for rule_name, smarts in forcefield._atomTypeDefinitions.items():
         overrides = forcefield._atomTypeOverrides.get(rule_name)
-        RULE_NAME_TO_RULE[rule_name] = Rule(rule_name, smarts, overrides=overrides)
+        RULE_NAME_TO_RULE[rule_name] = Rule(rule_name, forcefield.parser, smarts, overrides=overrides)
 
 # TODO: enable this for speedup
 # def _build_rule_map():
@@ -111,7 +111,7 @@ def _resolve_atomtypes(atoms):
         atomtype = [rule_name for rule_name in atom.whitelist - atom.blacklist]
 
         if len(atomtype) == 1:
-            atom.type = atomtype[0]
+            atom.id = atomtype[0]
         elif len(atomtype) > 1:
             raise FoyerError("Found multiple types for atom {0} ({1}): {2}.".format(i, atom.element.name, atomtype))
         else:

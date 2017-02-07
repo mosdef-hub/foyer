@@ -3,14 +3,12 @@ import itertools as it
 import parmed.periodic_table as pt
 from oset import oset as OrderedSet
 
-from foyer.smarts import parse
-
 
 class Rule(object):
-    def __init__(self, name, smarts_string, overrides=None):
+    def __init__(self, name, parser, smarts_string, overrides=None):
         self.name = name
         self.smarts_string = smarts_string
-        self.ast = parse(smarts_string)
+        self.ast = parser.parse(smarts_string)
         self.ast.calc_parents()
         if overrides:
             self.overrides = set(overrides)

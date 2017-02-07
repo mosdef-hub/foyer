@@ -1,7 +1,6 @@
-import itertools
 import plyplus
 
-SMARTS_GRAMMAR = plyplus.Grammar("""
+_grammar = ("""
     start: string;
 
     // Rules
@@ -36,17 +35,27 @@ SMARTS_GRAMMAR = plyplus.Grammar("""
     STAR: '\*';
     DOLLAR: '\$';
     NUM: '[\d]+';
-    LABEL: '\%[a-z_0-9]+';
+    LABEL: '\%[A-Za-z_0-9]+';
     // Tokens for chemical elements
-    SYMBOL: 'C[laroudsemf]?|Os?|N[eaibdpos]?|S[icernbmg]?|P[drmtboau]?|H[eofgas]?|A[lrsgutcm]|B[eraik]?|Dy|E[urs]|F[erm]?|G[aed]|I[nr]?|Kr?|L[iaur]|M[gnodt]|R[buhenaf]|T[icebmalh]|U|V|W|Xe|Yb?|Z[nr]';
+    // Optional, custom, non-element underscore-prefixed symbols are pre-pended
+    SYMBOL: '{optional}C[laroudsemf]?|Os?|N[eaibdpos]?|S[icernbmg]?|P[drmtboau]?|H[eofgas]?|A[lrsgutcm]|B[eraik]?|Dy|E[urs]|F[erm]?|G[aed]|I[nr]?|Kr?|L[iaur]|M[gnodt]|R[buhenaf]|T[icebmalh]|U|V|W|Xe|Yb?|Z[nr]';
 
 """)
 
-def parse(smarts_string):
-    return SMARTS_GRAMMAR.parse(smarts_string)
+class SMARTS(object):
+    def __init__(self, optional_names=''):
+        if optional_names:
+            self.grammar = _grammar.format(optional='{}|'.format(
+                    '|'.join(optional_names)))
+        else:
+            self.grammar = _grammar.format(optional='')
+        self.PARSER = plyplus.Grammar(self.grammar)
+
+    def parse(self, smarts_string):
+        return self.PARSER.parse(smarts_string)
 
 if __name__ == '__main__':
-    ast = parse('O([H&D1])(H)')
+    ast = SMARTS().parse('O([H&X1])(H)')
     print(ast)
     assert ast.head == "start"
     assert ast.tail[0].head == "atom"
