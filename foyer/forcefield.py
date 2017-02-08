@@ -172,7 +172,7 @@ class Forcefield(app.ForceField):
             pass
 
         system = self.createSystem(topology, *args, **kwargs)
-        structure = pmd.openmm.load_topology(topology=topology, system=system, use_atom_id_as_typename=True)
+        structure = pmd.openmm.load_topology(topology=topology, system=system)
         structure.positions = positions
         return structure
 
