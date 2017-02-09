@@ -2,7 +2,9 @@ import os
 import glob
 from functools import lru_cache
 from pkg_resources import resource_filename
+
 import parmed as pmd
+
 
 class TestStructure(pmd.Structure):
 
