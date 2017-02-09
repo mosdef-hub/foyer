@@ -84,6 +84,7 @@ def generate_topology(non_omm_topology, non_element_types=None):
         raise FoyerError('Unknown topology format: {}\n'
                          'Supported formats are: '
                          '"parmed.Structure", '
+                         '"mbuild.Compound", '
                          '"openmm.app.Topology"'.format(topology))
     return topology
 
