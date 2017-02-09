@@ -1,27 +1,21 @@
-dimethylether 115-10-6.top
-acetic-anhydride 108-24-7.top
-ethylbenzene 100-41-4.top
-gamma-butyrolactone 96-48-0.top
-benzyl-alcohol 100-51-6.top
-ethyl-propanoate 105-37-3.top
-anisole 100-66-3.top
-biphenyl biphenyl.top
-triethyl-phosphate 78-40-0.top
-nitrobenzene 98-95-3.top
-styrene 100-42-5.top
-124-trimethylbenzene 95-63-6.top
-benzaldehyde 100-52-7.top
-12-dimethoxybenzene 91-16-7.top
-ethylene-carbonate 96-49-1.top
-ethyl-acetate 141-78-6.top
-isobutane 75-28-5.top
-benzene benzene.top
-isopropylbenzene 98-82-8.top
-toluene 108-88-3.top
-trifluoromethyl-benzene 98-08-8.top
-acetophenone 98-86-2.top
-E-hex-2-ene 4050-45-7.top
-o-xylene 95-47-6.top
-tetrahydrofuran 109-99-9.top
-dibutyl-ether 142-96-1.top
-diethylene-glycol-dimethyl-ether 111-96-6.top
+benzene
+24-dimethyl-3-pentanone
+acetone
+1-nitropropane
+cyclopentanone
+26-dimethyl-4-heptanone
+1-octanol
+cyclohexanone
+1-pentanol
+1-butanol
+ethylbenzene
+2-heptanone
+nitroethane
+styrene
+15-pentanediol
+isobutane
+E-hex-2-ene
+2-hexanone
+14-butanediol
+ethanol
+24-pentanedione

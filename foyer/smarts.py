@@ -53,19 +53,3 @@ class SMARTS(object):
 
     def parse(self, smarts_string):
         return self.PARSER.parse(smarts_string)
-
-if __name__ == '__main__':
-    ast = SMARTS().parse('O([H&X1])(H)')
-    print(ast)
-    assert ast.head == "start"
-    assert ast.tail[0].head == "atom"
-    assert ast.tail[0].tail[0].head == "atom_symbol"
-    assert ast.tail[0].tail[0].head == "atom_symbol"
-    assert str(ast.tail[0].tail[0].tail[0]) == "O"
-
-    # ast = parse('[#6&D2]1CCCCC1')
-    # # g = ast2graph(ast)
-    # # assert g.nodes[0].degree == 2
-    #
-    #
-    # print(ast)

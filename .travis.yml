@@ -5,16 +5,18 @@ sudo: false
 
 matrix:
   include:
+    - { os: linux, env: PYTHON_VERSION=2.7 }
     - { os: linux, env: PYTHON_VERSION=3.4 }
     - { os: linux, env: PYTHON_VERSION=3.5 }
-    - { os: osx, env: PYTHON_VERSION=3.4 }
     - { os: osx, env: PYTHON_VERSION=3.5 }
 
 install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install md5sha1sum; fi
     - source devtools/travis-ci/install_conda.sh
     - conda config --add channels omnia
-    - conda install -yq parmed libpng=1.6.22 matplotlib networkx oset six pytest
+    - conda install -yq libpng=1.6.22 matplotlib networkx oset six pytest mdtraj oset openmm
+    - pip install parmed
+    - pip install git+http://github.com/imodels/mbuild.git#egg=mbuild
     - pip install -e .
 
 script:
