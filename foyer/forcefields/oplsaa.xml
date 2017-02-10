@@ -24,7 +24,7 @@
         <Type name="opls_185" class="HC" element="C" mass="1.00800"   def="[H;X1]C[O;%opls_180]" desc="H(COR), alpha H ether" overrides="opls_140"/>
         <Type name="opls_267" class="C" element="C" mass="12.01100"   def="[C;X3]([O;X1])OH" desc="Co in CCOOH" overrides="opls_277"/>
         <Type name="opls_268" class="OH" element="O" mass="15.9994"   def="[O;X2]([C;%opls_267])([H])" desc="Oh in CCOOH"/>
-        <Type name="opls_269" class="O_3" element="O" mass="15.9994"   def="[O;X1]([C;%opls_267])" desc="Oc in CCOOH"/>
+        <Type name="opls_269" class="O_3" element="O" mass="15.9994"   def="[O;X1]([C;%opls_267])" desc="Oc in CCOOH" overrides="opls_278"/>
         <Type name="opls_270" class="HO" element="H" mass="1.00800"   def="[H;X1]([O;%opls_268])" desc="H in CCOOH"/>
         <Type name="opls_277" class="C_2" element="C" mass="12.01100"   def="[C;X3]([O;X1])(H)" desc="C in aldehyde"/>
         <Type name="opls_278" class="O_2" element="O" mass="15.9994"   def="[O;X1]([C;%opls_277])" desc="O in aldehyde"/>
