@@ -31,25 +31,25 @@ def test_uniqueness():
     top = generate_topology(mol2)
 
     atom1 = next(top.atoms())
-    rule = Rule('test', parser=PARSER,
-                smarts_string='[#6]1[#6][#6][#6][#6][#6]1')
-    result = rule.matches(atom1)
-    assert result == False
+    rule = Rule('test', parser=PARSER, smarts_string='[#6]1[#6][#6][#6][#6][#6]1')
+    assert rule.matches(atom1) == False
+    rule = Rule('test', parser=PARSER, smarts_string='[#6]1[#6][#6][#6][#6]1')
+    assert rule.matches(atom1) == False
+    rule = Rule('test', parser=PARSER, smarts_string='[#6]1[#6][#6][#6]1')
+    assert rule.matches(atom1) == True
 
 
 def test_ringness():
     ring = pmd.load_file(get_fn('ring.mol2'), structure=True)
     top = generate_topology(ring)
     atom1 = next(top.atoms())
-    rule = Rule('test', parser=PARSER,
-                smarts_string='[#6]1[#6][#6][#6][#6][#6]1')
+    rule = Rule('test', parser=PARSER, smarts_string='[#6]1[#6][#6][#6][#6][#6]1')
     assert rule.matches(atom1) == True
 
     not_ring = pmd.load_file(get_fn('not_ring.mol2'), structure=True)
     top = generate_topology(not_ring)
     atom1 = next(top.atoms())
-    rule = Rule('test', parser=PARSER,
-                smarts_string='[#6]1[#6][#6][#6][#6][#6]1')
+    rule = Rule('test', parser=PARSER, smarts_string='[#6]1[#6][#6][#6][#6][#6]1')
     assert rule.matches(atom1) == False
 
 

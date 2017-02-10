@@ -40,3 +40,4 @@ fluorobenzene
 13-difluorobenzene
 2-propylpyrrole
 1-cyclopropylpropane
+cyclohexane

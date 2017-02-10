@@ -78,8 +78,8 @@ class TestOPLS(object):
         assert not non_matches.any(), message
 
     def test_full_parametrization(self):
-        top = os.path.join(OPLS_TESTFILES_DIR, 'benzene.top')
-        gro = os.path.join(OPLS_TESTFILES_DIR, 'benzene.gro')
+        top = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.top')
+        gro = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.gro')
         structure = pmd.load_file(top, xyz=gro)
         parametrized = OPLSAA.apply(structure)
 
