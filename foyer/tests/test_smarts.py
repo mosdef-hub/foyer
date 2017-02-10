@@ -1,13 +1,12 @@
 import os
 
 import parmed as pmd
-from pkg_resources import resource_filename
 
 from foyer.forcefield import generate_topology
 from foyer.rule import Rule
 from foyer.smarts import SMARTS
+from foyer.tests.utils import get_fn
 
-resource_dir = resource_filename('foyer', '../opls_validation')
 
 PARSER = SMARTS()
 
@@ -28,8 +27,7 @@ def test_parse():
 
 
 def test_uniqueness():
-    mol2 = pmd.load_file(os.path.join(resource_dir, 'uniqueness_test.mol2'),
-                         structure=True)
+    mol2 = pmd.load_file(get_fn('uniqueness_test.mol2'), structure=True)
     top = generate_topology(mol2)
 
     atom1 = next(top.atoms())
@@ -40,16 +38,14 @@ def test_uniqueness():
 
 
 def test_ringness():
-    ring = pmd.load_file(os.path.join(resource_dir, 'ring.mol2'),
-                         structure=True)
+    ring = pmd.load_file(get_fn('ring.mol2'), structure=True)
     top = generate_topology(ring)
     atom1 = next(top.atoms())
     rule = Rule('test', parser=PARSER,
                 smarts_string='[#6]1[#6][#6][#6][#6][#6]1')
     assert rule.matches(atom1) == True
 
-    not_ring = pmd.load_file(os.path.join(resource_dir, 'not_ring.mol2'),
-                         structure=True)
+    not_ring = pmd.load_file(get_fn('not_ring.mol2'), structure=True)
     top = generate_topology(not_ring)
     atom1 = next(top.atoms())
     rule = Rule('test', parser=PARSER,
@@ -58,8 +54,7 @@ def test_ringness():
 
 
 def test_fused_ring():
-    fused= pmd.load_file(os.path.join(resource_dir, 'fused.mol2'),
-                         structure=True)
+    fused= pmd.load_file(get_fn('fused.mol2'), structure=True)
     top = generate_topology(fused)
     atoms = list(top.atoms())
     rule = Rule('test', parser=PARSER,
