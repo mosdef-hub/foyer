@@ -10,6 +10,7 @@ from foyer import Forcefield
 
 OPLSAA = Forcefield.by_name('oplsaa')
 
+OPLS_TESTFILES_DIR = resource_filename('foyer', '../opls_validation')
 
 class TestOPLS(object):
 
@@ -17,8 +18,7 @@ class TestOPLS(object):
     def initdir(self, tmpdir):
         tmpdir.chdir()
 
-    resource_dir = resource_filename('foyer', '../opls_validation')
-    top_files = set(glob.glob(os.path.join(resource_dir, '*.top')))
+    top_files = set(glob.glob(os.path.join(OPLS_TESTFILES_DIR, '*/*.top')))
 
     # Please update this file if you implement atom typing for a test case.
     # You can automatically update the files by running the below function
@@ -43,14 +43,13 @@ class TestOPLS(object):
                         fh.write('{}\n'.format(mol_name))
 
     @pytest.mark.parametrize('mol_name', correctly_implemented)
-    def test_atomtyping(self, mol_name):
+    def test_atomtyping(self, mol_name, testfiles_dir=OPLS_TESTFILES_DIR):
         top_filename = '{}.top'.format(mol_name)
         gro_filename = '{}.gro'.format(mol_name)
-        top_path = os.path.join(self.resource_dir, top_filename)
-        gro_path = os.path.join(self.resource_dir, gro_filename)
+        top_path = os.path.join(testfiles_dir, mol_name, top_filename)
+        gro_path = os.path.join(testfiles_dir, mol_name, gro_filename)
 
-        structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path,
-                                                    parametrize=False)
+        structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path, parametrize=False)
         known_opls_types = [atom.type for atom in structure.atoms]
 
         print("Typing {}...".format(mol_name))
@@ -79,8 +78,8 @@ class TestOPLS(object):
         assert not non_matches.any(), message
 
     def test_full_parametrization(self):
-        top = os.path.join(self.resource_dir, 'benzene.top')
-        gro = os.path.join(self.resource_dir, 'benzene.gro')
+        top = os.path.join(OPLS_TESTFILES_DIR, 'benzene.top')
+        gro = os.path.join(OPLS_TESTFILES_DIR, 'benzene.gro')
         structure = pmd.load_file(top, xyz=gro)
         parametrized = OPLSAA.apply(structure)
 
@@ -93,6 +92,8 @@ class TestOPLS(object):
         # TODO: uncomment when oplsaa.xml is fully implemented
         # assert len(parametrized.rb_torsions) == 24
         # assert all(x.type for x in parametrized.dihedrals)
+
+
 
 if __name__ == '__main__':
     TestOPLS().find_correctly_implemented()
