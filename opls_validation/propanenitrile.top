@@ -13,7 +13,7 @@ propanenitrile                 3
 
 [ atoms ]
 ;   nr       type  resnr residue  atom   cgnr     charge       mass  typeB    chargeB      massB
-     1   opls_139      1    MOL      C      1      -0.18    12.0107   ; qtot 0
+     1   opls_135      1    MOL      C      1      -0.18    12.0107   ; qtot 0
      2   opls_140      1    MOL      H      1       0.06     1.0079   ; qtot 0
      3   opls_140      1    MOL      H      1       0.06     1.0079   ; qtot 0
      4   opls_140      1    MOL      H      1       0.06     1.0079   ; qtot 0

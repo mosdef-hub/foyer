@@ -11,14 +11,14 @@ pentanenitrile                 3
 
 [ atoms ]
 ;   nr       type  resnr residue  atom   cgnr     charge       mass  typeB    chargeB      massB
-     1   opls_139      1    MOL      C      1      -0.18    12.0107   ; qtot 0
+     1   opls_135      1    MOL      C      1      -0.18    12.0107   ; qtot 0
      2   opls_140      2    MOL      H      1       0.06     1.0079   ; qtot 0
      3   opls_140      3    MOL      H      1       0.06     1.0079   ; qtot 0
      4   opls_140      4    MOL      H      1       0.06     1.0079   ; qtot 0
-     5   opls_139      5    MOL      C      2      -0.12    12.0107   ; qtot 0
+     5   opls_136      5    MOL      C      2      -0.12    12.0107   ; qtot 0
      6   opls_140      6    MOL      H      2       0.06     1.0079   ; qtot 0
      7   opls_140      7    MOL      H      2       0.06     1.0079   ; qtot 0
-     8   opls_139      8    MOL      C      3      -0.12    12.0107   ; qtot 0
+     8   opls_136      8    MOL      C      3      -0.12    12.0107   ; qtot 0
      9   opls_140      9    MOL      H      3       0.06     1.0079   ; qtot 0
     10   opls_140     10    MOL      H      3       0.06     1.0079   ; qtot 0
     11   opls_756     11    MOL      C      4      -0.02    13.8511   ; qtot 0
