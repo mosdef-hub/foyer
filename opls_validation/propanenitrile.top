@@ -22,7 +22,6 @@ propanenitrile                 3
      7   opls_759      1    MOL      H      2       0.06     1.0079   ; qtot 0
      8   opls_754      1    MOL      C      3       0.46          0   ; qtot 0
      9   opls_753      1    MOL      N      4      -0.56          0   ; qtot 0
-    10         ML      1    MOL     ML      5          0    24.1794   ; qtot 0
 
 [ bonds ]
 ;  ai    aj funct            c0            c1            c2            c3
@@ -32,15 +31,17 @@ propanenitrile                 3
     1     5     1 
     5     6     1 
     5     7     1 
+    5     8     1 
+    8     9     1 
 
 #ifdef NORMALMODES
 [ bonds ]
 ;  ai    aj funct            c0   c1
-    5    10     1  2.238360e-01  1e7
+;    5    10     1  2.238360e-01  1e7
 #else
 [ constraints ]
 ;  ai    aj funct            c0            c1
-    5    10     1  2.238360e-01  0.000000e+00 
+;    5    10     1  2.238360e-01  0.000000e+00 
 #endif
 
 [ exclusions ]
@@ -72,8 +73,8 @@ propanenitrile                 3
 
 [ virtual_sites2 ]
 ;  ai    aj    ak funct            c0
-    8     5    10     1  6.526509e-01 
-    9     5    10     1  1.166628e+00 
+;    8     5    10     1  6.526509e-01 
+;    9     5    10     1  1.166628e+00 
 
 [ dihedrals ]
 ;  ai    aj    ak    al funct            c0            c1            c2            c3            c4            c5
