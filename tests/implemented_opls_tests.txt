@@ -31,3 +31,12 @@ diethylene-glycol-dimethyl-ether
 tetrahydrofuran
 propionic-acid
 nitrobenzene
+pentanenitrile
+propanenitrile
+formic-acid
+formaldehyde
+111-trifluoropropane
+fluorobenzene
+13-difluorobenzene
+2-propylpyrrole
+1-cyclopropylpropane
