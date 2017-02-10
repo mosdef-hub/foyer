@@ -1,5 +1,3 @@
-import os
-
 import parmed as pmd
 
 from foyer.forcefield import generate_topology
