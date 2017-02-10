@@ -43,8 +43,8 @@
         <Type name="opls_711" class="CY" element="C" mass="12.01100"   def="[C;X4;R3]1(H)(H)[C;X4;R3][C;X4;R3]1" overrides="opls_136,opls_712"/>
         <Type name="opls_712" class="CY" element="C" mass="12.01100"   def="[C;X4;R3]1(H)[C;X4;R3][C;X4;R3]1" overrides="opls_137,opls_713"/>
         <Type name="opls_713" class="CY" element="C" mass="12.01100"   def="[C;X4;R3]1[C;X4;R3][C;X4;R3]1"/>
-        <Type name="opls_718" class="CA" element="C" mass="12.01100"   def="[C;X3;R6]1[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1([F])" overrides="opls_145"/>
-        <Type name="opls_719" class="F" element="F" mass="18.9984"   def="[F][C;%opls_718]" desc="fluorobenzene F"/>
+        <Type name="opls_718" class="CA" element="C" mass="12.01100"   def="[C;X3;R6]1(F)[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1" overrides="opls_145"/>
+        <Type name="opls_719" class="F" element="F" mass="18.9984"   def="[F][C;%opls_718]" desc="fluorobenzene F" override="opls_965"/>
         <Type name="opls_753" class="NZ" element="N" mass="14.0067"   def="[N;X1]C" desc="N in RCN nitriles"/>
         <Type name="opls_754" class="CZ" element="C" mass="12.01100"   def="[C;X2][N;%opls_753]" desc="C in RCN nitriles"/>
         <Type name="opls_755" class="CT" element="C" mass="12.01100"   def="[C;X4](H)(H)(H)[C;%opls_754]" desc="C of CH3 in CH3CN" overrides="opls_135,opls_756"/>
