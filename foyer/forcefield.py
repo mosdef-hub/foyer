@@ -1,7 +1,3 @@
-try:
-    from functools import lru_cache
-except ImportError:
-    from functools32 import lru_cache
 import glob
 import itertools
 import os
@@ -90,40 +86,58 @@ def generate_topology(non_omm_topology, non_element_types=None):
 
 
 class Forcefield(app.ForceField):
-    def __init__(self, *files):
+    """
+
+    Parameters
+    ----------
+    forcefield_files : list of str, optional, default=None
+        List of forcefield files to load.
+    name : str, optional, default=None
+        Name of a forcefield to load that is packaged within foyer.
+
+
+    """
+    def __init__(self, forcefield_files=None, name=None):
         self._atomTypeDefinitions = dict()
         self._atomTypeOverrides = dict()
         self._atomTypeDesc = dict()
+        self._included_forcefields = dict()
         self.non_element_types = dict()
-        super(Forcefield, self).__init__(*files)
+
+        all_files_to_load = []
+        if forcefield_files is not None:
+            if isinstance(forcefield_files, (list, tuple, set)):
+                for file in forcefield_files:
+                    all_files_to_load.append(file)
+            else:
+                all_files_to_load.append(forcefield_files)
+
+        if name is not None:
+            try:
+                file = self.included_forcefields[name]
+            except KeyError:
+                raise IOError('Forcefield {} cannot be found'.format(name))
+            else:
+                all_files_to_load.append(file)
+
+        super(Forcefield, self).__init__(*all_files_to_load)
 
         self.parser = smarts.SMARTS(self.non_element_types)
 
-    @classmethod
-    @lru_cache(maxsize=32)
-    def _available(cls):
+    @property
+    def included_forcefields(self):
+        if any(self._included_forcefields):
+            return self._included_forcefields
+
         resource_extension = '.xml'
-        resource_dir = resource_filename('foyer', 'forcefields')
-        resource_files = set(glob.glob(os.path.join(resource_dir, '*'+resource_extension)))
+        ff_dir = resource_filename('foyer', '../forcefields')
+        ff_filepaths = set(glob.glob(os.path.join(ff_dir, '*'+resource_extension)))
 
-        resource_dict = {}
-        for resource_path in resource_files:
-            base_path, resource_fn = os.path.split(resource_path)
-            basename = resource_fn[:-len(resource_extension)]
-            resource_dict[basename] = resource_path
-
-        return resource_dict
-
-    @classmethod
-    def available(cls):
-        return Forcefield._available().keys()
-
-    @classmethod
-    def by_name(cls, forcefield_name):
-        if forcefield_name in cls.available():
-            return Forcefield(cls._available()[forcefield_name])
-        else:
-            raise IOError('Forcefield {} cannot be found'.format(forcefield_name))
+        for ff_filepath in ff_filepaths:
+            base_path, ff_file  = os.path.split(ff_filepath)
+            basename = ff_file[:-len(resource_extension)]
+            self._included_forcefields[basename] = ff_filepath
+        return self._included_forcefields
 
     def registerAtomType(self, parameters):
         """Register a new atom type. """

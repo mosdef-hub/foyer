@@ -8,7 +8,7 @@ import pytest
 
 from foyer import Forcefield
 
-OPLSAA = Forcefield.by_name('oplsaa')
+OPLSAA = Forcefield(name='oplsaa')
 
 OPLS_TESTFILES_DIR = resource_filename('foyer', '../opls_validation')
 
