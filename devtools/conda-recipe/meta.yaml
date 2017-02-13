@@ -8,7 +8,6 @@ requirements:
 
   run:
     - python
-    - matplotlib
     - parmed
     - networkx
     - oset
