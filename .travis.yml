@@ -13,8 +13,10 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install md5sha1sum; fi
   - source devtools/travis-ci/install_conda.sh
   - conda config --add channels omnia
-  - conda install -yq libpng=1.6.22 matplotlib networkx oset six pytest mdtraj oset openmm
+  - conda config --add channels bioconda
+  - conda install -yq libpng=1.6.22 matplotlib networkx oset six pytest mdtraj oset openmm nglvieww
   - pip install parmed
+  - pip install plyplus
   - pip install git+http://github.com/imodels/mbuild.git#egg=mbuild
   - pip install -e .
 
