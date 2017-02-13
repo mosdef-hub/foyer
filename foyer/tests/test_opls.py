@@ -1,12 +1,12 @@
 import glob
 import os
 
-import numpy as np
 import parmed as pmd
 from pkg_resources import resource_filename
 import pytest
 
 from foyer import Forcefield
+from foyer.tests.utils import atomtype
 
 OPLSAA = Forcefield(name='oplsaa')
 
@@ -50,32 +50,7 @@ class TestOPLS(object):
         gro_path = os.path.join(testfiles_dir, mol_name, gro_filename)
 
         structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path, parametrize=False)
-        known_opls_types = [atom.type for atom in structure.atoms]
-
-        print("Typing {}...".format(mol_name))
-        typed_structure = OPLSAA.apply(structure)
-
-        generated_opls_types = list()
-        for i, atom in enumerate(typed_structure.atoms):
-            message = ('Found multiple or no OPLS types for atom {} in {} ({}): {}\n'
-                       'Should be atomtype: {}'.format(
-                i, mol_name, top_filename, atom.type, known_opls_types[i]))
-            assert atom.type, message
-            generated_opls_types.append(atom.type)
-
-        both = zip(generated_opls_types, known_opls_types)
-
-        n_types = np.array(range(len(generated_opls_types)))
-        known_opls_types = np.array(known_opls_types)
-        generated_opls_types = np.array(generated_opls_types)
-
-        non_matches = np.array([a != b for a, b in both])
-        message = "Found inconsistent OPLS types in {} ({}): {}".format(
-            mol_name, top_filename,
-            list(zip(n_types[non_matches],
-                     generated_opls_types[non_matches],
-                     known_opls_types[non_matches])))
-        assert not non_matches.any(), message
+        atomtype(structure, OPLSAA)
 
     def test_full_parametrization(self):
         top = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.top')
