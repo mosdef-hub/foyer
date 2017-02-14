@@ -1,4 +1,5 @@
 import glob
+import itertools as it
 import os
 
 import parmed as pmd
@@ -18,7 +19,8 @@ class TestOPLS(object):
     def initdir(self, tmpdir):
         tmpdir.chdir()
 
-    top_files = set(glob.glob(os.path.join(OPLS_TESTFILES_DIR, '*/*.top')))
+    top_files = glob.glob(os.path.join(OPLS_TESTFILES_DIR, '*/*.top'))
+    mol2_files = glob.glob(os.path.join(OPLS_TESTFILES_DIR, '*/*.mol2'))
 
     # Please update this file if you implement atom typing for a test case.
     # You can automatically update the files by running the below function
@@ -30,11 +32,11 @@ class TestOPLS(object):
 
     def find_correctly_implemented(self):
         with open(self.implemented_tests_path, 'a') as fh:
-            for top_path in self.top_files:
-                _, top_file = os.path.split(top_path)
-                mol_name = top_file[:-4]
+            for mol_path in it.chain(self.top_files, self.mol2_files):
+                _, mol_file = os.path.split(mol_path)
+                mol_name, ext = os.path.splitext(mol_file)
                 try:
-                    self.test_atomtyping(mol_name)
+                   self.test_atomtyping(mol_name)
                 except Exception as e:
                     print(e)
                     continue
@@ -44,12 +46,18 @@ class TestOPLS(object):
 
     @pytest.mark.parametrize('mol_name', correctly_implemented)
     def test_atomtyping(self, mol_name, testfiles_dir=OPLS_TESTFILES_DIR):
-        top_filename = '{}.top'.format(mol_name)
-        gro_filename = '{}.gro'.format(mol_name)
-        top_path = os.path.join(testfiles_dir, mol_name, top_filename)
-        gro_path = os.path.join(testfiles_dir, mol_name, gro_filename)
-
-        structure = pmd.gromacs.GromacsTopologyFile(top_path, xyz=gro_path, parametrize=False)
+        files = glob.glob(os.path.join(testfiles_dir, mol_name, '*'))
+        for mol_file in files:
+            _, ext = os.path.splitext(mol_file)
+            if ext == '.top':
+                top_filename = '{}.top'.format(mol_name)
+                gro_filename = '{}.gro'.format(mol_name)
+                top_path = os.path.join(testfiles_dir, mol_name, top_filename)
+                gro_path = os.path.join(testfiles_dir, mol_name, gro_filename)
+                structure = pmd.load_file(top_path, xyz=gro_path, parametrize=False)
+            elif ext == '.mol2':
+                mol2_path = os.path.join(testfiles_dir, mol_name, mol_file)
+                structure = pmd.load_file(mol2_path, structure=True)
         atomtype(structure, OPLSAA)
 
     def test_full_parametrization(self):
