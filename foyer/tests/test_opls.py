@@ -89,9 +89,8 @@ class TestOPLS(object):
         assert all(x.type for x in parametrized.bonds)
         assert len(parametrized.angles) == 18
         assert all(x.type for x in parametrized.angles)
-        # TODO: uncomment when oplsaa.xml is fully implemented
-        # assert len(parametrized.rb_torsions) == 24
-        # assert all(x.type for x in parametrized.dihedrals)
+        assert len(parametrized.rb_torsions) == 24
+        assert all(x.type for x in parametrized.dihedrals)
 
 
 
