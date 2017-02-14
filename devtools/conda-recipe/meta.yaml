@@ -2,6 +2,9 @@ package:
   name: foyer-dev
   version: !!str 0.1.0.dev0
 
+build:
+  noarch_python: True
+
 requirements:
   build:
     - python
