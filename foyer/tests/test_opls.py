@@ -11,7 +11,7 @@ from foyer.tests.utils import atomtype
 
 OPLSAA = Forcefield(name='oplsaa')
 
-OPLS_TESTFILES_DIR = resource_filename('foyer', '../opls_validation')
+OPLS_TESTFILES_DIR = resource_filename('foyer', 'opls_validation')
 
 class TestOPLS(object):
 

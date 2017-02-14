@@ -6,7 +6,7 @@ import pytest
 from foyer import Forcefield
 
 
-FF_DIR = resource_filename('foyer', '../forcefields')
+FF_DIR = resource_filename('foyer', 'forcefields')
 FORCEFIELDS = glob.glob(os.path.join(FF_DIR, '*.xml'))
 
 def test_load_files():
