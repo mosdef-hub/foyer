@@ -130,7 +130,7 @@ class Forcefield(app.ForceField):
             return self._included_forcefields
 
         resource_extension = '.xml'
-        ff_dir = resource_filename('foyer', '../forcefields')
+        ff_dir = resource_filename('foyer', 'forcefields')
         ff_filepaths = set(glob.glob(os.path.join(ff_dir, '*'+resource_extension)))
 
         for ff_filepath in ff_filepaths:

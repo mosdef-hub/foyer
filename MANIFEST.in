@@ -1,3 +1,5 @@
-graft opls_validation
+graft foyer/opls_validation
+graft foyer/forcefields
+graft examples
 include foyer/tests/*.txt
-include requirements.txt
+include foyer/tests/files/*

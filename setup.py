@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 import os
-import sys
+import subprocess
 from setuptools import setup, find_packages
 
 #####################################
@@ -15,18 +15,65 @@ else:
     __version__ = VERSION + '.dev0'
 #####################################
 
-with open('foyer/version.py', 'w') as version_file:
-    version_file.write('version="{0}"\n'.format(__version__))
+def git_version():
+    # Return the git revision as a string
+    # copied from numpy setup.py
+    def _minimal_ext_cmd(cmd):
+        # construct minimal environment
+        env = {}
+        for k in ['SYSTEMROOT', 'PATH']:
+            v = os.environ.get(k)
+            if v is not None:
+                env[k] = v
+        # LANGUAGE is used on win32
+        env['LANGUAGE'] = 'C'
+        env['LANG'] = 'C'
+        env['LC_ALL'] = 'C'
+        out = subprocess.Popen(
+            cmd, stdout=subprocess.PIPE, env=env).communicate()[0]
+        return out
 
-with open('__conda_version__.txt', 'w') as conda_version:
-    conda_version.write(__version__)
+    try:
+        out = _minimal_ext_cmd(['git', 'rev-parse', 'HEAD'])
+        GIT_REVISION = out.strip().decode('ascii')
+    except OSError:
+        GIT_REVISION = 'Unknown'
 
-if sys.argv[-1] == 'publish':
-    os.system('python setup.py sdist upload')
-    sys.exit()
+    return GIT_REVISION
 
-with open('requirements.txt') as reqs_file:
-    reqs = [line.strip() for line in reqs_file]
+
+def write_version_py(version, isreleased, filename):
+    cnt = """
+# This file is generated in setup.py at build time.
+version = '{version}'
+short_version = '{short_version}'
+full_version = '{full_version}'
+git_revision = '{git_revision}'
+release = {release}
+"""
+    # git_revision
+    if os.path.exists('.git'):
+        git_revision = git_version()
+    else:
+        git_revision = 'Unknown'
+
+    # short_version, full_version
+    if isreleased:
+        full_version = version
+        short_version = version
+    else:
+        full_version = ("{version}+{git_revision}"
+                        .format(version=version, git_revision=git_revision))
+        short_version = version
+
+    with open(filename, 'w') as f:
+        f.write(cnt.format(version=version,
+                           short_version=short_version,
+                           full_version=full_version,
+                           git_revision=git_revision,
+                           release=isreleased))
+
+write_version_py(VERSION, ISRELEASED, 'foyer/version.py')
 
 setup(
     name='foyer',
@@ -35,17 +82,18 @@ setup(
     long_description=__doc__,
     author='Janos Sallai, Christoph Klein',
     author_email='janos.sallai@vanderbilt.edu, christoph.klein@vanderbilt.edu',
-    url='https://github.com/imodels/foyer',
-    download_url='https://github.com/imodels/foyer/tarball/{}'.format(__version__),
+    url='https://github.com/mosdef-hub/foyer',
+    download_url='https://github.com/mosdef-hub/foyer/tarball/{}'.format(__version__),
     packages=find_packages(),
-    package_data={'foyer': ['tests/*.txt',
-                            '../opls_validation/*.top',
-                            '../opls_validation/*.gro',
+    package_data={'foyer': ['foyer/tests/*.txt',
+                            '../opls_validation/*/*.top',
+                            '../opls_validation/*/*.gro',
+                            '../opls_validation/*/*.mol2',
                             '../opls_validation/oplsaa.ff/*',
+                            '../examples/*',
                             ]},
     package_dir={'foyer': 'foyer'},
     include_package_data=True,
-    install_requires=reqs,
     license="MIT",
     zip_safe=False,
     keywords='foyer',
