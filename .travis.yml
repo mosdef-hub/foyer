@@ -19,6 +19,7 @@ install:
   - git fetch -t
   - source devtools/travis-ci/install_conda.sh
   - conda config --add channels omnia
+  - conda config --add channels mosdef
 
 script:
   - conda build devtools/conda-recipe
