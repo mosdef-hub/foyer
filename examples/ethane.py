@@ -27,9 +27,6 @@ for dihedral in ethane.dihedrals:
 # Save to GROMACS
 ethane.save('ethane.gro')
 ethane.save('ethane.top')
-# Save to AMBER
-ethane.save('ethane.prmtop')
-ethane.save('ethane.inpcrd')
 
 
 # Within the `Forcefield.apply` method, an intermediate OpenMM system is

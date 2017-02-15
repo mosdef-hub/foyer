@@ -16,18 +16,23 @@ file with SMARTS-based atomtypes:
 </ForceField>
 ```
 
-Apply the forcefield to arbitrary topologies (we currently support the 
-[OpenMM.Topology](http://docs.openmm.org/7.0.0/api-python/generated/simtk.openmm.app.topology.Topology.html#),
-[ParmEd.Structure](http://parmed.github.io/ParmEd/html/structure.html) and 
-[mBuild.Compound](http://mosdef-hub.github.io/mbuild/data_structures.html) representations):
+Apply the forcefield to arbitrary chemical topologies. We currently support:
+
+* [OpenMM.Topology](http://docs.openmm.org/7.0.0/api-python/generated/simtk.openmm.app.topology.Topology.html#)
+* [ParmEd.Structure](http://parmed.github.io/ParmEd/html/structure.html)
+* [mBuild.Compound](http://mosdef-hub.github.io/mbuild/data_structures.html)
 
 ```python
 from foyer import Forcefield
 import parmed as pmd
 
 untyped_ethane = pmd.load_file('ethane.mol2', structure=True)
-oplsaa = Forcefield(name='oplsaa')
+oplsaa = Forcefield(forcefield_files='oplsaa.xml')
 ethane = oplsaa.apply(untyped_ethane)
+
+# Save to any format supported by ParmEd
+ethane.save('ethane.top')
+ethane.save('ethane.gro')
 ```
 ### Getting started?
 Check out our example template for disseminating force fields:
