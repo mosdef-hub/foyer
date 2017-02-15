@@ -6,7 +6,7 @@
 
 Install from conda:
 ```bash
-conda install -c omnia -c bioconda -c mosdef foyer
+conda install -c omnia -c mosdef foyer
 ```
 
 Install from source:
