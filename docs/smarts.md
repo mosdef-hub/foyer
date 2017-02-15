@@ -2,7 +2,7 @@
 
 Foyer allows users to describe atomtypes using a modified version of 
 [SMARTS](http://www.daylight.com/dayhtml/doc/theory/theory.smarts.html)
-You may already be familiar with SMILES
+You may already be familiar with
 [SMILES](https://www.wikiwand.com/en/Simplified_molecular-input_line-entry_system)
 representations for describing chemical structures. SMARTS is a straightforward
 extension of this notation.
@@ -22,7 +22,7 @@ carbon and its hydrogen atoms:
 This `.xml` format is an extension of the [OpenMM force field format](http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields)
 The above example utilizes two additional `.xml` attributes supported by foyer:
 `def` and `desc`. The atomtype that we are attempting to match is always the
-__first__ token in the SMARTS string. In the above example, `[C;X4]` and `H`.
+__first__ token in the SMARTS string, in the above example, `[C;X4]` and `H`.
 The `opls_135` (methyl group carbon) is defined by a SMARTS
 string indicated a carbon with 4 bonds, a carbon neighbor and 3
 hydrogen neighbors. The `opls_140` (alkane hydrogen) is defined simply as a
