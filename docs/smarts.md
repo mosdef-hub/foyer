@@ -2,7 +2,7 @@
 
 Foyer allows users to describe atomtypes using a modified version of 
 [SMARTS](http://www.daylight.com/dayhtml/doc/theory/theory.smarts.html)
-You may already be familiar with SMILES
+You may already be familiar with
 [SMILES](https://www.wikiwand.com/en/Simplified_molecular-input_line-entry_system)
 representations for describing chemical structures. SMARTS is a straightforward
 extension of this notation.
