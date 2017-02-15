@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 
 #####################################
 VERSION = "0.2.3"
-ISRELEASED = True
+ISRELEASED = False
 if ISRELEASED:
     __version__ = VERSION
 else:
