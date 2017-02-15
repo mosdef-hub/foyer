@@ -6,6 +6,7 @@ import warnings
 
 import mbuild as mb
 import networkx as nx
+import numpy as np
 import parmed as pmd
 import simtk.openmm.app.element as elem
 import simtk.unit as unit
@@ -52,6 +53,7 @@ def generate_topology(non_omm_topology, non_element_types=None):
             topology.addBond(atom1, atom2)
             atom1.bond_partners.append(atom2)
             atom2.bond_partners.append(atom1)
+        topology.setPeriodicBoxVectors(non_omm_topology.box_vectors)
 
     elif isinstance(non_omm_topology, mb.Compound):
         residue = topology.addResidue(non_omm_topology.name, chain)
@@ -76,6 +78,11 @@ def generate_topology(non_omm_topology, non_element_types=None):
             topology.addBond(atom1, atom2)
             atom1.bond_partners.append(atom2)
             atom2.bond_partners.append(atom1)
+        box_vectors = np.zeros(shape=(3, 3))
+        box_vectors[0, 0] = non_omm_topology.periodicity[0]
+        box_vectors[1, 1] = non_omm_topology.periodicity[1]
+        box_vectors[2, 2] = non_omm_topology.periodicity[2]
+        topology.setPeriodicBoxVectors(box_vectors)
     else:
         raise FoyerError('Unknown topology format: {}\n'
                          'Supported formats are: '
@@ -188,10 +195,11 @@ class Forcefield(app.ForceField):
             topology = generate_topology(topology, self.non_element_types)
         else:
             pass
-
+        box_vectors = topology.getPeriodicBoxVectors()
         system = self.createSystem(topology, *args, **kwargs)
         structure = pmd.openmm.load_topology(topology=topology, system=system)
         structure.positions = positions
+        structure.box_vectors = box_vectors
         return structure
 
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
@@ -238,18 +246,7 @@ class Forcefield(app.ForceField):
         system
             the newly created System
         """
-        if isinstance(topology, pmd.Structure):
-            topology = generate_topology(topology)
-        elif isinstance(topology, app.Topology):
-            pass
-        else:
-            raise FoyerError('Unknown topology format: {}\n'
-                             'Supported formats are: '
-                             '"parmed.Structure", '
-                             '"openmm.app.Topology"'.format(topology))
-
         # Atomtype the system.
-
         G = nx.Graph()
         G.add_nodes_from(topology.atoms())
         G.add_edges_from(topology.bonds())
