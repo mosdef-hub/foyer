@@ -53,7 +53,8 @@ def generate_topology(non_omm_topology, non_element_types=None):
             topology.addBond(atom1, atom2)
             atom1.bond_partners.append(atom2)
             atom2.bond_partners.append(atom1)
-        topology.setPeriodicBoxVectors(non_omm_topology.box_vectors)
+        if non_omm_topology.box_vectors and np.any([x._value for x in non_omm_topology.box_vectors]):
+            topology.setPeriodicBoxVectors(non_omm_topology.box_vectors)
 
     elif isinstance(non_omm_topology, mb.Compound):
         residue = topology.addResidue(non_omm_topology.name, chain)
@@ -78,10 +79,11 @@ def generate_topology(non_omm_topology, non_element_types=None):
             topology.addBond(atom1, atom2)
             atom1.bond_partners.append(atom2)
             atom2.bond_partners.append(atom1)
+        bounding_box = non_omm_topology.boundingbox
         box_vectors = np.zeros(shape=(3, 3))
-        box_vectors[0, 0] = non_omm_topology.periodicity[0]
-        box_vectors[1, 1] = non_omm_topology.periodicity[1]
-        box_vectors[2, 2] = non_omm_topology.periodicity[2]
+        box_vectors[0, 0] = non_omm_topology.periodicity[0] or bounding_box[0]
+        box_vectors[1, 1] = non_omm_topology.periodicity[1] or bounding_box[1]
+        box_vectors[2, 2] = non_omm_topology.periodicity[2] or bounding_box[2]
         topology.setPeriodicBoxVectors(box_vectors)
     else:
         raise FoyerError('Unknown topology format: {}\n'
@@ -199,7 +201,8 @@ class Forcefield(app.ForceField):
         system = self.createSystem(topology, *args, **kwargs)
         structure = pmd.openmm.load_topology(topology=topology, system=system)
         structure.positions = positions
-        structure.box_vectors = box_vectors
+        if box_vectors:
+            structure.box_vectors = box_vectors
         return structure
 
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
