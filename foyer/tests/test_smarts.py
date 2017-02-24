@@ -30,11 +30,11 @@ def test_uniqueness():
 
     atom1 = next(top.atoms())
     rule = Rule('test', parser=PARSER, smarts_string='[#6]1[#6][#6][#6][#6][#6]1')
-    assert rule.matches(atom1) == False
+    assert rule.matches(atom1) is False
     rule = Rule('test', parser=PARSER, smarts_string='[#6]1[#6][#6][#6][#6]1')
-    assert rule.matches(atom1) == False
+    assert rule.matches(atom1) is False
     rule = Rule('test', parser=PARSER, smarts_string='[#6]1[#6][#6][#6]1')
-    assert rule.matches(atom1) == True
+    assert rule.matches(atom1) is True
 
 
 def test_ringness():
@@ -42,25 +42,41 @@ def test_ringness():
     top = generate_topology(ring)
     atom1 = next(top.atoms())
     rule = Rule('test', parser=PARSER, smarts_string='[#6]1[#6][#6][#6][#6][#6]1')
-    assert rule.matches(atom1) == True
+    assert rule.matches(atom1) is True
 
     not_ring = pmd.load_file(get_fn('not_ring.mol2'), structure=True)
     top = generate_topology(not_ring)
     atom1 = next(top.atoms())
     rule = Rule('test', parser=PARSER, smarts_string='[#6]1[#6][#6][#6][#6][#6]1')
-    assert rule.matches(atom1) == False
+    assert rule.matches(atom1) is False
 
 
 def test_fused_ring():
-    fused= pmd.load_file(get_fn('fused.mol2'), structure=True)
+    fused = pmd.load_file(get_fn('fused.mol2'), structure=True)
     top = generate_topology(fused)
     atoms = list(top.atoms())
     rule = Rule('test', parser=PARSER,
                 smarts_string='[#6]12[#6][#6][#6][#6][#6]1[#6][#6][#6][#6]2')
 
-    assert rule.matches(atoms[2]) == False
+    assert rule.matches(atoms[2]) is False
     for _ in range(10):  # Traversal order during matching is stochastic.
-        assert rule.matches(atoms[3]) == True
-        assert rule.matches(atoms[4]) == True
-    assert rule.matches(atoms[5]) == False
+        assert rule.matches(atoms[3]) is True
+        assert rule.matches(atoms[4]) is True
+    assert rule.matches(atoms[5]) is False
+
+
+def test_not():
+    mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+    top = generate_topology(mol2)
+    atom1 = next(top.atoms())
+
+    rule = Rule('test', parser=PARSER, smarts_string='[!O]')
+    assert rule.matches(atom1) is True
+    rule = Rule('test', parser=PARSER, smarts_string='[!#5]')
+    assert rule.matches(atom1) is True
+
+    rule = Rule('test', parser=PARSER, smarts_string='[!C]')
+    assert rule.matches(atom1) is False
+    rule = Rule('test', parser=PARSER, smarts_string='[!#6]')
+    assert rule.matches(atom1) is False
 

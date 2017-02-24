@@ -15,6 +15,7 @@ _grammar = ("""
     ?and_expression: (and_expression and_symbol)? atom_id;
     @and_symbol: SEMI | AMP;
     @or_symbol: COMMA;
+    @not_symbol: EXCL;
     atom_id: atom_symbol | HASH atomic_num | DOLLAR LPAR matches_string RPAR | has_label | 'X' neighbor_count | 'R' ring_size;
     atom_symbol: SYMBOL | STAR;
     atomic_num: NUM;
@@ -36,6 +37,7 @@ _grammar = ("""
     DOLLAR: '\$';
     NUM: '[\d]+';
     LABEL: '\%[A-Za-z_0-9]+';
+    EXCL: '\!';
     // Tokens for chemical elements
     // Optional, custom, non-element underscore-prefixed symbols are pre-pended
     SYMBOL: '{optional}C[laroudsemf]?|Os?|N[eaibdpos]?|S[icernbmg]?|P[drmtboau]?|H[eofgas]?|A[lrsgutcm]|B[eraik]?|Dy|E[urs]|F[erm]?|G[aed]|I[nr]?|Kr?|L[iaur]|M[gnodt]|R[buhenaf]|T[icebmalh]|U|V|W|Xe|Yb?|Z[nr]';
