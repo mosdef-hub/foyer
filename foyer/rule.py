@@ -138,7 +138,9 @@ class Rule(object):
                 del labeled_atoms[dig]
 
     def _atom_expr_matches(self, atom_expr, atom):
-        if atom_expr.head == 'and_expression':
+        if atom_expr.head == 'not_expression':
+            return not self._atom_expr_matches(atom_expr.tail[0], atom)
+        elif atom_expr.head in ('and_expression', 'weak_and_expression'):
             return self._atom_expr_matches(atom_expr.tail[0], atom) and \
                    self._atom_expr_matches(atom_expr.tail[1], atom)
         elif atom_expr.head == 'or_expression':

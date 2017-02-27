@@ -36,11 +36,6 @@ def find_atomtypes(atoms, forcefield, debug=False):
     for atom in atoms:
         atom.whitelist = OrderedSet()
         atom.blacklist = OrderedSet()
-        # if atom.element:
-        #     atom.element_name = pt.Element[atom.element]
-        # else:
-        #     # TODO: more robust element detection
-        #     atom.element_name = atom.name
 
     _load_rules(forcefield)
     # if debug:
@@ -48,10 +43,10 @@ def find_atomtypes(atoms, forcefield, debug=False):
     _iterate_rules(atoms, max_iter=10)
     _resolve_atomtypes(atoms)
 
+
 def _load_rules(forcefield):
     global RULE_NAME_TO_RULE
     RULE_NAME_TO_RULE = dict()
-    all_names = forcefield._atomTypeDefinitions.keys()
     for rule_name, smarts in forcefield._atomTypeDefinitions.items():
         overrides = forcefield._atomTypeOverrides.get(rule_name)
         RULE_NAME_TO_RULE[rule_name] = Rule(rule_name, forcefield.parser, smarts, overrides=overrides)
@@ -104,6 +99,7 @@ def _iterate_rules(atoms, max_iter=10):
             break
     else:
         warn("Reached maximum iterations. Something probably went wrong.")
+
 
 def _resolve_atomtypes(atoms):
     """Determine the final atomtypes from the white- and blacklists."""
