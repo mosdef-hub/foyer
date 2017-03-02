@@ -21,6 +21,7 @@ from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
 
+
 def generate_topology(non_omm_topology, non_element_types=None):
     if non_element_types is None:
         non_element_types = set()
