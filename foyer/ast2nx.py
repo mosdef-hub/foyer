@@ -3,10 +3,9 @@ from foyer.smarts import SMARTS
 from plyplus.strees import STree
 
 import networkx as nx
-import matplotlib.pyplot as plt
 
 
-class AST2NetworkX:
+class Ast2Nx:
     """
     A class first to parse the SMARTS string to AST tree and finally convert to NetworkX graph.
     * Subgraph Isomorphism
@@ -38,32 +37,32 @@ class AST2NetworkX:
         self.NetworkX = nx.Graph()  # wait to convert
 
         # invoke initial functions to initialize
-        self.assign_id()  # assign a unique id and name to each of the atoms, which will initialize self.atom_id & self.atom_name
-        self.set_atoms_with_label()  # get all the atoms that have the atom_label attribute
+        self._assign_id()  # assign a unique id and name to each of the atoms, which will initialize self.atom_id & self.atom_name
+        self._set_atoms_with_label()  # get all the atoms that have the atom_label attribute
 
         # invoke converting functions to generate graph
-        self.add_nodes()
-        self.add_edges(self.AST)
-        self.add_label_edges()
+        self._add_nodes()
+        self._add_edges(self.AST)
+        self._add_label_edges()
 
     # ===== initialize function ===== #
-    def assign_id(self):
+    def _assign_id(self):
         # assign a unique id to each atom
         atom_id = 0
         atoms = self.AST.select('atom')
         for atom in atoms:
             self.atom_with_id[id(atom)] = (atom, atom_id)
-            self.atom_name[id(atom)] = self.set_atom_name(atom)
+            self.atom_name[id(atom)] = self._set_atom_name(atom)
             atom_id += 1
 
-    def set_atoms_with_label(self):
+    def _set_atoms_with_label(self):
         # set all atoms with atom_label attribute
         atoms_with_label = self.AST.select('atom_label')
         for atom_ in atoms_with_label:
             assert atom_.parent().head == 'atom', "the parent of atom_label has to be atom."
             self.atom_with_label[id(atom_.parent())] = list(atom_.tail[0])
 
-    def set_atom_name(self, atom):
+    def _set_atom_name(self, atom):
         # ToDo: deal with the any name situation, i.e., (*)
         atom_name_list = []
         for atom_name_ in atom.tail:
@@ -74,7 +73,6 @@ class AST2NetworkX:
                 atom_name_list.append(str(atom_name_))
         return 'atom(' + ', '.join(atom_name_list) + ')'
 
-    # ===== utility function ===== #
     def get_atom_with_id(self, atom):
         # given atom return atom_with_id
         if id(atom) in self.atom_with_id:
@@ -92,14 +90,14 @@ class AST2NetworkX:
         return self.get_atom_name(atom1) + '-' + self.get_atom_name(atom2)
 
     # ===== graph generation function ===== #
-    def add_nodes(self):
+    def _add_nodes(self):
         # add all nodes to the graph
         atoms = self.AST.select('atom')
         for atom in atoms:
             atom_name = self.get_atom_name(atom)
             self.NetworkX.add_node(self.get_atom_with_id(atom), name=atom_name)
 
-    def add_edges(self, ASTtree, trunk=None):
+    def _add_edges(self, ASTtree, trunk=None):
         # add all edges to the graph
         for atom in ASTtree.tail:
             if atom.head == 'atom':
@@ -121,9 +119,9 @@ class AST2NetworkX:
                     return  # we already travel through the whole branch
             elif atom.head == 'branch':
                 # a new branch appeared, so we recursively travel to the new branch
-                self.add_edges(atom, trunk)
+                self._add_edges(atom, trunk)
 
-    def add_label_edges(self):
+    def _add_label_edges(self):
         # connect all the atoms with same atom_label together
         for atom_id, labels in self.atom_with_label.items():
             for atom_id_inner, labels_inner in self.atom_with_label.items():
@@ -133,28 +131,12 @@ class AST2NetworkX:
                             self.NetworkX.add_edge(self.get_atom_with_id(atom_id_inner), self.get_atom_with_id(atom_id),
                                                    name=self.get_edge_name(atom_id_inner, atom_id))
 
-    # ===== visualize function ===== #
-    def visualzie(self):
-        # draw the graph without position information by Matplotlib
-        # https://networkx.github.io/documentation/networkx-1.10/reference/generated/networkx.drawing.nx_pylab.draw_networkx.html#networkx.drawing.nx_pylab.draw_networkx
-        plt.figure()
-        nx.draw_networkx(self.NetworkX)
-        plt.show()  # will stuck here unless you close the figure window
-
     def to_file(self, name_graphml='AST2NX.graphml'):
         # write to a graphml file which can be read by a lot of professional visualization tools such as Cytoscape
         if name_graphml.endswith('.graphml'):
             nx.write_graphml(self.NetworkX, name_graphml)
         else:
             nx.write_graphml(self.NetworkX, name_graphml + '.graphml')
-
-    def print_list(self):
-        # print the dict of lists format of the converted graph
-        print(nx.to_dict_of_lists(self.NetworkX))
-
-    def print_dict(self):
-        # print the dict of dicts format of the converted graph
-        print(nx.to_dict_of_dicts(self.NetworkX))
 
     # ===== isomorphism functions ===== #
     def foyer_node_match(self, G1_node, G2_node):
@@ -184,7 +166,7 @@ class AST2NetworkX:
         return isomorphism.GraphMatcher.subgraph_is_isomorphic(GM)
 
 
-# override the less or equal to operator for STree class for the graph isomorphism
+# override the "less or equal to" operator for STree class for the graph isomorphism
 def __lt__(self, other):
     return str(self) < str(other)
 STree.__lt__ = __lt__
