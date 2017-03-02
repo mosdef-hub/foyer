@@ -5,18 +5,13 @@ channels:
 - conda-forge
 - defaults
 dependencies:
-- numpy
-- scipy
-- packmol=1.0.0
-- nglview>=0.6
-- oset
+- openmm
+- mbuild
 - parmed
-- mdtraj
-- foyer
+- networkx
+- six
+- plyplus
 # Testing Deps
 - pytest >=3.0
-- jupyter
-- nbformat
-- ipyext
 - python-coveralls
 - pytest-cov
