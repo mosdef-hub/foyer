@@ -143,8 +143,9 @@ class Ast2Nx:
                 if atom_id_inner is not atom_id:
                     for label_inner in labels_inner:
                         if label_inner in labels:
-                            self.NetworkX.add_edge(self.get_atom_with_id(atom_id_inner), self.get_atom_with_id(atom_id),
-                                                   name=self.get_edge_name(atom_id_inner, atom_id))
+                            self.NetworkX.add_edge(self._get_atom_with_id(atom_id_inner),
+                                                   self._get_atom_with_id(atom_id),
+                                                   name=self._get_edge_name(atom_id_inner, atom_id))
 
     def to_file(self, name_graphml='AST2NX.graphml'):
         """ write to a graphml file which can be read by a lot of professional visualization tools such as Cytoscape.
