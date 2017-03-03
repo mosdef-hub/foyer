@@ -13,7 +13,8 @@ TEST_BANK = [
 
 
 def test_Ast2Nx():
-    # nodes test
+    """ converting tst.
+    """
     for cases in TEST_BANK:
         ast = PARSER.parse(cases)
         atoms = ast.select('atom')
@@ -23,7 +24,8 @@ def test_Ast2Nx():
 
 
 def test_graph_isomorphism():
-    # test for graph isomorphism
+    """ whole graph isomorphism test.
+    """
     assert Ast2Nx(TEST_BANK[0]) == Ast2Nx(TEST_BANK[0])
     assert not Ast2Nx(TEST_BANK[0]) == Ast2Nx(TEST_BANK[1])
     assert Ast2Nx(TEST_BANK[3]) == Ast2Nx(TEST_BANK[3])
@@ -32,7 +34,8 @@ def test_graph_isomorphism():
     
 
 def test_subgraph_isomorphism():
-    # test for graph isomorphism
+    """ sub-graph isomorphism test.
+    """
     assert Ast2Nx(TEST_BANK[0]) in Ast2Nx(TEST_BANK[0])
     assert not Ast2Nx(TEST_BANK[0]) in Ast2Nx(TEST_BANK[1])
     assert Ast2Nx(TEST_BANK[3]) in Ast2Nx(TEST_BANK[3])
