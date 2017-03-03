@@ -34,7 +34,7 @@ def test_parse():
 
 def test_uniqueness():
     mol2 = pmd.load_file(get_fn('uniqueness_test.mol2'), structure=True)
-    top = generate_topology(mol2)
+    top, _ = generate_topology(mol2)
 
     atom1 = next(top.atoms())
     _rule_match(atom1, '[#6]1[#6][#6][#6][#6][#6]1', False)
@@ -44,19 +44,19 @@ def test_uniqueness():
 
 def test_ringness():
     ring = pmd.load_file(get_fn('ring.mol2'), structure=True)
-    top = generate_topology(ring)
+    top, _ = generate_topology(ring)
     atom1 = next(top.atoms())
     _rule_match(atom1, '[#6]1[#6][#6][#6][#6][#6]1', True)
 
     not_ring = pmd.load_file(get_fn('not_ring.mol2'), structure=True)
-    top = generate_topology(not_ring)
+    top, _ = generate_topology(not_ring)
     atom1 = next(top.atoms())
     _rule_match(atom1, '[#6]1[#6][#6][#6][#6][#6]1', False)
 
 
 def test_fused_ring():
     fused = pmd.load_file(get_fn('fused.mol2'), structure=True)
-    top = generate_topology(fused)
+    top, _ = generate_topology(fused)
     atoms = list(top.atoms())
     rule = Rule('test', parser=PARSER,
                 smarts_string='[#6]12[#6][#6][#6][#6][#6]1[#6][#6][#6][#6]2')
@@ -88,7 +88,7 @@ def test_precedence_ast():
 
 def test_precedence():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
-    top = generate_topology(mol2)
+    top, _ = generate_topology(mol2)
     atom1 = next(top.atoms())
 
     checks = {'[C,H;C]': True,
@@ -119,7 +119,7 @@ def test_not_ast():
 
 def test_not():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
-    top = generate_topology(mol2)
+    top, _ = generate_topology(mol2)
     atom1 = next(top.atoms())
 
     checks = {'[!O]': True,
