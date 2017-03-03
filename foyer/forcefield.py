@@ -263,9 +263,7 @@ class Forcefield(app.ForceField):
             for atom in cycle:
                 atom.cycles.add(tuple(cycle))
 
-        find_atomtypes(atoms=list(topology.atoms()),
-                       forcefield=self,
-                       debug=verbose)
+        find_atomtypes(atoms=list(topology.atoms()), forcefield=self)
 
         data = app.ForceField._SystemData()
         data.atoms = list(topology.atoms())
