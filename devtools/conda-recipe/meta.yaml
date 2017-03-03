@@ -34,6 +34,7 @@ test:
     - foyer/forcefields/*
     - foyer/opls_validation/*
     - foyer/tests/files/*
+    - foyer/tests/implemented_opls_tests.txt
 
   commands:
     - py.test -v --pyargs foyer
