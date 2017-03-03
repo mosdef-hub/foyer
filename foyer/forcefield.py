@@ -167,7 +167,7 @@ class Forcefield(app.ForceField):
                         warnings.warn('Non-atomistic element type detected. '
                                       'Creating custom element for {}'.format(element))
                     element = elem.Element(number=0,
-                                           mass=parameters['mass'],
+                                           mass=mass,
                                            name=element,
                                            symbol=element)
                     self.non_element_types[element.name] = element
