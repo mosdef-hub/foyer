@@ -15,6 +15,7 @@ else:
     __version__ = VERSION + '.dev0'
 #####################################
 
+
 def git_version():
     # Return the git revision as a string
     # copied from numpy setup.py
