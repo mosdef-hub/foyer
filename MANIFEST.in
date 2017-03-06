@@ -1,5 +1,5 @@
 graft foyer/opls_validation
 graft foyer/forcefields
 graft examples
-include foyer/tests/*.txt
-include foyer/tests/files/*
+include foyer/tests/implemented_opls_tets.txt
+global-include *.xml *.mol2 *.top *.gro
