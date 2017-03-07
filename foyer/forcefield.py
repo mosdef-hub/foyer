@@ -9,7 +9,7 @@ import networkx as nx
 import numpy as np
 import parmed as pmd
 import simtk.openmm.app.element as elem
-import simtk.unit as unit
+import simtk.unit as u
 from simtk import openmm as mm
 from simtk.openmm import app
 from simtk.openmm.app.forcefield import (NoCutoff, CutoffNonPeriodic,
@@ -20,6 +20,7 @@ from simtk.openmm.app.forcefield import (NoCutoff, CutoffNonPeriodic,
 from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
+
 
 def generate_topology(non_omm_topology, non_element_types=None):
     if non_element_types is None:
@@ -56,6 +57,7 @@ def generate_topology(non_omm_topology, non_element_types=None):
         if non_omm_topology.box_vectors and np.any([x._value for x in non_omm_topology.box_vectors]):
             topology.setPeriodicBoxVectors(non_omm_topology.box_vectors)
 
+        positions = non_omm_topology.positions
     elif isinstance(non_omm_topology, mb.Compound):
         residue = topology.addResidue(non_omm_topology.name, chain)
         atoms = dict()  # mb.Particle: omm.Atom
@@ -80,18 +82,25 @@ def generate_topology(non_omm_topology, non_element_types=None):
             atom1.bond_partners.append(atom2)
             atom2.bond_partners.append(atom1)
         bounding_box = non_omm_topology.boundingbox
-        box_vectors = np.zeros(shape=(3, 3))
-        box_vectors[0, 0] = non_omm_topology.periodicity[0] or bounding_box[0]
-        box_vectors[1, 1] = non_omm_topology.periodicity[1] or bounding_box[1]
-        box_vectors[2, 2] = non_omm_topology.periodicity[2] or bounding_box[2]
+        box_vectors = [[0, 0, 0] * u.nanometer,
+                       [0, 0, 0] * u.nanometer,
+                       [0, 0, 0] * u.nanometer]
+        box_vectors[0][0] = (non_omm_topology.periodicity[1] or
+                             bounding_box.lengths[0]) * u.nanometer
+        box_vectors[1][1] = (non_omm_topology.periodicity[1] or
+                             bounding_box.lengths[1]) * u.nanometer
+        box_vectors[2][2] = (non_omm_topology.periodicity[2] or
+                             bounding_box.lengths[2]) * u.nanometer
         topology.setPeriodicBoxVectors(box_vectors)
+
+        positions = non_omm_topology.xyz
     else:
         raise FoyerError('Unknown topology format: {}\n'
                          'Supported formats are: '
                          '"parmed.Structure", '
                          '"mbuild.Compound", '
                          '"openmm.app.Topology"'.format(topology))
-    return topology
+    return topology, positions
 
 
 class Forcefield(app.ForceField):
@@ -167,7 +176,7 @@ class Forcefield(app.ForceField):
                         warnings.warn('Non-atomistic element type detected. '
                                       'Creating custom element for {}'.format(element))
                     element = elem.Element(number=0,
-                                           mass=parameters['mass'],
+                                           mass=mass,
                                            name=element,
                                            symbol=element)
                     self.non_element_types[element.name] = element
@@ -192,21 +201,20 @@ class Forcefield(app.ForceField):
             self._atomTypeDesc[name] = parameters['desc']
 
     def apply(self, topology, *args, **kwargs):
-        positions = topology.positions
         if not isinstance(topology, app.Topology):
-            topology = generate_topology(topology, self.non_element_types)
+            topology, positions = generate_topology(topology, self.non_element_types)
         else:
             pass
         box_vectors = topology.getPeriodicBoxVectors()
         system = self.createSystem(topology, *args, **kwargs)
         structure = pmd.openmm.load_topology(topology=topology, system=system)
         structure.positions = positions
-        if box_vectors:
+        if box_vectors is not None:
             structure.box_vectors = box_vectors
         return structure
 
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
-                     nonbondedCutoff=1.0*unit.nanometer, constraints=None,
+                     nonbondedCutoff=1.0*u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
                      residueTemplates=dict(), verbose=False, **args):
         """Construct an OpenMM System representing a Topology with this force field.
@@ -262,9 +270,7 @@ class Forcefield(app.ForceField):
             for atom in cycle:
                 atom.cycles.add(tuple(cycle))
 
-        find_atomtypes(atoms=list(topology.atoms()),
-                       forcefield=self,
-                       debug=verbose)
+        find_atomtypes(atoms=list(topology.atoms()), forcefield=self)
 
         data = app.ForceField._SystemData()
         data.atoms = list(topology.atoms())
@@ -322,8 +328,8 @@ class Forcefield(app.ForceField):
 
         # Adjust hydrogen masses if requested.
         if hydrogenMass is not None:
-            if not unit.is_quantity(hydrogenMass):
-                hydrogenMass *= unit.dalton
+            if not u.is_quantity(hydrogenMass):
+                hydrogenMass *= u.dalton
             for atom1, atom2 in topology.bonds():
                 if atom1.element == elem.hydrogen:
                     (atom1, atom2) = (atom2, atom1)

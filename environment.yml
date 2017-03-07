@@ -1,0 +1,17 @@
+name: test-environment
+channels:
+- mosdef
+- omnia
+- conda-forge
+- defaults
+dependencies:
+- openmm
+- mbuild
+- parmed
+- networkx
+- six
+- plyplus
+# Testing Deps
+- pytest >=3.0
+- python-coveralls
+- pytest-cov

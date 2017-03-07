@@ -9,12 +9,16 @@ _grammar = ("""
     @nonlastbranch: LPAR branch RPAR;
     @lastbranch: branch;
     branch: string;
-    atom: (LBRACKET or_expression RBRACKET | atom_symbol) atom_label?;
+    atom: (LBRACKET weak_and_expression RBRACKET | atom_symbol) atom_label?;
     atom_label: NUM;
+    ?weak_and_expression: (weak_and_expression weak_and_symbol)? or_expression;
     ?or_expression: (or_expression or_symbol)? and_expression;
-    ?and_expression: (and_expression and_symbol)? atom_id;
-    @and_symbol: SEMI | AMP;
+    ?and_expression: (and_expression and_symbol)? (atom_id | not_expression);
+    not_expression: not_symbol atom_id;
+    @and_symbol: AMP;
+    @weak_and_symbol: SEMI;
     @or_symbol: COMMA;
+    @not_symbol: EXCL;
     atom_id: atom_symbol | HASH atomic_num | DOLLAR LPAR matches_string RPAR | has_label | 'X' neighbor_count | 'R' ring_size;
     atom_symbol: SYMBOL | STAR;
     atomic_num: NUM;
@@ -36,11 +40,13 @@ _grammar = ("""
     DOLLAR: '\$';
     NUM: '[\d]+';
     LABEL: '\%[A-Za-z_0-9]+';
+    EXCL: '\!';
     // Tokens for chemical elements
     // Optional, custom, non-element underscore-prefixed symbols are pre-pended
     SYMBOL: '{optional}C[laroudsemf]?|Os?|N[eaibdpos]?|S[icernbmg]?|P[drmtboau]?|H[eofgas]?|A[lrsgutcm]|B[eraik]?|Dy|E[urs]|F[erm]?|G[aed]|I[nr]?|Kr?|L[iaur]|M[gnodt]|R[buhenaf]|T[icebmalh]|U|V|W|Xe|Yb?|Z[nr]';
 
 """)
+
 
 class SMARTS(object):
     def __init__(self, optional_names=''):

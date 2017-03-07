@@ -7,6 +7,8 @@ matrix:
     - { os: linux, env: PYTHON_VERSION=2.7 }
     - { os: linux, env: PYTHON_VERSION=3.4 }
     - { os: linux, env: PYTHON_VERSION=3.5 }
+    - { os: osx, env: PYTHON_VERSION=2.7 }
+    - { os: osx, env: PYTHON_VERSION=3.4 }
     - { os: osx, env: PYTHON_VERSION=3.5 }
 
 env:
@@ -16,11 +18,14 @@ env:
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install md5sha1sum; fi
-  - git fetch -t
   - source devtools/travis-ci/install_conda.sh
-  - conda config --add channels omnia
-  - conda config --add channels bioconda
-  - conda config --add channels mosdef
+  - conda config --set always_yes yes --set changeps1 no
+  - conda env create -q -n test-environment python=$PYTHON_VERSION -f environment.yml
+  - source activate test-environment
+  - pip install -e .
 
 script:
-  - conda build devtools/conda-recipe
+  - py.test -v --cov=foyer --cov-report= --pyargs foyer
+
+after_success:
+  - coveralls

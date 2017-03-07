@@ -15,6 +15,7 @@ else:
     __version__ = VERSION + '.dev0'
 #####################################
 
+
 def git_version():
     # Return the git revision as a string
     # copied from numpy setup.py
@@ -86,11 +87,12 @@ setup(
     download_url='https://github.com/mosdef-hub/foyer/tarball/{}'.format(__version__),
     packages=find_packages(),
     package_data={'foyer': ['foyer/tests/*.txt',
-                            '../opls_validation/*/*.top',
-                            '../opls_validation/*/*.gro',
-                            '../opls_validation/*/*.mol2',
-                            '../opls_validation/oplsaa.ff/*',
-                            '../examples/*',
+                            'foyer/tests/files/*.mol2',
+                            'foyer/forcefields/*.xml',
+                            'opls_validation/*/*.top',
+                            'opls_validation/*/*.gro',
+                            'opls_validation/*/*.mol2',
+                            'opls_validation/oplsaa.ff/*',
                             ]},
     package_dir={'foyer': 'foyer'},
     include_package_data=True,

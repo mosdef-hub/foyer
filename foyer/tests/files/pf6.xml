@@ -1,0 +1,27 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="P" class="P" element="P"  mass="30.9738"  def="P" desc="phosphorous"/>
+  <Type name="F1" class="F1" element="F"  mass="18.9984"  def="FP([!%F1])([!%F1])([!%F1])([!%F1])F" desc="fluorine type 1"/>
+  <Type name="F2" class="F2" element="F"  mass="18.9984"  def="FP([!%F1;!%F2])([!%F1;!%F2])([%F1])([%F1])F" desc="fluorine type 2" overrides="F1"/>
+  <Type name="F3" class="F3" element="F"  mass="18.9984"  def="FP([%F1])([%F1])([%F2])([%F2])F" desc="fluorine type 3" overrides="F1,F2"/>
+ </AtomTypes>
+ <NonbondedForce coulomb14scale="1.0" lj14scale="1.0">
+  <Atom type="P" charge="0.442" sigma="0.3740" epsilon="0.962"/>
+  <Atom type="F1" charge="-0.207" sigma="0.3118" epsilon="0.298"/>
+  <Atom type="F2" charge="-0.207" sigma="0.3118" epsilon="0.298"/>
+  <Atom type="F3" charge="-0.207" sigma="0.3118" epsilon="0.298"/>
+ </NonbondedForce>
+ <HarmonicBondForce>
+  <Bond class1="P" class2="F1" length="0.16" k="3347.2"/>
+  <Bond class1="P" class2="F2" length="0.16" k="3347.2"/>
+  <Bond class1="P" class2="F3" length="0.16" k="3347.2"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="F1" class2="P" class3="F1" angle="3.141592" k="1673.6"/>
+  <Angle class1="F2" class2="P" class3="F2" angle="3.141592" k="1673.6"/>
+  <Angle class1="F3" class2="P" class3="F3" angle="3.141592" k="1673.6"/>
+  <Angle class1="F1" class2="P" class3="F2" angle="1.570796" k="1673.6"/>
+  <Angle class1="F1" class2="P" class3="F3" angle="1.570796" k="1673.6"/>
+  <Angle class1="F2" class2="P" class3="F3" angle="1.570796" k="1673.6"/>
+ </HarmonicAngleForce>
+</ForceField>
