@@ -735,15 +735,15 @@
   <Type name="opls_766" class="opls_766" element="C" mass="12.011"/>
   <Type name="opls_767" class="NO" element="N" mass="14.0067"   def="[N;X3]([O;X1])([O;X1])[C;X3;R6]" desc="N in nitro Ar-NO2" overrides="opls_760"/>
   <Type name="opls_768" class="CA" element="C" mass="12.01100"   def="[C;X3;R6][N;%opls_767]" desc="C(NO2) nitrobenzene" overrides="opls_145"/>
-  <Type name="opls_771" class="opls_771" element="O" mass="15.9994" def="[O;X1][C;%opls_771]" desc="propylene carbonate O (Luciennes param.)"/>
-  <Type name="opls_772" class="opls_772" element="C" mass="12.011" def="[C;X3][O;%opls_771][O;%opls_773][O;%opls_773]" desc="propylene carbonate C=O"/>
-  <Type name="opls_773" class="opls_773" element="O" mass="15.9994" def="[O;X2][C;%opls_772](C)" desc="propylene carbonate OS"/>
-  <Type name="opls_774" class="opls_774" element="C" mass="12.011" def="[C;X4][O;%opls_773][C;%opls_775][H;%opls_777][H;%opls_777]" desc="propylene carbonate C in CH2"/>
-  <Type name="opls_775" class="opls_775" element="C" mass="12.011" def="[C;X4][O;%opls_773][C;%opls_774][C;%opls_776][H;%opls_778]" desc="propylene carbonate C in CH"/>
-  <Type name="opls_776" class="opls_776" element="C" mass="12.011" def="[C;X4][C;%opls_775][H;%opls_779][H;%opls_779][H;%opls_779]" desc="propylene carbonate C in CH3"/>
-  <Type name="opls_777" class="opls_777" element="H" mass="1.008" def="[H;X1][C;%opls_774]" desc="propylene carbonate H in CH2"/>
-  <Type name="opls_778" class="opls_778" element="H" mass="1.008" def="[H;X1][C;%opls_775]" desc="propylene carbonate H in CH"/>
-  <Type name="opls_779" class="opls_779" element="H" mass="1.008" def="[H;X1][C;%opls_776]" desc="propylene carbonate H in CH3"/>
+  <Type name="opls_771" class="O" element="O" mass="15.9994" def="[O;X1][C;%opls_771]" desc="propylene carbonate O (Luciennes param.)"/>
+  <Type name="opls_772" class="CT" element="C" mass="12.011" def="[C;X3][O;%opls_771][O;%opls_773][O;%opls_773]" desc="propylene carbonate C=O"/>
+  <Type name="opls_773" class="OS" element="O" mass="15.9994" def="[O;X2][C;%opls_772](C)" desc="propylene carbonate OS"/>
+  <Type name="opls_774" class="CT" element="C" mass="12.011" def="[C;X4][O;%opls_773][C;%opls_775][H;%opls_777][H;%opls_777]" desc="propylene carbonate C in CH2"/>
+  <Type name="opls_775" class="CT" element="C" mass="12.011" def="[C;X4][O;%opls_773][C;%opls_774][C;%opls_776][H;%opls_778]" desc="propylene carbonate C in CH"/>
+  <Type name="opls_776" class="CT" element="C" mass="12.011" def="[C;X4][C;%opls_775][H;%opls_779][H;%opls_779][H;%opls_779]" desc="propylene carbonate C in CH3"/>
+  <Type name="opls_777" class="HC" element="H" mass="1.008" def="[H;X1][C;%opls_774]" desc="propylene carbonate H in CH2"/>
+  <Type name="opls_778" class="HC" element="H" mass="1.008" def="[H;X1][C;%opls_775]" desc="propylene carbonate H in CH"/>
+  <Type name="opls_779" class="HC" element="H" mass="1.008" def="[H;X1][C;%opls_776]" desc="propylene carbonate H in CH3"/>
   <Type name="opls_781" class="opls_781" element="P" mass="30.97376"/>
   <Type name="opls_782" class="opls_782" element="C" mass="12.011"/>
   <Type name="opls_783" class="opls_783" element="C" mass="12.011"/>
