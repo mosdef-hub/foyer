@@ -162,9 +162,9 @@
   <Type name="opls_163" class="opls_163" element="H" mass="1.008"/>
   <Type name="opls_164" class="opls_164" element="F" mass="18.9984"/>
   <Type name="opls_165" class="opls_165" element="H" mass="1.008"/>
-  <Type name="opls_166" class="opls_166" element="C" mass="12.011"/>
-  <Type name="opls_167" class="opls_167" element="O" mass="15.9994"/>
-  <Type name="opls_168" class="opls_168" element="H" mass="1.008"/>
+  <Type name="opls_166" class="CA" element="C" mass="12.011" def="[C;X3;R6]1(OH)[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1" overrides="opls_145"/>
+  <Type name="opls_167" class="OH" element="O" mass="15.9994" def="O(H)[C;%opls_166]" overrides="opls_154"/>
+  <Type name="opls_168" class="HO" element="H" mass="1.008" def="H[O;%opls_167]" overrides="opls_155"/>
   <Type name="opls_169" class="opls_169" element="O" mass="15.9994"/>
   <Type name="opls_170" class="opls_170" element="H" mass="1.008"/>
   <Type name="opls_171" class="opls_171" element="O" mass="15.9994"/>
