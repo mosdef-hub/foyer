@@ -50,3 +50,7 @@ propane
 propene
 methane
 neopentane
+phenol
+2-methylphenol
+3-methylphenol
+4-methylphenol
