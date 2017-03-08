@@ -724,7 +724,7 @@
   <Type name="opls_755" class="CT" element="C" mass="12.01100" def="[C;X4](H)(H)(H)[C;%opls_754]" desc="C of CH3 in CH3CN" overrides="opls_135,opls_756"/>
   <Type name="opls_756" class="CT" element="C" mass="12.01100" def="[C;X4](H)(H)[C;%opls_754]" desc="C of CH2 in RCH2CN" overrides="opls_136,opls_757"/>
   <Type name="opls_757" class="CT" element="C" mass="12.01100" def="[C;X4](H)[C;%opls_754]" desc="C of CH in R2CHCN" overrides="opls_137,opls_758"/>
-  <Type name="opls_758" class="CT" element="C" mass="12.01100" def="[C;X4][C;%opls_754]" desc="C of C in r3CCN"/>
+  <Type name="opls_758" class="CT" element="C" mass="12.01100" def="[C;X4][C;%opls_754]" desc="C of C in R3CCN"/>
   <Type name="opls_759" class="HC" element="H" mass="1.00800"  def="HC[C;%opls_754]" desc="HC-CT-CN alpha-H in nitriles" overrides="opls_140"/>
   <Type name="opls_760" class="NO" element="N" mass="14.0067"  def="[N;X3]([O;X1])([O;X1])" desc="N in nitro R-NO2"/>
   <Type name="opls_761" class="ON" element="O" mass="15.9994"  def="[O;X1][N][O;X1]" desc="O in nitro R-NO2"/>
