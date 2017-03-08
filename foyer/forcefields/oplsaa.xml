@@ -141,7 +141,7 @@
   <Type name="opls_142" class="CM" element="C" mass="12.01100" def="[C;X3](C)(C)H" desc="alkene C (RH-C=)"/>
   <Type name="opls_143" class="CM" element="C" mass="12.01100" def="[C;X3](C)(H)H" desc="alkene C (H2-C=)"/>
   <Type name="opls_144" class="HC" element="H" mass="1.00800"  def="[H][C;X3]" desc="alkene H"/>
-  <Type name="opls_145" class="CA" element="C" mass="12.01100" def="[C;X3;R6]1[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1" overrides="opls_141,opls_142"/>
+  <Type name="opls_145" class="CA" element="C" mass="12.01100" def="[C;X3;r6]1[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" overrides="opls_141,opls_142"/>
   <Type name="opls_146" class="HA" element="H" mass="1.00800"  def="[H][C;%opls_145]" overrides="opls_144" desc="benzene H"/>
   <Type name="opls_147" class="opls_147" element="C" mass="12.011"/>
   <Type name="opls_148" class="CT" element="C" mass="12.01100"   def="[C;X4]([C;%opls_145])(H)(H)H" desc="toluene CH3" overrides="opls_149,opls_135"/>
@@ -162,7 +162,7 @@
   <Type name="opls_163" class="opls_163" element="H" mass="1.008"/>
   <Type name="opls_164" class="opls_164" element="F" mass="18.9984"/>
   <Type name="opls_165" class="opls_165" element="H" mass="1.008"/>
-  <Type name="opls_166" class="CA" element="C" mass="12.011" def="[C;X3;R6]1(OH)[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1" overrides="opls_145"/>
+  <Type name="opls_166" class="CA" element="C" mass="12.011" def="[C;X3;r6]1(OH)[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" overrides="opls_145"/>
   <Type name="opls_167" class="OH" element="O" mass="15.9994" def="O(H)[C;%opls_166]" overrides="opls_154"/>
   <Type name="opls_168" class="HO" element="H" mass="1.008" def="H[O;%opls_167]" overrides="opls_155"/>
   <Type name="opls_169" class="opls_169" element="O" mass="15.9994"/>
@@ -537,9 +537,9 @@
   <Type name="opls_539" class="opls_539" element="C" mass="12.011"/>
   <Type name="opls_540" class="opls_540" element="H" mass="1.008"/>
   <Type name="opls_541" class="opls_541" element="H" mass="1.008"/>
-  <Type name="opls_542" class="NA" element="N" mass="14.0067"  def="[N;X3;R5]1[C;X3;R5][C;X3;R5][C;X3;R5][C;X3;R5]1H" desc="N in pyrrole"/>
-  <Type name="opls_543" class="CW" element="C" mass="12.01100" def="[C;X3;R5]([N;%opls_542])" desc="C2 in pyrrole"/>
-  <Type name="opls_544" class="CS" element="C" mass="12.01100" def="[C;X3;R5]([C;%opls_543])" desc="C3 in pyrrole" overrides="opls_142"/>
+  <Type name="opls_542" class="NA" element="N" mass="14.0067"  def="[N;X3;r5]1[C;X3;r5][C;X3;r5][C;X3;r5][C;X3;r5]1H" desc="N in pyrrole"/>
+  <Type name="opls_543" class="CW" element="C" mass="12.01100" def="[C;X3;r5]([N;%opls_542])" desc="C2 in pyrrole"/>
+  <Type name="opls_544" class="CS" element="C" mass="12.01100" def="[C;X3;r5]([C;%opls_543])" desc="C3 in pyrrole" overrides="opls_142"/>
   <Type name="opls_545" class="H"  element="H" mass="1.00800"  def="H[N;%opls_542]" desc="H1 in pyrrole"/>
   <Type name="opls_546" class="HA" element="H" mass="1.00800"  def="H[C;%opls_543]" desc="H2 in pyrrole" overrides="opls_144"/>
   <Type name="opls_547" class="HA" element="H" mass="1.00800"  def="H[C;%opls_544]" desc="H3 in pyrrole" overrides="opls_144"/>
@@ -678,14 +678,14 @@
   <Type name="opls_708" class="opls_708" element="C" mass="12.011"/>
   <Type name="opls_709" class="opls_709" element="Cl" mass="35.453"/>
   <Type name="opls_710" class="opls_710" element="H" mass="1.008"/>
-  <Type name="opls_711" class="CY" element="C" mass="12.01100"   def="[C;X4;R3]1(H)(H)[C;X4;R3][C;X4;R3]1" overrides="opls_136,opls_712"/>
-  <Type name="opls_712" class="CY" element="C" mass="12.01100"   def="[C;X4;R3]1(H)[C;X4;R3][C;X4;R3]1" overrides="opls_137,opls_713"/>
-  <Type name="opls_713" class="CY" element="C" mass="12.01100"   def="[C;X4;R3]1[C;X4;R3][C;X4;R3]1"/>
+  <Type name="opls_711" class="CY" element="C" mass="12.01100"   def="[C;X4;r3]1(H)(H)[C;X4;r3][C;X4;r3]1" overrides="opls_136,opls_712"/>
+  <Type name="opls_712" class="CY" element="C" mass="12.01100"   def="[C;X4;r3]1(H)[C;X4;r3][C;X4;r3]1" overrides="opls_137,opls_713"/>
+  <Type name="opls_713" class="CY" element="C" mass="12.01100"   def="[C;X4;r3]1[C;X4;r3][C;X4;r3]1"/>
   <Type name="opls_714" class="opls_714" element="C" mass="12.011"/>
   <Type name="opls_715" class="opls_715" element="H" mass="1.008"/>
   <Type name="opls_716" class="opls_716" element="C" mass="12.011"/>
   <Type name="opls_717" class="opls_717" element="H" mass="1.008"/>
-  <Type name="opls_718" class="CA" element="C" mass="12.01100"   def="[C;X3;R6]1(F)[C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6][C;X3;R6]1" overrides="opls_145"/>
+  <Type name="opls_718" class="CA" element="C" mass="12.01100"   def="[C;X3;r6]1(F)[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" overrides="opls_145"/>
   <Type name="opls_719" class="F" element="F" mass="18.9984"   def="F[C;%opls_718]" desc="fluorobenzene F" overrides="opls_965"/>
   <Type name="opls_720" class="opls_720" element="C" mass="12.011"/>
   <Type name="opls_721" class="opls_721" element="F" mass="18.9984"/>
@@ -733,8 +733,8 @@
   <Type name="opls_764" class="CT" element="C" mass="12.01100" def="[C;X4](C)(H)(H)[N;%opls_760]" desc="CT-NO2 nitroethane" overrides="opls_136"/>
   <Type name="opls_765" class="opls_765" element="C" mass="12.011"/>
   <Type name="opls_766" class="opls_766" element="C" mass="12.011"/>
-  <Type name="opls_767" class="NO" element="N" mass="14.0067"   def="[N;X3]([O;X1])([O;X1])[C;X3;R6]" desc="N in nitro Ar-NO2" overrides="opls_760"/>
-  <Type name="opls_768" class="CA" element="C" mass="12.01100"   def="[C;X3;R6][N;%opls_767]" desc="C(NO2) nitrobenzene" overrides="opls_145"/>
+  <Type name="opls_767" class="NO" element="N" mass="14.0067"   def="[N;X3]([O;X1])([O;X1])[C;X3;r6]" desc="N in nitro Ar-NO2" overrides="opls_760"/>
+  <Type name="opls_768" class="CA" element="C" mass="12.01100"   def="[C;X3;r6][N;%opls_767]" desc="C(NO2) nitrobenzene" overrides="opls_145"/>
   <Type name="opls_771" class="opls_771" element="O" mass="15.9994"/>
   <Type name="opls_772" class="opls_772" element="C" mass="12.011"/>
   <Type name="opls_773" class="opls_773" element="O" mass="15.9994"/>
