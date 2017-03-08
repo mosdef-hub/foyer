@@ -10,6 +10,7 @@ class Rule(object):
         self.smarts_string = smarts_string
         self.ast = parser.parse(smarts_string)
         self.ast.calc_parents()
+
         if overrides:
             self.overrides = set(overrides)
         else:
