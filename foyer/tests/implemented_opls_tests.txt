@@ -17,6 +17,7 @@ formaldehyde
 nitromethane
 24-dimethyl-3-pentanone
 ethanol
+methanol
 pyrrole
 cyclohexanone
 propylamine
@@ -54,3 +55,5 @@ phenol
 2-methylphenol
 3-methylphenol
 4-methylphenol
+ethylene-carbonate
+propylene-carbonate
