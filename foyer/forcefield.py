@@ -13,7 +13,7 @@ import simtk.unit as u
 from simtk import openmm as mm
 from simtk.openmm import app
 from simtk.openmm.app.forcefield import (NoCutoff, CutoffNonPeriodic,
-                                         CutoffPeriodic, Ewald, HBonds,
+                                         CutoffPeriodic, HBonds,
                                          AllBonds, HAngles, NonbondedGenerator,
                                          _convertParameterToNumber)
 
@@ -23,83 +23,95 @@ from foyer import smarts
 
 
 def generate_topology(non_omm_topology, non_element_types=None):
+    """Create an OpenMM Topology from another supported topology structure. """
     if non_element_types is None:
         non_element_types = set()
 
-    topology = app.Topology()
-    chain = topology.addChain()
     if isinstance(non_omm_topology, pmd.Structure):
-        residue = topology.addResidue(non_omm_topology.title, chain)
-        atoms = dict()  # pmd.Atom: omm.Atom
-
-        # Create atoms in the residue.
-        for pmd_atom in non_omm_topology.atoms:
-            name = pmd_atom.name
-            if pmd_atom.element in non_element_types:
-                element = non_element_types[pmd_atom.element]
-            else:
-                if pmd_atom.atomic_number != 0:
-                    element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
-                else:  # TODO: more robust element detection or enforcement of symbols
-                    element = elem.Element.getBySymbol(pmd_atom.name)
-
-            omm_atom = topology.addAtom(name, element, residue)
-            atoms[pmd_atom] = omm_atom
-            omm_atom.bond_partners = []
-
-        # Create bonds.
-        for bond in non_omm_topology.bonds:
-            atom1 = atoms[bond.atom1]
-            atom2 = atoms[bond.atom2]
-            topology.addBond(atom1, atom2)
-            atom1.bond_partners.append(atom2)
-            atom2.bond_partners.append(atom1)
-        if non_omm_topology.box_vectors and np.any([x._value for x in non_omm_topology.box_vectors]):
-            topology.setPeriodicBoxVectors(non_omm_topology.box_vectors)
-
-        positions = non_omm_topology.positions
+        return _topology_from_parmed(non_omm_topology, non_element_types)
     elif isinstance(non_omm_topology, mb.Compound):
-        residue = topology.addResidue(non_omm_topology.name, chain)
-        atoms = dict()  # mb.Particle: omm.Atom
-
-        # Create atoms in the residue.
-        for mb_particle in non_omm_topology.particles():
-            name = mb_particle.name
-            if mb_particle.name in non_element_types:
-                element = non_element_types[mb_particle.name]
-            else:
-                element = elem.Element.getBySymbol(mb_particle.name)
-
-            omm_atom = topology.addAtom(name, element, residue)
-            atoms[mb_particle] = omm_atom
-            omm_atom.bond_partners = []
-
-        # Create bonds.
-        for bond in non_omm_topology.bonds():
-            atom1 = atoms[bond[0]]
-            atom2 = atoms[bond[1]]
-            topology.addBond(atom1, atom2)
-            atom1.bond_partners.append(atom2)
-            atom2.bond_partners.append(atom1)
-        bounding_box = non_omm_topology.boundingbox
-        box_vectors = [[0, 0, 0] * u.nanometer,
-                       [0, 0, 0] * u.nanometer,
-                       [0, 0, 0] * u.nanometer]
-        box_vectors[0][0] = (non_omm_topology.periodicity[1] or
-                             bounding_box.lengths[0]) * u.nanometer
-        box_vectors[1][1] = (non_omm_topology.periodicity[1] or
-                             bounding_box.lengths[1]) * u.nanometer
-        box_vectors[2][2] = (non_omm_topology.periodicity[2] or
-                             bounding_box.lengths[2]) * u.nanometer
-        topology.setPeriodicBoxVectors(box_vectors)
-
-        positions = non_omm_topology.xyz
+        return _topology_from_mbuild(non_omm_topology, non_element_types)
     else:
         raise FoyerError('Unknown topology format: {}\n'
                          'Supported formats are: '
                          '"parmed.Structure", '
                          '"mbuild.Compound", '
-                         '"openmm.app.Topology"'.format(topology))
+                         '"openmm.app.Topology"'.format(non_omm_topology))
+
+
+def _topology_from_parmed(structure, non_element_types):
+    """Convert a ParmEd Structure to an OpenMM Topology. """
+    topology = app.Topology()
+    chain = topology.addChain()
+
+    residue = topology.addResidue(structure.title, chain)
+    atoms = dict()  # pmd.Atom: omm.Atom
+
+    for pmd_atom in structure.atoms:
+        name = pmd_atom.name
+        if pmd_atom.element in non_element_types:
+            element = non_element_types[pmd_atom.element]
+        else:
+            if pmd_atom.atomic_number != 0:
+                element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
+            else:
+                element = elem.Element.getBySymbol(pmd_atom.name)
+
+        omm_atom = topology.addAtom(name, element, residue)
+        atoms[pmd_atom] = omm_atom
+        omm_atom.bond_partners = []
+
+    for bond in structure.bonds:
+        atom1 = atoms[bond.atom1]
+        atom2 = atoms[bond.atom2]
+        topology.addBond(atom1, atom2)
+        atom1.bond_partners.append(atom2)
+        atom2.bond_partners.append(atom1)
+    if structure.box_vectors and np.any([x._value for x in structure.box_vectors]):
+        topology.setPeriodicBoxVectors(structure.box_vectors)
+
+    positions = structure.positions
+    return topology, positions
+
+
+def _topology_from_mbuild(compound, non_element_types):
+    """Convert an mBuild Compound to an OpenMM Topology. """
+    topology = app.Topology()
+    chain = topology.addChain()
+
+    residue = topology.addResidue(compound.name, chain)
+    atoms = dict()  # mb.Particle: omm.Atom
+
+    for mb_particle in compound.particles():
+        name = mb_particle.name
+        if mb_particle.name in non_element_types:
+            element = non_element_types[mb_particle.name]
+        else:
+            element = elem.Element.getBySymbol(mb_particle.name)
+
+        omm_atom = topology.addAtom(name, element, residue)
+        atoms[mb_particle] = omm_atom
+        omm_atom.bond_partners = []
+
+    for bond in compound.bonds():
+        atom1 = atoms[bond[0]]
+        atom2 = atoms[bond[1]]
+        topology.addBond(atom1, atom2)
+        atom1.bond_partners.append(atom2)
+        atom2.bond_partners.append(atom1)
+    bounding_box = compound.boundingbox
+    box_vectors = [[0, 0, 0] * u.nanometer,
+                   [0, 0, 0] * u.nanometer,
+                   [0, 0, 0] * u.nanometer]
+    box_vectors[0][0] = (compound.periodicity[1] or
+                         bounding_box.lengths[0]) * u.nanometer
+    box_vectors[1][1] = (compound.periodicity[1] or
+                         bounding_box.lengths[1]) * u.nanometer
+    box_vectors[2][2] = (compound.periodicity[2] or
+                         bounding_box.lengths[2]) * u.nanometer
+    topology.setPeriodicBoxVectors(box_vectors)
+
+    positions = compound.xyz
     return topology, positions
 
 
@@ -116,9 +128,9 @@ class Forcefield(app.ForceField):
 
     """
     def __init__(self, forcefield_files=None, name=None):
-        self._atomTypeDefinitions = dict()
-        self._atomTypeOverrides = dict()
-        self._atomTypeDesc = dict()
+        self.atomTypeDefinitions = dict()
+        self.atomTypeOverrides = dict()
+        self.atomTypeDesc = dict()
         self._included_forcefields = dict()
         self.non_element_types = dict()
 
@@ -157,6 +169,22 @@ class Forcefield(app.ForceField):
             self._included_forcefields[basename] = ff_filepath
         return self._included_forcefields
 
+    @staticmethod
+    def _create_element(element):
+        if not isinstance(element, elem.Element):
+            try:
+                element = elem.get_by_symbol(element)
+            except KeyError:
+                # Enables support for non-atomistic "element types"
+                if element not in self.non_element_types:
+                    warnings.warn('Non-atomistic element type detected. '
+                                  'Creating custom element for {}'.format(element))
+                element = elem.Element(number=0,
+                                       mass=mass,
+                                       name=element,
+                                       symbol=element)
+        return element
+
     def registerAtomType(self, parameters):
         """Register a new atom type. """
         name = parameters['name']
@@ -166,20 +194,8 @@ class Forcefield(app.ForceField):
         mass = _convertParameterToNumber(parameters['mass'])
         element = None
         if 'element' in parameters:
-            element = parameters['element']
-            if not isinstance(element, elem.Element):
-                try:
-                    element = elem.get_by_symbol(element)
-                except KeyError:
-                    # Enables support for non-atomistic "element types"
-                    if element not in self.non_element_types:
-                        warnings.warn('Non-atomistic element type detected. '
-                                      'Creating custom element for {}'.format(element))
-                    element = elem.Element(number=0,
-                                           mass=mass,
-                                           name=element,
-                                           symbol=element)
-                    self.non_element_types[element.name] = element
+            element = self._create_element(parameters['element'])
+            self.non_element_types[element.name] = element
 
         self._atomTypes[name] = self.__class__._AtomType(name, atomClass, mass, element)
         if atomClass in self._atomClasses:
@@ -192,13 +208,13 @@ class Forcefield(app.ForceField):
 
         name = parameters['name']
         if 'def' in parameters:
-            self._atomTypeDefinitions[name] = parameters['def']
+            self.atomTypeDefinitions[name] = parameters['def']
         if 'overrides' in parameters:
             overrides = set(parameters['overrides'].split(","))
             if overrides:
-                self._atomTypeOverrides[name] = overrides
+                self.atomTypeOverrides[name] = overrides
         if 'des' in parameters:
-            self._atomTypeDesc[name] = parameters['desc']
+            self.atomTypeDesc[name] = parameters['desc']
 
     def apply(self, topology, *args, **kwargs):
         if not isinstance(topology, app.Topology):
@@ -216,7 +232,7 @@ class Forcefield(app.ForceField):
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0*u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
-                     residueTemplates=dict(), verbose=False, **args):
+                     verbose=False, **args):
         """Construct an OpenMM System representing a Topology with this force field.
 
         Parameters
@@ -240,13 +256,6 @@ class Forcefield(app.ForceField):
             The mass to use for hydrogen atoms bound to heavy atoms.  Any mass
             added to a hydrogen is subtracted from the heavy atom to keep
             their total mass the same.
-        residueTemplates : dict=dict()
-           Key: Topology Residue object
-           Value: string, name of _TemplateData residue template object to use for
-                  (Key) residue
-           This allows user to specify which template to apply to particular Residues
-           in the event that multiple matching templates are available (e.g Fe2+ and Fe3+
-           templates in the ForceField for a monoatomic iron ion in the topology).
         args
              Arbitrary additional keyword arguments may also be specified.
              This allows extra parameters to be specified that are specific to
@@ -257,6 +266,7 @@ class Forcefield(app.ForceField):
         system
             the newly created System
         """
+
         # Atomtype the system.
         G = nx.Graph()
         G.add_nodes_from(topology.atoms())
