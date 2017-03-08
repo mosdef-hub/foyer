@@ -19,7 +19,7 @@ _grammar = ("""
     @weak_and_symbol: SEMI;
     @or_symbol: COMMA;
     @not_symbol: EXCL;
-    atom_id: atom_symbol | HASH atomic_num | DOLLAR LPAR matches_string RPAR | has_label | 'X' neighbor_count | 'R' ring_size;
+    atom_id: atom_symbol | HASH atomic_num | DOLLAR LPAR matches_string RPAR | has_label | 'X' neighbor_count | 'r' ring_size;
     atom_symbol: SYMBOL | STAR;
     atomic_num: NUM;
     matches_string: string ;
