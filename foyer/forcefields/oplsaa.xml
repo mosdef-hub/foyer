@@ -233,15 +233,15 @@
   <Type name="opls_232" class="opls_232" element="C" mass="12.011"/>
   <Type name="opls_233" class="opls_233" element="C" mass="12.011"/>
   <Type name="opls_234" class="opls_234" element="C" mass="12.011"/>
-  <Type name="opls_235" class="opls_235" element="C" mass="12.011"/>
-  <Type name="opls_236" class="opls_236" element="O" mass="15.9994"/>
+  <Type name="opls_235" class="C" element="C" mass="12.011" def="[C;X3]([O;X1])[N;X3]" desc="C=O in amide, dmf, peptide bond" overrides="opls_277"/>
+  <Type name="opls_236" class="O" element="O" mass="15.9994" def="O[C;%opls_235]" desc="O: C=O in amide.   Acyl R on C in amide is neutral -" overrides="opls_278"/>
   <Type name="opls_237" class="opls_237" element="N" mass="14.0067"/>
   <Type name="opls_238" class="opls_238" element="N" mass="14.0067"/>
-  <Type name="opls_239" class="opls_239" element="N" mass="14.0067"/>
+  <Type name="opls_239" class="N" element="N" mass="14.0067" def="[N;X3]([!H])([!H])([!H])" desc="N: tertiary amide"/>
   <Type name="opls_240" class="opls_240" element="H" mass="1.008"/>
   <Type name="opls_241" class="opls_241" element="H" mass="1.008"/>
   <Type name="opls_242" class="opls_242" element="C" mass="12.011"/>
-  <Type name="opls_243" class="opls_243" element="C" mass="12.011"/>
+  <Type name="opls_243" class="CT" element="C" mass="12.011" def="[C;X4](H)(H)(H)[N;X3](C)(C)" desc="C on N: tertiary  N-Me amide"/>
   <Type name="opls_244" class="opls_244" element="C" mass="12.011"/>
   <Type name="opls_245" class="opls_245" element="C" mass="12.011"/>
   <Type name="opls_246" class="opls_246" element="C" mass="12.011"/>
@@ -726,7 +726,7 @@
   <Type name="opls_757" class="CT" element="C" mass="12.01100" def="[C;X4](H)[C;%opls_754]" desc="C of CH in R2CHCN" overrides="opls_137,opls_758"/>
   <Type name="opls_758" class="CT" element="C" mass="12.01100" def="[C;X4][C;%opls_754]" desc="C of C in R3CCN"/>
   <Type name="opls_759" class="HC" element="H" mass="1.00800"  def="HC[C;%opls_754]" desc="HC-CT-CN alpha-H in nitriles" overrides="opls_140"/>
-  <Type name="opls_760" class="NO" element="N" mass="14.0067"  def="[N;X3]([O;X1])([O;X1])" desc="N in nitro R-NO2"/>
+  <Type name="opls_760" class="NO" element="N" mass="14.0067"  def="[N;X3]([O;X1])([O;X1])" desc="N in nitro R-NO2" overrides="opls_239"/>
   <Type name="opls_761" class="ON" element="O" mass="15.9994"  def="[O;X1][N][O;X1]" desc="O in nitro R-NO2"/>
   <Type name="opls_762" class="CT" element="C" mass="12.01100" def="[C;X4](H)(H)(H)[N;%opls_760]" desc="CT-NO2 nitromethane"/>
   <Type name="opls_763" class="HC" element="H" mass="1.00800"  def="H([C;X4][N;%opls_760])" desc="HC-CT-NO2 alpha-H in nitroalkanes" overrides="opls_140"/>
