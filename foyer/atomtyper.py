@@ -45,9 +45,12 @@ def find_atomtypes(atoms, forcefield):
 def _load_rules(forcefield):
     global RULE_NAME_TO_RULE
     RULE_NAME_TO_RULE = dict()
-    for rule_name, smarts in forcefield._atomTypeDefinitions.items():
-        overrides = forcefield._atomTypeOverrides.get(rule_name)
-        RULE_NAME_TO_RULE[rule_name] = Rule(rule_name, forcefield.parser, smarts, overrides=overrides)
+    for rule_name, smarts in forcefield.atomTypeDefinitions.items():
+        overrides = forcefield.atomTypeOverrides.get(rule_name)
+        RULE_NAME_TO_RULE[rule_name] = Rule(name=rule_name,
+                                            parser=forcefield.parser,
+                                            smarts_string=smarts,
+                                            overrides=overrides)
 
 
 def _iterate_rules(atoms, max_iter=10):
@@ -79,12 +82,14 @@ def _iterate_rules(atoms, max_iter=10):
 
 def _resolve_atomtypes(atoms):
     """Determine the final atomtypes from the white- and blacklists."""
-    for i, atom in enumerate(atoms):
+    for n, atom in enumerate(atoms):
         atomtype = [rule_name for rule_name in atom.whitelist - atom.blacklist]
 
         if len(atomtype) == 1:
             atom.id = atomtype[0]
         elif len(atomtype) > 1:
-            raise FoyerError("Found multiple types for atom {0} ({1}): {2}.".format(i, atom.element.name, atomtype))
+            raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
+                n, atom.element.name, atomtype))
         else:
-            raise FoyerError("Found no types for atom {0} ({1}).".format(i, atom.element.name))
+            raise FoyerError("Found no types for atom {} ({}).".format(
+                n, atom.element.name))

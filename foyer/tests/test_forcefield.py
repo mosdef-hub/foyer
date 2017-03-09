@@ -14,6 +14,7 @@ from foyer.tests.utils import get_fn
 FF_DIR = resource_filename('foyer', 'forcefields')
 FORCEFIELDS = glob.glob(os.path.join(FF_DIR, '*.xml'))
 
+
 def test_load_files():
     ff1 = Forcefield(forcefield_files=FORCEFIELDS)
     assert len(ff1._atomTypes) > 0
@@ -23,6 +24,7 @@ def test_load_files():
 
     ff3 = Forcefield(name='oplsaa')
     assert len(ff1._atomTypes) == len(ff3._atomTypes)
+
 
 def test_duplicate_type_definitions():
     with pytest.raises(ValueError):

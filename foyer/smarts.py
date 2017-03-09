@@ -1,6 +1,6 @@
 import plyplus
 
-_grammar = ("""
+_grammar = (r"""
     start: string;
 
     // Rules
