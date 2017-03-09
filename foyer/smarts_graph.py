@@ -14,6 +14,10 @@ class SMARTSGraph(nx.Graph):
 
     Attributes
     ----------
+    smarts_string : str
+    parser : foyer.smarts.SMARTS.PARSER
+    name : str
+    overrides : set
 
     Other Parameters
     ----------
@@ -30,10 +34,9 @@ class SMARTSGraph(nx.Graph):
         self.overrides = overrides
 
         if parser is None:
-            self.parser = SMARTS().PARSER
+            self.ast = SMARTS().parse(smarts_string)
         else:
-            self.parser = parser
-        self.ast = self.parser.parse(smarts_string)
+            self.ast = parser.parse(smarts_string)
 
         self._add_nodes()
         self._add_edges(self.ast)
@@ -50,7 +53,7 @@ class SMARTSGraph(nx.Graph):
         for atom in ast_node.tail:
             if atom.head == 'atom':
                 if atom.is_first_kid and atom.parent().head == 'branch':
-                    if trunk is not None:
+                    if trunk is None:
                         raise FoyerError("Can't add branch without a trunk")
                     self.add_edge(id(atom), id(trunk))
                 elif not atom.is_last_kid:
@@ -61,7 +64,7 @@ class SMARTSGraph(nx.Graph):
                 else:  # We traveled through the whole branch.
                     return
             elif atom.head == 'branch':
-                self._add_edges(id(atom), id(trunk))
+                self._add_edges(atom, trunk)
 
     def _add_label_edges(self):
         """Add edges between all atoms with the same atom_label in rings. """
@@ -70,7 +73,7 @@ class SMARTSGraph(nx.Graph):
             return
 
         # We need each individual label and atoms with multiple ring labels
-        # would yield e.g. the string '12' so we split those up.
+        # would yield e.g. the string '12' so split those up.
         label_digits = []
         for label in labels:
             label_digits.extend(*label)
@@ -157,8 +160,8 @@ if __name__ == '__main__':
     mol2 = pmd.load_file(get_fn('ring.mol2'), structure=True)
     top, _ = generate_topology(mol2)
 
-    pattern = SMARTSGraph('[C;X2][#6;X2][#6;X2]')
-
+    pattern = SMARTSGraph('[C;X2;r6][#6;X2][#6;X2]')
+    pattern = SMARTSGraph('[N;X3]([O;X1])([O;X1])[C;X3;r6]')
     for i, mapping in enumerate(pattern.find_matches(top)):
         print(i, mapping)
 

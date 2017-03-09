@@ -34,10 +34,14 @@ def _load_rules(forcefield):
     rules = dict()
     for rule_name, smarts in forcefield.atomTypeDefinitions.items():
         overrides = forcefield.atomTypeOverrides.get(rule_name)
+        if overrides is not None:
+            overrides = set(overrides)
+        else:
+            overrides = set()
         rules[rule_name] = SMARTSGraph(smarts_string=smarts,
                                        parser=forcefield.parser,
                                        name=rule_name,
-                                       overrides=set(overrides))
+                                       overrides=overrides)
     return rules
 
 
@@ -72,29 +76,16 @@ def _iterate_rules(rules, topology, max_iter):
         warn("Reached maximum iterations. Something probably went wrong.")
 
 
-<<<<<<< HEAD
 def _resolve_atomtypes(topology):
     """Determine the final atomtypes from the white- and blacklists. """
-    for i, atom in enumerate(topology.atoms()):
-=======
-def _resolve_atomtypes(atoms):
-    """Determine the final atomtypes from the white- and blacklists."""
-    for n, atom in enumerate(atoms):
->>>>>>> master
+    for n, atom in enumerate(topology.atoms()):
         atomtype = [rule_name for rule_name in atom.whitelist - atom.blacklist]
 
         if len(atomtype) == 1:
             atom.id = atomtype[0]
         elif len(atomtype) > 1:
             raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
-<<<<<<< HEAD
-                i, atom.element.name, atomtype))
-        else:
-            raise FoyerError("Found no types for atom {} ({}).".format(
-                i, atom.element.name))
-=======
                 n, atom.element.name, atomtype))
         else:
             raise FoyerError("Found no types for atom {} ({}).".format(
                 n, atom.element.name))
->>>>>>> master
