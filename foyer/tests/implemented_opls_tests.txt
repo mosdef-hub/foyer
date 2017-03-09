@@ -57,3 +57,5 @@ phenol
 4-methylphenol
 ethylene-carbonate
 propylene-carbonate
+dimethyl-sulfoxide
+dimethylformamide
