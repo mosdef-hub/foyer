@@ -5,13 +5,30 @@ import networkx as nx
 from networkx.algorithms import isomorphism
 import parmed.periodic_table as pt
 
+from foyer.exceptions import FoyerError
 from foyer.smarts import SMARTS
 
 
 class SMARTSGraph(nx.Graph):
-    def __init__(self, smarts_string, parser=None, name=None, overrides=None, *args, **kwargs):
+    """
+
+    Attributes
+    ----------
+
+    Other Parameters
+    ----------
+    args
+    kwargs
+    """
+    def __init__(self, smarts_string, parser=None, name=None, overrides=None,
+                 *args, **kwargs):
         super(SMARTSGraph, self).__init__(*args, **kwargs)
+        self.node_dict_factory = OrderedDict
+
         self.smarts_string = smarts_string
+        self.name = name
+        self.overrides = overrides
+
         if parser is None:
             self.parser = SMARTS().PARSER
         else:
@@ -21,20 +38,20 @@ class SMARTSGraph(nx.Graph):
         self._add_nodes()
         self._add_edges(self.ast)
         self._add_label_edges()
-        self.name = name
-        self.overrides = overrides
-        self.node_dict_factory = OrderedDict
 
     def _add_nodes(self):
+        """Add all atoms in the SMARTS string as nodes in the graph. """
         atoms = self.ast.select('atom')
         for atom in atoms:
             self.add_node(id(atom), atom=atom)
 
     def _add_edges(self, ast_node, trunk=None):
+        """"Add all bonds in the SMARTS string as edges in the graph. """
         for atom in ast_node.tail:
             if atom.head == 'atom':
                 if atom.is_first_kid and atom.parent().head == 'branch':
-                    assert trunk is not None, "Can't add branch without a trunk"
+                    if trunk is not None:
+                        raise FoyerError("Can't add branch without a trunk")
                     self.add_edge(id(atom), id(trunk))
                 elif not atom.is_last_kid:
                     if atom.next_kid.head == 'atom':
@@ -47,12 +64,13 @@ class SMARTSGraph(nx.Graph):
                 self._add_edges(id(atom), id(trunk))
 
     def _add_label_edges(self):
-        """Connect all atoms with the same atom_label in rings. """
+        """Add edges between all atoms with the same atom_label in rings. """
         labels = self.ast.select('atom_label')
-
         if not labels:
             return
 
+        # We need each individual label and atoms with multiple ring labels
+        # would yield e.g. the string '12' so we split those up.
         label_digits = []
         for label in labels:
             label_digits.extend(*label)
@@ -65,7 +83,6 @@ class SMARTSGraph(nx.Graph):
     def _node_match(self, host, pattern):
         atom_expr = pattern['atom'].tail[0]
         atom = host['atom']
-
         return self._atom_expr_matches(atom_expr, atom)
 
     def _atom_expr_matches(self, atom_expr, atom):
@@ -86,7 +103,7 @@ class SMARTSGraph(nx.Graph):
                             ' or atom_id, got {}'.format(atom_expr.head))
 
     def _atom_id_matches(self, atom_id, atom):
-        atomic_num = atom.element._atomic_number
+        atomic_num = atom.element.atomic_number
         if atom_id.head == 'atomic_num':
             return atomic_num == int(atom_id.tail[0])
         elif atom_id.head == 'atom_symbol':
@@ -114,47 +131,34 @@ class SMARTSGraph(nx.Graph):
         if topology is None:
             return False
 
-        from simtk.openmm.app import Topology
-        assert isinstance(topology, Topology)
-
         g = nx.Graph()
-        g.add_nodes_from(((a.index, { 'atom': a }) for a in topology.atoms()), )
-        g.add_edges_from(((b.atom1.index, b.atom2.index) for b in topology.bonds()))
+        g.add_nodes_from(((a.index, {'atom': a})
+                          for a in topology.atoms()))
+        g.add_edges_from(((b.atom1.index, b.atom2.index)
+                          for b in topology.bonds()))
 
         gm = isomorphism.GraphMatcher(g, self, node_match=self._node_match)
 
         for mapping in gm.subgraph_isomorphisms_iter():
             ordered_mapping = []
             mapping = {id(v): k for k, v in mapping.items()}
-            # import pdb
-            # pdb.set_trace()
             for node in self.nodes():
-                ordered_mapping.append((self.node[node]['atom'], mapping[id(node)]))
-
+                smarts_atom = self.node[node]['atom']
+                atom_index = mapping[id(node)]
+                ordered_mapping.append((smarts_atom, atom_index))
             yield ordered_mapping
 
-if __name__ == '__main__':
-    #S1 = SMARTSGraph('O([H&X1])(H)')
 
-    # S1 = SMARTSGraph('[#6]1[#6][#6][#6][#6][#6]1')
+if __name__ == '__main__':
     from foyer.tests.utils import get_fn
     import parmed as pmd
-    mol2 = pmd.load_file(get_fn('ring.mol2'), structure=True)
     from foyer.forcefield import generate_topology
-    top,_ = generate_topology(mol2)
 
+    mol2 = pmd.load_file(get_fn('ring.mol2'), structure=True)
+    top, _ = generate_topology(mol2)
 
     pattern = SMARTSGraph('[C;X2][#6;X2][#6;X2]')
 
-
-    # print('===============')
-    # print(len(S1.nodes()))
-    # for n in S1.nodes():
-    #     print(n)
-    # print(len(S1.edges()))
-    # for e in S1.edges():
-    #     print(e)
-
-    for i,mapping in enumerate(pattern.find_matches(top)):
+    for i, mapping in enumerate(pattern.find_matches(top)):
         print(i, mapping)
 

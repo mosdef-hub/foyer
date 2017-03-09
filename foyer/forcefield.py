@@ -116,9 +116,9 @@ class Forcefield(app.ForceField):
 
     """
     def __init__(self, forcefield_files=None, name=None):
-        self._atomTypeDefinitions = dict()
-        self._atomTypeOverrides = dict()
-        self._atomTypeDesc = dict()
+        self.atomTypeDefinitions = dict()
+        self.atomTypeOverrides = dict()
+        self.atomTypeDesc = dict()
         self._included_forcefields = dict()
         self.non_element_types = dict()
 
@@ -192,13 +192,13 @@ class Forcefield(app.ForceField):
 
         name = parameters['name']
         if 'def' in parameters:
-            self._atomTypeDefinitions[name] = parameters['def']
+            self.atomTypeDefinitions[name] = parameters['def']
         if 'overrides' in parameters:
             overrides = set(parameters['overrides'].split(","))
             if overrides:
-                self._atomTypeOverrides[name] = overrides
+                self.atomTypeOverrides[name] = overrides
         if 'des' in parameters:
-            self._atomTypeDesc[name] = parameters['desc']
+            self.atomTypeDesc[name] = parameters['desc']
 
     def apply(self, topology, *args, **kwargs):
         if not isinstance(topology, app.Topology):
@@ -213,7 +213,7 @@ class Forcefield(app.ForceField):
             structure.box_vectors = box_vectors
         return structure
 
-    def createSystem(self, topology, nonbondedMethod=NoCutoff,
+    def createSystem(self, topology, atomtype=True, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0*u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
                      residueTemplates=dict(), verbose=False, **args):
@@ -257,20 +257,20 @@ class Forcefield(app.ForceField):
         system
             the newly created System
         """
-        # Atomtype the system.
-        G = nx.Graph()
-        G.add_nodes_from(topology.atoms())
-        G.add_edges_from(topology.bonds())
-        cycles = nx.cycle_basis(G)
+        if atomtype:
+            G = nx.Graph()
+            G.add_nodes_from(topology.atoms())
+            G.add_edges_from(topology.bonds())
+            cycles = nx.cycle_basis(G)
 
-        for atom in topology.atoms():
-            atom.cycles = set()
+            for atom in topology.atoms():
+                atom.cycles = set()
 
-        for cycle in cycles:
-            for atom in cycle:
-                atom.cycles.add(tuple(cycle))
+            for cycle in cycles:
+                for atom in cycle:
+                    atom.cycles.add(tuple(cycle))
 
-        find_atomtypes(atoms=list(topology.atoms()), forcefield=self)
+            find_atomtypes(topology, forcefield=self)
 
         data = app.ForceField._SystemData()
         data.atoms = list(topology.atoms())
