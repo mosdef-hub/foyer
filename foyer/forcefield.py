@@ -12,8 +12,7 @@ import simtk.openmm.app.element as elem
 import simtk.unit as u
 from simtk import openmm as mm
 from simtk.openmm import app
-from simtk.openmm.app.forcefield import (NoCutoff, CutoffNonPeriodic,
-                                         CutoffPeriodic, HBonds,
+from simtk.openmm.app.forcefield import (NoCutoff, CutoffNonPeriodic, HBonds,
                                          AllBonds, HAngles, NonbondedGenerator,
                                          _convertParameterToNumber)
 
@@ -164,13 +163,12 @@ class Forcefield(app.ForceField):
         ff_filepaths = set(glob.glob(os.path.join(ff_dir, '*'+resource_extension)))
 
         for ff_filepath in ff_filepaths:
-            base_path, ff_file  = os.path.split(ff_filepath)
+            _, ff_file = os.path.split(ff_filepath)
             basename = ff_file[:-len(resource_extension)]
             self._included_forcefields[basename] = ff_filepath
         return self._included_forcefields
 
-    @staticmethod
-    def _create_element(element):
+    def _create_element(self, element, mass):
         if not isinstance(element, elem.Element):
             try:
                 element = elem.get_by_symbol(element)
@@ -194,7 +192,7 @@ class Forcefield(app.ForceField):
         mass = _convertParameterToNumber(parameters['mass'])
         element = None
         if 'element' in parameters:
-            element = self._create_element(parameters['element'])
+            element = self._create_element(parameters['element'], mass)
             self.non_element_types[element.name] = element
 
         self._atomTypes[name] = self.__class__._AtomType(name, atomClass, mass, element)
@@ -232,7 +230,7 @@ class Forcefield(app.ForceField):
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0*u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
-                     verbose=False, **args):
+                     **args):
         """Construct an OpenMM System representing a Topology with this force field.
 
         Parameters
