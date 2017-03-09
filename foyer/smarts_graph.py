@@ -79,7 +79,8 @@ class SMARTSGraph(nx.Graph):
                 self.add_edge(atom1, atom2)
 
     def _node_match(self, node1, node2):
-        return node1['attr'] == node2['attr']
+        #return node1['attr'] == node2['attr']
+        return True
 
     def __eq__(self, other):
         gm = isomorphism.GraphMatcher(self, other, node_match=self._node_match)
@@ -88,8 +89,8 @@ class SMARTSGraph(nx.Graph):
     def __contains__(self, item):
         if item is None:
             return False
-        gm = SMARTSGraphMatcher(self, item, node_match=self._node_match)
-        return SMARTSGraphMatcher.subgraph_is_isomorphic(gm)
+        gm = isomorphism.GraphMatcher(self, item, node_match=self._node_match)
+        return isomorphism.GraphMatcher.subgraph_is_isomorphic(gm)
 
 
 if __name__ == '__main__':
