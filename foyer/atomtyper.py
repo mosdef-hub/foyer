@@ -4,6 +4,7 @@ from oset import oset as OrderedSet
 
 from foyer.exceptions import FoyerError
 from foyer.rule import Rule
+from foyer.smarts_graph import SMARTSGraph
 
 RULE_NAME_TO_RULE = dict()
 
@@ -47,8 +48,8 @@ def _load_rules(forcefield):
     RULE_NAME_TO_RULE = dict()
     for rule_name, smarts in forcefield._atomTypeDefinitions.items():
         overrides = forcefield._atomTypeOverrides.get(rule_name)
-        RULE_NAME_TO_RULE[rule_name] = Rule(rule_name, forcefield.parser, smarts, overrides=overrides)
-
+        # RULE_NAME_TO_RULE[rule_name] = Rule(rule_name, forcefield.parser, smarts, overrides=overrides)
+        RULE_NAME_TO_RULE[rule_name] = SMARTSGraph(smarts, forcefield.parser, name=rule_name, overrides=set(overrides))
 
 def _iterate_rules(atoms, max_iter=10):
     """Iteratively run all the rules until the white- and backlists converge.
@@ -64,13 +65,13 @@ def _iterate_rules(atoms, max_iter=10):
     for _ in range(max_iter):
         max_iter -= 1
         found_something = False
-        for atom in atoms:
-            for rule in RULE_NAME_TO_RULE.values():
-                if rule.name not in atom.whitelist:
-                    if rule.matches(atom):
-                        atom.whitelist.add(rule.name)
-                        atom.blacklist |= rule.overrides
-                        found_something = True
+        for rule in RULE_NAME_TO_RULE.values():
+            matches = rule.find_matches(top)
+            if rule.name not in atom.whitelist:
+                if rule.matches(atom):
+                    atom.whitelist.add(rule.name)
+                    atom.blacklist |= rule.overrides
+                    found_something = True
         if not found_something:
             break
     else:

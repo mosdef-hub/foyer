@@ -1,14 +1,15 @@
 import itertools as it
+from collections import OrderedDict
 
 import networkx as nx
 from networkx.algorithms import isomorphism
-
+import parmed.periodic_table as pt
 
 from foyer.smarts import SMARTS
 
 
 class SMARTSGraph(nx.Graph):
-    def __init__(self, smarts_string, parser=None, *args, **kwargs):
+    def __init__(self, smarts_string, parser=None, name=None, overrides=None, *args, **kwargs):
         super(SMARTSGraph, self).__init__(*args, **kwargs)
         self.smarts_string = smarts_string
         if parser is None:
@@ -20,6 +21,9 @@ class SMARTSGraph(nx.Graph):
         self._add_nodes()
         self._add_edges(self.ast)
         self._add_label_edges()
+        self.name = name
+        self.overrides = overrides
+        self.node_dict_factory = OrderedDict
 
     def _add_nodes(self):
         atoms = self.ast.select('atom')
@@ -120,8 +124,14 @@ class SMARTSGraph(nx.Graph):
         gm = isomorphism.GraphMatcher(g, self, node_match=self._node_match)
 
         for mapping in gm.subgraph_isomorphisms_iter():
-            yield mapping
+            ordered_mapping = []
+            mapping = {id(v): k for k, v in mapping.items()}
+            # import pdb
+            # pdb.set_trace()
+            for node in self.nodes():
+                ordered_mapping.append((self.node[node]['atom'], mapping[id(node)]))
 
+            yield ordered_mapping
 
 if __name__ == '__main__':
     #S1 = SMARTSGraph('O([H&X1])(H)')
@@ -134,7 +144,7 @@ if __name__ == '__main__':
     top,_ = generate_topology(mol2)
 
 
-    pattern = SMARTSGraph('[#6;X2][#6;X2][#6;X2]')
+    pattern = SMARTSGraph('[C;X2][#6;X2][#6;X2]')
 
 
     # print('===============')
@@ -146,6 +156,5 @@ if __name__ == '__main__':
     #     print(e)
 
     for i,mapping in enumerate(pattern.find_matches(top)):
-        # pass
         print(i, mapping)
 
