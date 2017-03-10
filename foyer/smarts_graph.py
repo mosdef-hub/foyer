@@ -135,6 +135,18 @@ class SMARTSGraph(nx.Graph):
             raise NotImplementedError('matches_string feature is not yet implemented')
 
     def find_matches(self, topology):
+        """Return sets of atoms that match this SMARTS pattern in a topology.
+
+        Notes:
+        ------
+        When this function gets used in atomtyper.py, we actively modify the
+        white- and blacklists of the atoms in `topology` after finding a match.
+        What this means is that between every successive call of
+        `subgraph_isomorphisms_iter()`, the topology against which we are
+        matching may have actually changed. Currently, we take advantage of this
+        behavior in some edges cases (e.g. see `test_hexa_coordinated` in
+        `test_smarts.py`).
+        """
         if topology is None:
             return False
 
@@ -145,12 +157,10 @@ class SMARTSGraph(nx.Graph):
                           for b in topology.bonds()))
 
         gm = isomorphism.GraphMatcher(g, self, node_match=self._node_match)
-
-        # Note about how we mutate the whitelists which affects how the matching works under the hood in the algo
         for mapping in gm.subgraph_isomorphisms_iter():
             # The first node in the smarts graph always corresponds to the atom
             # that we are trying to match.
-            mapping = {node_id: atom_idx for atom_idx, node_id in mapping.items()}
+            mapping = {node_id: atom_id for atom_id, node_id in mapping.items()}
             atom_index = mapping[next(self.nodes_iter())]
             yield atom_index
 
