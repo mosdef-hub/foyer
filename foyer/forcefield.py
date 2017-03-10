@@ -7,6 +7,7 @@ import warnings
 import mbuild as mb
 import networkx as nx
 import numpy as np
+from oset import oset as OrderedSet
 import parmed as pmd
 import simtk.openmm.app.element as elem
 import simtk.unit as u
@@ -272,6 +273,8 @@ class Forcefield(app.ForceField):
 
             for atom in topology.atoms():
                 atom.cycles = set()
+                atom.whitelist = OrderedSet()
+                atom.blacklist = OrderedSet()
 
             for cycle in cycles:
                 for atom in cycle:

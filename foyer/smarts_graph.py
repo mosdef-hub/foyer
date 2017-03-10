@@ -1,5 +1,5 @@
 import itertools as it
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 import networkx as nx
 from networkx.algorithms import isomorphism
@@ -24,10 +24,13 @@ class SMARTSGraph(nx.Graph):
     args
     kwargs
     """
+    # Because the first atom in a SMARTS string is always the one we want to
+    # type, the graph's nodes needs to be ordered.
+    node_dict_factory = OrderedDict
+
     def __init__(self, smarts_string, parser=None, name=None, overrides=None,
                  *args, **kwargs):
         super(SMARTSGraph, self).__init__(*args, **kwargs)
-        self.node_dict_factory = OrderedDict
 
         self.smarts_string = smarts_string
         self.name = name
@@ -44,8 +47,7 @@ class SMARTSGraph(nx.Graph):
 
     def _add_nodes(self):
         """Add all atoms in the SMARTS string as nodes in the graph. """
-        atoms = self.ast.select('atom')
-        for atom in atoms:
+        for atom in self.ast.select('atom'):
             self.add_node(id(atom), atom=atom)
 
     def _add_edges(self, ast_node, trunk=None):
@@ -56,9 +58,9 @@ class SMARTSGraph(nx.Graph):
                     if trunk is None:
                         raise FoyerError("Can't add branch without a trunk")
                     self.add_edge(id(atom), id(trunk))
-                elif not atom.is_last_kid:
+                if not atom.is_last_kid:
                     if atom.next_kid.head == 'atom':
-                        self.add_edge(id(atom), id(atom.next_kid),)
+                        self.add_edge(id(atom), id(atom.next_kid))
                     elif atom.next_kid.head == 'branch':
                         trunk = atom
                 else:  # We traveled through the whole branch.
@@ -74,13 +76,15 @@ class SMARTSGraph(nx.Graph):
 
         # We need each individual label and atoms with multiple ring labels
         # would yield e.g. the string '12' so split those up.
-        label_digits = []
+        label_digits = defaultdict(list)
         for label in labels:
-            label_digits.extend(*label)
+            digits = list(label.tail[0])
+            for digit in digits:
+                label_digits[digit].append(label.parent())
 
         for label1, label2 in it.permutations(label_digits, 2):
-            if label1.tail[0] == label2.tail[0]:
-                atom1, atom2 = label1.parent(), label2.parent()
+            if label1 == label2:
+                atom1, atom2 = label_digits[label1], label_digits[label2]
                 self.add_edge(atom1, atom2)
 
     def _node_match(self, host, pattern):
@@ -142,14 +146,13 @@ class SMARTSGraph(nx.Graph):
 
         gm = isomorphism.GraphMatcher(g, self, node_match=self._node_match)
 
+        # Note about how we mutate the whitelists which affects how the matching works under the hood in the algo
         for mapping in gm.subgraph_isomorphisms_iter():
-            ordered_mapping = []
-            mapping = {id(v): k for k, v in mapping.items()}
-            for node in self.nodes():
-                smarts_atom = self.node[node]['atom']
-                atom_index = mapping[id(node)]
-                ordered_mapping.append((smarts_atom, atom_index))
-            yield ordered_mapping
+            # The first node in the smarts graph always corresponds to the atom
+            # that we are trying to match.
+            mapping = {node_id: atom_idx for atom_idx, node_id in mapping.items()}
+            atom_index = mapping[next(self.nodes_iter())]
+            yield atom_index
 
 
 if __name__ == '__main__':
@@ -157,11 +160,26 @@ if __name__ == '__main__':
     import parmed as pmd
     from foyer.forcefield import generate_topology
 
-    mol2 = pmd.load_file(get_fn('ring.mol2'), structure=True)
+    mol2 = pmd.load_file('opls_validation/methanol/methanol.top', xyz='opls_validation/methanol/methanol.gro')
     top, _ = generate_topology(mol2)
 
-    pattern = SMARTSGraph('[C;X2;r6][#6;X2][#6;X2]')
-    pattern = SMARTSGraph('[N;X3]([O;X1])([O;X1])[C;X3;r6]')
-    for i, mapping in enumerate(pattern.find_matches(top)):
-        print(i, mapping)
+    from oset import oset as OrderedSet
+    atoms = list(top.atoms())
+    for atom in atoms:
+        atom.whitelist = OrderedSet()
+        # if atom.element.symbol == 'N':
+        #     atom.whitelist.add('opls_760')
+        # if atom.element.symbol == 'H':
+        #     atom.whitelist.add('opls_140')
+        atom.blacklist = OrderedSet()
+
+    # opls_763 = SMARTSGraph('H[C;X4][N;%opls_760]')
+    graph = SMARTSGraph('HC(H)(H)OH')
+
+    for _ in range(20):
+        graph = SMARTSGraph('HC(H)(H)OH')
+        print(graph.node.__class__)
+        print([graph.node[x]['atom'].tail[0].tail[0] for x in graph.nodes()])
+        # for i, mapping in enumerate(graph.find_matches(top)):
+        #     print(i, mapping, atoms[mapping])
 

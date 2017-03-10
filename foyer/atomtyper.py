@@ -1,7 +1,5 @@
 from warnings import warn
 
-from oset import oset as OrderedSet
-
 from foyer.exceptions import FoyerError
 from foyer.smarts_graph import SMARTSGraph
 
@@ -19,11 +17,6 @@ def find_atomtypes(topology, forcefield, max_iter=10):
         The maximum number of iterations.
 
     """
-
-    for atom in topology.atoms():
-        atom.whitelist = OrderedSet()
-        atom.blacklist = OrderedSet()
-
     rules = _load_rules(forcefield)
     _iterate_rules(rules, topology, max_iter=max_iter)
     _resolve_atomtypes(topology)
@@ -59,14 +52,14 @@ def _iterate_rules(rules, topology, max_iter):
         The maximum number of iterations.
 
     """
+    atoms = list(topology.atoms())
     for _ in range(max_iter):
         max_iter -= 1
         found_something = False
         for rule in rules.values():
-            matches = rule.find_matches(topology)
-            assert False
-            if rule.name not in atom.whitelist:
-                if rule.matches(atom):
+            for match_index in rule.find_matches(topology):
+                atom = atoms[match_index]
+                if rule.name not in atom.whitelist:
                     atom.whitelist.add(rule.name)
                     atom.blacklist |= rule.overrides
                     found_something = True
@@ -80,7 +73,6 @@ def _resolve_atomtypes(topology):
     """Determine the final atomtypes from the white- and blacklists. """
     for n, atom in enumerate(topology.atoms()):
         atomtype = [rule_name for rule_name in atom.whitelist - atom.blacklist]
-
         if len(atomtype) == 1:
             atom.id = atomtype[0]
         elif len(atomtype) > 1:
