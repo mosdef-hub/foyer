@@ -492,9 +492,9 @@
   <Type name="opls_492" class="opls_492" element="C" mass="12.011"/>
   <Type name="opls_493" class="opls_493" element="S" mass="32.06"/>
   <Type name="opls_494" class="opls_494" element="O" mass="15.9994"/>
-  <Type name="opls_496" class="opls_496" element="S" mass="32.06"/>
-  <Type name="opls_497" class="opls_497" element="O" mass="15.9994"/>
-  <Type name="opls_498" class="opls_498" element="C" mass="12.011"/>
+  <Type name="opls_496" class="SZ" element="S" mass="32.06" def="[S;X3]([O;%opls_497])(C)(C)" desc="sulfoxide - all atom"/>
+  <Type name="opls_497" class="OY" element="O" mass="15.9994" def="[O;X1][S;X3]" desc="sulfoxide - all atom"/>
+  <Type name="opls_498" class="CT" element="C" mass="12.011" def="[C;X4]([S;X3])(H)(H)(H)" desc="CH3 all-atom C: sulfoxide"/>
   <Type name="opls_499" class="opls_499" element="C" mass="12.011"/>
   <Type name="opls_500" class="opls_500" element="C" mass="12.011"/>
   <Type name="opls_501" class="opls_501" element="C" mass="12.011"/>
