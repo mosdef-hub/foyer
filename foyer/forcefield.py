@@ -1,5 +1,6 @@
 import glob
 import itertools
+import json
 import os
 from pkg_resources import resource_filename
 import warnings
@@ -130,6 +131,7 @@ class Forcefield(app.ForceField):
         self.atomTypeDefinitions = dict()
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
+        self.atomTypeRefs = dict()
         self._included_forcefields = dict()
         self.non_element_types = dict()
 
@@ -213,8 +215,10 @@ class Forcefield(app.ForceField):
                 self.atomTypeOverrides[name] = overrides
         if 'des' in parameters:
             self.atomTypeDesc[name] = parameters['desc']
+        if 'doi' in parameters:
+            self.atomTypeRefs[name] = parameters['doi']
 
-    def apply(self, topology, *args, **kwargs):
+    def apply(self, topology, output_refs=False, *args, **kwargs):
         if not isinstance(topology, app.Topology):
             topology, positions = generate_topology(topology, self.non_element_types)
         else:
@@ -225,6 +229,9 @@ class Forcefield(app.ForceField):
         structure.positions = positions
         if box_vectors is not None:
             structure.box_vectors = box_vectors
+        if output_refs:
+            atom_types = set(atom.type for atom in structure.atoms)
+            self._write_references_to_file(atom_types)
         return structure
 
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
@@ -466,3 +473,14 @@ class Forcefield(app.ForceField):
         for script in self._scripts:
             exec(script, locals())
         return sys
+
+    def _write_references_to_file(self, atom_types):
+        filename = 'forcefield_references.json'
+        references = {}
+        for atype in atom_types:
+            try:
+                references[atype] = self.atomTypeRefs[atype]
+            except KeyError:
+                references[atype] = "No reference found"
+        with open(filename, 'w') as f:
+            json.dump(references, f, indent=4)
