@@ -222,6 +222,7 @@ class Forcefield(app.ForceField):
         box_vectors = topology.getPeriodicBoxVectors()
         system = self.createSystem(topology, *args, **kwargs)
         structure = pmd.openmm.load_topology(topology=topology, system=system)
+        structure.bonds.sort(key=lambda x: x.atom1.idx)
         structure.positions = positions
         if box_vectors is not None:
             structure.box_vectors = box_vectors
