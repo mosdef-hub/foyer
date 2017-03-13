@@ -1,4 +1,3 @@
-import itertools as it
 from collections import OrderedDict, defaultdict
 
 import networkx as nx
@@ -10,12 +9,12 @@ from foyer.smarts import SMARTS
 
 
 class SMARTSGraph(nx.Graph):
-    """
+    """A graph representation of a SMARTS pattern.
 
     Attributes
     ----------
     smarts_string : str
-    parser : foyer.smarts.SMARTS.PARSER
+    parser : foyer.smarts.SMARTS
     name : str
     overrides : set
 
@@ -82,10 +81,8 @@ class SMARTSGraph(nx.Graph):
             for digit in digits:
                 label_digits[digit].append(label.parent())
 
-        for label1, label2 in it.permutations(label_digits, 2):
-            if label1 == label2:
-                atom1, atom2 = label_digits[label1], label_digits[label2]
-                self.add_edge(atom1, atom2)
+        for label, (atom1, atom2) in label_digits.items():
+            self.add_edge(id(atom1), id(atom2))
 
     def _node_match(self, host, pattern):
         atom_expr = pattern['atom'].tail[0]
@@ -122,7 +119,7 @@ class SMARTSGraph(nx.Graph):
                 return atomic_num == pt.AtomicNum[str(atom_id.tail[0])]
         elif atom_id.head == 'has_label':
             label = atom_id.tail[0][1:]  # Strip the % sign from the beginning.
-            return label in (rule_name for rule_name in atom.whitelist)
+            return label in atom.whitelist
         elif atom_id.head == 'neighbor_count':
             return len(atom.bond_partners) == int(atom_id.tail[0])
         elif atom_id.head == 'ring_size':
@@ -132,7 +129,7 @@ class SMARTSGraph(nx.Graph):
                     return True
             return False
         elif atom_id.head == 'matches_string':
-            raise NotImplementedError('matches_string feature is not yet implemented')
+            raise NotImplementedError('matches_string is not yet implemented')
 
     def find_matches(self, topology):
         """Return sets of atoms that match this SMARTS pattern in a topology.
@@ -141,11 +138,12 @@ class SMARTSGraph(nx.Graph):
         ------
         When this function gets used in atomtyper.py, we actively modify the
         white- and blacklists of the atoms in `topology` after finding a match.
-        What this means is that between every successive call of
+        This means that between every successive call of
         `subgraph_isomorphisms_iter()`, the topology against which we are
         matching may have actually changed. Currently, we take advantage of this
         behavior in some edges cases (e.g. see `test_hexa_coordinated` in
         `test_smarts.py`).
+
         """
         if topology is None:
             return False
@@ -157,39 +155,10 @@ class SMARTSGraph(nx.Graph):
                           for b in topology.bonds()))
 
         gm = isomorphism.GraphMatcher(g, self, node_match=self._node_match)
+        # The first node in the smarts graph always corresponds to the atom
+        # that we are trying to match.
+        first_atom = next(self.nodes_iter())
         for mapping in gm.subgraph_isomorphisms_iter():
-            # The first node in the smarts graph always corresponds to the atom
-            # that we are trying to match.
             mapping = {node_id: atom_id for atom_id, node_id in mapping.items()}
-            atom_index = mapping[next(self.nodes_iter())]
+            atom_index = mapping[first_atom]
             yield atom_index
-
-
-if __name__ == '__main__':
-    from foyer.tests.utils import get_fn
-    import parmed as pmd
-    from foyer.forcefield import generate_topology
-
-    mol2 = pmd.load_file('opls_validation/methanol/methanol.top', xyz='opls_validation/methanol/methanol.gro')
-    top, _ = generate_topology(mol2)
-
-    from oset import oset as OrderedSet
-    atoms = list(top.atoms())
-    for atom in atoms:
-        atom.whitelist = OrderedSet()
-        # if atom.element.symbol == 'N':
-        #     atom.whitelist.add('opls_760')
-        # if atom.element.symbol == 'H':
-        #     atom.whitelist.add('opls_140')
-        atom.blacklist = OrderedSet()
-
-    # opls_763 = SMARTSGraph('H[C;X4][N;%opls_760]')
-    graph = SMARTSGraph('HC(H)(H)OH')
-
-    for _ in range(20):
-        graph = SMARTSGraph('HC(H)(H)OH')
-        print(graph.node.__class__)
-        print([graph.node[x]['atom'].tail[0].tail[0] for x in graph.nodes()])
-        # for i, mapping in enumerate(graph.find_matches(top)):
-        #     print(i, mapping, atoms[mapping])
-
