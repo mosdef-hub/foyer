@@ -11,6 +11,7 @@ dependencies:
 - networkx
 - six
 - plyplus
+- requests
 # Testing Deps
 - pytest >=3.0
 - python-coveralls
