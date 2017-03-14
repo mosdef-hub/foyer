@@ -71,3 +71,9 @@ def test_from_mbuild():
     assert ethane.box_vectors[0][0].value_in_unit(u.nanometers) == boundingbox.lengths[0]
     assert ethane.box_vectors[1][1].value_in_unit(u.nanometers) == boundingbox.lengths[1]
     assert ethane.box_vectors[2][2].value_in_unit(u.nanometers) == boundingbox.lengths[2]
+
+def test_write_refs():
+    mol2 = mb.load(get_fn('ethane.mol2'))
+    oplsaa = Forcefield(FORCEFIELDS[0])
+    ethane = oplsaa.apply(mol2, references_file='ethane.bib')
+    assert os.path.isfile('ethane.bib')

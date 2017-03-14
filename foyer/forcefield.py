@@ -1,7 +1,9 @@
+import collections
 import glob
 import itertools
 import os
 from pkg_resources import resource_filename
+import requests
 import warnings
 
 import mbuild as mb
@@ -130,6 +132,7 @@ class Forcefield(app.ForceField):
         self.atomTypeDefinitions = dict()
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
+        self.atomTypeRefs = dict()
         self._included_forcefields = dict()
         self.non_element_types = dict()
 
@@ -213,8 +216,20 @@ class Forcefield(app.ForceField):
                 self.atomTypeOverrides[name] = overrides
         if 'des' in parameters:
             self.atomTypeDesc[name] = parameters['desc']
+        if 'doi' in parameters:
+            self.atomTypeRefs[name] = parameters['doi']
 
-    def apply(self, topology, *args, **kwargs):
+    def apply(self, topology, references_file=None, *args, **kwargs):
+        """Apply the force field to a molecular structure
+
+        Parameters
+        ----------
+        topology : openmm.app.Topology or parmed.Structure or mbuild.Compound
+            Molecular structure to apply the force field to
+        references_file : str, optional, default=None
+            Name of file where force field references will be written (in Bibtex 
+            format)
+        """
         if not isinstance(topology, app.Topology):
             topology, positions = generate_topology(topology, self.non_element_types)
         else:
@@ -226,6 +241,9 @@ class Forcefield(app.ForceField):
         structure.positions = positions
         if box_vectors is not None:
             structure.box_vectors = box_vectors
+        if references_file:
+            atom_types = set(atom.type for atom in structure.atoms)
+            self._write_references_to_file(atom_types, references_file)
         return structure
 
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
@@ -467,3 +485,24 @@ class Forcefield(app.ForceField):
         for script in self._scripts:
             exec(script, locals())
         return sys
+
+    def _write_references_to_file(self, atom_types, references_file):
+        atomtype_references = {}
+        for atype in atom_types:
+            try:
+                atomtype_references[atype] = self.atomTypeRefs[atype]
+            except KeyError:
+                warnings.warn("Reference not found for atom type '{}'."
+                              "".format(atype))
+        unique_references = collections.defaultdict(list)
+        for key, value in atomtype_references.items():
+            unique_references[value].append(key)
+        with open(references_file, 'w') as f:
+            for doi, atomtypes in unique_references.items():
+                url = "http://dx.doi.org/" + doi
+                headers = {"accept": "application/x-bibtex"}
+                bibtex_ref = requests.get(url, headers=headers).text
+                note = (',\n\tnote = {Parameters for atom types: ' +
+                        ', '.join(atomtypes) + '}')
+                bibtex_ref = bibtex_ref[:-2] + note + bibtex_ref[-2:]
+                f.write('{}\n'.format(bibtex_ref))

@@ -23,6 +23,7 @@ requirements:
     - six
     - openmm
     - plyplus
+    - requests
 
 test:
   requires:
