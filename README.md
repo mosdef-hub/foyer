@@ -4,7 +4,6 @@
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/r6b2ny2hjo1t1ulb/branch/master?svg=true)](https://ci.appveyor.com/project/ctk3b/foyer/branch/master)
 [![PyPI Version](https://badge.fury.io/py/foyer.svg)](https://pypi.python.org/pypi/foyer)
 [![Anaconda Badge](https://anaconda.org/mosdef/foyer/badges/version.svg)](https://anaconda.org/mosdef/foyer)
-[![Code Health](https://landscape.io/github/mosdef-hub/foyer/master/landscape.svg?style=flat)](https://landscape.io/github/mosdef-hub/foyer/master)
 [![Coverage Status](https://coveralls.io/repos/github/mosdef-hub/foyer/badge.svg?branch=master)](https://coveralls.io/github/mosdef-hub/foyer?branch=master)
 
 Annotate an [OpenMM .xml force field](http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields)
