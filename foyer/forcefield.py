@@ -1,7 +1,6 @@
 import collections
 import glob
 import itertools
-import json
 import os
 from pkg_resources import resource_filename
 import requests
@@ -221,7 +220,7 @@ class Forcefield(app.ForceField):
             self.atomTypeRefs[name] = parameters['doi']
 
     def apply(self, topology, references_file=None, *args, **kwargs):
-        ''' Apply the force field to a molecular structure
+        """Apply the force field to a molecular structure
 
         Parameters
         ----------
@@ -230,7 +229,7 @@ class Forcefield(app.ForceField):
         references_file : str, optional, default=None
             Name of file where force field references will be written (in Bibtex 
             format)
-        '''
+        """
         if not isinstance(topology, app.Topology):
             topology, positions = generate_topology(topology, self.non_element_types)
         else:
@@ -492,7 +491,7 @@ class Forcefield(app.ForceField):
             try:
                 atomtype_references[atype] = self.atomTypeRefs[atype]
             except KeyError:
-                warnings.warn("Reference not found for atom type '{}'." +
+                warnings.warn("Reference not found for atom type '{}'." \
                               "".format(atype))
         unique_references = collections.defaultdict(list)
         for key, value in atomtype_references.items():
@@ -503,6 +502,6 @@ class Forcefield(app.ForceField):
                 headers = {"accept": "application/x-bibtex"}
                 bibtex_ref = requests.get(url, headers=headers).text
                 note = (',\n\tnote = {Parameters for atom types: ' +
-                       ', '.join(atomtypes) + '}')
+                        ', '.join(atomtypes) + '}')
                 bibtex_ref = bibtex_ref[:-2] + note + bibtex_ref[-2:]
                 f.write('{}\n\n'.format(bibtex_ref))
