@@ -6,7 +6,7 @@ if __name__ == '__main__':
     mol2_path = get_fn('ethane.mol2')
     untyped_ethane = pmd.load_file(mol2_path, structure=True)
     oplsaa = Forcefield(name='oplsaa')
-    ethane = oplsaa.apply(untyped_ethane)
+    ethane = oplsaa.apply(untyped_ethane, references_file='ethane.bib')
 
     print("Atoms:")
     for atom in ethane.atoms:
