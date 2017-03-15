@@ -158,7 +158,10 @@ class SMARTSGraph(nx.Graph):
         # The first node in the smarts graph always corresponds to the atom
         # that we are trying to match.
         first_atom = next(self.nodes_iter())
+        matched_atoms = set()
         for mapping in gm.subgraph_isomorphisms_iter():
             mapping = {node_id: atom_id for atom_id, node_id in mapping.items()}
             atom_index = mapping[first_atom]
-            yield atom_index
+            if atom_index not in matched_atoms:
+                matched_atoms.add(atom_index)
+                yield atom_index
