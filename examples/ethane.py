@@ -36,5 +36,3 @@ if __name__ == '__main__':
     from foyer.forcefield import generate_topology
     omm_topology, positions = generate_topology(untyped_ethane)
     omm_system = oplsaa.createSystem(topology=omm_topology)
-
-

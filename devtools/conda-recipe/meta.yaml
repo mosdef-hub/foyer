@@ -23,6 +23,7 @@ requirements:
     - six
     - openmm
     - plyplus
+    - requests
 
 test:
   requires:
@@ -35,6 +36,7 @@ test:
     - foyer/tests/implemented_opls_tests.txt
 
   commands:
+    - set LNAME=appveyor
     - py.test -v --pyargs foyer
 
 about:
