@@ -163,7 +163,7 @@ class SMARTSGraph(nx.Graph):
         g = nx.Graph()
         g.add_nodes_from(((a.index, {'atom': a})
                           for a in topology.atoms()))
-        g.add_edges_from(((b.atom1.index, b.atom2.index)
+        g.add_edges_from(((b[0].index, b[1].index)
                           for b in topology.bonds()))
 
         gm = isomorphism.GraphMatcher(g, self, node_match=self._node_match)
