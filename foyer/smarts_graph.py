@@ -151,9 +151,14 @@ class SMARTSGraph(nx.Graph):
         `test_smarts.py`).
 
         """
+
         if topology is None:
             return False
-        _prepare_atoms(topology)
+        # Note: Needs to be updated in sync with the grammar in `smarts.py`.
+        ring_tokens = ['ring_size', 'ring_count']
+        has_ring_rules = any(self.ast.select(token)
+                             for token in ring_tokens)
+        _prepare_atoms(topology, compute_cycles=has_ring_rules)
 
         g = nx.Graph()
         g.add_nodes_from(((a.index, {'atom': a})
@@ -174,21 +179,26 @@ class SMARTSGraph(nx.Graph):
                 yield atom_index
 
 
-def _prepare_atoms(topology):
+def _prepare_atoms(topology, compute_cycles=False):
     """Compute cycles and add white-/blacklists to atoms. """
     atom1 = next(topology.atoms())
-    if not hasattr(atom1, 'whitelist'):
-        # TODO: only compute cycles if necessary
+    has_whitelists = hasattr(atom1, 'whitelist')
+    has_cycles = hasattr(atom1, 'cycles')
+    compute_cycles = compute_cycles and not has_cycles
+
+    if compute_cycles or not has_whitelists:
+        for atom in topology.atoms():
+            if compute_cycles:
+                atom.cycles = set()
+            if not has_whitelists:
+                atom.whitelist = OrderedSet()
+                atom.blacklist = OrderedSet()
+
+    if compute_cycles:
         g = nx.Graph()
         g.add_nodes_from(topology.atoms())
         g.add_edges_from(topology.bonds())
         cycles = nx.cycle_basis(g)
-
-        for atom in topology.atoms():
-            atom.cycles = set()
-            atom.whitelist = OrderedSet()
-            atom.blacklist = OrderedSet()
-
         for cycle in cycles:
             for atom in cycle:
                 atom.cycles.add(tuple(cycle))
