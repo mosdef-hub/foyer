@@ -4,13 +4,13 @@
   <Type name="H" class="H" element="H" mass="1.00800" def="HO" desc="Hydrogen in hydroxyl" doi="10.1021/jp003882x"/>
   <Type name="CH4" class="CH4" element="_CH4" mass="16.04300" def="_CH4" desc="CH4, united atom" doi="10.1021/jp972543+"/>
   <Type name="CH3_O" class="CH3" element="_CH3" mass="15.03500" def="[_CH3;X1]OH" desc="CH3, united atom, attached to hydroxyl" doi="10.1021/jp003882x"/>
-  <Type name="CH3_sp3" class="CH3" element="_CH3" mass="15.03500" def="[_CH3;X1][_CH3,_CH2,_CH,C]" desc="Alkane CH3, united atom" doi="10.1021/jp972543+"/>
-  <Type name="CH2_O" class="CH2" element="_CH2" mass="14.02700" def="[_CH2;X2](_CH3,_CH2,_CH,C)OH" desc="CH2, united atom, attached to hydroxyl" doi="10.1021/jp003882x"/>
-  <Type name="CH2_sp3" class="CH2" element="_CH2" mass="14.02700" def="[_CH2;X2](_CH3,_CH2,_CH,C)[_CH3,_CH2,_CH,C]" desc="Alkane CH2, united atom" doi="10.1021/jp972543+"/>
-  <Type name="CH_O" class="CH" element="_CH" mass="13.01900" def="[_CH;X3](_CH3,_CH2,_CH,C)(_CH3,_CH2,_CH,C)OH" desc="CH, united atom, attached to hydroxyl" doi="10.1021/jp003882x"/>
-  <Type name="CH_sp3" class="CH" element="_CH" mass="13.01900" def="[_CH;X3](_CH3,_CH2,_CH,C)(_CH3,_CH2,_CH,C)[_CH3,_CH2,_CH,C]" desc="Alkane CH, united atom" doi="10.1021/jp984742e"/>
-  <Type name="C_O" class="C" element="C" mass="12.01100" def="[C;X4](_CH3,_CH2,_CH,C)(_CH3,_CH2,_CH,C)(_CH3,_CH2,_CH,C)OH" desc="Carbon attached to hydroxyl" doi="10.1021/jp003882x"/>
-  <Type name="C_sp3" class="C" element="C" mass="12.01100" def="[C;X4](_CH3,_CH2,_CH,C)(_CH3,_CH2,_CH,C)(_CH3,_CH2,_CH,C)[_CH3,_CH2,_CH,C]" desc="Alkane carbon" doi="10.1021/jp984742e"/>
+  <Type name="CH3_sp3" class="CH3" element="_CH3" mass="15.03500" def="[_CH3;X1][_CH3,_CH2,_HC,C]" desc="Alkane CH3, united atom" doi="10.1021/jp972543+"/>
+  <Type name="CH2_O" class="CH2" element="_CH2" mass="14.02700" def="[_CH2;X2]([_CH3,_CH2,_HC,C])OH" desc="CH2, united atom, attached to hydroxyl" doi="10.1021/jp003882x"/>
+  <Type name="CH2_sp3" class="CH2" element="_CH2" mass="14.02700" def="[_CH2;X2]([_CH3,_CH2,_HC,C])[_CH3,_CH2,_HC,C]" desc="Alkane CH2, united atom" doi="10.1021/jp972543+"/>
+  <Type name="CH_O" class="CH" element="_HC" mass="13.01900" def="[_HC;X3]([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])OH" desc="CH, united atom, attached to hydroxyl" doi="10.1021/jp003882x"/>
+  <Type name="CH_sp3" class="CH" element="_HC" mass="13.01900" def="[_HC;X3]([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])[_CH3,_CH2,_HC,C]" desc="Alkane CH, united atom" doi="10.1021/jp984742e"/>
+  <Type name="C_O" class="C" element="C" mass="12.01100" def="[C;X4]([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])OH" desc="Carbon attached to hydroxyl" doi="10.1021/jp003882x"/>
+  <Type name="C_sp3" class="C" element="C" mass="12.01100" def="[C;X4]([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])[_CH3,_CH2,_HC,C]" desc="Alkane carbon" doi="10.1021/jp984742e"/>
   <!--
   <Type name="CH2_sp2" class="CH2_E" element="_CH2" mass="14.02700" def="[_CH2;X1][_CH2,_CH,C]" desc="Alkene CH2" doi="10.1021/jp001044x"/>
   <Type name="CH_sp2" class="CH_E" element="_CH" mass="13.01900" def="[_CH;X2](_CH3,_CH2,_CH,C)[_CH2,_CH,C]" desc="Alkene CH" doi="10.1021/jp001044x"/>

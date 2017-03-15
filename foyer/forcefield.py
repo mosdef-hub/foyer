@@ -51,7 +51,8 @@ def _topology_from_parmed(structure, non_element_types):
         if pmd_atom.element in non_element_types:
             element = non_element_types[pmd_atom.element]
         else:
-            if pmd_atom.atomic_number != 0:
+            if (isinstance(pmd_atom.atomic_number, int) and 
+                    pmd_atom.atomic_number != 0):
                 element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
             else:
                 element = elem.Element.getBySymbol(pmd_atom.name)

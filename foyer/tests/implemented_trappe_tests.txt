@@ -1,0 +1,12 @@
+methane
+ethane
+propane
+1-octanol
+1-pentanol
+2-methyl-2-butanol
+2-methyl-2-propanol
+3-pentanol
+ethanol
+isobutane
+methanol
+neopentane
