@@ -55,8 +55,6 @@ class SMARTSGraph(nx.Graph):
         for atom in ast_node.tail:
             if atom.head == 'atom':
                 if atom.is_first_kid and atom.parent().head == 'branch':
-                    if trunk is None:
-                        raise FoyerError("Can't add branch without a trunk")
                     self.add_edge(id(atom), id(trunk))
                 if not atom.is_last_kid:
                     if atom.next_kid.head == 'atom':
@@ -104,8 +102,9 @@ class SMARTSGraph(nx.Graph):
         elif atom_expr.head == 'atom_symbol':
             return self._atom_id_matches(atom_expr, atom)
         else:
-            raise TypeError('Expected and_expression, or_expression,'
-                            ' or atom_id, got {}'.format(atom_expr.head))
+            raise TypeError('Expected atom_id, atom_symbol, and_expression, '
+                            'or_expression, or not_expression. '
+                            'Got {}'.format(atom_expr.head))
 
     def _atom_id_matches(self, atom_id, atom):
         atomic_num = atom.element.atomic_number
@@ -151,9 +150,6 @@ class SMARTSGraph(nx.Graph):
         `test_smarts.py`).
 
         """
-
-        if topology is None:
-            return False
         # Note: Needs to be updated in sync with the grammar in `smarts.py`.
         ring_tokens = ['ring_size', 'ring_count']
         has_ring_rules = any(self.ast.select(token)
