@@ -63,6 +63,35 @@ def test_fused_ring():
     assert len(match_indices) == 2
 
 
+def test_ring_count():
+    # Two rings
+    fused = pmd.load_file(get_fn('fused.mol2'), structure=True)
+    top, _ = generate_topology(fused)
+    rule = SMARTSGraph(name='test', parser=PARSER,
+                       smarts_string='[#6;R2]')
+
+    match_indices = list(rule.find_matches(top))
+    for atom_idx in (3, 4):
+        assert atom_idx in match_indices
+    assert len(match_indices) == 2
+
+    rule = SMARTSGraph(name='test', parser=PARSER,
+                       smarts_string='[#6;R1]')
+    match_indices = list(rule.find_matches(top))
+    for atom_idx in (0, 1, 2, 5, 6, 7, 8, 9):
+        assert atom_idx in match_indices
+    assert len(match_indices) == 8
+
+    # One ring
+    ring = pmd.load_file(get_fn('ring.mol2'), structure=True)
+    top, _ = generate_topology(ring)
+
+    match_indices = list(rule.find_matches(top))
+    for atom_idx in range(6):
+        assert atom_idx in match_indices
+    assert len(match_indices) == 6
+
+
 def test_precedence_ast():
     ast1 = PARSER.parse('[C,H;O]')
     ast2 = PARSER.parse('[O;H,C]')
@@ -143,4 +172,3 @@ def test_hexa_coordinated():
 
     assert len(pf6.angles) == 15
     assert all(angle.type for angle in pf6.angles)
-

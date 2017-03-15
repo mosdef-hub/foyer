@@ -284,20 +284,6 @@ class Forcefield(app.ForceField):
             the newly created System
         """
         if atomtype:
-            g = nx.Graph()
-            g.add_nodes_from(topology.atoms())
-            g.add_edges_from(topology.bonds())
-            cycles = nx.cycle_basis(g)
-
-            for atom in topology.atoms():
-                atom.cycles = set()
-                atom.whitelist = OrderedSet()
-                atom.blacklist = OrderedSet()
-
-            for cycle in cycles:
-                for atom in cycle:
-                    atom.cycles.add(tuple(cycle))
-
             find_atomtypes(topology, forcefield=self)
 
         data = app.ForceField._SystemData()

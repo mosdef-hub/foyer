@@ -2,6 +2,7 @@ from collections import OrderedDict, defaultdict
 
 import networkx as nx
 from networkx.algorithms import isomorphism
+from oset import oset as OrderedSet
 import parmed.periodic_table as pt
 
 from foyer.exceptions import FoyerError
@@ -128,6 +129,11 @@ class SMARTSGraph(nx.Graph):
                 if len(cycle) == cycle_len:
                     return True
             return False
+        elif atom_id.head == 'ring_count':
+            n_cycles = len(atom.cycles)
+            if n_cycles == int(atom_id.tail[0]):
+                return True
+            return False
         elif atom_id.head == 'matches_string':
             raise NotImplementedError('matches_string is not yet implemented')
 
@@ -147,6 +153,7 @@ class SMARTSGraph(nx.Graph):
         """
         if topology is None:
             return False
+        _prepare_atoms(topology)
 
         g = nx.Graph()
         g.add_nodes_from(((a.index, {'atom': a})
@@ -165,3 +172,23 @@ class SMARTSGraph(nx.Graph):
             if atom_index not in matched_atoms:
                 matched_atoms.add(atom_index)
                 yield atom_index
+
+
+def _prepare_atoms(topology):
+    """Compute cycles and add white-/blacklists to atoms. """
+    atom1 = next(topology.atoms())
+    if not hasattr(atom1, 'whitelist'):
+        # TODO: only compute cycles if necessary
+        g = nx.Graph()
+        g.add_nodes_from(topology.atoms())
+        g.add_edges_from(topology.bonds())
+        cycles = nx.cycle_basis(g)
+
+        for atom in topology.atoms():
+            atom.cycles = set()
+            atom.whitelist = OrderedSet()
+            atom.blacklist = OrderedSet()
+
+        for cycle in cycles:
+            for atom in cycle:
+                atom.cycles.add(tuple(cycle))

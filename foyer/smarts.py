@@ -19,13 +19,20 @@ _grammar = (r"""
     @weak_and_symbol: SEMI;
     @or_symbol: COMMA;
     @not_symbol: EXCL;
-    atom_id: atom_symbol | HASH atomic_num | DOLLAR LPAR matches_string RPAR | has_label | 'X' neighbor_count | 'r' ring_size;
+    atom_id: atom_symbol
+             | HASH atomic_num
+             | DOLLAR LPAR matches_string RPAR
+             | has_label
+             | 'X' neighbor_count
+             | 'r' ring_size
+             | 'R' ring_count;
     atom_symbol: SYMBOL | STAR;
     atomic_num: NUM;
     matches_string: string ;
     has_label: LABEL ;
     neighbor_count: NUM;
     ring_size: NUM;
+    ring_count: NUM;
 
     // Tokens
     HASH: '\#';
