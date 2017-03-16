@@ -1,6 +1,6 @@
 import plyplus
 
-_grammar = (r"""
+GRAMMAR = (r"""
     start: string;
 
     // Rules
@@ -56,12 +56,19 @@ _grammar = (r"""
 
 
 class SMARTS(object):
+    """A wrapper class for parsing SMARTS grammar using plyplus.
+
+    Provides functionality for injecting optional, custom, non-element symbols
+    denoted by an underscore-prefix as additional tokens that the parser can
+    recognize.
+
+    """
     def __init__(self, optional_names=''):
         if optional_names:
-            self.grammar = _grammar.format(optional='{}|'.format(
-                    '|'.join(optional_names)))
+            self.grammar = GRAMMAR.format(optional='{}|'.format(
+                '|'.join(optional_names)))
         else:
-            self.grammar = _grammar.format(optional='')
+            self.grammar = GRAMMAR.format(optional='')
         self.PARSER = plyplus.Grammar(self.grammar)
 
     def parse(self, smarts_string):

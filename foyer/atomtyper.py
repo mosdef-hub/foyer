@@ -71,13 +71,13 @@ def _iterate_rules(rules, topology, max_iter):
 
 def _resolve_atomtypes(topology):
     """Determine the final atomtypes from the white- and blacklists. """
-    for n, atom in enumerate(topology.atoms()):
+    for atom in topology.atoms():
         atomtype = [rule_name for rule_name in atom.whitelist - atom.blacklist]
         if len(atomtype) == 1:
             atom.id = atomtype[0]
         elif len(atomtype) > 1:
             raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
-                n, atom.element.name, atomtype))
+                atom.index, atom.element.name, atomtype))
         else:
             raise FoyerError("Found no types for atom {} ({}).".format(
-                n, atom.element.name))
+                atom.index, atom.element.name))

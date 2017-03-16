@@ -7,9 +7,7 @@ import requests
 import warnings
 
 import mbuild as mb
-import networkx as nx
 import numpy as np
-from oset import oset as OrderedSet
 import parmed as pmd
 import simtk.openmm.app.element as elem
 import simtk.unit as u
@@ -25,7 +23,7 @@ from foyer import smarts
 
 
 def generate_topology(non_omm_topology, non_element_types=None):
-    """Create an OpenMM Topology from another supported topology structure. """
+    """Create an OpenMM Topology from another supported topology structure."""
     if non_element_types is None:
         non_element_types = set()
 
@@ -42,7 +40,7 @@ def generate_topology(non_omm_topology, non_element_types=None):
 
 
 def _topology_from_parmed(structure, non_element_types):
-    """Convert a ParmEd Structure to an OpenMM Topology. """
+    """Convert a ParmEd Structure to an OpenMM Topology."""
     topology = app.Topology()
     chain = topology.addChain()
 
@@ -77,7 +75,7 @@ def _topology_from_parmed(structure, non_element_types):
 
 
 def _topology_from_mbuild(compound, non_element_types):
-    """Convert an mBuild Compound to an OpenMM Topology. """
+    """Convert an mBuild Compound to an OpenMM Topology."""
     topology = app.Topology()
     chain = topology.addChain()
 
@@ -118,7 +116,7 @@ def _topology_from_mbuild(compound, non_element_types):
 
 
 class Forcefield(app.ForceField):
-    """
+    """Specialization of OpenMM's Forcefield allowing SMARTS based atomtyping.
 
     Parameters
     ----------
@@ -350,7 +348,8 @@ class Forcefield(app.ForceField):
                 if atom2.element == elem.hydrogen and atom1.element not in (elem.hydrogen, None):
                     transfer_mass = hydrogenMass - sys.getParticleMass(atom2.index)
                     sys.setParticleMass(atom2.index, hydrogenMass)
-                    sys.setParticleMass(atom1.index, sys.getParticleMass(atom1.index)-transfer_mass)
+                    mass = sys.getParticleMass(atom1.index) - transfer_mass
+                    sys.setParticleMass(atom1.index, mass)
 
         # Set periodic boundary conditions.
         box_vectors = topology.getPeriodicBoxVectors()
@@ -453,10 +452,12 @@ class Forcefield(app.ForceField):
                     atoms[0], atoms[1], site.weights[0], site.weights[1]))
             elif site.type == 'average3':
                 sys.setVirtualSite(index, mm.ThreeParticleAverageSite(
-                    atoms[0], atoms[1], atoms[2], site.weights[0], site.weights[1], site.weights[2]))
+                    atoms[0], atoms[1], atoms[2],
+                    site.weights[0], site.weights[1], site.weights[2]))
             elif site.type == 'outOfPlane':
                 sys.setVirtualSite(index, mm.OutOfPlaneSite(
-                    atoms[0], atoms[1], atoms[2], site.weights[0], site.weights[1], site.weights[2]))
+                    atoms[0], atoms[1], atoms[2],
+                    site.weights[0], site.weights[1], site.weights[2]))
             elif site.type == 'localCoords':
                 local_coord_site = mm.LocalCoordinatesSite(
                     atoms[0], atoms[1], atoms[2],

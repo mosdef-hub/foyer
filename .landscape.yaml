@@ -6,6 +6,7 @@ autodetect: true
 ignore-paths:
   - docs
   - devtools
+  - examples
 ignore-patterns:
   - __init__.py
 python-targets:

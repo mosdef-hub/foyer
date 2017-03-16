@@ -5,7 +5,6 @@ from networkx.algorithms import isomorphism
 from oset import oset as OrderedSet
 import parmed.periodic_table as pt
 
-from foyer.exceptions import FoyerError
 from foyer.smarts import SMARTS
 
 
@@ -46,12 +45,12 @@ class SMARTSGraph(nx.Graph):
         self._add_label_edges()
 
     def _add_nodes(self):
-        """Add all atoms in the SMARTS string as nodes in the graph. """
+        """Add all atoms in the SMARTS string as nodes in the graph."""
         for atom in self.ast.select('atom'):
             self.add_node(id(atom), atom=atom)
 
     def _add_edges(self, ast_node, trunk=None):
-        """"Add all bonds in the SMARTS string as edges in the graph. """
+        """"Add all bonds in the SMARTS string as edges in the graph."""
         for atom in ast_node.tail:
             if atom.head == 'atom':
                 if atom.is_first_kid and atom.parent().head == 'branch':
@@ -67,7 +66,7 @@ class SMARTSGraph(nx.Graph):
                 self._add_edges(atom, trunk)
 
     def _add_label_edges(self):
-        """Add edges between all atoms with the same atom_label in rings. """
+        """Add edges between all atoms with the same atom_label in rings."""
         labels = self.ast.select('atom_label')
         if not labels:
             return
@@ -106,7 +105,8 @@ class SMARTSGraph(nx.Graph):
                             'or_expression, or not_expression. '
                             'Got {}'.format(atom_expr.head))
 
-    def _atom_id_matches(self, atom_id, atom):
+    @staticmethod
+    def _atom_id_matches(atom_id, atom):
         atomic_num = atom.element.atomic_number
         if atom_id.head == 'atomic_num':
             return atomic_num == int(atom_id.tail[0])
@@ -156,27 +156,31 @@ class SMARTSGraph(nx.Graph):
                              for token in ring_tokens)
         _prepare_atoms(topology, compute_cycles=has_ring_rules)
 
-        g = nx.Graph()
-        g.add_nodes_from(((a.index, {'atom': a})
-                          for a in topology.atoms()))
-        g.add_edges_from(((b[0].index, b[1].index)
-                          for b in topology.bonds()))
+        top_graph = nx.Graph()
+        top_graph.add_nodes_from(((a.index, {'atom': a})
+                                  for a in topology.atoms()))
+        top_graph.add_edges_from(((b[0].index, b[1].index)
+                                  for b in topology.bonds()))
 
-        gm = isomorphism.GraphMatcher(g, self, node_match=self._node_match)
+        graph_matcher = isomorphism.GraphMatcher(
+            top_graph, self, node_match=self._node_match)
+
         # The first node in the smarts graph always corresponds to the atom
         # that we are trying to match.
         first_atom = next(self.nodes_iter())
         matched_atoms = set()
-        for mapping in gm.subgraph_isomorphisms_iter():
+        for mapping in graph_matcher.subgraph_isomorphisms_iter():
             mapping = {node_id: atom_id for atom_id, node_id in mapping.items()}
             atom_index = mapping[first_atom]
+            # Don't yield duplicate matches found via matching the pattern in a
+            # different order.
             if atom_index not in matched_atoms:
                 matched_atoms.add(atom_index)
                 yield atom_index
 
 
 def _prepare_atoms(topology, compute_cycles=False):
-    """Compute cycles and add white-/blacklists to atoms. """
+    """Compute cycles and add white-/blacklists to atoms."""
     atom1 = next(topology.atoms())
     has_whitelists = hasattr(atom1, 'whitelist')
     has_cycles = hasattr(atom1, 'cycles')
@@ -191,10 +195,10 @@ def _prepare_atoms(topology, compute_cycles=False):
                 atom.blacklist = OrderedSet()
 
     if compute_cycles:
-        g = nx.Graph()
-        g.add_nodes_from(topology.atoms())
-        g.add_edges_from(topology.bonds())
-        cycles = nx.cycle_basis(g)
+        bond_graph = nx.Graph()
+        bond_graph.add_nodes_from(topology.atoms())
+        bond_graph.add_edges_from(topology.bonds())
+        cycles = nx.cycle_basis(bond_graph)
         for cycle in cycles:
             for atom in cycle:
                 atom.cycles.add(tuple(cycle))
