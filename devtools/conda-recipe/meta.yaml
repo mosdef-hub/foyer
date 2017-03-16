@@ -32,7 +32,7 @@ test:
     - foyer/forcefields/*
     - foyer/opls_validation/*
     - foyer/tests/files/*
-    - foyer/tests/implemented_opls_tests.txt
+    - foyer/tests/*.txt
 
   commands:
     - set LNAME=appveyor
