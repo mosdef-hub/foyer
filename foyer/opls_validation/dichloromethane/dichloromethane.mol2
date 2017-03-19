@@ -1,0 +1,20 @@
+@<TRIPOS>MOLECULE
+LIG
+5 4 1 0 1
+SMALL
+USER_CHARGES
+@<TRIPOS>CRYSIN
+  100.0000   100.0000   100.0000    90.0000    90.0000    90.0000  1  1
+@<TRIPOS>ATOM
+       1 CL          51.6300    49.6300    50.1800 opls_151      1 LIG       -0.100000
+       2 C           49.8800    49.8900    49.9600 opls_152      1 LIG       -0.006000
+       3 H           49.4900    49.5700    50.9200 opls_153      1 LIG        0.103000
+       4 H           49.5700    49.3100    49.0900 opls_153      1 LIG        0.103000
+       5 CL          49.4400    51.6200    49.8300 opls_151      1 LIG       -0.100000
+@<TRIPOS>BOND
+       1        1        2 1
+       2        2        3 1
+       3        2        4 1
+       4        2        5 1
+@<TRIPOS>SUBSTRUCTURE
+       1 LIG             1 RESIDUE    0 **** ROOT      0
