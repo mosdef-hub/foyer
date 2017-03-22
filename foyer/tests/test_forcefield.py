@@ -23,7 +23,7 @@ def test_load_files():
         ff2 = Forcefield(forcefield_files=ff_file)
         assert len(ff1._atomTypes) == len(ff2._atomTypes)
 
-        ff3 = Forcefield(name=os.path.split(ff_file)[-1].strip('.xml'))
+        ff3 = Forcefield(name=os.path.splitext(os.path.basename(ff_file))[0])
         assert len(ff1._atomTypes) == len(ff3._atomTypes)
 
 
