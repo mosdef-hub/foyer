@@ -16,14 +16,15 @@ FORCEFIELDS = glob.glob(os.path.join(FF_DIR, '*.xml'))
 
 
 def test_load_files():
-    ff1 = Forcefield(forcefield_files=FORCEFIELDS)
-    assert len(ff1._atomTypes) > 0
+    for ff_file in FORCEFIELDS:
+        ff1 = Forcefield(forcefield_files=ff_file)
+        assert len(ff1._atomTypes) > 0
 
-    ff2 = Forcefield(forcefield_files=FORCEFIELDS[0])
-    assert len(ff1._atomTypes) == len(ff2._atomTypes)
+        ff2 = Forcefield(forcefield_files=ff_file)
+        assert len(ff1._atomTypes) == len(ff2._atomTypes)
 
-    ff3 = Forcefield(name='oplsaa')
-    assert len(ff1._atomTypes) == len(ff3._atomTypes)
+        ff3 = Forcefield(name=os.path.splitext(os.path.basename(ff_file))[0])
+        assert len(ff1._atomTypes) == len(ff3._atomTypes)
 
 
 def test_duplicate_type_definitions():
