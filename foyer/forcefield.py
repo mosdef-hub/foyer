@@ -28,9 +28,11 @@ def generate_topology(non_omm_topology, non_element_types=None):
     if non_element_types is None:
         non_element_types = set()
 
-    if (isinstance(non_omm_topology, pmd.Structure) or
-            isinstance(non_omm_topology, mb.Compound)):
+    if isinstance(non_omm_topology, pmd.Structure):
         return _topology_from_parmed(non_omm_topology, non_element_types)
+    elif isinstance(non_omm_topology, mb.Compound):
+        pmdCompoundStructure = non_omm_topology.to_parmed()
+        return _topology_from_parmed(pmdCompoundStructure, non_element_types)
     else:
         raise FoyerError('Unknown topology format: {}\n'
                          'Supported formats are: '
@@ -41,12 +43,9 @@ def generate_topology(non_omm_topology, non_element_types=None):
 
 def _topology_from_parmed(structure, non_element_types):
     """Convert a ParmEd Structure to an OpenMM Topology. """
-    if isinstance(structure, mb.Compound):
-        structure = structure.to_parmed()
 
     topology = app.Topology()
     chain = topology.addChain()
-
     residue = topology.addResidue(structure.title, chain)
     atoms = dict()  # pmd.Atom: omm.Atom
 
