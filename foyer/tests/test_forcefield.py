@@ -4,7 +4,6 @@ from pkg_resources import resource_filename
 
 import mbuild as mb
 import parmed as pmd
-import parmed.unit as u
 import pytest
 
 from foyer import Forcefield
@@ -67,11 +66,6 @@ def test_from_mbuild():
     assert all(x.type for x in ethane.angles)
     assert len(ethane.rb_torsions) == 9
     assert all(x.type for x in ethane.dihedrals)
-
-    boundingbox = mol2.boundingbox
-    assert ethane.box_vectors[0][0].value_in_unit(u.nanometers) == boundingbox.lengths[0]
-    assert ethane.box_vectors[1][1].value_in_unit(u.nanometers) == boundingbox.lengths[1]
-    assert ethane.box_vectors[2][2].value_in_unit(u.nanometers) == boundingbox.lengths[2]
 
 def test_write_refs():
     mol2 = mb.load(get_fn('ethane.mol2'))
