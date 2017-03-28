@@ -65,4 +65,4 @@ Providing the `overrides` indicates that if the `opls_145` pattern matches, it
 should supercede the specified rules.
 
 #### Current Grammar Supported
-We currently do not support all of [SMARTS' features](http://www.daylight.com/dayhtml/doc/theory/theory.smarts.html). [Here](https://github.com/mosdef-hub/foyer/issues/63) we're keeping track of which portions are supported.
+We currently do not (yet) support all of [SMARTS' features](http://www.daylight.com/dayhtml/doc/theory/theory.smarts.html). [Here](https://github.com/mosdef-hub/foyer/issues/63) we're keeping track of which portions are supported.
