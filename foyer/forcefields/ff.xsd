@@ -77,8 +77,8 @@
       </xs:sequence>
     </xs:complexType>
     <xs:unique name="name_unique">
-                <xs:selector xpath="Type"/>
-                <xs:field xpath="@name"/>
+      <xs:selector xpath="Type"/>
+      <xs:field xpath="@name"/>
     </xs:unique>
   </xs:element>
   <xs:element name="HarmonicBondForce">
@@ -121,5 +121,13 @@
         <xs:element ref="NonbondedForce"/>
       </xs:sequence>
     </xs:complexType>
+    <xs:key name="type_name">
+      <xs:selector xpath="AtomTypes/Type" />
+      <xs:field xpath="@name" />
+    </xs:key>
+    <xs:keyref name="type_name_constraint" refer="type_name">
+      <xs:selector xpath="NonbondedForce/Atom"/>
+      <xs:field xpath="@type"/>
+    </xs:keyref>
   </xs:element>
 </xs:schema>
