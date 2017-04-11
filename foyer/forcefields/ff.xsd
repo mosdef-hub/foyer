@@ -1,0 +1,125 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Type">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="name" use="optional"/>
+          <xs:attribute type="xs:string" name="class" use="optional"/>
+          <xs:attribute type="xs:string" name="element" use="optional"/>
+          <xs:attribute type="xs:float" name="mass" use="optional"/>
+          <xs:attribute type="xs:string" name="def" use="optional"/>
+          <xs:attribute type="xs:string" name="desc" use="optional"/>
+          <xs:attribute type="xs:string" name="doi" use="optional"/>
+          <xs:attribute type="xs:string" name="overrides" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Bond">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:float" name="length" use="optional"/>
+          <xs:attribute type="xs:float" name="k" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Angle">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:string" name="class3" use="optional"/>
+          <xs:attribute type="xs:float" name="angle" use="optional"/>
+          <xs:attribute type="xs:float" name="k" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Proper">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:string" name="class3" use="optional"/>
+          <xs:attribute type="xs:string" name="class4" use="optional"/>
+          <xs:attribute type="xs:float" name="c0" use="optional"/>
+          <xs:attribute type="xs:float" name="c1" use="optional"/>
+          <xs:attribute type="xs:float" name="c2" use="optional"/>
+          <xs:attribute type="xs:float" name="c3" use="optional"/>
+          <xs:attribute type="xs:float" name="c4" use="optional"/>
+          <xs:attribute type="xs:float" name="c5" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Atom">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="type" use="optional"/>
+          <xs:attribute type="xs:float" name="charge" use="optional"/>
+          <xs:attribute type="xs:float" name="sigma" use="optional"/>
+          <xs:attribute type="xs:float" name="epsilon" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AtomTypes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Type" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="name_unique">
+                <xs:selector xpath="Type"/>
+                <xs:field xpath="@name"/>
+    </xs:unique>
+  </xs:element>
+  <xs:element name="HarmonicBondForce">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Bond" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="HarmonicAngleForce">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Angle" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RBTorsionForce">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Proper" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NonbondedForce">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Atom" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute type="xs:float" name="coulomb14scale"/>
+      <xs:attribute type="xs:float" name="lj14scale"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ForceField">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AtomTypes"/>
+        <xs:element ref="HarmonicBondForce"/>
+        <xs:element ref="HarmonicAngleForce"/>
+        <xs:element ref="RBTorsionForce"/>
+        <xs:element ref="NonbondedForce"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

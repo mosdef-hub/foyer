@@ -1,6 +1,6 @@
 import plyplus
 
-_grammar = (r"""
+GRAMMAR = (r"""
     start: string;
 
     // Rules
@@ -19,13 +19,20 @@ _grammar = (r"""
     @weak_and_symbol: SEMI;
     @or_symbol: COMMA;
     @not_symbol: EXCL;
-    atom_id: atom_symbol | HASH atomic_num | DOLLAR LPAR matches_string RPAR | has_label | 'X' neighbor_count | 'r' ring_size;
+    atom_id: atom_symbol
+             | HASH atomic_num
+             | DOLLAR LPAR matches_string RPAR
+             | has_label
+             | 'X' neighbor_count
+             | 'r' ring_size
+             | 'R' ring_count;
     atom_symbol: SYMBOL | STAR;
     atomic_num: NUM;
     matches_string: string ;
     has_label: LABEL ;
     neighbor_count: NUM;
     ring_size: NUM;
+    ring_count: NUM;
 
     // Tokens
     HASH: '\#';
@@ -49,12 +56,19 @@ _grammar = (r"""
 
 
 class SMARTS(object):
+    """A wrapper class for parsing SMARTS grammar using plyplus.
+
+    Provides functionality for injecting optional, custom, non-element symbols
+    denoted by an underscore-prefix as additional tokens that the parser can
+    recognize.
+
+    """
     def __init__(self, optional_names=''):
         if optional_names:
-            self.grammar = _grammar.format(optional='{}|'.format(
-                    '|'.join(optional_names)))
+            self.grammar = GRAMMAR.format(optional='{}|'.format(
+                '|'.join(optional_names)))
         else:
-            self.grammar = _grammar.format(optional='')
+            self.grammar = GRAMMAR.format(optional='')
         self.PARSER = plyplus.Grammar(self.grammar)
 
     def parse(self, smarts_string):

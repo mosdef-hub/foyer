@@ -7,7 +7,6 @@ import requests
 import warnings
 
 import mbuild as mb
-import networkx as nx
 import numpy as np
 import parmed as pmd
 import simtk.openmm.app.element as elem
@@ -24,7 +23,7 @@ from foyer import smarts
 
 
 def generate_topology(non_omm_topology, non_element_types=None):
-    """Create an OpenMM Topology from another supported topology structure. """
+    """Create an OpenMM Topology from another supported topology structure."""
     if non_element_types is None:
         non_element_types = set()
 
@@ -42,8 +41,7 @@ def generate_topology(non_omm_topology, non_element_types=None):
 
 
 def _topology_from_parmed(structure, non_element_types):
-    """Convert a ParmEd Structure to an OpenMM Topology. """
-
+    """Convert a ParmEd Structure to an OpenMM Topology."""
     topology = app.Topology()
     chain = topology.addChain()
     residue = topology.addResidue(structure.title, chain)
@@ -76,9 +74,8 @@ def _topology_from_parmed(structure, non_element_types):
     positions = structure.positions
     return topology, positions
 
-
 class Forcefield(app.ForceField):
-    """
+    """Specialization of OpenMM's Forcefield allowing SMARTS based atomtyping.
 
     Parameters
     ----------
@@ -122,13 +119,12 @@ class Forcefield(app.ForceField):
         if any(self._included_forcefields):
             return self._included_forcefields
 
-        resource_extension = '.xml'
         ff_dir = resource_filename('foyer', 'forcefields')
-        ff_filepaths = set(glob.glob(os.path.join(ff_dir, '*'+resource_extension)))
+        ff_filepaths = set(glob.glob(os.path.join(ff_dir, '*.xml')))
 
         for ff_filepath in ff_filepaths:
             _, ff_file = os.path.split(ff_filepath)
-            basename = ff_file[:-len(resource_extension)]
+            basename, _ = os.path.splitext(ff_file)
             self._included_forcefields[basename] = ff_filepath
         return self._included_forcefields
 
@@ -151,21 +147,21 @@ class Forcefield(app.ForceField):
         """Register a new atom type. """
         name = parameters['name']
         if name in self._atomTypes:
-            raise ValueError('Found multiple definitions for atom type: '+name)
-        atomClass = parameters['class']
+            raise ValueError('Found multiple definitions for atom type: ' + name)
+        atom_class = parameters['class']
         mass = _convertParameterToNumber(parameters['mass'])
         element = None
         if 'element' in parameters:
             element = self._create_element(parameters['element'], mass)
             self.non_element_types[element.name] = element
 
-        self._atomTypes[name] = self.__class__._AtomType(name, atomClass, mass, element)
-        if atomClass in self._atomClasses:
-            typeSet = self._atomClasses[atomClass]
+        self._atomTypes[name] = self.__class__._AtomType(name, atom_class, mass, element)
+        if atom_class in self._atomClasses:
+            type_set = self._atomClasses[atom_class]
         else:
-            typeSet = set()
-            self._atomClasses[atomClass] = typeSet
-        typeSet.add(name)
+            type_set = set()
+            self._atomClasses[atom_class] = type_set
+        type_set.add(name)
         self._atomClasses[''].add(name)
 
         name = parameters['name']
@@ -207,8 +203,8 @@ class Forcefield(app.ForceField):
             self._write_references_to_file(atom_types, references_file)
         return structure
 
-    def createSystem(self, topology, nonbondedMethod=NoCutoff,
-                     nonbondedCutoff=1.0*u.nanometer, constraints=None,
+    def createSystem(self, topology, atomtype=True, nonbondedMethod=NoCutoff,
+                     nonbondedCutoff=1.0 * u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
                      **args):
         """Construct an OpenMM System representing a Topology with this force field.
@@ -244,21 +240,8 @@ class Forcefield(app.ForceField):
         system
             the newly created System
         """
-
-        # Atomtype the system.
-        G = nx.Graph()
-        G.add_nodes_from(topology.atoms())
-        G.add_edges_from(topology.bonds())
-        cycles = nx.cycle_basis(G)
-
-        for atom in topology.atoms():
-            atom.cycles = set()
-
-        for cycle in cycles:
-            for atom in cycle:
-                atom.cycles.add(tuple(cycle))
-
-        find_atomtypes(atoms=list(topology.atoms()), forcefield=self)
+        if atomtype:
+            find_atomtypes(topology, forcefield=self)
 
         data = app.ForceField._SystemData()
         data.atoms = list(topology.atoms())
@@ -270,14 +253,14 @@ class Forcefield(app.ForceField):
             data.bonds.append(app.ForceField._BondData(bond[0].index, bond[1].index))
 
         # Record which atoms are bonded to each other atom
-        bondedToAtom = []
+        bonded_to_atom = []
         for i in range(len(data.atoms)):
-            bondedToAtom.append(set())
+            bonded_to_atom.append(set())
             data.atomBonds.append([])
         for i in range(len(data.bonds)):
             bond = data.bonds[i]
-            bondedToAtom[bond.atom1].add(bond.atom2)
-            bondedToAtom[bond.atom2].add(bond.atom1)
+            bonded_to_atom[bond.atom1].add(bond.atom2)
+            bonded_to_atom[bond.atom2].add(bond.atom1)
             data.atomBonds[bond.atom1].append(i)
             data.atomBonds[bond.atom2].append(i)
 
@@ -322,56 +305,61 @@ class Forcefield(app.ForceField):
                 if atom1.element == elem.hydrogen:
                     (atom1, atom2) = (atom2, atom1)
                 if atom2.element == elem.hydrogen and atom1.element not in (elem.hydrogen, None):
-                    transferMass = hydrogenMass-sys.getParticleMass(atom2.index)
+                    transfer_mass = hydrogenMass - sys.getParticleMass(atom2.index)
                     sys.setParticleMass(atom2.index, hydrogenMass)
-                    sys.setParticleMass(atom1.index, sys.getParticleMass(atom1.index)-transferMass)
+                    mass = sys.getParticleMass(atom1.index) - transfer_mass
+                    sys.setParticleMass(atom1.index, mass)
 
         # Set periodic boundary conditions.
-        boxVectors = topology.getPeriodicBoxVectors()
-        if boxVectors is not None:
-            sys.setDefaultPeriodicBoxVectors(boxVectors[0], boxVectors[1], boxVectors[2])
+        box_vectors = topology.getPeriodicBoxVectors()
+        if box_vectors is not None:
+            sys.setDefaultPeriodicBoxVectors(box_vectors[0],
+                                             box_vectors[1],
+                                             box_vectors[2])
         elif nonbondedMethod not in [NoCutoff, CutoffNonPeriodic]:
-            raise ValueError('Requested periodic boundary conditions for a Topology that does not specify periodic box dimensions')
+            raise ValueError('Requested periodic boundary conditions for a '
+                             'Topology that does not specify periodic box '
+                             'dimensions')
 
         # Make a list of all unique angles
-        uniqueAngles = set()
+        unique_angles = set()
         for bond in data.bonds:
-            for atom in bondedToAtom[bond.atom1]:
+            for atom in bonded_to_atom[bond.atom1]:
                 if atom != bond.atom2:
                     if atom < bond.atom2:
-                        uniqueAngles.add((atom, bond.atom1, bond.atom2))
+                        unique_angles.add((atom, bond.atom1, bond.atom2))
                     else:
-                        uniqueAngles.add((bond.atom2, bond.atom1, atom))
-            for atom in bondedToAtom[bond.atom2]:
+                        unique_angles.add((bond.atom2, bond.atom1, atom))
+            for atom in bonded_to_atom[bond.atom2]:
                 if atom != bond.atom1:
                     if atom > bond.atom1:
-                        uniqueAngles.add((bond.atom1, bond.atom2, atom))
+                        unique_angles.add((bond.atom1, bond.atom2, atom))
                     else:
-                        uniqueAngles.add((atom, bond.atom2, bond.atom1))
-        data.angles = sorted(list(uniqueAngles))
+                        unique_angles.add((atom, bond.atom2, bond.atom1))
+        data.angles = sorted(list(unique_angles))
 
         # Make a list of all unique proper torsions
-        uniquePropers = set()
+        unique_propers = set()
         for angle in data.angles:
-            for atom in bondedToAtom[angle[0]]:
+            for atom in bonded_to_atom[angle[0]]:
                 if atom not in angle:
                     if atom < angle[2]:
-                        uniquePropers.add((atom, angle[0], angle[1], angle[2]))
+                        unique_propers.add((atom, angle[0], angle[1], angle[2]))
                     else:
-                        uniquePropers.add((angle[2], angle[1], angle[0], atom))
-            for atom in bondedToAtom[angle[2]]:
+                        unique_propers.add((angle[2], angle[1], angle[0], atom))
+            for atom in bonded_to_atom[angle[2]]:
                 if atom not in angle:
                     if atom > angle[0]:
-                        uniquePropers.add((angle[0], angle[1], angle[2], atom))
+                        unique_propers.add((angle[0], angle[1], angle[2], atom))
                     else:
-                        uniquePropers.add((atom, angle[2], angle[1], angle[0]))
-        data.propers = sorted(list(uniquePropers))
+                        unique_propers.add((atom, angle[2], angle[1], angle[0]))
+        data.propers = sorted(list(unique_propers))
 
         # Make a list of all unique improper torsions
-        for atom in range(len(bondedToAtom)):
-            bondedTo = bondedToAtom[atom]
-            if len(bondedTo) > 2:
-                for subset in itertools.combinations(bondedTo, 3):
+        for atom in range(len(bonded_to_atom)):
+            bonded_to = bonded_to_atom[atom]
+            if len(bonded_to) > 2:
+                for subset in itertools.combinations(bonded_to, 3):
                     data.impropers.append((atom, subset[0], subset[1], subset[2]))
 
         # Identify bonds that should be implemented with constraints
@@ -419,17 +407,24 @@ class Forcefield(app.ForceField):
             index = atom.index
             data.excludeAtomWith[excludeWith].append(index)
             if site.type == 'average2':
-                sys.setVirtualSite(index, mm.TwoParticleAverageSite(atoms[0], atoms[1], site.weights[0], site.weights[1]))
+                sys.setVirtualSite(index, mm.TwoParticleAverageSite(
+                    atoms[0], atoms[1], site.weights[0], site.weights[1]))
             elif site.type == 'average3':
-                sys.setVirtualSite(index, mm.ThreeParticleAverageSite(atoms[0], atoms[1], atoms[2], site.weights[0], site.weights[1], site.weights[2]))
+                sys.setVirtualSite(index, mm.ThreeParticleAverageSite(
+                    atoms[0], atoms[1], atoms[2],
+                    site.weights[0], site.weights[1], site.weights[2]))
             elif site.type == 'outOfPlane':
-                sys.setVirtualSite(index, mm.OutOfPlaneSite(atoms[0], atoms[1], atoms[2], site.weights[0], site.weights[1], site.weights[2]))
+                sys.setVirtualSite(index, mm.OutOfPlaneSite(
+                    atoms[0], atoms[1], atoms[2],
+                    site.weights[0], site.weights[1], site.weights[2]))
             elif site.type == 'localCoords':
-                sys.setVirtualSite(index, mm.LocalCoordinatesSite(atoms[0], atoms[1], atoms[2],
-                                                                  mm.Vec3(site.originWeights[0], site.originWeights[1], site.originWeights[2]),
-                                                                  mm.Vec3(site.xWeights[0], site.xWeights[1], site.xWeights[2]),
-                                                                  mm.Vec3(site.yWeights[0], site.yWeights[1], site.yWeights[2]),
-                                                                  mm.Vec3(site.localPos[0], site.localPos[1], site.localPos[2])))
+                local_coord_site = mm.LocalCoordinatesSite(
+                    atoms[0], atoms[1], atoms[2],
+                    mm.Vec3(site.originWeights[0], site.originWeights[1], site.originWeights[2]),
+                    mm.Vec3(site.xWeights[0], site.xWeights[1], site.xWeights[2]),
+                    mm.Vec3(site.yWeights[0], site.yWeights[1], site.yWeights[2]),
+                    mm.Vec3(site.localPos[0], site.localPos[1], site.localPos[2]))
+                sys.setVirtualSite(index, local_coord_site)
 
         # Add forces to the System
         for force in self._forces:
