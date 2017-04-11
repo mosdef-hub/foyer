@@ -30,7 +30,8 @@ def generate_topology(non_omm_topology, non_element_types=None):
     if isinstance(non_omm_topology, pmd.Structure):
         return _topology_from_parmed(non_omm_topology, non_element_types)
     elif isinstance(non_omm_topology, mb.Compound):
-        return _topology_from_mbuild(non_omm_topology, non_element_types)
+        pmdCompoundStructure = non_omm_topology.to_parmed()
+        return _topology_from_parmed(pmdCompoundStructure, non_element_types)
     else:
         raise FoyerError('Unknown topology format: {}\n'
                          'Supported formats are: '
@@ -43,7 +44,6 @@ def _topology_from_parmed(structure, non_element_types):
     """Convert a ParmEd Structure to an OpenMM Topology."""
     topology = app.Topology()
     chain = topology.addChain()
-
     residue = topology.addResidue(structure.title, chain)
     atoms = dict()  # pmd.Atom: omm.Atom
 
@@ -52,7 +52,8 @@ def _topology_from_parmed(structure, non_element_types):
         if pmd_atom.element in non_element_types:
             element = non_element_types[pmd_atom.element]
         else:
-            if pmd_atom.atomic_number != 0:
+            if (isinstance(pmd_atom.atomic_number, int) and
+                    pmd_atom.atomic_number != 0):
                 element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
             else:
                 element = elem.Element.getBySymbol(pmd_atom.name)
@@ -72,48 +73,6 @@ def _topology_from_parmed(structure, non_element_types):
 
     positions = structure.positions
     return topology, positions
-
-
-def _topology_from_mbuild(compound, non_element_types):
-    """Convert an mBuild Compound to an OpenMM Topology."""
-    topology = app.Topology()
-    chain = topology.addChain()
-
-    residue = topology.addResidue(compound.name, chain)
-    atoms = dict()  # mb.Particle: omm.Atom
-
-    for mb_particle in compound.particles():
-        name = mb_particle.name
-        if mb_particle.name in non_element_types:
-            element = non_element_types[mb_particle.name]
-        else:
-            element = elem.Element.getBySymbol(mb_particle.name)
-
-        omm_atom = topology.addAtom(name, element, residue)
-        atoms[mb_particle] = omm_atom
-        omm_atom.bond_partners = []
-
-    for bond in compound.bonds():
-        atom1 = atoms[bond[0]]
-        atom2 = atoms[bond[1]]
-        topology.addBond(atom1, atom2)
-        atom1.bond_partners.append(atom2)
-        atom2.bond_partners.append(atom1)
-    bounding_box = compound.boundingbox
-    box_vectors = [[0, 0, 0] * u.nanometer,
-                   [0, 0, 0] * u.nanometer,
-                   [0, 0, 0] * u.nanometer]
-    box_vectors[0][0] = (compound.periodicity[1] or
-                         bounding_box.lengths[0]) * u.nanometer
-    box_vectors[1][1] = (compound.periodicity[1] or
-                         bounding_box.lengths[1]) * u.nanometer
-    box_vectors[2][2] = (compound.periodicity[2] or
-                         bounding_box.lengths[2]) * u.nanometer
-    topology.setPeriodicBoxVectors(box_vectors)
-
-    positions = compound.xyz
-    return topology, positions
-
 
 class Forcefield(app.ForceField):
     """Specialization of OpenMM's Forcefield allowing SMARTS based atomtyping.
@@ -225,7 +184,7 @@ class Forcefield(app.ForceField):
         topology : openmm.app.Topology or parmed.Structure or mbuild.Compound
             Molecular structure to apply the force field to
         references_file : str, optional, default=None
-            Name of file where force field references will be written (in Bibtex 
+            Name of file where force field references will be written (in Bibtex
             format)
         """
         if not isinstance(topology, app.Topology):

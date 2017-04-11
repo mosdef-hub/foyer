@@ -1,0 +1,218 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="O" class="O" element="O" mass="15.99940" def="OH" desc="Oxygen in hydroxyl" doi="10.1021/jp003882x"/>
+  <Type name="H" class="H" element="H" mass="1.00800" def="HO" desc="Hydrogen in hydroxyl" doi="10.1021/jp003882x"/>
+  <Type name="CH4" class="CH4" element="_CH4" mass="16.04300" def="_CH4" desc="CH4, united atom" doi="10.1021/jp972543+"/>
+  <Type name="CH3_O" class="CH3" element="_CH3" mass="15.03500" def="[_CH3;X1]OH" desc="CH3, united atom, attached to hydroxyl" doi="10.1021/jp003882x"/>
+  <Type name="CH3_sp3" class="CH3" element="_CH3" mass="15.03500" def="[_CH3;X1][_CH3,_CH2,_HC,C]" desc="Alkane CH3, united atom" doi="10.1021/jp972543+"/>
+  <Type name="CH2_O" class="CH2" element="_CH2" mass="14.02700" def="[_CH2;X2]([_CH3,_CH2,_HC,C])OH" desc="CH2, united atom, attached to hydroxyl" doi="10.1021/jp003882x"/>
+  <Type name="CH2_sp3" class="CH2" element="_CH2" mass="14.02700" def="[_CH2;X2]([_CH3,_CH2,_HC,C])[_CH3,_CH2,_HC,C]" desc="Alkane CH2, united atom" doi="10.1021/jp972543+"/>
+  <Type name="CH_O" class="CH" element="_HC" mass="13.01900" def="[_HC;X3]([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])OH" desc="CH, united atom, attached to hydroxyl" doi="10.1021/jp003882x"/>
+  <Type name="CH_sp3" class="CH" element="_HC" mass="13.01900" def="[_HC;X3]([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])[_CH3,_CH2,_HC,C]" desc="Alkane CH, united atom" doi="10.1021/jp984742e"/>
+  <Type name="C_O" class="C" element="C" mass="12.01100" def="[C;X4]([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])OH" desc="Carbon attached to hydroxyl" doi="10.1021/jp003882x"/>
+  <Type name="C_sp3" class="C" element="C" mass="12.01100" def="[C;X4]([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])([_CH3,_CH2,_HC,C])[_CH3,_CH2,_HC,C]" desc="Alkane carbon" doi="10.1021/jp984742e"/>
+  <!--
+  <Type name="CH2_sp2" class="CH2_E" element="_CH2" mass="14.02700" def="[_CH2;X1][_CH2,_CH,C]" desc="Alkene CH2" doi="10.1021/jp001044x"/>
+  <Type name="CH_sp2" class="CH_E" element="_CH" mass="13.01900" def="[_CH;X2](_CH3,_CH2,_CH,C)[_CH2,_CH,C]" desc="Alkene CH" doi="10.1021/jp001044x"/>
+  <Type name="C_sp2" class="C_E" element="C" mass="12.01100" def="[C;X3](_CH3,_CH2,_CH,C)(_CH3,_CH2,_CH,C)[_CH2,_CH,C]" desc="Alkene carbon" doi="10.1021/jp001044x"/>
+  -->
+ </AtomTypes>
+ <HarmonicBondForce>
+  <!-- CHX-CHY -->
+  <Bond class1="CH3" class2="CH3" length="0.1540" k="502416.0"/>
+  <Bond class1="CH3" class2="CH2" length="0.1540" k="502416.0"/>
+  <Bond class1="CH3" class2="CH" length="0.1540" k="502416.0"/>
+  <Bond class1="CH3" class2="C" length="0.1540" k="502416.0"/>
+  <Bond class1="CH2" class2="CH2" length="0.1540" k="502416.0"/>
+  <Bond class1="CH2" class2="CH" length="0.1540" k="502416.0"/>
+  <Bond class1="CH2" class2="C" length="0.1540" k="502416.0"/>
+  <Bond class1="CH" class2="CH" length="0.1540" k="502416.0"/>
+  <Bond class1="CH" class2="C" length="0.1540" k="502416.0"/>
+  <Bond class1="C" class2="C" length="0.1540" k="502416.0"/>
+  <!--
+  <Bond class1="CH_E" class2="CH3" length="0.1540" k="502416.0"/>
+  <Bond class1="CH_E" class2="CH2" length="0.1540" k="502416.0"/>
+  <Bond class1="CH_E" class2="CH" length="0.1540" k="502416.0"/>
+  <Bond class1="CH_E" class2="C" length="0.1540" k="502416.0"/>
+  <Bond class1="C_E" class2="CH3" length="0.1540" k="502416.0"/>
+  <Bond class1="C_E" class2="CH2" length="0.1540" k="502416.0"/>
+  <Bond class1="C_E" class2="CH" length="0.1540" k="502416.0"/>
+  <Bond class1="C_E" class2="C" length="0.1540" k="502416.0"/>
+  -->
+  <!-- CHX-OH -->
+  <Bond class1="CH3" class2="O" length="0.1430" k="502416.0"/>
+  <Bond class1="CH2" class2="O" length="0.1430" k="502416.0"/>
+  <Bond class1="CH" class2="O" length="0.1430" k="502416.0"/>
+  <Bond class1="C" class2="O" length="0.1430" k="502416.0"/>
+  <!-- O-H -->
+  <Bond class1="O" class2="H" length="0.0945" k="502416.0"/>
+  <!-- CHX-CHY alkenes -->
+  <!--
+  <Bond class1="CH2_E" class2="CH2_E" length="0.1330" k="502416.0"/>
+  <Bond class1="CH2_E" class2="CH_E" length="0.1330" k="502416.0"/>
+  <Bond class1="CH2_E" class2="C_E" length="0.1330" k="502416.0"/>
+  <Bond class1="CH_E" class2="CH_E" length="0.1330" k="502416.0"/>
+  <Bond class1="CH_E" class2="C_E" length="0.1330" k="502416.0"/>
+  <Bond class1="C_E" class2="C_E" length="0.1330" k="502416.0"/>
+  -->
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <!-- CHX-[CH2]-CHY -->
+  <Angle class1="CH3" class2="CH2" class3="CH3" angle="1.98967" k="519.65389"/>
+  <Angle class1="CH3" class2="CH2" class3="CH2" angle="1.98967" k="519.65389"/>
+  <Angle class1="CH3" class2="CH2" class3="CH" angle="1.98967" k="519.65389"/>
+  <Angle class1="CH3" class2="CH2" class3="C" angle="1.98967" k="519.65389"/>
+  <Angle class1="CH2" class2="CH2" class3="CH2" angle="1.98967" k="519.65389"/>
+  <Angle class1="CH2" class2="CH2" class3="CH" angle="1.98967" k="519.65389"/>
+  <Angle class1="CH2" class2="CH2" class3="C" angle="1.98967" k="519.65389"/>
+  <Angle class1="CH" class2="CH2" class3="CH" angle="1.98967" k="519.65389"/>
+  <Angle class1="CH" class2="CH2" class3="C" angle="1.98967" k="519.65389"/>
+  <Angle class1="C" class2="CH2" class3="C" angle="1.98967" k="519.65389"/>
+  <!-- CHX-[CH]-CHY -->
+  <Angle class1="CH3" class2="CH" class3="CH3" angle="1.95477" k="519.65389"/>
+  <Angle class1="CH3" class2="CH" class3="CH2" angle="1.95477" k="519.65389"/>
+  <Angle class1="CH3" class2="CH" class3="CH" angle="1.95477" k="519.65389"/>
+  <Angle class1="CH3" class2="CH" class3="C" angle="1.95477" k="519.65389"/>
+  <Angle class1="CH2" class2="CH" class3="CH2" angle="1.95477" k="519.65389"/>
+  <Angle class1="CH2" class2="CH" class3="CH" angle="1.95477" k="519.65389"/>
+  <Angle class1="CH2" class2="CH" class3="C" angle="1.95477" k="519.65389"/>
+  <Angle class1="CH" class2="CH" class3="CH" angle="1.95477" k="519.65389"/>
+  <Angle class1="CH" class2="CH" class3="C" angle="1.95477" k="519.65389"/>
+  <Angle class1="C" class2="CH" class3="C" angle="1.95477" k="519.65389"/>
+  <!-- CHX-[C]-CHY -->
+  <Angle class1="CH3" class2="C" class3="CH3" angle="1.91061" k="519.65389"/>
+  <Angle class1="CH3" class2="C" class3="CH2" angle="1.91061" k="519.65389"/>
+  <Angle class1="CH3" class2="C" class3="CH" angle="1.91061" k="519.65389"/>
+  <Angle class1="CH3" class2="C" class3="C" angle="1.91061" k="519.65389"/>
+  <Angle class1="CH2" class2="C" class3="CH2" angle="1.91061" k="519.65389"/>
+  <Angle class1="CH2" class2="C" class3="CH" angle="1.91061" k="519.65389"/>
+  <Angle class1="CH2" class2="C" class3="C" angle="1.91061" k="519.65389"/>
+  <Angle class1="CH" class2="C" class3="CH" angle="1.91061" k="519.65389"/>
+  <Angle class1="CH" class2="C" class3="C" angle="1.91061" k="519.65389"/>
+  <Angle class1="C" class2="C" class3="C" angle="1.91061" k="519.65389"/>
+  <!-- CHX-[CHY]-O -->
+  <Angle class1="CH3" class2="CH3" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="CH3" class2="CH2" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="CH3" class2="CH" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="CH3" class2="C" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="CH2" class2="CH3" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="CH2" class2="CH2" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="CH2" class2="CH" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="CH2" class2="C" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="CH" class2="CH3" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="CH" class2="CH2" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="CH" class2="CH" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="CH" class2="C" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="C" class2="CH3" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="C" class2="CH2" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="C" class2="CH" class3="O" angle="1.91061" k="419.04889"/>
+  <Angle class1="C" class2="C" class3="O" angle="1.91061" k="419.04889"/>
+  <!-- CHX-[O]-H -->
+  <Angle class1="CH3" class2="O" class3="H" angle="1.89368" k="460.62120"/>
+  <Angle class1="CH2" class2="O" class3="H" angle="1.89368" k="460.62120"/>
+  <Angle class1="CH" class2="O" class3="H" angle="1.89368" k="460.62120"/>
+  <Angle class1="C" class2="O" class3="H" angle="1.89368" k="460.62120"/>
+ </HarmonicAngleForce>
+ <RBTorsionForce>
+  <!-- CHX-[CH2]-[CH2]-CHY -->
+  <Proper class1="CH3" class2="CH2" class3="CH2" class4="CH3" c0="8.39736" c1="16.78632" c2="1.13393" c3="-26.31760" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH2" class3="CH2" class4="CH2" c0="8.39736" c1="16.78632" c2="1.13393" c3="-26.31760" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH2" class3="CH2" class4="CH" c0="8.39736" c1="16.78632" c2="1.13393" c3="-26.31760" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH2" class3="CH2" class4="C" c0="8.39736" c1="16.78632" c2="1.13393" c3="-26.31760" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="CH2" class4="CH2" c0="8.39736" c1="16.78632" c2="1.13393" c3="-26.31760" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="CH2" class4="CH" c0="8.39736" c1="16.78632" c2="1.13393" c3="-26.31760" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="CH2" class4="C" c0="8.39736" c1="16.78632" c2="1.13393" c3="-26.31760" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="CH2" class4="CH" c0="8.39736" c1="16.78632" c2="1.13393" c3="-26.31760" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="CH2" class4="C" c0="8.39736" c1="16.78632" c2="1.13393" c3="-26.31760" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH2" class3="CH2" class4="C" c0="8.39736" c1="16.78632" c2="1.13393" c3="-26.31760" c4="0.0" c5="0.0"/>
+  <!-- CHX-[CH2]-[CH]-CHY -->
+  <Proper class1="CH3" class2="CH2" class3="CH" class4="CH3" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH2" class3="CH" class4="CH2" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH2" class3="CH" class4="CH" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH2" class3="CH" class4="C" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="CH" class4="CH3" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="CH" class4="CH2" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="CH" class4="CH" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="CH" class4="C" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="CH" class4="CH3" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="CH" class4="CH2" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="CH" class4="CH" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="CH" class4="C" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH2" class3="CH" class4="CH3" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH2" class3="CH" class4="CH2" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH2" class3="CH" class4="CH" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH2" class3="CH" class4="C" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <!-- CHX-[CH2]-[C]-CHY -->
+  <Proper class1="CH3" class2="CH2" class3="C" class4="CH3" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH2" class3="C" class4="CH2" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH2" class3="C" class4="CH" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH2" class3="C" class4="C" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="C" class4="CH3" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="C" class4="CH2" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="C" class4="CH" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="C" class4="C" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="C" class4="CH3" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="C" class4="CH2" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="C" class4="CH" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="C" class4="C" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH2" class3="C" class4="CH3" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH2" class3="C" class4="CH2" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH2" class3="C" class4="CH" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH2" class3="C" class4="C" c0="3.83538" c1="11.50613" c2="0.0" c3="-15.34151" c4="0.0" c5="0.0"/>
+  <!-- CHX-[CH]-[CH]-CHY -->
+  <Proper class1="CH3" class2="CH" class3="CH" class4="CH3" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH" class3="CH" class4="CH2" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH" class3="CH" class4="CH" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH3" class2="CH" class3="CH" class4="C" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH" class3="CH" class4="CH2" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH" class3="CH" class4="CH" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH" class3="CH" class4="C" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH" class3="CH" class4="CH" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH" class3="CH" class4="C" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH" class3="CH" class4="C" c0="3.28629" c1="7.44211" c2="1.85995" c3="-14.67569" c4="0.0" c5="0.0"/>
+  <!-- No parameters for CHX-[C]-[C]-CHY or CHX-[CH]-[C]-CHY ? -->
+  <!-- CHX-[CH2]-[CH2]-OH -->
+  <Proper class1="CH3" class2="CH2" class3="CH2" class4="O" c0="6.98307" c1="17.73616" c2="0.88699" c3="-25.60622" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="CH2" class4="O" c0="6.98307" c1="17.73616" c2="0.88699" c3="-25.60622" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="CH2" class4="O" c0="6.98307" c1="17.73616" c2="0.88699" c3="-25.60622" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH2" class3="CH2" class4="O" c0="6.98307" c1="17.73616" c2="0.88699" c3="-25.60622" c4="0.0" c5="0.0"/>
+  <!-- CHX-[CH2]-[O]-H -->
+  <Proper class1="CH3" class2="CH2" class3="O" class4="H" c0="2.82201" c1="2.94307" c2="0.48507" c3="-6.25015" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH2" class3="O" class4="H" c0="2.82201" c1="2.94307" c2="0.48507" c3="-6.25015" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH2" class3="O" class4="H" c0="2.82201" c1="2.94307" c2="0.48507" c3="-6.25015" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH2" class3="O" class4="H" c0="2.82201" c1="2.94307" c2="0.48507" c3="-6.25015" c4="0.0" c5="0.0"/>
+  <!-- CHX-[CH]-[O]-H -->
+  <Proper class1="CH3" class2="CH" class3="O" class4="H" c0="2.51338" c1="-5.97885" c2="-0.52315" c3="5.78421" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="CH" class3="O" class4="H" c0="2.51338" c1="-5.97885" c2="-0.52315" c3="5.78421" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="CH" class3="O" class4="H" c0="2.51338" c1="-5.97885" c2="-0.52315" c3="5.78421" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="CH" class3="O" class4="H" c0="2.51338" c1="-5.97885" c2="-0.52315" c3="5.78421" c4="0.0" c5="0.0"/>
+  <!-- CHX-[C]-[O]-H -->
+  <Proper class1="CH3" class2="C" class3="O" class4="H" c0="1.35991" c1="4.07974" c2="0.0" c3="-5.43965" c4="0.0" c5="0.0"/>
+  <Proper class1="CH2" class2="C" class3="O" class4="H" c0="1.35991" c1="4.07974" c2="0.0" c3="-5.43965" c4="0.0" c5="0.0"/>
+  <Proper class1="CH" class2="C" class3="O" class4="H" c0="1.35991" c1="4.07974" c2="0.0" c3="-5.43965" c4="0.0" c5="0.0"/>
+  <Proper class1="C" class2="C" class3="O" class4="H" c0="1.35991" c1="4.07974" c2="0.0" c3="-5.43965" c4="0.0" c5="0.0"/>
+  <!-- 
+  No parameters for CHX-[CH2]-[CH]-OH, CHX-[CH2]-[C]-OH, CHX-[CH]-[CH2]-OH,
+  CHX-[CH]-[CH]-OH, CHX-[CH]-[C]-OH, CHX-[C]-[CH2]-OH, CHX-[C]-[CH]-OH,
+  CHX-[C]-[C]-OH ?
+  -->
+ </RBTorsionForce>
+ <NonbondedForce coulomb14scale="0" lj14scale="0">
+  <Atom type="O" charge="-0.700" sigma="0.302" epsilon="0.773245"/>
+  <Atom type="H" charge="0.435" sigma="1.0" epsilon="0.0"/>
+  <Atom type="CH4" charge="0.0" sigma="0.373" epsilon="1.23054"/>
+  <Atom type="CH3_O" charge="0.265" sigma="0.375" epsilon="0.814817"/>
+  <Atom type="CH3_sp3" charge="0.0" sigma="0.375" epsilon="0.814817"/>
+  <Atom type="CH2_O" charge="0.265" sigma="0.395" epsilon="0.382465"/>
+  <Atom type="CH2_sp3" charge="0.0" sigma="0.395" epsilon="0.382465"/>
+  <Atom type="CH_O" charge="0.265" sigma="0.433" epsilon="0.0831445"/>
+  <Atom type="CH_sp3" charge="0.0" sigma="0.468" epsilon="0.0831445"/>
+  <Atom type="C_O" charge="0.265" sigma="0.58" epsilon="0.00415723"/>
+  <Atom type="C_sp3" charge="0.0" sigma="0.64" epsilon="0.00415723"/>
+  <!--
+  <Atom type="CH2_sp2" charge="0.0" sigma="0.3675" epsilon="0.706729"/>
+  <Atom type="CH_sp2" charge="0.0" sigma="0.373" epsilon="0.390780"/>
+  <Atom type="C_sp2" charge="0.0" sigma="0.385" epsilon="0.166289"/>
+  -->
+ </NonbondedForce>
+</ForceField>

@@ -1,0 +1,14 @@
+@<TRIPOS>MOLECULE
+RES
+2 1 1 0 1
+SMALL
+NO_CHARGES
+@<TRIPOS>CRYSIN
+    5.0000     6.5000     5.0000    90.0000    90.0000    90.0000  1  1
+@<TRIPOS>ATOM
+       1 _CH3         0.0000     0.0000     0.0000 CH3_sp3          1 RES     
+       2 _CH3         0.0000     1.5000     0.0000 CH3_sp3          1 RES     
+@<TRIPOS>BOND
+       1        1        2 1
+@<TRIPOS>SUBSTRUCTURE
+       1 RES             1 RESIDUE    0 **** ROOT      0
