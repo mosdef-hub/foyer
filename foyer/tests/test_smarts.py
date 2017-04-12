@@ -121,14 +121,14 @@ def test_precedence():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     top, _ = generate_topology(mol2)
 
-    checks = {'[C,O;C]': True,
-              '[C&O;C]': False,
-              '[!C;O,C]': False,
-              '[!C&O,C]': True,
+    checks = {'[C,O;C]': 2,
+              '[C&O;C]': 0,
+              '[!C;O,C]': 0,
+              '[!C&O,C]': 2,
               }
 
     for smart, result in checks.items():
-        _rule_match(top, smart, result)
+        _rule_match_count(top, smart, result)
 
 
 def test_not_ast():

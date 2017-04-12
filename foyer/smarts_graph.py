@@ -174,14 +174,17 @@ class SMARTSGraph(nx.Graph):
 
         if self._graph_matcher is None:
             atom = nx.get_node_attributes(self, 'atom')[0]
-            try:
-                element = atom.select('atom_symbol').strees[0].tail[0]
-            except IndexError:
+            if len(atom.select('atom_symbol')) == 1 and not atom.select('not_expression'):
                 try:
-                    atomic_num = atom.select('atomic_num').strees[0].tail[0]
-                    element = pt.Element[int(atomic_num)]
+                    element = atom.select('atom_symbol').strees[0].tail[0]
                 except IndexError:
-                    element = None
+                    try:
+                        atomic_num = atom.select('atomic_num').strees[0].tail[0]
+                        element = pt.Element[int(atomic_num)]
+                    except IndexError:
+                        element = None
+            else:
+                element = None
             self._graph_matcher = SMARTSMatcher(top_graph, self,
                                                 node_match=self._node_match,
                                                 element=element)
