@@ -1,34 +1,18 @@
-from io import StringIO
+from os.path import join, split, abspath
 from warnings import warn
 
 from lxml import etree, objectify
-from lxml.etree import XMLSyntaxError, Element, DocumentInvalid, XMLSyntaxError
-from os.path import join, split, abspath
-from plyplus.common import ParseError
-from foyer.smarts import SMARTS
-from foyer.smarts_graph import SMARTSGraph
+from lxml.etree import XMLSyntaxError, Element, DocumentInvalid
 import networkx as nx
+from plyplus.common import ParseError
 
-
-class ValidationError(Exception):
-    def __init__(self, message, source, line):
-        super(ValidationError, self).__init__(message)
-
-        self.source = source
-        self.line = line
-
-
-class ValidationWarning(Warning):
-    pass
+from foyer.exceptions import ValidationError, ValidationWarning
+from foyer.smarts_graph import SMARTSGraph
 
 
 class Validator(object):
     def __init__(self, ff_file_name):
-        # parse XML
-        try:
-            ff_tree = etree.parse(ff_file_name)
-        except XMLSyntaxError:
-            raise
+        ff_tree = etree.parse(ff_file_name)
 
         # validate tree against schema
         self.validate_xsd(ff_tree)
