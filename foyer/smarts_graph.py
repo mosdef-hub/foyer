@@ -261,22 +261,3 @@ def _prepare_atoms(topology, compute_cycles=False):
         for cycle in cycles:
             for atom in cycle:
                 atom.cycles.add(tuple(cycle))
-
-if __name__ == '__main__':
-    from foyer.smarts import SMARTS
-    from foyer.forcefield import generate_topology, Forcefield
-    import mbuild as mb
-    from mbuild.examples import Alkane
-
-    c6 = Alkane(n=6)
-    box = mb.fill_box(c6, 20, [10, 10, 10])
-
-
-    ff = Forcefield(name='oplsaa')
-
-    import time
-
-    start = time.time()
-    ff.apply(box)
-    print(time.time() - start)
-
