@@ -1,0 +1,5 @@
+<ForceField>
+ <AtomTypes>
+  <hello/>
+ </AtomTypes>
+</ForceField>

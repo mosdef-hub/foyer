@@ -20,6 +20,7 @@ from simtk.openmm.app.forcefield import (NoCutoff, CutoffNonPeriodic, HBonds,
 from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
+from foyer.validator import Validator
 
 
 def generate_topology(non_omm_topology, non_element_types=None):
@@ -86,7 +87,7 @@ class Forcefield(app.ForceField):
 
 
     """
-    def __init__(self, forcefield_files=None, name=None):
+    def __init__(self, forcefield_files=None, name=None, validation=True):
         self.atomTypeDefinitions = dict()
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
@@ -109,6 +110,10 @@ class Forcefield(app.ForceField):
                 raise IOError('Forcefield {} cannot be found'.format(name))
             else:
                 all_files_to_load.append(file)
+
+        if validation:
+            for ff_file_name in all_files_to_load:
+                Validator(ff_file_name)
 
         super(Forcefield, self).__init__(*all_files_to_load)
 
