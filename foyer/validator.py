@@ -13,15 +13,13 @@ from foyer.smarts_graph import SMARTSGraph
 class Validator(object):
     def __init__(self, ff_file_name):
         ff_tree = etree.parse(ff_file_name)
-
-        # validate tree against schema
         self.validate_xsd(ff_tree)
 
-        # this part should succeed, because XML can be parsed
+        # Loading forcefield should succeed, because XML can be parsed and
+        # basics have been validated.
         from foyer.forcefield import Forcefield
         self.smarts_parser = Forcefield(ff_file_name, validation=False).parser
 
-        # validate SMARTS strings
         self.validate_smarts(ff_tree)
         # TODO: figure out what exceptions are raised, and provide good error messages
 
@@ -43,14 +41,13 @@ class Validator(object):
                 if "missing_atom_type_in_nonbonded" in message:
                     atomtype = message[message.find("[") + 1:message.find("]")]
                     raise ValidationError(
-                        "Atom type {} is found in NonbondedForce at line {} but undefined in AtomTypes".format(atomtype,
-                                                                                                               line),
-                        ex, line)
+                        "Atom type {} is found in NonbondedForce at line {} but"
+                        " undefined in AtomTypes".format(atomtype, line), ex, line)
                 elif "nonunique_atomtype_name" in message:
                     atomtype = message[message.find("[") + 1:message.find("]")]
                     raise ValidationError(
-                        "Atom type {} is defined a second time at line {}".format(atomtype, line), ex, line)
-            # reraise without rewriting the error message
+                        "Atom type {} is defined a second time at line {}".format(
+                            atomtype, line), ex, line)
             raise
 
     def validate_smarts(self, ff_tree):
@@ -74,23 +71,20 @@ class Validator(object):
                 else:
                     column = ""
 
-                raise ValidationError("Malformed SMARTS string{} on line {}".format(column, r.sourceline), ex,
-                                      r.sourceline)
+                raise ValidationError("Malformed SMARTS string{} on line {}".format(
+                    column, r.sourceline), ex, r.sourceline)
 
             # make sure referenced labels exist
-            smarts_graph = SMARTSGraph(smarts_string, parser=self.smarts_parser, name=name,
-                                       overrides=r.attrib.get('overrides'))
+            smarts_graph = SMARTSGraph(smarts_string, parser=self.smarts_parser,
+                                       name=name, overrides=r.attrib.get('overrides'))
             for atom_expr in nx.get_node_attributes(smarts_graph, 'atom').values():
                 labels = atom_expr.select('has_label')
                 for label in labels:
                     atom_type = label.tail[0][1:]
                     if atom_type not in atom_types:
                         raise ValidationError(
-                            "Reference to undefined atomtype {} in SMARTS string '{}' at line {}".format(atom_type,
-                                                                                                         r.attrib[
-                                                                                                             'def'],
-                                                                                                         r.sourceline),
-                            None, r.sourceline)
+                            "Reference to undefined atomtype {} in SMARTS string" " '{}' at line {}".format(
+                                atom_type, r.attrib['def'], r.sourceline), None, r.sourceline)
 
         warn("The following atom types do not have smarts definitions: {}".format(', '.join(missing_smarts)),
              ValidationWarning)
