@@ -63,7 +63,7 @@ ethane_box = mb.fill_box(compound=Ethane(), n_compounds=200, box=box)
 
 opls = Forcefield(name='oplsaa')
 opls_silica = Forcefield(forcefield_files=get_fn('opls-silica.xml'))
-ethane_UA_box = opls.apply(ethane_box)
+ethane_box = opls.apply(ethane_box)
 interface = opls_silica.apply(interface)
 
 system = interface + ethane_box
