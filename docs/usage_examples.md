@@ -10,9 +10,9 @@ atom-type the system, applying the OPLS force field, and save to run-able GROMAC
 files.
 ```python
 import mbuild as mb
-from mbuild.examples.ethane.ethane import Ethane
+from mbuild.examples import Ethane
 
-ethane_box = mb.fill_box(Ethane(), 100, box=[2, 2, 2])
+ethane_box = mb.fill_box(compound=Ethane(), n_compounds=100, box=[2, 2, 2])
 ethane_box.save('ethane-box.gro')
 ethane_box.save('ethane-box.top', forcefield_name='oplsaa')
 ```
@@ -20,22 +20,17 @@ ethane_box.save('ethane-box.top', forcefield_name='oplsaa')
 #### Creating a box of coarse-grained ethane
 Again we will use mBuild to construct a box filled with ethane molecules.  However,
 now we will model ethane using a united-atom description and apply the TraPPE force
-field during atom-typing.  Note how particle names are prefaced with an underscore so
+field during atom-typing.  Note how particle names are prefixed with an underscore so
 that Foyer knows these particles are non-atomistic.
 ```python
 import mbuild as mb
 
-class CH3_UA(mb.Compound):
-    def __init__(self):
-        super(CH3_UA, self).__init__()
-        self.add(mb.Particle(name='_CH3'))
-        self.add(mb.Port(anchor=self[0], separation=0.075), 'up')
-
 ethane_UA = mb.Compound()
-ethane_UA.add(CH3_UA(), 'ch3_1')
-ethane_UA.add(CH3_UA(), 'ch3_2')
-mb.force_overlap(ethane_UA['ch3_1'], ethane_UA['ch3_1']['up'],
-                 ethane_UA['ch3_2']['up'])
+ch3_1 = mb.Particle(name='_CH3', pos=[0, 0, 0])
+ch3_2 = mb.Particle(name='_CH3', pos=[0.15, 0, 0])
+ethane_UA.add([ch3_1, ch3_2])
+ethane_UA.add_bond((ch3_1, ch3_2))
+
 ethane_UA_box = mb.fill_box(ethane_UA, 100, box=[2, 2, 2])
 ethane_UA_box.save('ethane-UA-box.gro')
 ethane_UA_box.save('ethane-UA-box.top', forcefield_name='trappe-ua')
@@ -52,16 +47,11 @@ the ethane.  The two atomtyped Parmed structures are then combined using a simpl
 '\+' operator and can be saved to Gromacs files.
 ```python
 from foyer import Forcefield
-from foyer.test.utils.import get_fn
+from foyer.test.utils import get_fn
 import mbuild as mb
+from mbuild.examples import Ethane
 from mbuild.lib.atoms import H
 from mbuild.lib.bulk_materials import AmorphousSilica
-
-class CH3_UA(mb.Compound):
-    def __init__(self):
-        super(CH3_UA, self).__init__()
-        self.add(mb.Particle(name='_CH3'))
-        self.add(mb.Port(anchor=self[0], separation=0.075), 'up')
 
 interface = mb.SilicaInterface(bulk_silica=AmorphousSilica())
 interface = mb.Monolayer(surface=interface, chains=H(), guest_port_name='up')
@@ -69,19 +59,14 @@ interface = mb.Monolayer(surface=interface, chains=H(), guest_port_name='up')
 box = mb.Box(mins=[0, 0, max(interface.xyz[:,2])],
              maxs=interface.periodicity + [0, 0, 4]) 
 
-ethane_UA = mb.Compound()
-ethane_UA.add(CH3_UA(), 'ch3_1')
-ethane_UA.add(CH3_UA(), 'ch3_2')
-mb.force_overlap(ethane_UA['ch3_1'], ethane_UA['ch3_1']['up'],
-                 ethane_UA['ch3_2']['up'])
-ethane_UA_box = mb.fill_box(ethane_UA, 500, box=box)
+ethane_box = mb.fill_box(compound=Ethane(), n_compounds=200, box=box)
 
+opls = Forcefield(name='oplsaa')
 opls_silica = Forcefield(forcefield_files=get_fn('opls-silica.xml'))
-trappe = Forcefield(name='trappe-ua')
+ethane_UA_box = opls.apply(ethane_box)
 interface = opls_silica.apply(interface)
-ethane_UA_box = trappe.apply(ethane_UA_box)
 
-system = interface + ethane_UA_box
+system = interface + ethane_box
 
 system.save('ethane-silica.gro')
 system.save('ethane-silica.top')
