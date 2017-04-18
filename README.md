@@ -46,6 +46,9 @@ https://github.com/mosdef-hub/forcefield_template
 
 ### [Force field validation](docs/validation.md)
 
+### [Usage examples](docs/usage_examples.md)
+
+
 #### [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
 Various sub-portions of this library may be independently distributed under
