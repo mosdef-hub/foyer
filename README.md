@@ -44,7 +44,10 @@ https://github.com/mosdef-hub/forcefield_template
 
 ### [SMARTS-based atomtyping](docs/smarts.md)
 
+### [Force field validation](docs/validation.md)
+
 ### [Usage examples](docs/usage_examples.md)
+
 
 #### [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
