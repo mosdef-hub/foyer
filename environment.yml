@@ -12,6 +12,7 @@ dependencies:
 - six
 - plyplus
 - requests
+- lxml
 # Testing Deps
 - pytest >=3.0
 - python-coveralls
