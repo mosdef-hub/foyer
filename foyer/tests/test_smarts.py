@@ -16,6 +16,11 @@ def _rule_match(top, smart, result):
     assert bool(list(rule.find_matches(top))) is result
 
 
+def _rule_match_count(top, smart, count):
+    rule = SMARTSGraph(name='test', parser=PARSER, smarts_string=smart)
+    assert len(list(rule.find_matches(top))) is count
+
+
 def test_ast():
     ast = PARSER.parse('O([H&X1])(H)')
     assert ast.head == "start"
@@ -86,6 +91,8 @@ def test_ring_count():
     ring = pmd.load_file(get_fn('ring.mol2'), structure=True)
     top, _ = generate_topology(ring)
 
+    rule = SMARTSGraph(name='test', parser=PARSER,
+                       smarts_string='[#6;R1]')
     match_indices = list(rule.find_matches(top))
     for atom_idx in range(6):
         assert atom_idx in match_indices
@@ -114,14 +121,14 @@ def test_precedence():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     top, _ = generate_topology(mol2)
 
-    checks = {'[C,O;C]': True,
-              '[C&O;C]': False,
-              '[!C;O,C]': False,
-              '[!C&O,C]': True,
+    checks = {'[C,O;C]': 2,
+              '[C&O;C]': 0,
+              '[!C;O,C]': 0,
+              '[!C&O,C]': 2,
               }
 
     for smart, result in checks.items():
-        _rule_match(top, smart, result)
+        _rule_match_count(top, smart, result)
 
 
 def test_not_ast():
@@ -144,15 +151,15 @@ def test_not():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     top, _ = generate_topology(mol2)
 
-    checks = {'[!O]': True,
-              '[!#5]': True,
-              '[!C]': True,
-              '[!#6]': True,
-              '[!C&!H]': False,
-              '[!C;!H]': False,
+    checks = {'[!O]': 8,
+              '[!#5]': 8,
+              '[!C]': 6,
+              '[!#6]': 6,
+              '[!C&!H]': 0,
+              '[!C;!H]': 0,
               }
     for smart, result in checks.items():
-        _rule_match(top, smart, result)
+        _rule_match_count(top, smart, result)
 
 
 def test_hexa_coordinated():
