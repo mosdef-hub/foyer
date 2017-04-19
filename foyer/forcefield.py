@@ -2,8 +2,12 @@ import collections
 import glob
 import itertools
 import os
+from tempfile import mktemp, mkstemp
 
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
 from pkg_resources import resource_filename
 import requests
 import warnings
@@ -24,6 +28,35 @@ from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
 from foyer.validator import Validator
+
+
+def preprocess_forcefield_files(forcefield_files=None):
+    if forcefield_files is None:
+        return None
+
+    preprocessed_files = []
+
+    for xml_file in forcefield_files:
+        if not hasattr(xml_file,'read'):
+            f = open(xml_file)
+        else:
+            f = xml_file
+
+        # read and preprocess
+        xml_contents = f.read()
+        f.close()
+        xml_contents = re.sub(r"(def\w*=\w*[\"\'])(.*)([\"\'])", lambda m: m.group(1) + re.sub(r"&(?!amp;)", r"&amp;", m.group(2)) + m.group(3),
+                              xml_contents)
+
+        # write to temp file
+        _, temp_file_name = mkstemp()
+        with open(temp_file_name, 'w') as temp_f:
+            temp_f.write(xml_contents)
+
+        # append temp file name to list
+        preprocessed_files.append(temp_file_name)
+
+    return preprocessed_files
 
 
 def generate_topology(non_omm_topology, non_element_types=None):
@@ -114,16 +147,7 @@ class Forcefield(app.ForceField):
             else:
                 all_files_to_load.append(file)
 
-        preprocessed_files = []
-        for xml_file in all_files_to_load:
-            with open(xml_file) as f:
-                # read and preprocess
-                xml_contents = f.read()
-                xml_contents = re.sub(r"def\w*=\w*[\"\'](.*)[\"\']", lambda m: re.sub(r"&", r"&amp;", m.group(1)),
-                                      xml_contents)
-                # append to list
-                preprocessed_files.append(StringIO(xml_contents))
-
+        preprocessed_files = preprocess_forcefield_files(all_files_to_load)
         if validation:
             for ff_file_name in preprocessed_files:
                 Validator(ff_file_name)

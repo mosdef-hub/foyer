@@ -12,13 +12,18 @@ from foyer.smarts_graph import SMARTSGraph
 
 class Validator(object):
     def __init__(self, ff_file_name):
-        ff_tree = etree.parse(ff_file_name)
+
+        from foyer.forcefield import preprocess_forcefield_files
+
+        preprocessed_ff_file_name = preprocess_forcefield_files([ff_file_name])
+
+        ff_tree = etree.parse(preprocessed_ff_file_name[0])
         self.validate_xsd(ff_tree)
 
         # Loading forcefield should succeed, because XML can be parsed and
         # basics have been validated.
         from foyer.forcefield import Forcefield
-        self.smarts_parser = Forcefield(ff_file_name, validation=False).parser
+        self.smarts_parser = Forcefield(preprocessed_ff_file_name, validation=False).parser
 
         self.validate_smarts(ff_tree)
         # TODO: figure out what exceptions are raised, and provide good error messages
@@ -99,10 +104,9 @@ class Validator(object):
             # make sure smarts string can be parsed
             self.smarts.parse(smarts_string)
 
-
 if __name__ == '__main__':
     # ff_file_name = join(split(abspath(__file__))[0], 'forcefields', 'oplsaa.xml')
 
     from foyer.tests.utils import get_fn
 
-    v = Validator(get_fn('bad_ff_missingsmarts.xml'))
+    v = Validator(get_fn('smarts_preprocess.xml'))
