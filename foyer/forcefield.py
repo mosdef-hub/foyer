@@ -2,9 +2,12 @@ import collections
 import glob
 import itertools
 import os
+
+from cStringIO import StringIO
 from pkg_resources import resource_filename
 import requests
 import warnings
+import re
 
 import mbuild as mb
 import numpy as np
@@ -111,11 +114,21 @@ class Forcefield(app.ForceField):
             else:
                 all_files_to_load.append(file)
 
+        preprocessed_files = []
+        for xml_file in all_files_to_load:
+            with open(xml_file) as f:
+                # read and preprocess
+                xml_contents = f.read()
+                xml_contents = re.sub(r"def\w*=\w*[\"\'](.*)[\"\']", lambda m: re.sub(r"&", r"&amp;", m.group(1)),
+                                      xml_contents)
+                # append to list
+                preprocessed_files.append(StringIO(xml_contents))
+
         if validation:
-            for ff_file_name in all_files_to_load:
+            for ff_file_name in preprocessed_files:
                 Validator(ff_file_name)
 
-        super(Forcefield, self).__init__(*all_files_to_load)
+        super(Forcefield, self).__init__(*preprocessed_files)
 
         self.parser = smarts.SMARTS(self.non_element_types)
 
