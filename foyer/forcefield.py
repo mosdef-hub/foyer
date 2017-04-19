@@ -39,8 +39,10 @@ def preprocess_forcefield_files(forcefield_files=None):
     for xml_file in forcefield_files:
         if not hasattr(xml_file,'read'):
             f = open(xml_file)
+            _,suffix = os.path.split(xml_file)
         else:
             f = xml_file
+            suffix=""
 
         # read and preprocess
         xml_contents = f.read()
@@ -49,7 +51,7 @@ def preprocess_forcefield_files(forcefield_files=None):
                               xml_contents)
 
         # write to temp file
-        _, temp_file_name = mkstemp()
+        _, temp_file_name = mkstemp(suffix=suffix)
         with open(temp_file_name, 'w') as temp_f:
             temp_f.write(xml_contents)
 
