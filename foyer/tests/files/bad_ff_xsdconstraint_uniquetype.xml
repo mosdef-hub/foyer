@@ -1,0 +1,6 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="opls_141" class="CM" element="C" mass="12.01100" def="[C;X3](C)(C)C" desc="alkene C (R2-C=)"/>
+  <Type name="opls_141" class="CM" element="C" mass="12.01100" def="[C;X3](C)(C)C" desc="alkene C (R2-C=)"/>
+ </AtomTypes>
+</ForceField>

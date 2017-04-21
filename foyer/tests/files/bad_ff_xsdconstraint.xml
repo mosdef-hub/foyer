@@ -1,0 +1,8 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="opls_141" class="CM" element="C" mass="12.01100" def="[C;X3](C)(C)C" desc="alkene C (R2-C=)"/>
+ </AtomTypes>
+ <NonbondedForce  coulomb14scale="0.5" lj14scale="0.5">
+   <Atom type="opls_142" charge="0.0" sigma="0.316435" epsilon="0.680946"/>
+ </NonbondedForce>
+</ForceField>
