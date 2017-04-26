@@ -17,6 +17,7 @@ import mbuild as mb
 import numpy as np
 import parmed as pmd
 import simtk.openmm.app.element as elem
+import foyer.element as custom_elem
 import simtk.unit as u
 from simtk import openmm as mm
 from simtk.openmm import app
@@ -155,7 +156,6 @@ class Forcefield(app.ForceField):
                 Validator(ff_file_name)
 
         super(Forcefield, self).__init__(*preprocessed_files)
-
         self.parser = smarts.SMARTS(self.non_element_types)
 
     @property
@@ -181,11 +181,14 @@ class Forcefield(app.ForceField):
                 if element not in self.non_element_types:
                     warnings.warn('Non-atomistic element type detected. '
                                   'Creating custom element for {}'.format(element))
-                element = elem.Element(number=0,
+                element = custom_elem.Element(number=0,
                                        mass=mass,
                                        name=element,
                                        symbol=element)
-        return element
+            else:
+                return element, False
+
+        return element, True
 
     def registerAtomType(self, parameters):
         """Register a new atom type. """
@@ -196,8 +199,9 @@ class Forcefield(app.ForceField):
         mass = _convertParameterToNumber(parameters['mass'])
         element = None
         if 'element' in parameters:
-            element = self._create_element(parameters['element'], mass)
-            self.non_element_types[element.name] = element
+            element, custom = self._create_element(parameters['element'], mass)
+            if custom:
+                self.non_element_types[element.symbol] = element
 
         self._atomTypes[name] = self.__class__._AtomType(name, atom_class, mass, element)
         if atom_class in self._atomClasses:
