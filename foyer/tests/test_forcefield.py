@@ -22,9 +22,6 @@ def test_load_files():
         ff2 = Forcefield(forcefield_files=ff_file)
         assert len(ff1._atomTypes) == len(ff2._atomTypes)
 
-        ff3 = Forcefield(name=os.path.splitext(os.path.basename(ff_file))[0])
-        assert len(ff1._atomTypes) == len(ff3._atomTypes)
-
 
 def test_duplicate_type_definitions():
     with pytest.raises(ValueError):
@@ -33,7 +30,7 @@ def test_duplicate_type_definitions():
 
 def test_from_parmed():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
-    oplsaa = Forcefield(FORCEFIELDS[0])
+    oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2)
 
     assert sum((1 for at in ethane.atoms if at.type == 'opls_135')) == 2
@@ -47,7 +44,7 @@ def test_from_parmed():
 
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     mol2.box_vectors = [[2, 0, 0], [0, 2, 0], [0, 0, 2]]
-    oplsaa = Forcefield(FORCEFIELDS[0])
+    oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2)
 
     assert ethane.box_vectors == mol2.box_vectors
@@ -55,7 +52,7 @@ def test_from_parmed():
 
 def test_from_mbuild():
     mol2 = mb.load(get_fn('ethane.mol2'))
-    oplsaa = Forcefield(FORCEFIELDS[0])
+    oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2)
 
     assert sum((1 for at in ethane.atoms if at.type == 'opls_135')) == 2
@@ -69,6 +66,6 @@ def test_from_mbuild():
 
 def test_write_refs():
     mol2 = mb.load(get_fn('ethane.mol2'))
-    oplsaa = Forcefield(FORCEFIELDS[0])
+    oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
     assert os.path.isfile('ethane.bib')

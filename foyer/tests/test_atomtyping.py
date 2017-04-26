@@ -16,7 +16,7 @@ def test_missing_overrides():
     gro = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.gro')
     structure = pmd.load_file(top, xyz=gro)
 
-    forcefield = Forcefield(get_fn('bad_ff.xml'))
+    forcefield = Forcefield(get_fn('missing_overrides.xml'))
     with pytest.raises(FoyerError):
         forcefield.apply(structure)
 
@@ -24,6 +24,6 @@ def test_missing_overrides():
 def test_missing_definition():
     structure = pmd.load_file(get_fn('silly_chemistry.mol2'), structure=True)
 
-    forcefield = Forcefield(get_fn('bad_ff.xml'))
+    forcefield = Forcefield(get_fn('missing_overrides.xml'))
     with pytest.raises(FoyerError):
         forcefield.apply(structure)

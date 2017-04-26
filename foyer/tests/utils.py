@@ -1,3 +1,4 @@
+import glob
 from os.path import join, split, abspath
 
 import numpy as np
@@ -63,3 +64,19 @@ def get_fn(filename):
         Name of the test file with the full path location
     """
     return join(split(abspath(__file__))[0], 'files', filename)
+
+
+def glob_fn(pattern):
+    """Gets the full path of the file name for a particular test file.
+
+    Parameters
+    ----------
+    filename : str
+        Name of the file to get
+
+    Returns
+    -------
+    path: str
+        Name of the test file with the full path location
+    """
+    return glob.glob(join(split(abspath(__file__))[0], 'files', pattern))

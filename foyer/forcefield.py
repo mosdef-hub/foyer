@@ -2,14 +2,22 @@ import collections
 import glob
 import itertools
 import os
+from tempfile import mktemp, mkstemp
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
 from pkg_resources import resource_filename
 import requests
 import warnings
+import re
 
 import mbuild as mb
 import numpy as np
 import parmed as pmd
 import simtk.openmm.app.element as elem
+import foyer.element as custom_elem
 import simtk.unit as u
 from simtk import openmm as mm
 from simtk.openmm import app
@@ -20,6 +28,38 @@ from simtk.openmm.app.forcefield import (NoCutoff, CutoffNonPeriodic, HBonds,
 from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
+from foyer.validator import Validator
+
+
+def preprocess_forcefield_files(forcefield_files=None):
+    if forcefield_files is None:
+        return None
+
+    preprocessed_files = []
+
+    for xml_file in forcefield_files:
+        if not hasattr(xml_file,'read'):
+            f = open(xml_file)
+            _,suffix = os.path.split(xml_file)
+        else:
+            f = xml_file
+            suffix=""
+
+        # read and preprocess
+        xml_contents = f.read()
+        f.close()
+        xml_contents = re.sub(r"(def\w*=\w*[\"\'])(.*)([\"\'])", lambda m: m.group(1) + re.sub(r"&(?!amp;)", r"&amp;", m.group(2)) + m.group(3),
+                              xml_contents)
+
+        # write to temp file
+        _, temp_file_name = mkstemp(suffix=suffix)
+        with open(temp_file_name, 'w') as temp_f:
+            temp_f.write(xml_contents)
+
+        # append temp file name to list
+        preprocessed_files.append(temp_file_name)
+
+    return preprocessed_files
 
 
 def generate_topology(non_omm_topology, non_element_types=None):
@@ -86,7 +126,7 @@ class Forcefield(app.ForceField):
 
 
     """
-    def __init__(self, forcefield_files=None, name=None):
+    def __init__(self, forcefield_files=None, name=None, validation=True):
         self.atomTypeDefinitions = dict()
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
@@ -110,8 +150,12 @@ class Forcefield(app.ForceField):
             else:
                 all_files_to_load.append(file)
 
-        super(Forcefield, self).__init__(*all_files_to_load)
+        preprocessed_files = preprocess_forcefield_files(all_files_to_load)
+        if validation:
+            for ff_file_name in preprocessed_files:
+                Validator(ff_file_name)
 
+        super(Forcefield, self).__init__(*preprocessed_files)
         self.parser = smarts.SMARTS(self.non_element_types)
 
     @property
@@ -137,11 +181,14 @@ class Forcefield(app.ForceField):
                 if element not in self.non_element_types:
                     warnings.warn('Non-atomistic element type detected. '
                                   'Creating custom element for {}'.format(element))
-                element = elem.Element(number=0,
+                element = custom_elem.Element(number=0,
                                        mass=mass,
                                        name=element,
                                        symbol=element)
-        return element
+            else:
+                return element, False
+
+        return element, True
 
     def registerAtomType(self, parameters):
         """Register a new atom type. """
@@ -152,8 +199,9 @@ class Forcefield(app.ForceField):
         mass = _convertParameterToNumber(parameters['mass'])
         element = None
         if 'element' in parameters:
-            element = self._create_element(parameters['element'], mass)
-            self.non_element_types[element.name] = element
+            element, custom = self._create_element(parameters['element'], mass)
+            if custom:
+                self.non_element_types[element.symbol] = element
 
         self._atomTypes[name] = self.__class__._AtomType(name, atom_class, mass, element)
         if atom_class in self._atomClasses:

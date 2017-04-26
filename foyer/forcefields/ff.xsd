@@ -76,10 +76,11 @@
         <xs:element ref="Type" maxOccurs="unbounded" minOccurs="0"/>
       </xs:sequence>
     </xs:complexType>
-    <xs:unique name="name_unique">
-                <xs:selector xpath="Type"/>
-                <xs:field xpath="@name"/>
-    </xs:unique>
+    <!-- this is redundant here, because nonunique_atomtype_name (see later) checks for uniqueness of keys
+    <xs:unique name="nonunique_atomtype_name">
+      <xs:selector xpath="Type"/>
+      <xs:field xpath="@name"/>
+    </xs:unique> -->
   </xs:element>
   <xs:element name="HarmonicBondForce">
     <xs:complexType>
@@ -107,19 +108,27 @@
       <xs:sequence>
         <xs:element ref="Atom" maxOccurs="unbounded" minOccurs="0"/>
       </xs:sequence>
-      <xs:attribute type="xs:float" name="coulomb14scale"/>
-      <xs:attribute type="xs:float" name="lj14scale"/>
+      <xs:attribute type="xs:float" name="coulomb14scale" use="required"/>
+      <xs:attribute type="xs:float" name="lj14scale" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="ForceField">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="AtomTypes"/>
-        <xs:element ref="HarmonicBondForce"/>
-        <xs:element ref="HarmonicAngleForce"/>
-        <xs:element ref="RBTorsionForce"/>
-        <xs:element ref="NonbondedForce"/>
-      </xs:sequence>
+      <xs:all>
+        <xs:element ref="AtomTypes" minOccurs="0"/>
+        <xs:element ref="HarmonicBondForce" minOccurs="0"/>
+        <xs:element ref="HarmonicAngleForce" minOccurs="0"/>
+        <xs:element ref="RBTorsionForce" minOccurs="0"/>
+        <xs:element ref="NonbondedForce" minOccurs="0"/>
+      </xs:all>
     </xs:complexType>
+    <xs:key name="nonunique_atomtype_name">
+      <xs:selector xpath="AtomTypes/Type" />
+      <xs:field xpath="@name" />
+    </xs:key>
+    <xs:keyref name="missing_atom_type_in_nonbonded" refer="nonunique_atomtype_name">
+      <xs:selector xpath="NonbondedForce/Atom"/>
+      <xs:field xpath="@type"/>
+    </xs:keyref>
   </xs:element>
 </xs:schema>

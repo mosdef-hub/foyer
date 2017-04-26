@@ -2,6 +2,7 @@ import parmed as pmd
 import plyplus
 import pytest
 
+from foyer.exceptions import FoyerError
 from foyer.forcefield import generate_topology, Forcefield
 from foyer.smarts_graph import SMARTSGraph
 from foyer.smarts import SMARTS
@@ -179,3 +180,23 @@ def test_hexa_coordinated():
 
     assert len(pf6.angles) == 15
     assert all(angle.type for angle in pf6.angles)
+
+
+def test_optional_names_bad_syntax():
+    bad_optional_names = ['_C', 'XXX', 'C']
+    with pytest.raises(FoyerError):
+        S = SMARTS(optional_names=bad_optional_names)
+
+
+def test_optional_names_good_syntax():
+    good_optional_names = ['_C', '_CH2', '_CH']
+    S = SMARTS(optional_names=good_optional_names)
+
+
+def test_optional_name_parser():
+    optional_names = ['_C', '_CH2', '_CH']
+    S = SMARTS(optional_names=optional_names)
+    ast = S.parse('_CH2_C_CH')
+    symbols = [a.tail[0] for a in ast.select('atom_symbol').strees]
+    for name in optional_names:
+        assert name in symbols

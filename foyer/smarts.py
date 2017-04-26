@@ -1,5 +1,7 @@
 import plyplus
 
+from foyer.exceptions import FoyerError
+
 GRAMMAR = (r"""
     start: string;
 
@@ -65,8 +67,14 @@ class SMARTS(object):
     """
     def __init__(self, optional_names=''):
         if optional_names:
+            for n in optional_names:
+                if not n.startswith('_'):
+                    raise FoyerError('Non-element types must start with an underscore, you passed {}'.format(', '.join(optional_names)))
+
+            optional_names = sorted(optional_names, reverse=True)
             self.grammar = GRAMMAR.format(optional='{}|'.format(
                 '|'.join(optional_names)))
+
         else:
             self.grammar = GRAMMAR.format(optional='')
         self.PARSER = plyplus.Grammar(self.grammar)

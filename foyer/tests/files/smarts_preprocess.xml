@@ -1,0 +1,6 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="a" class="CM" element="C" mass="12.01100" def="[C&!H][C&!H]"/>
+  <Type name="b" class="CM" element="H" mass="1.008" def='[H&!C]' desc="alkene C (RH-C=)"/>
+ </AtomTypes>
+</ForceField>
