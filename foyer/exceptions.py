@@ -14,6 +14,18 @@ class ValidationError(FoyerError):
         self.line = line
 
 
+class MultipleValidationError(FoyerError):
+    """Used for grouping and raising multiple ValidationErrors of one type. """
+    def __init__(self, validation_errors):
+        self.validation_errors = validation_errors
+
+    def __str__(self):
+        message = ['\n']
+        for err in self.validation_errors:
+            message.append('\t' + str(err))
+        return '\n'.join(message)
+
+
 class ValidationWarning(FoyerWarning):
     """Raised when validating .xml forcefield files """
     pass

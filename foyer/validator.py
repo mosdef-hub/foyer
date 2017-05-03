@@ -1,20 +1,18 @@
 from os.path import join, split, abspath
 from warnings import warn
 
-from lxml import etree, objectify
-from lxml.etree import XMLSyntaxError, Element, DocumentInvalid
+from lxml import etree
+from lxml.etree import DocumentInvalid
 import networkx as nx
 from plyplus.common import ParseError
 
-from foyer.exceptions import ValidationError, ValidationWarning
+from foyer.exceptions import ValidationError, ValidationWarning, MultipleValidationError
 from foyer.smarts_graph import SMARTSGraph
 
 
 class Validator(object):
     def __init__(self, ff_file_name):
-
         from foyer.forcefield import preprocess_forcefield_files
-
         preprocessed_ff_file_name = preprocess_forcefield_files([ff_file_name])
 
         ff_tree = etree.parse(preprocessed_ff_file_name[0])
@@ -25,8 +23,10 @@ class Validator(object):
         from foyer.forcefield import Forcefield
         self.smarts_parser = Forcefield(preprocessed_ff_file_name, validation=False).parser
 
-        self.validate_smarts(ff_tree)
-        # TODO: figure out what exceptions are raised, and provide good error messages
+        self.atom_type_names = ff_tree.xpath('/ForceField/AtomTypes/Type/@name')
+        self.atom_types = ff_tree.xpath('/ForceField/AtomTypes/Type')
+        self.validate_smarts()
+        self.validate_overrides()
 
     def validate_xsd(self, ff_tree, xsd_file=None):
         if xsd_file is None:
@@ -40,7 +40,6 @@ class Validator(object):
         except DocumentInvalid as ex:
             message = ex.error_log.last_error.message
             line = ex.error_log.last_error.line
-
             # rewrite error message for constraint violation
             if ex.error_log.last_error.type_name == "SCHEMAV_CVC_IDC":
                 if "missing_atom_type_in_nonbonded" in message:
@@ -53,16 +52,22 @@ class Validator(object):
                     raise ValidationError(
                         "Atom type {} is defined a second time at line {}".format(
                             atomtype, line), ex, line)
+                elif "atomtype_name_key" in message:
+                    atomtype = message[message.find("[") + 1:message.find("]")]
+                    raise ValidationError(
+                        "Atom type {} is defined a second time at line {}".format(
+                            atomtype, line), ex, line)
+                else:
+                    raise ValidationError('Unhandled XML validation error. '
+                                          'Please consider submitting a bug report.', ex, line)
             raise
 
-    def validate_smarts(self, ff_tree):
-        results = ff_tree.xpath('/ForceField/AtomTypes/Type')
-        atom_types = ff_tree.xpath('/ForceField/AtomTypes/Type/@name')
-
+    def validate_smarts(self):
         missing_smarts = []
-        for r in results:
-            smarts_string = r.attrib.get('def')
-            name = r.attrib['name']
+        errors = []
+        for entry in self.atom_types:
+            smarts_string = entry.attrib.get('def')
+            name = entry.attrib['name']
             if smarts_string is None:
                 missing_smarts.append(name)
                 continue
@@ -76,37 +81,46 @@ class Validator(object):
                 else:
                     column = ""
 
-                raise ValidationError("Malformed SMARTS string{} on line {}".format(
-                    column, r.sourceline), ex, r.sourceline)
+                malformed = ValidationError("Malformed SMARTS string{} on line {}".format(
+                    column, entry.sourceline), ex, entry.sourceline)
+                errors.append(malformed)
+                print(malformed)
+                continue
 
             # make sure referenced labels exist
             smarts_graph = SMARTSGraph(smarts_string, parser=self.smarts_parser,
-                                       name=name, overrides=r.attrib.get('overrides'))
+                                       name=name, overrides=entry.attrib.get('overrides'))
             for atom_expr in nx.get_node_attributes(smarts_graph, 'atom').values():
                 labels = atom_expr.select('has_label')
                 for label in labels:
                     atom_type = label.tail[0][1:]
-                    if atom_type not in atom_types:
-                        raise ValidationError(
-                            "Reference to undefined atomtype {} in SMARTS string" " '{}' at line {}".format(
-                                atom_type, r.attrib['def'], r.sourceline), None, r.sourceline)
+                    if atom_type not in self.atom_type_names:
+                        undefined = ValidationError(
+                            "Reference to undefined atomtype '{}' in SMARTS string '{}' at line {}".format(
+                                atom_type, entry.attrib['def'], entry.sourceline), None, entry.sourceline)
+                        errors.append(undefined)
+        if len(errors) > 1:
+            raise MultipleValidationError(errors)
+        elif len(errors) == 1:
+            raise errors[0]
+        if missing_smarts:
+            warn("The following atom types do not have smarts definitions: {}".format(
+                ', '.join(missing_smarts)), ValidationWarning)
 
-        warn("The following atom types do not have smarts definitions: {}".format(', '.join(missing_smarts)),
-             ValidationWarning)
-
-    def validate_overrides(self, ff_tree):
-        results = ff_tree.xpath('/ForceField/AtomTypes/Type[@name]')
-
-        for r in results:
-            smarts_string = r.attrib['def']
-            print(smarts_string)
-            print(r.sourceline)
-            # make sure smarts string can be parsed
-            self.smarts.parse(smarts_string)
-
-if __name__ == '__main__':
-    # ff_file_name = join(split(abspath(__file__))[0], 'forcefields', 'oplsaa.xml')
-
-    from foyer.tests.utils import get_fn
-
-    v = Validator(get_fn('smarts_preprocess.xml'))
+    def validate_overrides(self):
+        errors = []
+        for entry in self.atom_types:
+            overrides = entry.attrib.get('overrides')
+            if not overrides:
+                continue
+            overridden_types = [at.strip() for at in overrides.split(',') if at]
+            for atom_type in overridden_types:
+                if atom_type not in self.atom_type_names:
+                    undefined = ValidationError(
+                        "Reference to undefined atomtype '{}' in 'overrides' '{}' at line {}".format(
+                            atom_type, entry.attrib['overrides'], entry.sourceline), None, entry.sourceline)
+                    errors.append(undefined)
+        if len(errors) > 1:
+            raise MultipleValidationError(errors)
+        elif len(errors) == 1:
+            raise errors[0]

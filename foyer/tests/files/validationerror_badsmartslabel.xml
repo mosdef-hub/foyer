@@ -3,5 +3,6 @@
   <Type name="opls_139" class="CM" element="C" mass="12.01100"/>
   <Type name="opls_140" class="CM" element="C" mass="12.01100" def="[C;%opls_141]" desc="alkene C (R2-C=)"/>
   <Type name="opls_141" class="CM" element="C" mass="12.01100" def="[C;%opls_142]" desc="alkene C (R2-C=)"/>
+  <Type name="opls_145" class="CM" element="C" mass="12.01100" def="[O;%opls_143]" desc="alkene C (R2-C=)"/>
  </AtomTypes>
 </ForceField>

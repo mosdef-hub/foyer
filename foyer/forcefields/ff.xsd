@@ -76,11 +76,10 @@
         <xs:element ref="Type" maxOccurs="unbounded" minOccurs="0"/>
       </xs:sequence>
     </xs:complexType>
-    <!-- this is redundant here, because nonunique_atomtype_name (see later) checks for uniqueness of keys
     <xs:unique name="nonunique_atomtype_name">
       <xs:selector xpath="Type"/>
       <xs:field xpath="@name"/>
-    </xs:unique> -->
+    </xs:unique>
   </xs:element>
   <xs:element name="HarmonicBondForce">
     <xs:complexType>
@@ -122,11 +121,11 @@
         <xs:element ref="NonbondedForce" minOccurs="0"/>
       </xs:all>
     </xs:complexType>
-    <xs:key name="nonunique_atomtype_name">
+    <xs:key name="atomtype_name_key">
       <xs:selector xpath="AtomTypes/Type" />
       <xs:field xpath="@name" />
     </xs:key>
-    <xs:keyref name="missing_atom_type_in_nonbonded" refer="nonunique_atomtype_name">
+    <xs:keyref name="missing_atom_type_in_nonbonded" refer="atomtype_name_key">
       <xs:selector xpath="NonbondedForce/Atom"/>
       <xs:field xpath="@type"/>
     </xs:keyref>

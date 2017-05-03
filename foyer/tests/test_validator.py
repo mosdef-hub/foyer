@@ -6,10 +6,11 @@ from lxml.etree import XMLSyntaxError, DocumentInvalid
 import pytest
 
 from foyer.tests.utils import glob_fn
-from foyer.validator import ValidationError, ValidationWarning, Validator
+from foyer.validator import (ValidationError, ValidationWarning, Validator,
+                             MultipleValidationError)
 
 XMLS = glob_fn('*.xml')
-ERRORS = {'validationerror': ValidationError,
+ERRORS = {'validationerror': (ValidationError, MultipleValidationError),
           'xmlsyntaxerror': XMLSyntaxError,
           'documentinvalid': DocumentInvalid,
 }
