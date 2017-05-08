@@ -19,8 +19,17 @@
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:string">
+          <!--- In reality, class1 and type1 should be mutually exclusive. This
+          is supported in XSD 1.1 which is as of this writing not seamlessly
+          supported in Python.
+
+          For now, this is manually validated in Python code but should be
+          happening here once we can access XSD 1.1
+          -->
           <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
           <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
           <xs:attribute type="xs:float" name="length" use="optional"/>
           <xs:attribute type="xs:float" name="k" use="optional"/>
         </xs:extension>
@@ -32,8 +41,11 @@
       <xs:simpleContent>
         <xs:extension base="xs:string">
           <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
           <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
           <xs:attribute type="xs:string" name="class3" use="optional"/>
+          <xs:attribute type="xs:string" name="type3" use="optional"/>
           <xs:attribute type="xs:float" name="angle" use="optional"/>
           <xs:attribute type="xs:float" name="k" use="optional"/>
         </xs:extension>
@@ -45,9 +57,13 @@
       <xs:simpleContent>
         <xs:extension base="xs:string">
           <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
           <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
           <xs:attribute type="xs:string" name="class3" use="optional"/>
+          <xs:attribute type="xs:string" name="type3" use="optional"/>
           <xs:attribute type="xs:string" name="class4" use="optional"/>
+          <xs:attribute type="xs:string" name="type4" use="optional"/>
           <xs:attribute type="xs:float" name="c0" use="optional"/>
           <xs:attribute type="xs:float" name="c1" use="optional"/>
           <xs:attribute type="xs:float" name="c2" use="optional"/>

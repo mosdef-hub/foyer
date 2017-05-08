@@ -1,3 +1,4 @@
+from collections import Counter
 from os.path import join, split, abspath
 from warnings import warn
 
@@ -18,13 +19,17 @@ class Validator(object):
         ff_tree = etree.parse(preprocessed_ff_file_name[0])
         self.validate_xsd(ff_tree)
 
+        self.atom_type_names = ff_tree.xpath('/ForceField/AtomTypes/Type/@name')
+        self.atom_types = ff_tree.xpath('/ForceField/AtomTypes/Type')
+
+        self.validate_class_type_exclusivity(ff_tree)
+
         # Loading forcefield should succeed, because XML can be parsed and
         # basics have been validated.
         from foyer.forcefield import Forcefield
         self.smarts_parser = Forcefield(preprocessed_ff_file_name, validation=False).parser
 
-        self.atom_type_names = ff_tree.xpath('/ForceField/AtomTypes/Type/@name')
-        self.atom_types = ff_tree.xpath('/ForceField/AtomTypes/Type')
+
         self.validate_smarts()
         self.validate_overrides()
 
@@ -62,6 +67,50 @@ class Validator(object):
                                           'Please consider submitting a bug report.', ex, line)
             raise
 
+    def validate_class_type_exclusivity(self, ff_tree):
+        sections = {'HarmonicBondForce/Bond': 2,
+                    'HarmonicAngleForce/Angle': 3,
+                    'RBTorsionForce/Proper': 4}
+
+        errors = []
+        for element, num_atoms in sections.items():
+            valid_attribs = set()
+            for n in range(1, num_atoms + 1):
+                valid_attribs.add('class{}'.format(n))
+                valid_attribs.add('type{}'.format(n))
+
+            for entry in ff_tree.xpath('/ForceField/{}'.format(element)):
+                attribs = [valid for valid in valid_attribs
+                           if entry.attrib.get(valid) is not None]
+                if num_atoms != len(attribs):
+                    error = ValidationError('Invalid number of "class" and/or "type" attributes for {} at line {}'.format(element, entry.sourceline), None, entry.sourceline)
+                    errors.append(error)
+                number_endings = Counter([a[-1] for a in attribs])
+                if not all(1 == x for x in number_endings.values()):
+                    error = ValidationError('Only one "class" or "type" attribute may be defined for each atom in a bonded force. See line {}'.format(entry.sourceline), None, entry.sourceline)
+                    errors.append(error)
+
+                referenced_types = []
+                for valid in valid_attribs:
+                    if valid.startswith('type'):
+                        atomtype = entry.attrib.get(valid)
+                        if atomtype:
+                            referenced_types.append(atomtype)
+
+                for atomtype in referenced_types:
+                    if atomtype not in self.atom_type_names:
+                        error = ValidationError(
+                            "Atom type {} is found in {} at line {} but undefined in AtomTypes".format(
+                                atomtype, element.split('/')[0], entry.sourceline), None, entry.sourceline)
+                        errors.append(error)
+
+
+        #TODO: helper func to raise 1 or more erros
+        if len(errors) > 1:
+            raise MultipleValidationError(errors)
+        elif len(errors) == 1:
+            raise errors[0]
+
     def validate_smarts(self):
         missing_smarts = []
         errors = []
@@ -84,7 +133,6 @@ class Validator(object):
                 malformed = ValidationError("Malformed SMARTS string{} on line {}".format(
                     column, entry.sourceline), ex, entry.sourceline)
                 errors.append(malformed)
-                print(malformed)
                 continue
 
             # make sure referenced labels exist
@@ -124,3 +172,9 @@ class Validator(object):
             raise MultipleValidationError(errors)
         elif len(errors) == 1:
             raise errors[0]
+
+
+if __name__ == '__main__':
+    from foyer.tests.utils import get_fn
+    v = Validator(get_fn('validate_types.xml'))
+    v = Validator(get_fn('validationerror_validate_types.xml'))

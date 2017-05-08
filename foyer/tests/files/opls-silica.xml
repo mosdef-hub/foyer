@@ -2,7 +2,7 @@
  <AtomTypes>
   <Type name="opls_1001" class="OS" element="O" mass="15.9994" def="[O][Si;%opls_1002]"/>
   <Type name="opls_1002" class="SI" element="Si" mass="28.0855" def="[Si]"/>
-  <Type name="opls_1003" class="OS" element="O" mass="15.9994" def="[O;X2]([Si;%opls_1002])H" overrides="opls_1001"/>
+  <Type name="opls_1003" class="OH" element="O" mass="15.9994" def="[O;X2]([Si;%opls_1002])H" overrides="opls_1001"/>
   <Type name="opls_1004" class="HO" element="H" mass="1.00800" def="[H;X1](O[Si;%opls_1002])"/>
  </AtomTypes>
  <HarmonicBondForce>

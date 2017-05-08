@@ -1,0 +1,12 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="A" class="OS" element="O" mass="15.9994" def="O"/>
+  <Type name="B" class="SI" element="Si" mass="28.0855" def="Si"/>
+  <Type name="C" class="HO" element="H" mass="1.00800" def="H"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="SI" length="0.163" k="251040.0"/>
+  <Bond class1="SI" type1="B" length="0.163" k="251040.0"/>
+  <Bond type1="A" type2="C" class1="B" length="0.185" k="167360.0"/>
+ </HarmonicBondForce>
+</ForceField>
