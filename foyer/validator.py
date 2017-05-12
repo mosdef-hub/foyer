@@ -7,7 +7,8 @@ from lxml.etree import DocumentInvalid
 import networkx as nx
 from plyplus.common import ParseError
 
-from foyer.exceptions import ValidationError, ValidationWarning, MultipleValidationError
+from foyer.exceptions import (ValidationError, ValidationWarning,
+                              raise_collected)
 from foyer.smarts_graph import SMARTSGraph
 
 
@@ -29,16 +30,30 @@ class Validator(object):
         from foyer.forcefield import Forcefield
         self.smarts_parser = Forcefield(preprocessed_ff_file_name, validation=False).parser
 
-
         self.validate_smarts()
         self.validate_overrides()
 
-    def validate_xsd(self, ff_tree, xsd_file=None):
+    @staticmethod
+    def validate_xsd(ff_tree, xsd_file=None):
         if xsd_file is None:
             xsd_file = join(split(abspath(__file__))[0], 'forcefields', 'ff.xsd')
 
         xmlschema_doc = etree.parse(xsd_file)
         xmlschema = etree.XMLSchema(xmlschema_doc)
+
+        error_texts = {'missing_atom_type_in_nonbonded':
+                           ("Atom type {} is found in NonbondedForce at line {}"
+                            " but undefined in AtomTypes"),
+                       'nonunique_atomtype_name':
+                           "Atom type {} is defined a second time at line {}",
+                       'atomtype_name_key':
+                           "Atom type {} is defined a second time at line {}"
+        }
+
+        def create_error(keyword, message, line):
+            atomtype = message[message.find("[") + 1:message.find("]")]
+            error_text = error_texts[keyword].format(atomtype, line)
+            return ValidationError(error_text, ex, line)
 
         try:
             xmlschema.assertValid(ff_tree)
@@ -47,21 +62,9 @@ class Validator(object):
             line = ex.error_log.last_error.line
             # rewrite error message for constraint violation
             if ex.error_log.last_error.type_name == "SCHEMAV_CVC_IDC":
-                if "missing_atom_type_in_nonbonded" in message:
-                    atomtype = message[message.find("[") + 1:message.find("]")]
-                    raise ValidationError(
-                        "Atom type {} is found in NonbondedForce at line {} but"
-                        " undefined in AtomTypes".format(atomtype, line), ex, line)
-                elif "nonunique_atomtype_name" in message:
-                    atomtype = message[message.find("[") + 1:message.find("]")]
-                    raise ValidationError(
-                        "Atom type {} is defined a second time at line {}".format(
-                            atomtype, line), ex, line)
-                elif "atomtype_name_key" in message:
-                    atomtype = message[message.find("[") + 1:message.find("]")]
-                    raise ValidationError(
-                        "Atom type {} is defined a second time at line {}".format(
-                            atomtype, line), ex, line)
+                for keyword in error_texts:
+                    if keyword in message:
+                        raise create_error(keyword, message, line)
                 else:
                     raise ValidationError('Unhandled XML validation error. '
                                           'Please consider submitting a bug report.', ex, line)
@@ -83,11 +86,17 @@ class Validator(object):
                 attribs = [valid for valid in valid_attribs
                            if entry.attrib.get(valid) is not None]
                 if num_atoms != len(attribs):
-                    error = ValidationError('Invalid number of "class" and/or "type" attributes for {} at line {}'.format(element, entry.sourceline), None, entry.sourceline)
+                    error = ValidationError(
+                        'Invalid number of "class" and/or "type" attributes for'
+                        ' {} at line {}'.format(element, entry.sourceline),
+                        None, entry.sourceline)
                     errors.append(error)
                 number_endings = Counter([a[-1] for a in attribs])
                 if not all(1 == x for x in number_endings.values()):
-                    error = ValidationError('Only one "class" or "type" attribute may be defined for each atom in a bonded force. See line {}'.format(entry.sourceline), None, entry.sourceline)
+                    error = ValidationError(
+                        'Only one "class" or "type" attribute may be defined'
+                        ' for each atom in a bonded force. See line {}'.format(entry.sourceline),
+                        None, entry.sourceline)
                     errors.append(error)
 
                 referenced_types = []
@@ -100,16 +109,11 @@ class Validator(object):
                 for atomtype in referenced_types:
                     if atomtype not in self.atom_type_names:
                         error = ValidationError(
-                            "Atom type {} is found in {} at line {} but undefined in AtomTypes".format(
-                                atomtype, element.split('/')[0], entry.sourceline), None, entry.sourceline)
+                            'Atom type {} is found in {} at line {} but'
+                            ' undefined in AtomTypes'.format(atomtype, element.split('/')[0], entry.sourceline),
+                            None, entry.sourceline)
                         errors.append(error)
-
-
-        #TODO: helper func to raise 1 or more erros
-        if len(errors) > 1:
-            raise MultipleValidationError(errors)
-        elif len(errors) == 1:
-            raise errors[0]
+        raise_collected(errors)
 
     def validate_smarts(self):
         missing_smarts = []
@@ -130,8 +134,9 @@ class Validator(object):
                 else:
                     column = ""
 
-                malformed = ValidationError("Malformed SMARTS string{} on line {}".format(
-                    column, entry.sourceline), ex, entry.sourceline)
+                malformed = ValidationError(
+                    "Malformed SMARTS string{} on line {}".format(column, entry.sourceline),
+                    ex, entry.sourceline)
                 errors.append(malformed)
                 continue
 
@@ -144,13 +149,11 @@ class Validator(object):
                     atom_type = label.tail[0][1:]
                     if atom_type not in self.atom_type_names:
                         undefined = ValidationError(
-                            "Reference to undefined atomtype '{}' in SMARTS string '{}' at line {}".format(
-                                atom_type, entry.attrib['def'], entry.sourceline), None, entry.sourceline)
+                            "Reference to undefined atomtype '{}' in SMARTS "
+                            "string '{}' at line {}".format(atom_type, entry.attrib['def'], entry.sourceline),
+                            None, entry.sourceline)
                         errors.append(undefined)
-        if len(errors) > 1:
-            raise MultipleValidationError(errors)
-        elif len(errors) == 1:
-            raise errors[0]
+        raise_collected(errors)
         if missing_smarts:
             warn("The following atom types do not have smarts definitions: {}".format(
                 ', '.join(missing_smarts)), ValidationWarning)
@@ -165,13 +168,11 @@ class Validator(object):
             for atom_type in overridden_types:
                 if atom_type not in self.atom_type_names:
                     undefined = ValidationError(
-                        "Reference to undefined atomtype '{}' in 'overrides' '{}' at line {}".format(
-                            atom_type, entry.attrib['overrides'], entry.sourceline), None, entry.sourceline)
+                        "Reference to undefined atomtype '{}' in 'overrides' "
+                        "'{}' at line {}".format(atom_type, entry.attrib['overrides'], entry.sourceline),
+                        None, entry.sourceline)
                     errors.append(undefined)
-        if len(errors) > 1:
-            raise MultipleValidationError(errors)
-        elif len(errors) == 1:
-            raise errors[0]
+        raise_collected(errors)
 
 
 if __name__ == '__main__':

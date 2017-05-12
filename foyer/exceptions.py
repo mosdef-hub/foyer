@@ -30,3 +30,9 @@ class ValidationWarning(FoyerWarning):
     """Raised when validating .xml forcefield files """
     pass
 
+
+def raise_collected(errors):
+    if len(errors) > 1:
+        raise MultipleValidationError(errors)
+    elif len(errors) == 1:
+        raise errors[0]
