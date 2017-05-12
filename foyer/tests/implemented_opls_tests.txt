@@ -59,3 +59,15 @@ ethylene-carbonate
 propylene-carbonate
 dimethyl-sulfoxide
 dimethylformamide
+dichloromethane
+trichloromethane
+112-trichloroethane
+1122-tetrachloroethane
+12-dichloroethane
+13-dichloropropane
+14-dichlorobutane
+2-chloroethanol
+pentachloroethane
+1-chlorobutane
+11-dichloroethane
+chloroethane
