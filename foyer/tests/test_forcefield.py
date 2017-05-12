@@ -69,3 +69,11 @@ def test_write_refs():
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
     assert os.path.isfile('ethane.bib')
+
+def test_preserve_resname():
+    untyped_ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+    untyped_resname = untyped_ethane.residues[0].name
+    oplsaa = Forcefield(name='oplsaa')
+    typed_ethane = oplsaa.apply(untyped_ethane)
+    typed_resname = typed_ethane.residues[0].name
+    assert typed_resname == untyped_resname
