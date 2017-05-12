@@ -83,8 +83,11 @@ def generate_topology(non_omm_topology, non_element_types=None):
 def _topology_from_parmed(structure, non_element_types):
     """Convert a ParmEd Structure to an OpenMM Topology."""
     topology = app.Topology()
-    chain = topology.addChain()
-    residue = topology.addResidue(structure.title, chain)
+    residues = dict()
+    for pmd_residue in structure.residues:
+        chain = topology.addChain()
+        omm_residue = topology.addResidue(pmd_residue.name, chain)
+        residues[pmd_residue] = omm_residue
     atoms = dict()  # pmd.Atom: omm.Atom
 
     for pmd_atom in structure.atoms:
@@ -98,7 +101,7 @@ def _topology_from_parmed(structure, non_element_types):
             else:
                 element = elem.Element.getBySymbol(pmd_atom.name)
 
-        omm_atom = topology.addAtom(name, element, residue)
+        omm_atom = topology.addAtom(name, element, residues[pmd_atom.residue])
         atoms[pmd_atom] = omm_atom
         omm_atom.bond_partners = []
 
