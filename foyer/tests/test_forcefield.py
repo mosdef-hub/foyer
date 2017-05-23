@@ -77,3 +77,18 @@ def test_preserve_resname():
     typed_ethane = oplsaa.apply(untyped_ethane)
     typed_resname = typed_ethane.residues[0].name
     assert typed_resname == untyped_resname
+
+def test_from_mbuild_customtype():
+    mol2 = mb.load(get_fn('ethane_customtype.pdb'))
+    customtype_ff = Forcefield(forcefield_files = get_fn('validate_customtypes.xml'))
+    ethane = customtype_ff.apply(mol2)
+
+    assert sum((1 for at in ethane.atoms if at.type == 'C3')) == 2
+    assert sum((1 for at in ethane.atoms if at.type == 'Hb')) == 6
+    assert len(ethane.bonds) == 7
+    assert all(x.type for x in ethane.bonds)
+    assert len(ethane.angles) == 12
+    assert all(x.type for x in ethane.angles)
+    assert len(ethane.rb_torsions) == 9
+    assert all(x.type for x in ethane.dihedrals)
+

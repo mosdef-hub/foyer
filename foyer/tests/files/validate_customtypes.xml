@@ -1,0 +1,18 @@
+<ForceField>
+ <AtomTypes>
+    <Type name="C3" class="C3" element="_C3" mass="12.01" def="[_C3]"/>
+    <Type name="Hb" class="Hb" element="_Hb" mass="1.01" def="[_Hb]"/>
+</AtomTypes>
+<HarmonicBondForce>
+    <Bond class1="C3" class2="Hb" length="1" k="1"/>
+    <Bond class1="C3" class2="C3" length="1" k="1"/>
+    <Bond class1="Hb" class2="Hb" length="1" k="1"/>
+</HarmonicBondForce>
+<HarmonicAngleForce>
+    <Angle class1="Hb" class2="C3" class3="Hb" angle="1" k="1"/>
+    <Angle class1="C3" class2="C3" class3="Hb" angle="1" k="1"/>
+</HarmonicAngleForce>
+<RBTorsionForce>
+    <Proper class1="" class2="C3" class3="C3" class4="" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+</RBTorsionForce>
+</ForceField>
