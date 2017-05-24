@@ -88,6 +88,7 @@ setup(
     packages=find_packages(),
     package_data={'foyer': ['foyer/tests/*.txt',
                             'foyer/tests/files/*.mol2',
+                            'foyer/tests/files/*.pdb',
                             'foyer/forcefields/*.xml',
                             'opls_validation/*/*.top',
                             'opls_validation/*/*.gro',
