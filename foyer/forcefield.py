@@ -92,8 +92,8 @@ def _topology_from_parmed(structure, non_element_types):
 
     for pmd_atom in structure.atoms:
         name = pmd_atom.name
-        if pmd_atom.element in non_element_types:
-            element = non_element_types[pmd_atom.element]
+        if pmd_atom.name in non_element_types:
+            element = non_element_types[pmd_atom.name]
         else:
             if (isinstance(pmd_atom.atomic_number, int) and
                     pmd_atom.atomic_number != 0):
