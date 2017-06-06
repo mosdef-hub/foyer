@@ -1,13 +1,16 @@
 <ForceField>
  <AtomTypes>
-     <Type name="_CCC" class="_CCC" element="C" mass="12.01100" def="C"/>
-     <Type name="_HHH" class="_HHH" element="H" mass="1.0081" def="H"/>
+     <Type name="CT" class="CT" element="C" mass="12.01100" def="C"/>
+     <Type name="HC" class="HC" element="H" mass="1.0081" def="H"/>
  </AtomTypes>
+ <HarmonicBondForce>
+  <Bond type1="CT" type2="CT" length="0.0" k="0.0"/>
+ </HarmonicBondForce>
  <HarmonicAngleForce>
-  <Angle type1="_CCC" type2="_CCC" type3="_CCC" angle="0.0" k="0.0"/>
+  <Angle type1="CT" type2="CT" type3="CT" angle="0.0" k="0.0"/>
  </HarmonicAngleForce>
  <RBTorsionForce>
-  <Proper type1="_CCC" type2="_CCC" type3="_CCC" type4="_HHH" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
-  <Improper type1="_CCC" type2="_CCC" type3="_CCC" type4="_HHH" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper type1="CT" type2="CT" type3="CT" type4="HC" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+  <Improper type1="CT" type2="CT" type3="CT" type4="HC" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
  </RBTorsionForce>
 </ForceField>

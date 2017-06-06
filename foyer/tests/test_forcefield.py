@@ -96,4 +96,5 @@ def test_improper_dihedral():
     mol2 = pmd.load_file(get_fn('benzene.mol2'), structure=True)
     ff_improper = Forcefield(forcefield_files = get_fn('improper_dihedral.xml'))
     benzene = ff_improper.apply(mol2) 
-    import pdb; pdb.set_trace()
+    assert len(benzene.angles) == 6
+    assert len(benzene.dihedrals) == 6
