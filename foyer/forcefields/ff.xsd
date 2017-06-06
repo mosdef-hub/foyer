@@ -171,17 +171,18 @@
   </xs:element>
   <xs:element name="RBTorsionForce">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="Proper" maxOccurs="unbounded" minOccurs="0"/>
-        <xs:element ref="Improper" maxOccurs="unbounded" minOccurs="0"/>
-      </xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="Proper" minOccurs="0"/>
+        <xs:element ref="Improper" minOccurs="0"/>
+      </xs:choice>
     </xs:complexType>
   </xs:element>
   <xs:element name="PeriodicTorsionForce">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="Proper" maxOccurs="unbounded" minOccurs="0"/>
-      </xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="Proper" minOccurs="0"/>
+        <xs:element ref="Improper" minOccurs="0"/>
+      </xs:choice>
     </xs:complexType>
   </xs:element>
   <xs:element name="NonbondedForce">
