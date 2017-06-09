@@ -238,9 +238,11 @@ class Forcefield(app.ForceField):
         if not isinstance(topology, app.Topology):
             topology, positions = generate_topology(topology, self.non_element_types)
         else:
-            pass
+            positions = np.empty(shape=(topology.getNumAtoms(), 3))
+            positions[:] = np.nan
         box_vectors = topology.getPeriodicBoxVectors()
         system = self.createSystem(topology, *args, **kwargs)
+
         structure = pmd.openmm.load_topology(topology=topology, system=system)
         structure.bonds.sort(key=lambda x: x.atom1.idx)
         structure.positions = positions
@@ -249,6 +251,7 @@ class Forcefield(app.ForceField):
         if references_file:
             atom_types = set(atom.type for atom in structure.atoms)
             self._write_references_to_file(atom_types, references_file)
+
         return structure
 
     def createSystem(self, topology, atomtype=True, nonbondedMethod=NoCutoff,
