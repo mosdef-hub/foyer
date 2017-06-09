@@ -1,0 +1,19 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="CT" class="CT" element="C" mass="12.01100" def="C"/>
+  <Type name="HC" class="HC" element="H" mass="1.0081" def="H"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="CT" class2="HC" length="0.163" k="251040.0"/>
+  <Bond class1="CT" class2="CT" length="0.163" k="251040.0"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="CT" class2="CT" class3="HC" angle="2.7053" k="397.48"/>
+  <Angle class1="HC" class2="CT" class3="HC" angle="2.7053" k="397.48"/>
+  <Angle class1="CT" class2="CT" class3="CT" angle="1.9111" k="397.48"/>
+ </HarmonicAngleForce>
+ <PeriodicTorsionForce>
+     <Proper class1="CT" class2="CT" class3="CT" class4="HC" periodicity1="1" phase1="3.14" k1="3.1"/>
+     <Improper class1="CT" class2="CT" class3="CT" class4="HC" periodicity1="1" phase1="3.14" k1="3.1"/>
+ </PeriodicTorsionForce>
+</ForceField>
