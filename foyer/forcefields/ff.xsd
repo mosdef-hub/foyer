@@ -70,6 +70,64 @@
           <xs:attribute type="xs:float" name="c3" use="optional"/>
           <xs:attribute type="xs:float" name="c4" use="optional"/>
           <xs:attribute type="xs:float" name="c5" use="optional"/>
+          <xs:attribute type="xs:float" name="k0" use="optional"/>
+          <xs:attribute type="xs:float" name="k1" use="optional"/>
+          <xs:attribute type="xs:float" name="k2" use="optional"/>
+          <xs:attribute type="xs:float" name="k3" use="optional"/>
+          <xs:attribute type="xs:float" name="k4" use="optional"/>
+          <xs:attribute type="xs:float" name="k5" use="optional"/>
+          <xs:attribute type="xs:float" name="phase0" use="optional"/>
+          <xs:attribute type="xs:float" name="phase1" use="optional"/>
+          <xs:attribute type="xs:float" name="phase2" use="optional"/>
+          <xs:attribute type="xs:float" name="phase3" use="optional"/>
+          <xs:attribute type="xs:float" name="phase4" use="optional"/>
+          <xs:attribute type="xs:float" name="phase5" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity0" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity1" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity2" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity3" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity4" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity5" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Improper">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
+          <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
+          <xs:attribute type="xs:string" name="class3" use="optional"/>
+          <xs:attribute type="xs:string" name="type3" use="optional"/>
+          <xs:attribute type="xs:string" name="class4" use="optional"/>
+          <xs:attribute type="xs:string" name="type4" use="optional"/>
+          <xs:attribute type="xs:float" name="c0" use="optional"/>
+          <xs:attribute type="xs:float" name="c1" use="optional"/>
+          <xs:attribute type="xs:float" name="c2" use="optional"/>
+          <xs:attribute type="xs:float" name="c3" use="optional"/>
+          <xs:attribute type="xs:float" name="c4" use="optional"/>
+          <xs:attribute type="xs:float" name="c5" use="optional"/>
+          <xs:attribute type="xs:float" name="k0" use="optional"/>
+          <xs:attribute type="xs:float" name="k1" use="optional"/>
+          <xs:attribute type="xs:float" name="k2" use="optional"/>
+          <xs:attribute type="xs:float" name="k3" use="optional"/>
+          <xs:attribute type="xs:float" name="k4" use="optional"/>
+          <xs:attribute type="xs:float" name="k5" use="optional"/>
+          <xs:attribute type="xs:float" name="phase0" use="optional"/>
+          <xs:attribute type="xs:float" name="phase1" use="optional"/>
+          <xs:attribute type="xs:float" name="phase2" use="optional"/>
+          <xs:attribute type="xs:float" name="phase3" use="optional"/>
+          <xs:attribute type="xs:float" name="phase4" use="optional"/>
+          <xs:attribute type="xs:float" name="phase5" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity0" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity1" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity2" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity3" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity4" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity5" use="optional"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
@@ -113,9 +171,18 @@
   </xs:element>
   <xs:element name="RBTorsionForce">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="Proper" maxOccurs="unbounded" minOccurs="0"/>
-      </xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="Proper" minOccurs="0"/>
+        <xs:element ref="Improper" minOccurs="0"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PeriodicTorsionForce">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="Proper" minOccurs="0"/>
+        <xs:element ref="Improper" minOccurs="0"/>
+      </xs:choice>
     </xs:complexType>
   </xs:element>
   <xs:element name="NonbondedForce">
@@ -134,6 +201,7 @@
         <xs:element ref="HarmonicBondForce" minOccurs="0"/>
         <xs:element ref="HarmonicAngleForce" minOccurs="0"/>
         <xs:element ref="RBTorsionForce" minOccurs="0"/>
+        <xs:element ref="PeriodicTorsionForce" minOccurs="0"/>
         <xs:element ref="NonbondedForce" minOccurs="0"/>
       </xs:all>
     </xs:complexType>
