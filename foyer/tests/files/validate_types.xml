@@ -1,0 +1,22 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="A" class="OS" element="O" mass="15.9994" def="O"/>
+  <Type name="B" class="SI" element="Si" mass="28.0855" def="Si"/>
+  <Type name="C" class="HO" element="H" mass="1.00800" def="H"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+  <Bond class1="SI" class2="OS" length="0.163" k="251040.0"/>
+  <Bond class1="SI" type2="B" length="0.163" k="251040.0"/>
+  <Bond type1="A" type2="B" length="0.185" k="167360.0"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="SI" class2="OS" class3="SI" angle="2.7053" k="397.48"/>
+  <Angle class1="SI" class2="OH" type3="B" angle="2.7053" k="397.48"/>
+  <Angle type1="A" type2="B" type3="A" angle="1.9111" k="397.48"/>
+ </HarmonicAngleForce>
+ <RBTorsionForce>
+  <Proper class1="" class2="SI" class3="OS" class4="" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper type1="" class2="SI" class3="OH" class4="" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper type1="" type2="B" type3="C" type4="" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+ </RBTorsionForce>
+</ForceField>

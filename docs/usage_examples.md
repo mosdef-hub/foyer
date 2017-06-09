@@ -47,7 +47,7 @@ the ethane.  The two atomtyped Parmed structures are then combined using a simpl
 '\+' operator and can be saved to Gromacs files.
 ```python
 from foyer import Forcefield
-from foyer.test.utils import get_fn
+from foyer.tests.utils import get_fn
 import mbuild as mb
 from mbuild.examples import Ethane
 from mbuild.lib.atoms import H

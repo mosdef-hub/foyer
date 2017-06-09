@@ -1,0 +1,8 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="a" class="CM" element="C" mass="12.01100" def="[C&!H][C&!H]"/>
+  <Type name="b" class="HM" element="H" mass="1.008" def="[H&!C]" overrides="a"/>
+  <Type name="c" class="HM" element="H" mass="1.008" def="[H&!C]" overrides="a,f"/>
+  <Type name="d" class="HM" element="H" mass="1.008" def="[H&!C]" overrides="a, g,"/>
+ </AtomTypes>
+</ForceField>

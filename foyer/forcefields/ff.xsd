@@ -19,8 +19,17 @@
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:string">
+          <!--- In reality, class1 and type1 should be mutually exclusive. This
+          is supported in XSD 1.1 which is as of this writing not seamlessly
+          supported in Python.
+
+          For now, this is manually validated in Python code but should be
+          happening here once we can access XSD 1.1
+          -->
           <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
           <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
           <xs:attribute type="xs:float" name="length" use="optional"/>
           <xs:attribute type="xs:float" name="k" use="optional"/>
         </xs:extension>
@@ -32,8 +41,11 @@
       <xs:simpleContent>
         <xs:extension base="xs:string">
           <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
           <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
           <xs:attribute type="xs:string" name="class3" use="optional"/>
+          <xs:attribute type="xs:string" name="type3" use="optional"/>
           <xs:attribute type="xs:float" name="angle" use="optional"/>
           <xs:attribute type="xs:float" name="k" use="optional"/>
         </xs:extension>
@@ -45,15 +57,77 @@
       <xs:simpleContent>
         <xs:extension base="xs:string">
           <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
           <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
           <xs:attribute type="xs:string" name="class3" use="optional"/>
+          <xs:attribute type="xs:string" name="type3" use="optional"/>
           <xs:attribute type="xs:string" name="class4" use="optional"/>
+          <xs:attribute type="xs:string" name="type4" use="optional"/>
           <xs:attribute type="xs:float" name="c0" use="optional"/>
           <xs:attribute type="xs:float" name="c1" use="optional"/>
           <xs:attribute type="xs:float" name="c2" use="optional"/>
           <xs:attribute type="xs:float" name="c3" use="optional"/>
           <xs:attribute type="xs:float" name="c4" use="optional"/>
           <xs:attribute type="xs:float" name="c5" use="optional"/>
+          <xs:attribute type="xs:float" name="k0" use="optional"/>
+          <xs:attribute type="xs:float" name="k1" use="optional"/>
+          <xs:attribute type="xs:float" name="k2" use="optional"/>
+          <xs:attribute type="xs:float" name="k3" use="optional"/>
+          <xs:attribute type="xs:float" name="k4" use="optional"/>
+          <xs:attribute type="xs:float" name="k5" use="optional"/>
+          <xs:attribute type="xs:float" name="phase0" use="optional"/>
+          <xs:attribute type="xs:float" name="phase1" use="optional"/>
+          <xs:attribute type="xs:float" name="phase2" use="optional"/>
+          <xs:attribute type="xs:float" name="phase3" use="optional"/>
+          <xs:attribute type="xs:float" name="phase4" use="optional"/>
+          <xs:attribute type="xs:float" name="phase5" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity0" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity1" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity2" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity3" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity4" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity5" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Improper">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
+          <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
+          <xs:attribute type="xs:string" name="class3" use="optional"/>
+          <xs:attribute type="xs:string" name="type3" use="optional"/>
+          <xs:attribute type="xs:string" name="class4" use="optional"/>
+          <xs:attribute type="xs:string" name="type4" use="optional"/>
+          <xs:attribute type="xs:float" name="c0" use="optional"/>
+          <xs:attribute type="xs:float" name="c1" use="optional"/>
+          <xs:attribute type="xs:float" name="c2" use="optional"/>
+          <xs:attribute type="xs:float" name="c3" use="optional"/>
+          <xs:attribute type="xs:float" name="c4" use="optional"/>
+          <xs:attribute type="xs:float" name="c5" use="optional"/>
+          <xs:attribute type="xs:float" name="k0" use="optional"/>
+          <xs:attribute type="xs:float" name="k1" use="optional"/>
+          <xs:attribute type="xs:float" name="k2" use="optional"/>
+          <xs:attribute type="xs:float" name="k3" use="optional"/>
+          <xs:attribute type="xs:float" name="k4" use="optional"/>
+          <xs:attribute type="xs:float" name="k5" use="optional"/>
+          <xs:attribute type="xs:float" name="phase0" use="optional"/>
+          <xs:attribute type="xs:float" name="phase1" use="optional"/>
+          <xs:attribute type="xs:float" name="phase2" use="optional"/>
+          <xs:attribute type="xs:float" name="phase3" use="optional"/>
+          <xs:attribute type="xs:float" name="phase4" use="optional"/>
+          <xs:attribute type="xs:float" name="phase5" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity0" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity1" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity2" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity3" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity4" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity5" use="optional"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
@@ -76,11 +150,10 @@
         <xs:element ref="Type" maxOccurs="unbounded" minOccurs="0"/>
       </xs:sequence>
     </xs:complexType>
-    <!-- this is redundant here, because nonunique_atomtype_name (see later) checks for uniqueness of keys
     <xs:unique name="nonunique_atomtype_name">
       <xs:selector xpath="Type"/>
       <xs:field xpath="@name"/>
-    </xs:unique> -->
+    </xs:unique>
   </xs:element>
   <xs:element name="HarmonicBondForce">
     <xs:complexType>
@@ -98,9 +171,18 @@
   </xs:element>
   <xs:element name="RBTorsionForce">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="Proper" maxOccurs="unbounded" minOccurs="0"/>
-      </xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="Proper" minOccurs="0"/>
+        <xs:element ref="Improper" minOccurs="0"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PeriodicTorsionForce">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="Proper" minOccurs="0"/>
+        <xs:element ref="Improper" minOccurs="0"/>
+      </xs:choice>
     </xs:complexType>
   </xs:element>
   <xs:element name="NonbondedForce">
@@ -119,14 +201,15 @@
         <xs:element ref="HarmonicBondForce" minOccurs="0"/>
         <xs:element ref="HarmonicAngleForce" minOccurs="0"/>
         <xs:element ref="RBTorsionForce" minOccurs="0"/>
+        <xs:element ref="PeriodicTorsionForce" minOccurs="0"/>
         <xs:element ref="NonbondedForce" minOccurs="0"/>
       </xs:all>
     </xs:complexType>
-    <xs:key name="nonunique_atomtype_name">
+    <xs:key name="atomtype_name_key">
       <xs:selector xpath="AtomTypes/Type" />
       <xs:field xpath="@name" />
     </xs:key>
-    <xs:keyref name="missing_atom_type_in_nonbonded" refer="nonunique_atomtype_name">
+    <xs:keyref name="missing_atom_type_in_nonbonded" refer="atomtype_name_key">
       <xs:selector xpath="NonbondedForce/Atom"/>
       <xs:field xpath="@type"/>
     </xs:keyref>
