@@ -62,7 +62,8 @@ def preprocess_forcefield_files(forcefield_files=None):
     return preprocessed_files
 
 
-def generate_topology(non_omm_topology, non_element_types=None):
+def generate_topology(non_omm_topology, non_element_types=None,
+        residues=None):
     """Create an OpenMM Topology from another supported topology structure."""
     if non_element_types is None:
         non_element_types = set()
@@ -70,7 +71,7 @@ def generate_topology(non_omm_topology, non_element_types=None):
     if isinstance(non_omm_topology, pmd.Structure):
         return _topology_from_parmed(non_omm_topology, non_element_types)
     elif isinstance(non_omm_topology, mb.Compound):
-        pmdCompoundStructure = non_omm_topology.to_parmed()
+        pmdCompoundStructure = non_omm_topology.to_parmed(residues=residues)
         return _topology_from_parmed(pmdCompoundStructure, non_element_types)
     else:
         raise FoyerError('Unknown topology format: {}\n'
@@ -239,7 +240,9 @@ class Forcefield(app.ForceField):
             format)
         """
         if not isinstance(topology, app.Topology):
-            topology, positions = generate_topology(topology, self.non_element_types)
+            residues = kwargs.get('residues')
+            topology, positions = generate_topology(topology,
+                    self.non_element_types, residues=residues)
         else:
             positions = np.empty(shape=(topology.getNumAtoms(), 3))
             positions[:] = np.nan
