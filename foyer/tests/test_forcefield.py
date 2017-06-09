@@ -78,6 +78,13 @@ def test_preserve_resname():
     typed_resname = typed_ethane.residues[0].name
     assert typed_resname == untyped_resname
 
+def test_apply_residues():
+    from mbuild.examples import Ethane
+    ethane = Ethane()
+    opls = Forcefield(name='oplsaa')
+    typed = opls.apply(ethane, residues='CH3')
+    assert len([res for res in typed.residues if res.name == 'CH3']) == 2
+
 def test_from_mbuild_customtype():
     mol2 = mb.load(get_fn('ethane_customtype.pdb'))
     customtype_ff = Forcefield(forcefield_files=get_fn('validate_customtypes.xml'))
