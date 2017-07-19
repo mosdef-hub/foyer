@@ -259,5 +259,8 @@ def _prepare_atoms(topology, compute_cycles=False):
         bond_graph.add_edges_from(topology.bonds())
         cycles = nx.cycle_basis(bond_graph)
         for cycle in cycles:
+            # NOTE: Only considering cycles containing less than 8 atoms
+            if len(cycle) > 8:
+                continue
             for atom in cycle:
                 atom.cycles.add(tuple(cycle))
