@@ -35,7 +35,7 @@ def find_atomtypes(topology, forcefield, max_iter=10):
                     element = None
         else:
             element = None
-        if element in system_elements:
+        if element is None or element in system_elements:
             subrules[key] = val
     rules = subrules
 
