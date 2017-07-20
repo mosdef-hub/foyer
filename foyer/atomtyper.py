@@ -18,6 +18,27 @@ def find_atomtypes(topology, forcefield, max_iter=10):
 
     """
     rules = _load_rules(forcefield)
+
+    # Only consider rules for elements found in topology
+    subrules = dict()
+    system_elements = {a.element.symbol for a in topology.atoms()}
+    for key,val in rules.items():
+        atom = val.node[0]['atom']
+        if len(atom.select('atom_symbol')) == 1 and not atom.select('not_expression'):
+            try:
+                element = atom.select('atom_symbol').strees[0].tail[0]
+            except IndexError:
+                try:
+                    atomic_num = atom.select('atomic_num').strees[0].tail[0]
+                    element = pt.Element[int(atomic_num)]
+                except IndexError:
+                    element = None
+        else:
+            element = None
+        if element is None or element in system_elements:
+            subrules[key] = val
+    rules = subrules
+
     _iterate_rules(rules, topology, max_iter=max_iter)
     _resolve_atomtypes(topology)
 
