@@ -118,6 +118,48 @@ def _topology_from_parmed(structure, non_element_types):
     positions = structure.positions
     return topology, positions
 
+
+def _topology_from_residue(res):
+    """Converts a openmm.app.Topology.Residue to openmm.app.Topology"""
+    topology = app.Topology()
+    chain = topology.addChain()
+    new_res = topology.addResidue(res.name, chain)
+
+    atoms = dict()  # omm.Atom in res : omm.Atom in topology
+
+    for res_atom in res.atoms():
+        topology_atom = topology.addAtom(name=res_atom.name,
+                         #element=elem.Element.getBySymbol(res_atom.name),
+                         element=res_atom.element,
+                         residue=new_res)
+        atoms[res_atom] = topology_atom
+        topology_atom.bond_partners = []
+
+    for bond in res.bonds():
+        try:
+            atom1 = atoms[bond.atom1]
+        except KeyError:
+            import pdb; pdb.set_trace() 
+        try:
+            atom2 = atoms[bond.atom2]
+        except KeyError:
+            import pdb; pdb.set_trace() 
+        topology.addBond(atom1, atom2)
+        atom1.bond_partners.append(atom2)
+        atom2.bond_partners.append(atom1)
+
+    return topology
+
+
+def _update_atomtypes(unatomtyped_topology, atomtyped_prototype_topology):
+    for res in unatomtyped_topology.residues():
+        if res.name == [res_prototype.name for res_prototype in atomtyped_prototype_topology.residues()][0]:
+            for old_atom, new_atom_id in zip([atom for atom in res.atoms()], [atom.id for atom in atomtyped_prototype_topology.atoms()]):
+                old_atom.id = new_atom_id
+    atomtyped_topology = unatomtyped_topology
+    return atomtyped_topology
+
+
 class Forcefield(app.ForceField):
     """Specialization of OpenMM's Forcefield allowing SMARTS based atomtyping.
 
@@ -298,7 +340,18 @@ class Forcefield(app.ForceField):
             the newly created System
         """
         if atomtype:
-            find_atomtypes(topology, forcefield=self)
+            residue_map = dict()
+
+            for res in topology.residues():
+                if res.name not in residue_map.keys():
+                    residue = _topology_from_residue(res)
+                    find_atomtypes(residue, forcefield=self)
+                    residue_map[res.name] = residue
+        
+            for key, val in residue_map.items():
+                new_system = _update_atomtypes(topology, val)
+        
+            topology = new_system
 
         data = app.ForceField._SystemData()
         data.atoms = list(topology.atoms())
