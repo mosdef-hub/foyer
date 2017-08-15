@@ -329,7 +329,8 @@ class Forcefield(app.ForceField):
 
         return structure
 
-    def createSystem(self, topology, atomtype=True, nonbondedMethod=NoCutoff,
+    def createSystem(self, topology, atomtype=True, use_residue_map=True,
+                     nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
                      **args):
@@ -339,6 +340,8 @@ class Forcefield(app.ForceField):
         ----------
         topology : Topology
             The Topology for which to create a System
+        use_residue_map : boolean
+            Bypass atomtyping duplicate residues using a residue map
         nonbondedMethod : object=NoCutoff
             The method to use for nonbonded interactions.  Allowed values are
             NoCutoff, CutoffNonPeriodic, CutoffPeriodic, Ewald, or PME.
@@ -367,23 +370,27 @@ class Forcefield(app.ForceField):
             the newly created System
         """
         if atomtype:
-            independent_residues = _check_independent_residues(topology)
+            if use_residue_map:
+                independent_residues = _check_independent_residues(topology)
 
-            if independent_residues:
-                residue_map = dict()
+                if independent_residues:
+                    residue_map = dict()
 
-                for res in topology.residues():
-                    if res.name not in residue_map.keys():
-                        residue = _topology_from_residue(res)
-                        find_atomtypes(residue, forcefield=self)
-                        residue_map[res.name] = residue
+                    for res in topology.residues():
+                        if res.name not in residue_map.keys():
+                            residue = _topology_from_residue(res)
+                            find_atomtypes(residue, forcefield=self)
+                            residue_map[res.name] = residue
 
-                new_topology = topology
+                    new_topology = topology
 
-                for key, val in residue_map.items():
-                    new_topology = _update_atomtypes(topology, val)
+                    for key, val in residue_map.items():
+                        new_topology = _update_atomtypes(topology, val)
 
-                topology = new_topology
+                    topology = new_topology
+
+                else:
+                    find_atomtypes(topology, forcefield=self)
 
             else:
                 find_atomtypes(topology, forcefield=self)

@@ -7,6 +7,7 @@ import parmed as pmd
 import pytest
 
 from foyer import Forcefield
+from foyer.forcefield import generate_topology
 from foyer.tests.utils import get_fn
 
 
@@ -26,6 +27,7 @@ def test_load_files():
 def test_duplicate_type_definitions():
     with pytest.raises(ValueError):
         ff4 = Forcefield(name='oplsaa', forcefield_files=FORCEFIELDS)
+
 
 
 def test_from_parmed():
@@ -106,3 +108,13 @@ def test_improper_dihedral():
     assert len(benzene.dihedrals) == 18
     assert len([dih for dih in benzene.dihedrals if dih.improper]) == 6
     assert len([dih for dih in benzene.dihedrals if not dih.improper]) == 12
+
+def test_residue_map():
+    ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+    oplsaa = Forcefield(name='oplsaa')
+    topo, NULL = generate_topology(ethane)
+    with_map = pmd.openmm.load_topology(topo,
+        oplsaa.createSystem(topo, use_residue_map = True))
+    without_map = pmd.openmm.load_topology(topo,
+        oplsaa.createSystem(topo, use_residue_map = False))
+    [a.type for a in with_map.atoms] == [a.type for a in without_map.atoms]
