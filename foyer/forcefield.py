@@ -120,16 +120,27 @@ def _topology_from_parmed(structure, non_element_types):
 
 
 def _topology_from_residue(res):
-    """Converts a openmm.app.Topology.Residue to openmm.app.Topology"""
+    """Converts a openmm.app.Topology.Residue to openmm.app.Topology.
+
+    Parameters
+    ----------
+    res : openmm.app.Topology.Residue
+        An individual residue in an openmm.app.Topology
+
+    Returns
+    -------
+    topology : openmm.app.Topology
+        The generated topology
+
+    """
     topology = app.Topology()
     chain = topology.addChain()
     new_res = topology.addResidue(res.name, chain)
 
-    atoms = dict()  # omm.Atom in res : omm.Atom in topology
+    atoms = dict()  # { omm.Atom in res : omm.Atom in *new* topology }
 
     for res_atom in res.atoms():
         topology_atom = topology.addAtom(name=res_atom.name,
-                         #element=elem.Element.getBySymbol(res_atom.name),
                          element=res_atom.element,
                          residue=new_res)
         atoms[res_atom] = topology_atom
@@ -146,8 +157,7 @@ def _topology_from_residue(res):
 
 
 def _check_independent_residues(topology):
-    """Check to see if residues will constitute independent graphs"""
-
+    """Check to see if residues will constitute independent graphs."""
     for res in topology.residues():
         atoms_in_residue = set([atom for atom in res.atoms()])
         bond_partners_in_residue = [item for sublist in [atom.bond_partners for atom in res.atoms()] for item in sublist]
@@ -156,10 +166,22 @@ def _check_independent_residues(topology):
     return True
 
 
-def _update_atomtypes(unatomtyped_topology, atomtyped_prototype_topology):
+def _update_atomtypes(unatomtyped_topology, prototype):
+    """Update atomtypes in residues in a topology using a prototype topology.
+
+    Atomtypes are updated when residues in each topology have matching names.
+
+    Parameters
+    ----------
+    unatomtyped_topology : openmm.app.Topology
+        Topology lacking atomtypes defined by `find_atomtypes`.
+    prototype : openmm.app.Topology
+        Prototype topology with atomtypes defined by `find_atomtypes`.
+
+    """
     for res in unatomtyped_topology.residues():
-        if res.name == [res_prototype.name for res_prototype in atomtyped_prototype_topology.residues()][0]:
-            for old_atom, new_atom_id in zip([atom for atom in res.atoms()], [atom.id for atom in atomtyped_prototype_topology.atoms()]):
+        if res.name == [res_prototype.name for res_prototype in prototype.residues()][0]:
+            for old_atom, new_atom_id in zip([atom for atom in res.atoms()], [atom.id for atom in prototype.atoms()]):
                 old_atom.id = new_atom_id
     atomtyped_topology = unatomtyped_topology
     return atomtyped_topology
@@ -347,7 +369,7 @@ class Forcefield(app.ForceField):
         if atomtype:
             independent_residues = _check_independent_residues(topology)
 
-            if independent_residues == True:
+            if independent_residues:
                 residue_map = dict()
 
                 for res in topology.residues():
