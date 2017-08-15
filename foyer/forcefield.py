@@ -166,7 +166,7 @@ def _check_independent_residues(topology):
     return True
 
 
-def _update_atomtypes(unatomtyped_topology, prototype):
+def _update_atomtypes(unatomtyped_topology, res_name, prototype):
     """Update atomtypes in residues in a topology using a prototype topology.
 
     Atomtypes are updated when residues in each topology have matching names.
@@ -180,11 +180,9 @@ def _update_atomtypes(unatomtyped_topology, prototype):
 
     """
     for res in unatomtyped_topology.residues():
-        if res.name == [res_prototype.name for res_prototype in prototype.residues()][0]:
+        if res.name == res_name:
             for old_atom, new_atom_id in zip([atom for atom in res.atoms()], [atom.id for atom in prototype.atoms()]):
                 old_atom.id = new_atom_id
-    atomtyped_topology = unatomtyped_topology
-    return atomtyped_topology
 
 
 class Forcefield(app.ForceField):
@@ -382,12 +380,8 @@ class Forcefield(app.ForceField):
                             find_atomtypes(residue, forcefield=self)
                             residue_map[res.name] = residue
 
-                    new_topology = topology
-
                     for key, val in residue_map.items():
-                        new_topology = _update_atomtypes(topology, val)
-
-                    topology = new_topology
+                        _update_atomtypes(topology, key, val)
 
                 else:
                     find_atomtypes(topology, forcefield=self)
