@@ -1,1 +1,11 @@
 bromomethane
+chloroethane
+fluorobenzene
+iodopropane
+toluene
+ethylbenzene
+12-dibromopropane
+1-nitropropane
+diethylamine
+acetamide
+acetonitrile
