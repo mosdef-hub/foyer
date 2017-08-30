@@ -31,10 +31,10 @@
   <Type name="hs" class="hs" element="H" mass="1.008"/>
   <Type name="hw" class="hw" element="H" mass="1.008"/>
   <Type name="hx" class="hx" element="H" mass="1.008"/>
-  <Type name="f" class="f" element="F" mass="19.0"/>
-  <Type name="cl" class="cl" element="Cl" mass="35.45"/>
+  <Type name="f" class="f" element="F" mass="19.0" def="F" desc="any F"/>
+  <Type name="cl" class="cl" element="Cl" mass="35.45" def="Cl" desc="any Cl"/>
   <Type name="br" class="br" element="Br" mass="79.9" def="Br" desc="any Br"/>
-  <Type name="i" class="i" element="I" mass="126.9"/>
+  <Type name="i" class="i" element="I" mass="126.9" def="I" desc="any I"/>
   <Type name="n" class="n" element="N" mass="14.01"/>
   <Type name="n1" class="n1" element="N" mass="14.01"/>
   <Type name="n2" class="n2" element="N" mass="14.01"/>
