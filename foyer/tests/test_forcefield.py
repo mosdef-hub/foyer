@@ -3,10 +3,13 @@ import os
 from pkg_resources import resource_filename
 
 import mbuild as mb
+from mbuild.examples import Alkane
 import parmed as pmd
 import pytest
 
 from foyer import Forcefield
+from foyer.forcefield import generate_topology
+from foyer.forcefield import _check_independent_residues
 from foyer.tests.utils import get_fn
 
 
@@ -26,6 +29,7 @@ def test_load_files():
 def test_duplicate_type_definitions():
     with pytest.raises(ValueError):
         ff4 = Forcefield(name='oplsaa', forcefield_files=FORCEFIELDS)
+
 
 
 def test_from_parmed():
@@ -106,3 +110,29 @@ def test_improper_dihedral():
     assert len(benzene.dihedrals) == 18
     assert len([dih for dih in benzene.dihedrals if dih.improper]) == 6
     assert len([dih for dih in benzene.dihedrals if not dih.improper]) == 12
+
+def test_residue_map():
+    ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+    ethane *= 2
+    oplsaa = Forcefield(name='oplsaa')
+    topo, NULL = generate_topology(ethane)
+    with_map = pmd.openmm.load_topology(topo,
+            oplsaa.createSystem(topo, use_residue_map=True))
+    without_map = pmd.openmm.load_topology(topo,
+            oplsaa.createSystem(topo, use_residue_map=False))
+    for atom_with, atom_without in zip(with_map.atoms, without_map.atoms):
+        assert atom_with.type == atom_without.type
+        b_with = atom_with.bond_partners
+        b_without = atom_without.bond_partners
+        assert [a0.type for a0 in b_with] == [a1.type for a1 in b_without]
+        assert [a0.idx for a0 in b_with] == [a1.idx for a1 in b_without]
+
+def test_independent_residues():
+    """Test to see that _check_independent_residues works."""
+    butane = Alkane(4)
+    structure = butane.to_parmed()
+    topo, NULL = generate_topology(structure)
+    assert _check_independent_residues(topo)
+    structure = butane.to_parmed(residues=['RES', 'CH3'])
+    topo, NULL = generate_topology(structure)
+    assert not _check_independent_residues(topo)
