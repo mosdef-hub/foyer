@@ -1,0 +1,12 @@
+TITLE     acetonitrile
+REMARK    THIS IS A SIMULATION BOX
+CRYST1  100.000  100.000  100.000  90.00  90.00  90.00 P 1           1
+MODEL        1
+ATOM      1  C1  MOL     1      50.083  50.317  49.618  1.00  0.00            
+ATOM      2  H1  MOL     1      51.153  50.377  49.408  1.00  0.00            
+ATOM      3  H2  MOL     1      49.673  49.727  48.788  1.00  0.00            
+ATOM      4  H3  MOL     1      49.543  51.267  49.658  1.00  0.00            
+ATOM      5  C2  MOL     1      49.893  49.517  50.838  1.00  0.00            
+ATOM      6  N1  MOL     1      49.653  48.797  51.688  1.00  0.00            
+TER
+ENDMDL

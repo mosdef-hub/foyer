@@ -1,0 +1,11 @@
+CHARGE      0.00 ( 0 )
+Formula: B1 F4 
+ATOM      1  B   UNL     1       0.838   1.023   0.000  0.000000         B
+ATOM      2  F   UNL     1       0.541   2.083  -0.000  0.000000         F
+ATOM      3  F   UNL     1       1.897   1.320  -0.000  0.000000         F
+ATOM      4  F   UNL     1       0.564  -0.042  -0.000  0.000000         F
+ATOM      5  F   UNL     1      -0.228   1.296  -0.000  0.000000         F
+BOND    1    2    1    1      F    B
+BOND    2    3    1    1      F    B
+BOND    3    4    1    1      F    B
+BOND    4    5    1    1      F    B

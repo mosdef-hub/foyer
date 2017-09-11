@@ -1,0 +1,11 @@
+TITLE     dichloromethane
+REMARK    THIS IS A SIMULATION BOX
+CRYST1  100.000  100.000  100.000  90.00  90.00  90.00 P 1           1
+MODEL        1
+ATOM      1  Cl1 MOL     1      50.992  50.471  51.318  1.00  0.00            
+ATOM      2  C1  MOL     1      50.012  49.821  49.978  1.00  0.00            
+ATOM      3  H1  MOL     1      49.332  48.982  50.188  1.00  0.00            
+ATOM      4  H2  MOL     1      50.592  49.492  49.098  1.00  0.00            
+ATOM      5  Cl2 MOL     1      49.072  51.232  49.418  1.00  0.00            
+TER
+ENDMDL

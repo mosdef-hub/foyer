@@ -1,0 +1,38 @@
+CHARGE     -0.00 ( 0 )
+Formula: H7 C7 O3 S1 
+ATOM      1  C   UNL     1      -2.009   3.357  -0.209 -0.039700       C.3
+ATOM      2  C   UNL     1      -0.605   2.789  -0.098 -0.050300      C.ar
+ATOM      3  H   UNL     1      -2.669   2.912   0.539  0.027800         H
+ATOM      4  H   UNL     1      -2.422   3.152  -1.199  0.027800         H
+ATOM      5  H   UNL     1      -2.004   4.438  -0.054  0.027800         H
+ATOM      6  C   UNL     1      -0.407   1.483   0.352 -0.057000      C.ar
+ATOM      7  C   UNL     1       0.882   0.961   0.450 -0.034100      C.ar
+ATOM      8  C   UNL     1       1.988   1.738   0.102  0.119600      C.ar
+ATOM      9  C   UNL     1       1.787   3.042  -0.357 -0.034100      C.ar
+ATOM     10  C   UNL     1       0.499   3.565  -0.455 -0.057000      C.ar
+ATOM     11  H   UNL     1       0.359   4.582  -0.815  0.062100         H
+ATOM     12  H   UNL     1       2.636   3.658  -0.644  0.063700         H
+ATOM     13  H   UNL     1      -1.258   0.865   0.627  0.062100         H
+ATOM     14  H   UNL     1       1.018  -0.060   0.798  0.063700         H
+ATOM     15  S   UNL     1       3.624   1.071   0.216  0.139600       S.3
+ATOM     16  O   UNL     1       4.541   2.170   0.331 -0.139700       O.2
+ATOM     17  O   UNL     1       3.597  -0.000   1.173 -0.139700       O.2
+ATOM     18  O   UNL     1       3.788   0.438  -1.232 -0.042700       O.3
+BOND    1    1    2    1      C    C
+BOND    2    1    3    1      C    H
+BOND    3    1    4    1      C    H
+BOND    4    1    5    1      C    H
+BOND    5    2    6   10      C    C
+BOND    6    6    7   10      C    C
+BOND    7    7    8   10      C    C
+BOND    8    8    9   10      C    C
+BOND    9   10    2   10      C    C
+BOND   10   10   11    1      C    H
+BOND   11    9   12    1      C    H
+BOND   12    6   13    1      C    H
+BOND   13    7   14    1      C    H
+BOND   14    8   15    1      C    S
+BOND   15   16   15    2      O    S
+BOND   16   17   15    2      O    S
+BOND   17   18   15    1      O    S
+BOND   18    9   10   10      C    C

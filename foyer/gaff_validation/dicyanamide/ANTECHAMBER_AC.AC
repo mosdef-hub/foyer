@@ -1,0 +1,11 @@
+CHARGE      0.00 ( 0 )
+Formula: C2 N3 
+ATOM      1  N   UNL     1      -1.426   2.255   0.047 -0.063400        ne
+ATOM      2  C   UNL     1      -1.387   3.042  -1.100  0.203300        c1
+ATOM      3  C1  UNL     1      -1.203   0.881   0.038  0.203300        cg
+ATOM      4  N1  UNL     1      -1.399   3.841  -1.911 -0.171500        n1
+ATOM      5  N2  UNL     1      -1.051  -0.230   0.234 -0.171500        n1
+BOND    1    2    1    2      C    N
+BOND    2    3    1    1     C1    N
+BOND    3    4    2    2     N1    C
+BOND    4    5    3    3     N2   C1

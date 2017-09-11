@@ -1,0 +1,13 @@
+CHARGE     -0.99 ( -1 )
+Formula: H1 O4 S1 
+ATOM      1  S   UNL     1       0.868   0.934  -0.342 -0.003300        s6
+ATOM      2  O   UNL     1       0.373   2.270  -0.168 -0.345400         o
+ATOM      3  O1  UNL     1       0.713   0.153  -1.536 -0.345400         o
+ATOM      4  O2  UNL     1       0.190   0.081   0.811 -0.268300         o
+ATOM      5  O3  UNL     1       2.344   0.813   0.211 -0.270200        oh
+ATOM      6  H   UNL     1       2.303   0.282   1.023  0.242700        ho
+BOND    1    2    1    9      O    S
+BOND    2    3    1    9     O1    S
+BOND    3    4    1    9     O2    S
+BOND    4    1    5    1      S   O3
+BOND    5    6    5    1      H   O3

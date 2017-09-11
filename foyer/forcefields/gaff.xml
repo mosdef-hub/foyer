@@ -1,6 +1,6 @@
 <ForceField>
  <AtomTypes>
-  <Type name="c" class="c" element="C" mass="12.01" def="C[%o,%s2]" desc="sp2 C in C=O, C=S"/>
+  <Type name="c" class="c" element="C" mass="12.01" def="C[%o,%s2]" desc="sp2 C in C=O, C=S" overrides="ca"/>
   <Type name="c1" class="c1" element="C" mass="12.01" def="[C;X2]" desc="sp1 C"/>
   <Type name="c2" class="c2" element="C" mass="12.01" def="[C;X3](C)(C)H" desc="sp2 C, aliphatic"/>
   <Type name="c3" class="c3" element="C" mass="12.01" def="[C;X4]" desc="sp3 C"/>
@@ -18,19 +18,19 @@
   <Type name="cu" class="cu" element="C" mass="12.01"/>
   <Type name="cv" class="cv" element="C" mass="12.01"/>
   <Type name="cz" class="cz" element="C" mass="12.01"/>
-  <Type name="h1" class="h1" element="H" mass="1.008" def="HC[F,Cl,Br,I,N]" desc="H on aliphatic C with 1 EW group" overrides="hc"/>
-  <Type name="h2" class="h2" element="H" mass="1.008"/>
+  <Type name="h1" class="h1" element="H" mass="1.008" def="HC[F,Cl,Br,I,N,O,S]" desc="H on aliphatic C with 1 EW group" overrides="hc"/>
+  <Type name="h2" class="h2" element="H" mass="1.008" def="HC([F,Cl,Br,I,N,O,S])[F,Cl,Br,I,N,O,S]" desc="H on aliphatic C with 2 EW group" overrides="h1"/>
   <Type name="h3" class="h3" element="H" mass="1.008"/>
   <Type name="h4" class="h4" element="H" mass="1.008"/>
   <Type name="h5" class="h5" element="H" mass="1.008"/>
-  <Type name="ha" class="ha" element="H" mass="1.008" def="H[C;R1]" desc="H on aromatic C" overrides="hc"/>
+  <Type name="ha" class="ha" element="H" mass="1.008" def="H[C;%ca]" desc="H on aromatic C" overrides="hc,h1"/>
   <Type name="hc" class="hc" element="H" mass="1.008" def="HC" desc="H on aliphatic C"/>
   <Type name="hn" class="hn" element="H" mass="1.008" def="HN" desc="H on N"/>
-  <Type name="ho" class="ho" element="H" mass="1.008"/>
+  <Type name="ho" class="ho" element="H" mass="1.008" def="HO" desc="H on O"/>
   <Type name="hp" class="hp" element="H" mass="1.008"/>
   <Type name="hs" class="hs" element="H" mass="1.008"/>
   <Type name="hw" class="hw" element="H" mass="1.008"/>
-  <Type name="hx" class="hx" element="H" mass="1.008"/>
+  <Type name="hx" class="hx" element="H" mass="1.008" def="H(C[N;%n4])" desc="H bonded to C next to + charged group" overrides="h1"/>
   <Type name="f" class="f" element="F" mass="19.0" def="F" desc="any F"/>
   <Type name="cl" class="cl" element="Cl" mass="35.45" def="Cl" desc="any Cl"/>
   <Type name="br" class="br" element="Br" mass="79.9" def="Br" desc="any Br"/>
@@ -39,7 +39,7 @@
   <Type name="n1" class="n1" element="N" mass="14.01" def="[N;X1]" desc="sp1 N"/>
   <Type name="n2" class="n2" element="N" mass="14.01"/>
   <Type name="n3" class="n3" element="N" mass="14.01" def="[N;X3]" desc="sp3 N with 3 subst."/>
-  <Type name="n4" class="n4" element="N" mass="14.01"/>
+  <Type name="n4" class="n4" element="N" mass="14.01" def="[N;X4]" desc="sp3 N with 4 sbust."/>
   <Type name="na" class="na" element="N" mass="14.01"/>
   <Type name="nb" class="nb" element="N" mass="14.01"/>
   <Type name="nc" class="nc" element="N" mass="14.01"/>
@@ -49,13 +49,13 @@
   <Type name="nh" class="nh" element="N" mass="14.01"/>
   <Type name="no" class="no" element="N" mass="14.01" def="[N;X3](O)O" desc="N in nitro group" overrides="n3"/>
   <Type name="o" class="o" element="O" mass="16.0" def="[O;X1]" desc="sp2 O in C=O, COO-"/>
-  <Type name="oh" class="oh" element="O" mass="16.0"/>
-  <Type name="os" class="os" element="O" mass="16.0"/>
+  <Type name="oh" class="oh" element="O" mass="16.0" def="[O;X2]H" desc="sp3 O in hydroxyl group" overrides="os"/>
+  <Type name="os" class="os" element="O" mass="16.0" def="[O;X2]" desc="sp3 O in ether and ester"/>
   <Type name="ow" class="ow" element="O" mass="16.0"/>
   <Type name="p2" class="p2" element="P" mass="30.97"/>
   <Type name="p3" class="p3" element="P" mass="30.97"/>
   <Type name="p4" class="p4" element="P" mass="30.97"/>
-  <Type name="p5" class="p5" element="P" mass="30.97"/>
+  <Type name="p5" class="p5" element="P" mass="30.97" def="[P;X4]" desc="hypervalent P, 4 subst."/>
   <Type name="pb" class="pb" element="P" mass="30.97"/>
   <Type name="pc" class="pc" element="P" mass="30.97"/>
   <Type name="pd" class="pd" element="P" mass="30.97"/>
@@ -65,8 +65,8 @@
   <Type name="py" class="py" element="P" mass="30.97"/>
   <Type name="s" class="s" element="S" mass="32.06"/>
   <Type name="s2" class="s2" element="S" mass="32.06"/>
-  <Type name="s4" class="s4" element="S" mass="32.06"/>
-  <Type name="s6" class="s6" element="S" mass="32.06"/>
+  <Type name="s4" class="s4" element="S" mass="32.06" def="[S;X3]" desc="hypervalent S, 3 subst."/>
+  <Type name="s6" class="s6" element="S" mass="32.06" def="[S;X4]" desc="hypervalent S, 4 subst."/>
   <Type name="sh" class="sh" element="S" mass="32.06"/>
   <Type name="ss" class="ss" element="S" mass="32.06"/>
   <Type name="sx" class="sx" element="S" mass="32.06"/>

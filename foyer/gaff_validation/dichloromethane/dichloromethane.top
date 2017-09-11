@@ -1,0 +1,54 @@
+; GAFF topology for dichloromethane
+; with charges based on quantum calculations
+; on Hartee-Fock level with the 6/311G** basis set
+; 
+; Wang, J.; Wang, W.; Kollman, P. A.; Case, D. A. J. Comput. Chem. 2005, 25, 11571174 
+; Carl Caleman, Paul J. van Maaren, Minyan Hong, Jochen S. Hub, Luciano T. Costa and David van der Spoel, Force Field Benchmark of Organic Liquids: Density, Enthalpy of Vaporization, Heat Capacities, Surface Tension, Isothermal Compressibility, Volumetric Expansion Coefficient, and Dielectric Constant, J. Chem. Theor. Comput. 8 (2012) http://dx.doi.org/10.1021/ct200731v
+;
+;
+[ defaults ]
+; nbfunc        comb-rule       gen-pairs       fudgeLJ fudgeQQ
+1               2               yes             0.5     0.8333
+
+[ atomtypes ]
+;name  bond_type    mass    charge   ptype          sigma      epsilon
+c3            c3      0.0000  0.0000  A   3.39967e-01  4.57730e-01
+cl            cl      0.0000  0.0000  A   3.47094e-01  1.10876e+00
+h2            h2      0.0000  0.0000  A   2.29317e-01  6.56888e-02
+
+[ moleculetype ]
+; Name            nrexcl
+dichloromethane  3
+
+[ atoms ]
+;   nr       type  resnr residue  atom   cgnr     charge       mass  typeB    chargeB
+     1         cl      1    MOL    Cl1      1   -0.09320  35.500000
+     2         c3      1    MOL     C1      2   -0.25960  12.000000
+     3         h2      1    MOL     H1      3    0.22300   1.000000
+     4         h2      1    MOL     H2      4    0.22300   1.000000
+     5         cl      1    MOL    Cl2      5   -0.09320  35.500000
+
+[ bonds ]
+;  ai    aj funct  r  k
+    2     3     1  1.1000e-01  2.7313e+05
+    2     4     1  1.1000e-01  2.7313e+05
+    1     2     1  1.7860e-01  2.3347e+05
+    2     5     1  1.7860e-01  2.3347e+05
+
+[ pairs ]
+;  ai    aj funct
+
+[ angles ]
+;  ai    aj    ak funct  theta   cth
+    1     2     3     1  1.1011e+02  1.5681e+02
+    1     2     4     1  1.1011e+02  1.5681e+02
+    3     2     4     1  1.0919e+02  3.2635e+02
+    3     2     5     1  1.1011e+02  1.5681e+02
+    4     2     5     1  1.1011e+02  1.5681e+02
+    1     2     5     1  1.1103e+02  4.5355e+02
+
+
+[ system ]
+dichloromethane GAS
+[ molecules ]
+dichloromethane 1
