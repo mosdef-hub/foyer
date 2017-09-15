@@ -1,8 +1,0 @@
-11-dichloroethene, ha (H on aromatic C) is used instead of hc
-    also happens with propyne
-styrene, need a way to define ce (sp2 C conjugated chain system)
-atomtype h1, not sure if N will always be an EW group
-atomtype cg, not defined (benzonitrile)
-atomtype h4, not sure how this can be in formaldehyde
-PF6, no atomtype for P (currently finds P5 but P5 requires 4 subst.)
-atomtype ne
