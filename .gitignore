@@ -40,3 +40,5 @@ docs/_build
 # PyCharm
 .idea
 .idea/*
+
+gaff_bugs.txt
