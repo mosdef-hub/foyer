@@ -51,10 +51,10 @@ class TestGAFF(object):
             _, ext = os.path.splitext(mol_file)
             if ext == '.top':
                 top_filename = '{}.top'.format(mol_name)
-                pdb_filename = '{}.pdb'.format(mol_name)
+                gro_filename = '{}.gro'.format(mol_name)
                 top_path = os.path.join(testfiles_dir, mol_name, top_filename)
-                pdb_path = os.path.join(testfiles_dir, mol_name, pdb_filename)
-                structure = pmd.load_file(top_path, xyz=pdb_path, parametrize=False)
+                gro_path = os.path.join(testfiles_dir, mol_name, gro_filename)
+                structure = pmd.load_file(top_path, xyz=gro_path, parametrize=False)
             elif ext == '.mol2':
                 mol2_path = os.path.join(testfiles_dir, mol_name, mol_file)
                 structure = pmd.load_file(mol2_path, structure=True)
