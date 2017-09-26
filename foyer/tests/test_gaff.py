@@ -59,23 +59,23 @@ class TestGAFF(object):
                 mol2_path = os.path.join(testfiles_dir, mol_name, mol_file)
                 structure = pmd.load_file(mol2_path, structure=True)
         atomtype(structure, GAFF)
-#
-#    def test_full_parametrization(self):
-#        top = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.top')
-#        pdb = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.pdb')
-#        structure = pmd.load_file(top, xyz=pdb)
-#        parametrized = OPLSAA.apply(structure)
-#
-#        assert sum((1 for at in parametrized.atoms if at.type == 'opls_145')) == 6
-#        assert sum((1 for at in parametrized.atoms if at.type == 'opls_146')) == 6
-#        assert len(parametrized.bonds) == 12
-#        assert all(x.type for x in parametrized.bonds)
-#        assert len(parametrized.angles) == 18
-#        assert all(x.type for x in parametrized.angles)
-#        assert len(parametrized.rb_torsions) == 24
-#        assert all(x.type for x in parametrized.dihedrals)
+
+    def test_full_parametrization(self):
+        top = os.path.join(GAFF_TESTFILES_DIR, 'benzene/benzene.top')
+        gro = os.path.join(GAFF_TESTFILES_DIR, 'benzene/benzene.gro')
+        structure = pmd.load_file(top, xyz=gro)
+        parametrized = GAFF.apply(structure)
+
+        assert sum((1 for at in parametrized.atoms if at.type == 'ca')) == 6
+        assert sum((1 for at in parametrized.atoms if at.type == 'ha')) == 6
+        assert len(parametrized.bonds) == 12
+        assert all(x.type for x in parametrized.bonds)
+        assert len(parametrized.angles) == 18
+        assert all(x.type for x in parametrized.angles)
+        assert len(parametrized.dihedrals) == 30
+        assert all(x.type for x in parametrized.dihedrals)
 
 
 
 if __name__ == '__main__':
-    TestOPLS().find_correctly_implemented()
+    TestGAFF().find_correctly_implemented()
