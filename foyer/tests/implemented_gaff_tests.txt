@@ -14,3 +14,17 @@ dichloromethane
 acetone
 cyclohexanone
 glycerol
+propane
+benzene
+toluene
+butane-1-thiol
+ethyldisulfanylethane
+pyridine
+acetone
+NN-dimethylformamide
+carbon-tetrachloride
+2-iodopropane
+benzamide
+hexanoic-acid
+1-cyclopropylethanone
+octafluorocyclobutane

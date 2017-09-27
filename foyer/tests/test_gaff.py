@@ -48,10 +48,11 @@ class TestGAFF(object):
     def test_atomtyping(self, mol_name, testfiles_dir=GAFF_TESTFILES_DIR):
         files = glob.glob(os.path.join(testfiles_dir, mol_name, '*'))
         for mol_file in files:
-            _, ext = os.path.splitext(mol_file)
+            full_path, ext = os.path.splitext(mol_file)
             if ext == '.top':
-                top_filename = '{}.top'.format(mol_name)
-                gro_filename = '{}.gro'.format(mol_name)
+                mobley_name = os.path.splitext(os.path.split(mol_file)[-1])[0]
+                top_filename = '{}.top'.format(mobley_name)
+                gro_filename = '{}.gro'.format(mobley_name)
                 top_path = os.path.join(testfiles_dir, mol_name, top_filename)
                 gro_path = os.path.join(testfiles_dir, mol_name, gro_filename)
                 structure = pmd.load_file(top_path, xyz=gro_path, parametrize=False)
@@ -61,8 +62,8 @@ class TestGAFF(object):
         atomtype(structure, GAFF)
 
     def test_full_parametrization(self):
-        top = os.path.join(GAFF_TESTFILES_DIR, 'benzene/benzene.top')
-        gro = os.path.join(GAFF_TESTFILES_DIR, 'benzene/benzene.gro')
+        top = os.path.join(GAFF_TESTFILES_DIR, 'benzene/mobley_3053621.top')
+        gro = os.path.join(GAFF_TESTFILES_DIR, 'benzene/mobley_3053621.gro')
         structure = pmd.load_file(top, xyz=gro)
         parametrized = GAFF.apply(structure)
 

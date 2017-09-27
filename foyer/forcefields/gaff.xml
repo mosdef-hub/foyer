@@ -13,22 +13,22 @@
   <Type name="cf" class="cf" element="C" mass="12.01"/>
   <Type name="cg" class="cg" element="C" mass="12.01"/>
   <Type name="ch" class="ch" element="C" mass="12.01"/>
-  <Type name="cx" class="cx" element="C" mass="12.01"/>
-  <Type name="cy" class="cy" element="C" mass="12.01"/>
+  <Type name="cx" class="cx" element="C" mass="12.01" def="[C;X4;r3]" desc="sp3 C in three-memberred rings" overrides="c3"/>
+  <Type name="cy" class="cy" element="C" mass="12.01" def="[C;X4;r4]" desc="sp3 C in four-memberred rings" overrides="c3"/>
   <Type name="cu" class="cu" element="C" mass="12.01"/>
   <Type name="cv" class="cv" element="C" mass="12.01"/>
   <Type name="cz" class="cz" element="C" mass="12.01"/>
   <Type name="h1" class="h1" element="H" mass="1.008" def="HC[F,Cl,Br,I,N,O,S]" desc="H on aliphatic C with 1 EW group" overrides="hc"/>
-  <Type name="h2" class="h2" element="H" mass="1.008" def="HC([F,Cl,Br,I,N,O,S])[F,Cl,Br,I,N,O,S]" desc="H on aliphatic C with 2 EW group" overrides="h1"/>
+  <Type name="h2" class="h2" element="H" mass="1.008" def="H[C;X4]([F,Cl,Br,I,N,O,S])[F,Cl,Br,I,N,O,S]" desc="H on aliphatic C with 2 EW group" overrides="h1"/>
   <Type name="h3" class="h3" element="H" mass="1.008"/>
-  <Type name="h4" class="h4" element="H" mass="1.008"/>
-  <Type name="h5" class="h5" element="H" mass="1.008"/>
+  <Type name="h4" class="h4" element="H" mass="1.008" def="H[C;X3][F,Cl,Br,I,N,O,S]" desc="H on aromatic C with 1 EW group" overrides="ha,h1"/>
+  <Type name="h5" class="h5" element="H" mass="1.008" def="H[C;X3]([F,Cl,Br,I,N,O,S])[F,Cl,Br,I,N,O,S]" desc="H on aromatic C with 2 EW group" overrides="ha,h1,h2,h4"/>
   <Type name="ha" class="ha" element="H" mass="1.008" def="H[C;%ca]" desc="H on aromatic C" overrides="hc,h1"/>
   <Type name="hc" class="hc" element="H" mass="1.008" def="HC" desc="H on aliphatic C"/>
   <Type name="hn" class="hn" element="H" mass="1.008" def="HN" desc="H on N"/>
   <Type name="ho" class="ho" element="H" mass="1.008" def="HO" desc="H on O"/>
   <Type name="hp" class="hp" element="H" mass="1.008"/>
-  <Type name="hs" class="hs" element="H" mass="1.008"/>
+  <Type name="hs" class="hs" element="H" mass="1.008" def="HS"/>
   <Type name="hw" class="hw" element="H" mass="1.008"/>
   <Type name="hx" class="hx" element="H" mass="1.008" def="H(C[N;%n4])" desc="H bonded to C next to + charged group" overrides="h1"/>
   <Type name="f" class="f" element="F" mass="19.0" def="F" desc="any F"/>
@@ -41,7 +41,7 @@
   <Type name="n3" class="n3" element="N" mass="14.01" def="[N;X3]" desc="sp3 N with 3 subst."/>
   <Type name="n4" class="n4" element="N" mass="14.01" def="[N;X4]" desc="sp3 N with 4 sbust."/>
   <Type name="na" class="na" element="N" mass="14.01"/>
-  <Type name="nb" class="nb" element="N" mass="14.01"/>
+  <Type name="nb" class="nb" element="N" mass="14.01" def="[N;X2;R1]" desc="inner sp2 N in conj. ring systems"/>
   <Type name="nc" class="nc" element="N" mass="14.01"/>
   <Type name="nd" class="nd" element="N" mass="14.01"/>
   <Type name="ne" class="ne" element="N" mass="14.01"/>
@@ -67,8 +67,8 @@
   <Type name="s2" class="s2" element="S" mass="32.06"/>
   <Type name="s4" class="s4" element="S" mass="32.06" def="[S;X3]" desc="hypervalent S, 3 subst."/>
   <Type name="s6" class="s6" element="S" mass="32.06" def="[S;X4]" desc="hypervalent S, 4 subst."/>
-  <Type name="sh" class="sh" element="S" mass="32.06"/>
-  <Type name="ss" class="ss" element="S" mass="32.06"/>
+  <Type name="sh" class="sh" element="S" mass="32.06" def="[S;X2]H" desc="sp3 S in thiol group"/>
+  <Type name="ss" class="ss" element="S" mass="32.06" def="[S;X2]([!H])[!H]" desc="sp3 S in -SR and SS"/>
   <Type name="sx" class="sx" element="S" mass="32.06"/>
   <Type name="sy" class="sy" element="S" mass="32.06"/>
  </AtomTypes>
