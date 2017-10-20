@@ -173,7 +173,7 @@ class SMARTSGraph(nx.Graph):
                                   for b in topology.bonds()))
 
         if self._graph_matcher is None:
-            atom = nx.get_node_attributes(self, 'atom')[0]
+            atom = nx.get_node_attributes(self, name='atom')[0]
             if len(atom.select('atom_symbol')) == 1 and not atom.select('not_expression'):
                 try:
                     element = atom.select('atom_symbol').strees[0].tail[0]
@@ -208,7 +208,7 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
         super(SMARTSMatcher, self).__init__(G1, G2, node_match)
         self.element = element
         if element not in [None, '*']:
-            self.valid_nodes = [n for n, atom in nx.get_node_attributes(G1, 'atom').items()
+            self.valid_nodes = [n for n, atom in nx.get_node_attributes(G1, name='atom').items()
                                 if atom.element.symbol == element]
         else:
             self.valid_nodes = G1.nodes()
