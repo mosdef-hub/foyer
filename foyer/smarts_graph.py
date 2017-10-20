@@ -154,7 +154,7 @@ class SMARTSGraph(nx.Graph):
         When this function gets used in atomtyper.py, we actively modify the
         white- and blacklists of the atoms in `topology` after finding a match.
         This means that between every successive call of
-        `subgraph_isomorphisms_iter()`, the topology against which we are
+        `subgraph_isomorphisms()`, the topology against which we are
         matching may have actually changed. Currently, we take advantage of this
         behavior in some edges cases (e.g. see `test_hexa_coordinated` in
         `test_smarts.py`).
@@ -191,9 +191,9 @@ class SMARTSGraph(nx.Graph):
 
         # The first node in the smarts graph always corresponds to the atom
         # that we are trying to match.
-        first_atom = next(self.nodes_iter())
+        first_atom = next(self.nodes())
         matched_atoms = set()
-        for mapping in self._graph_matcher.subgraph_isomorphisms_iter():
+        for mapping in self._graph_matcher.subgraph_isomorphisms():
             mapping = {node_id: atom_id for atom_id, node_id in mapping.items()}
             atom_index = mapping[first_atom]
             # Don't yield duplicate matches found via matching the pattern in a
