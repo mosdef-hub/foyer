@@ -191,11 +191,10 @@ class SMARTSGraph(nx.Graph):
 
         # The first node in the smarts graph always corresponds to the atom
         # that we are trying to match.
-        first_atom = self.nodes()[0]
         matched_atoms = set()
         for mapping in self._graph_matcher.subgraph_isomorphisms_iter():
             mapping = {node_id: atom_id for atom_id, node_id in mapping.items()}
-            atom_index = mapping[first_atom]
+            atom_index = mapping[0]
             # Don't yield duplicate matches found via matching the pattern in a
             # different order.
             if atom_index not in matched_atoms:
