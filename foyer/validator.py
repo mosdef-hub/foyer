@@ -157,7 +157,7 @@ class Validator(object):
         if missing_smarts and debug:
             warn("The following atom types do not have smarts definitions: {}".format(
                 ', '.join(missing_smarts)), ValidationWarning)
-       	if missing_smarts and not debug:
+        if missing_smarts and not debug:
        	    warn("There are {} atom types that are missing a smarts definition. "
                      "To view the missing atom types, re-run with debug=True when "
                      "applying the forcefield.".format(len(missing_smarts)), ValidationWarning)
