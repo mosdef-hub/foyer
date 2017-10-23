@@ -197,7 +197,7 @@ class Forcefield(app.ForceField):
 
 
     """
-    def __init__(self, forcefield_files=None, name=None, validation=True):
+    def __init__(self, forcefield_files=None, name=None, validation=True, debug=False):
         self.atomTypeDefinitions = dict()
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
@@ -224,7 +224,7 @@ class Forcefield(app.ForceField):
         preprocessed_files = preprocess_forcefield_files(all_files_to_load)
         if validation:
             for ff_file_name in preprocessed_files:
-                Validator(ff_file_name)
+                Validator(ff_file_name, debug)
 
         super(Forcefield, self).__init__(*preprocessed_files)
         self.parser = smarts.SMARTS(self.non_element_types)
