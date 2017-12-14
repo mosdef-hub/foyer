@@ -161,6 +161,9 @@ def _check_independent_residues(topology):
     for res in topology.residues():
         atoms_in_residue = set([atom for atom in res.atoms()])
         bond_partners_in_residue = [item for sublist in [atom.bond_partners for atom in res.atoms()] for item in sublist]
+        # Handle the case of a 'residue' with no neighbors
+        if bond_partners_in_residue is None:
+            continue
         if set(atoms_in_residue) != set(bond_partners_in_residue):
             return False
     return True
