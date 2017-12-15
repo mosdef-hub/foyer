@@ -127,8 +127,8 @@ def test_residue_map():
         assert [a0.type for a0 in b_with] == [a1.type for a1 in b_without]
         assert [a0.idx for a0 in b_with] == [a1.idx for a1 in b_without]
 
-def test_independent_residues():
-    """Test to see that _check_independent_residues works."""
+def test_independent_residues_molecules():
+    """Test to see that _check_independent_residues works for molecules."""
     butane = Alkane(4)
     structure = butane.to_parmed()
     topo, NULL = generate_topology(structure)
@@ -136,3 +136,11 @@ def test_independent_residues():
     structure = butane.to_parmed(residues=['RES', 'CH3'])
     topo, NULL = generate_topology(structure)
     assert not _check_independent_residues(topo)
+
+def test_independent_residues_atoms():
+    """Test to see that _check_independent_residues works for single aotms."""
+    argon = mb.Compound()
+    argon.name = 'Ar'
+    structure = argon.to_parmed()
+    topo, NULL = generate_topology(structure)
+    assert _check_independent_residues(topo)
