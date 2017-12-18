@@ -29,7 +29,7 @@ def atomtype(structure, forcefield, non_atomistic=False):
 
     generated_opls_types = list()
     for i, atom in enumerate(typed_structure.atoms):
-        message = ('Found multiple or no OPLS types for atom {} in {}: {}\n'
+        message = ('Found multiple or no atom types for atom {} in {}: {}\n'
                    'Should be atomtype: {}'.format(
             i, structure.title, atom.type, known_types[i]))
         assert atom.type, message
@@ -42,7 +42,7 @@ def atomtype(structure, forcefield, non_atomistic=False):
     generated_opls_types = np.array(generated_opls_types)
 
     non_matches = np.array([a != b for a, b in both])
-    message = "Found inconsistent OPLS types in {}: {}".format(
+    message = "Found inconsistent atom types in {}: {}".format(
         structure.title,
         list(zip(n_types[non_matches],
                  generated_opls_types[non_matches],
