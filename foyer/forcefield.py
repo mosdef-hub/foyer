@@ -161,6 +161,9 @@ def _check_independent_residues(topology):
     for res in topology.residues():
         atoms_in_residue = set([atom for atom in res.atoms()])
         bond_partners_in_residue = [item for sublist in [atom.bond_partners for atom in res.atoms()] for item in sublist]
+        # Handle the case of a 'residue' with no neighbors
+        if not bond_partners_in_residue:
+            continue
         if set(atoms_in_residue) != set(bond_partners_in_residue):
             return False
     return True
@@ -197,7 +200,7 @@ class Forcefield(app.ForceField):
 
 
     """
-    def __init__(self, forcefield_files=None, name=None, validation=True):
+    def __init__(self, forcefield_files=None, name=None, validation=True, debug=False):
         self.atomTypeDefinitions = dict()
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
@@ -224,7 +227,7 @@ class Forcefield(app.ForceField):
         preprocessed_files = preprocess_forcefield_files(all_files_to_load)
         if validation:
             for ff_file_name in preprocessed_files:
-                Validator(ff_file_name)
+                Validator(ff_file_name, debug)
 
         super(Forcefield, self).__init__(*preprocessed_files)
         self.parser = smarts.SMARTS(self.non_element_types)

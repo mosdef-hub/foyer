@@ -173,7 +173,7 @@ class SMARTSGraph(nx.Graph):
                                   for b in topology.bonds()))
 
         if self._graph_matcher is None:
-            atom = nx.get_node_attributes(self, 'atom')[0]
+            atom = nx.get_node_attributes(self, name='atom')[0]
             if len(atom.select('atom_symbol')) == 1 and not atom.select('not_expression'):
                 try:
                     element = atom.select('atom_symbol').strees[0].tail[0]
@@ -189,13 +189,12 @@ class SMARTSGraph(nx.Graph):
                                                 node_match=self._node_match,
                                                 element=element)
 
-        # The first node in the smarts graph always corresponds to the atom
-        # that we are trying to match.
-        first_atom = next(self.nodes_iter())
         matched_atoms = set()
         for mapping in self._graph_matcher.subgraph_isomorphisms_iter():
             mapping = {node_id: atom_id for atom_id, node_id in mapping.items()}
-            atom_index = mapping[first_atom]
+            # The first node in the smarts graph always corresponds to the atom
+            # that we are trying to match.
+            atom_index = mapping[0]
             # Don't yield duplicate matches found via matching the pattern in a
             # different order.
             if atom_index not in matched_atoms:
@@ -208,7 +207,7 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
         super(SMARTSMatcher, self).__init__(G1, G2, node_match)
         self.element = element
         if element not in [None, '*']:
-            self.valid_nodes = [n for n, atom in nx.get_node_attributes(G1, 'atom').items()
+            self.valid_nodes = [n for n, atom in nx.get_node_attributes(G1, name='atom').items()
                                 if atom.element.symbol == element]
         else:
             self.valid_nodes = G1.nodes()

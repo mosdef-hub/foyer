@@ -71,3 +71,7 @@ pentachloroethane
 1-chlorobutane
 11-dichloroethane
 chloroethane
+pyridine
+pyrimidine
+propyne
+paraldehyde

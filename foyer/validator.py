@@ -13,7 +13,7 @@ from foyer.smarts_graph import SMARTSGraph
 
 
 class Validator(object):
-    def __init__(self, ff_file_name):
+    def __init__(self, ff_file_name, debug=False):
         from foyer.forcefield import preprocess_forcefield_files
         preprocessed_ff_file_name = preprocess_forcefield_files([ff_file_name])
 
@@ -30,7 +30,7 @@ class Validator(object):
         from foyer.forcefield import Forcefield
         self.smarts_parser = Forcefield(preprocessed_ff_file_name, validation=False).parser
 
-        self.validate_smarts()
+        self.validate_smarts(debug=debug)
         self.validate_overrides()
 
     @staticmethod
@@ -115,7 +115,7 @@ class Validator(object):
                         errors.append(error)
         raise_collected(errors)
 
-    def validate_smarts(self):
+    def validate_smarts(self, debug):
         missing_smarts = []
         errors = []
         for entry in self.atom_types:
@@ -143,7 +143,7 @@ class Validator(object):
             # make sure referenced labels exist
             smarts_graph = SMARTSGraph(smarts_string, parser=self.smarts_parser,
                                        name=name, overrides=entry.attrib.get('overrides'))
-            for atom_expr in nx.get_node_attributes(smarts_graph, 'atom').values():
+            for atom_expr in nx.get_node_attributes(smarts_graph, name='atom').values():
                 labels = atom_expr.select('has_label')
                 for label in labels:
                     atom_type = label.tail[0][1:]
@@ -154,9 +154,13 @@ class Validator(object):
                             None, entry.sourceline)
                         errors.append(undefined)
         raise_collected(errors)
-        if missing_smarts:
+        if missing_smarts and debug:
             warn("The following atom types do not have smarts definitions: {}".format(
                 ', '.join(missing_smarts)), ValidationWarning)
+        if missing_smarts and not debug:
+       	    warn("There are {} atom types that are missing a smarts definition. "
+                     "To view the missing atom types, re-run with debug=True when "
+                     "applying the forcefield.".format(len(missing_smarts)), ValidationWarning)
 
     def validate_overrides(self):
         errors = []
