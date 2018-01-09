@@ -298,7 +298,9 @@ class Forcefield(app.ForceField):
         if 'doi' in parameters:
             self.atomTypeRefs[name] = parameters['doi']
 
-    def apply(self, topology, references_file=None, *args, **kwargs):
+    def apply(self, topology, references_file=None, assert_angle_params=True,
+              assert_dihedral_params=True, assert_improper_params=False,
+              *args, **kwargs):
         """Apply the force field to a molecular structure
 
         Parameters
@@ -308,6 +310,15 @@ class Forcefield(app.ForceField):
         references_file : str, optional, default=None
             Name of file where force field references will be written (in Bibtex
             format)
+        assert_angle_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all system
+            angles.
+        assert_dihedral_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all system
+            proper dihedrals.
+        assert_improper_params : bool, optional, default=False
+            If True, Foyer will exit if parameters are not found for all system
+            improper dihedrals.
         """
         if not isinstance(topology, app.Topology):
             residues = kwargs.get('residues')
@@ -317,9 +328,42 @@ class Forcefield(app.ForceField):
             positions = np.empty(shape=(topology.getNumAtoms(), 3))
             positions[:] = np.nan
         box_vectors = topology.getPeriodicBoxVectors()
-        system = self.createSystem(topology, *args, **kwargs)
+        system, data = self.createSystem(topology, *args, **kwargs)
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
+
+        '''
+        Check that all topology objects (angles, dihedrals, and impropers)
+        have parameters assigned. OpenMM will generate an error if bond parameters
+        are not assigned.
+        '''
+        if data.angles and (len(data.angles) != len(structure.angles)):
+            msg = ("Parameters have not been assigned to all angles. Total "
+                   "system angles: {}, Parameterized angles: {}"
+                   "".format(len(data.angles), len(structure.angles)))
+            if assert_angle_params:
+                raise Exception(msg)
+            else:
+                warnings.warn(msg)
+        if data.propers and len(data.propers) != \
+                len(structure.dihedrals) + len(structure.rb_torsions):
+            msg = ("Parameters have not been assigned to all proper dihedrals. "
+                   "Total system dihedrals: {}, Parameterized dihedrals: {}"
+                   "".format(len(data.propers), len(structure.dihedrals) + \
+                   len(structure.rb_torsions)))
+            if assert_dihedral_params:
+                raise Exception(msg)
+            else:
+                warnings.warn(msg)
+        if data.impropers and (len(data.impropers) != len(structure.impropers)):
+            msg = ("Parameters have not been assigned to all impropers. Total "
+                   "system impropers: {}, Parameterized impropers: {}"
+                   "".format(len(data.impropers), len(structure.impropers)))
+            if assert_improper_params:
+                raise Exception(msg)
+            else:
+                warnings.warn(msg)
+
         structure.bonds.sort(key=lambda x: x.atom1.idx)
         structure.positions = positions
         if box_vectors is not None:
@@ -589,7 +633,7 @@ class Forcefield(app.ForceField):
         # Execute scripts found in the XML files.
         for script in self._scripts:
             exec(script, locals())
-        return sys
+        return sys, data
 
     def _write_references_to_file(self, atom_types, references_file):
         atomtype_references = {}

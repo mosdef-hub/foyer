@@ -144,3 +144,19 @@ def test_independent_residues_atoms():
     structure = argon.to_parmed()
     topo, NULL = generate_topology(structure)
     assert _check_independent_residues(topo)
+
+def test_exit_no_topo_params():
+    """Test that the user is notified if not all topology parameters are found."""
+    ethane = mb.load(get_fn('ethane.mol2'))
+    oplsaa_angle_typo = Forcefield(forcefield_files=get_fn('ethane-angle-typo.xml'))
+    with pytest.raises(Exception):
+        ethane = oplsaa_angle_typo.apply(ethane)
+    with pytest.warns(UserWarning):
+        ethane = oplsaa_angle_typo.apply(ethane, assert_angle_params=False)
+
+    ethane = mb.load(get_fn('ethane.mol2'))
+    oplsaa_dihedral_typo = Forcefield(forcefield_files=get_fn('ethane-dihedral-typo.xml'))
+    with pytest.raises(Exception):
+        ethane = oplsaa_dihedral_typo.apply(ethane)
+    with pytest.warns(UserWarning):
+        ethane = oplsaa_dihedral_typo.apply(ethane, assert_dihedral_params=False)
