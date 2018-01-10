@@ -187,6 +187,21 @@ def _update_atomtypes(unatomtyped_topology, res_name, prototype):
             for old_atom, new_atom_id in zip([atom for atom in res.atoms()], [atom.id for atom in prototype.atoms()]):
                 old_atom.id = new_atom_id
 
+def _error_or_warn(error, msg):
+    """Raise an error or warning if topology objects are not fully parameterized.
+    
+    Parameters
+    ----------
+    error : bool
+        If True, raise an error, else raise a warning
+    msg : str
+        The message to be provided with the error or warning
+    """
+    if error:
+        raise Exception(msg)
+    else:
+        warnings.warn(msg)
+
 
 class Forcefield(app.ForceField):
     """Specialization of OpenMM's Forcefield allowing SMARTS based atomtyping.
@@ -341,28 +356,19 @@ class Forcefield(app.ForceField):
             msg = ("Parameters have not been assigned to all angles. Total "
                    "system angles: {}, Parameterized angles: {}"
                    "".format(len(data.angles), len(structure.angles)))
-            if assert_angle_params:
-                raise Exception(msg)
-            else:
-                warnings.warn(msg)
+            _error_or_warn(assert_angle_params, msg)
         if data.propers and len(data.propers) != \
                 len(structure.dihedrals) + len(structure.rb_torsions):
             msg = ("Parameters have not been assigned to all proper dihedrals. "
                    "Total system dihedrals: {}, Parameterized dihedrals: {}"
                    "".format(len(data.propers), len(structure.dihedrals) + \
                    len(structure.rb_torsions)))
-            if assert_dihedral_params:
-                raise Exception(msg)
-            else:
-                warnings.warn(msg)
+            _error_or_warn(assert_dihedral_params)
         if data.impropers and (len(data.impropers) != len(structure.impropers)):
             msg = ("Parameters have not been assigned to all impropers. Total "
                    "system impropers: {}, Parameterized impropers: {}"
                    "".format(len(data.impropers), len(structure.impropers)))
-            if assert_improper_params:
-                raise Exception(msg)
-            else:
-                warnings.warn(msg)
+            _error_or_warn(assert_improper_params)
 
         structure.bonds.sort(key=lambda x: x.atom1.idx)
         structure.positions = positions
