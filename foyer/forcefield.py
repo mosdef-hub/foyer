@@ -343,7 +343,7 @@ class Forcefield(app.ForceField):
             positions = np.empty(shape=(topology.getNumAtoms(), 3))
             positions[:] = np.nan
         box_vectors = topology.getPeriodicBoxVectors()
-        system, data = self.createSystem(topology, *args, **kwargs)
+        system = self.createSystem(topology, *args, **kwargs)
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
 
@@ -352,6 +352,7 @@ class Forcefield(app.ForceField):
         have parameters assigned. OpenMM will generate an error if bond parameters
         are not assigned.
         '''
+        data = self._system_data
         if data.angles and (len(data.angles) != len(structure.angles)):
             msg = ("Parameters have not been assigned to all angles. Total "
                    "system angles: {}, Parameterized angles: {}"
@@ -363,12 +364,12 @@ class Forcefield(app.ForceField):
                    "Total system dihedrals: {}, Parameterized dihedrals: {}"
                    "".format(len(data.propers), len(structure.dihedrals) + \
                    len(structure.rb_torsions)))
-            _error_or_warn(assert_dihedral_params)
+            _error_or_warn(assert_dihedral_params, msg)
         if data.impropers and (len(data.impropers) != len(structure.impropers)):
             msg = ("Parameters have not been assigned to all impropers. Total "
                    "system impropers: {}, Parameterized impropers: {}"
                    "".format(len(data.impropers), len(structure.impropers)))
-            _error_or_warn(assert_improper_params)
+            _error_or_warn(assert_improper_params, msg)
 
         structure.bonds.sort(key=lambda x: x.atom1.idx)
         structure.positions = positions
@@ -639,7 +640,11 @@ class Forcefield(app.ForceField):
         # Execute scripts found in the XML files.
         for script in self._scripts:
             exec(script, locals())
-        return sys, data
+        
+        # Store system data in Forcefield
+        self._system_data = data
+
+        return sys
 
     def _write_references_to_file(self, atom_types, references_file):
         atomtype_references = {}
