@@ -354,22 +354,31 @@ class Forcefield(app.ForceField):
         are not assigned.
         '''
         data = self._SystemData
+
         if data.angles and (len(data.angles) != len(structure.angles)):
             msg = ("Parameters have not been assigned to all angles. Total "
                    "system angles: {}, Parameterized angles: {}"
                    "".format(len(data.angles), len(structure.angles)))
             _error_or_warn(assert_angle_params, msg)
+
+        proper_dihedrals = [dihedral for dihedral in structure.dihedrals
+                                if not dihedral.improper]
         if data.propers and len(data.propers) != \
-                len(structure.dihedrals) + len(structure.rb_torsions):
+                len(proper_dihedrals) + len(structure.rb_torsions):
             msg = ("Parameters have not been assigned to all proper dihedrals. "
                    "Total system dihedrals: {}, Parameterized dihedrals: {}"
-                   "".format(len(data.propers), len(structure.dihedrals) + \
+                   "".format(len(data.propers), len(proper_dihedrals) + \
                    len(structure.rb_torsions)))
             _error_or_warn(assert_dihedral_params, msg)
-        if data.impropers and (len(data.impropers) != len(structure.impropers)):
+
+        improper_dihedrals = [dihedral for dihedral in structure.dihedrals
+                                if dihedral.improper]
+        if data.impropers and len(data.impropers) != \
+                len(improper_dihedrals) + len(structure.impropers):
             msg = ("Parameters have not been assigned to all impropers. Total "
                    "system impropers: {}, Parameterized impropers: {}"
-                   "".format(len(data.impropers), len(structure.impropers)))
+                   "".format(len(data.impropers), len(improper_dihedrals) + \
+                   len(structure.impropers)))
             _error_or_warn(assert_improper_params, msg)
 
         structure.bonds.sort(key=lambda x: x.atom1.idx)
