@@ -756,19 +756,19 @@
   <Type name="opls_795" class="opls_795" element="O" mass="15.9994"/>
   <Type name="opls_796" class="opls_796" element="H" mass="1.008"/>
   <Type name="opls_797" class="opls_797" mass="0.0"/>
-  <Type name="opls_900" class="NT" element="N" mass="14.0067"   def="[N;X3](H)(H)C" desc="N primary amines"/>
+  <Type name="opls_900" class="NT" element="N" mass="14.0067" def="[N;X3](H)(H)C" desc="N primary amines" doi="10.1021/ja984106u"/>
   <Type name="opls_901" class="opls_901" element="N" mass="14.0067"/>
   <Type name="opls_902" class="opls_902" element="N" mass="14.0067"/>
-  <Type name="opls_903" class="CT" element="C" mass="12.01100"   def="[C;X4](H)(H)(H)[N;%opls_900]" desc="CH3(N) primary aliphatic amines" overrides="opls_906"/>
+  <Type name="opls_903" class="CT" element="C" mass="12.01100" def="[C;X4](H)(H)(H)[N;%opls_900]" desc="CH3(N) primary aliphatic amines" overrides="opls_906" doi="10.1021/ja984106u"/>
   <Type name="opls_904" class="opls_904" element="C" mass="12.011"/>
   <Type name="opls_905" class="opls_905" element="C" mass="12.011"/>
-  <Type name="opls_906" class="CT" element="C" mass="12.01100"   def="[C;X4](H)(H)[N;%opls_900]" desc="CH2(N) primary aliphatic amines" overrides="opls_136"/>
+  <Type name="opls_906" class="CT" element="C" mass="12.01100" def="[C;X4](H)(H)[N;%opls_900]" desc="CH2(N) primary aliphatic amines" overrides="opls_136" doi="10.1021/ja984106u"/>
   <Type name="opls_906B" class="opls_906B" element="C" mass="12.011"/>
   <Type name="opls_907" class="opls_907" element="C" mass="12.011"/>
   <Type name="opls_908" class="opls_908" element="C" mass="12.011"/>
-  <Type name="opls_909" class="H" element="H" mass="1.00800"   def="H[N;%opls_900]" desc="H(N) primary amines"/>
+  <Type name="opls_909" class="H" element="H" mass="1.00800" def="H[N;%opls_900]" desc="H(N) primary amines" doi="10.1021/ja984106u"/>
   <Type name="opls_910" class="opls_910" element="H" mass="1.008"/>
-  <Type name="opls_911" class="HC" element="H" mass="1.00800"   def="HC[N;%opls_900]" desc="H(C) for C bonded to N in amines, diamines (aziridine H2,H3)" overrides="opls_140"/>
+  <Type name="opls_911" class="HC" element="H" mass="1.00800" def="HC[N;%opls_900]" desc="H(C) for C bonded to N in amines, diamines (aziridine H2,H3)" overrides="opls_140" doi="10.1021/ja984106u"/>
   <Type name="opls_912" class="opls_912" element="C" mass="12.011"/>
   <Type name="opls_912B" class="opls_912B" element="C" mass="12.011"/>
   <Type name="opls_913" class="opls_913" element="C" mass="12.011"/>
