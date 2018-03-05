@@ -106,7 +106,7 @@ def test_from_mbuild_customtype():
 def test_improper_dihedral():
     untyped_benzene = pmd.load_file(get_fn('benzene.mol2'), structure=True)
     ff_improper = Forcefield(forcefield_files=get_fn('improper_dihedral.xml'))
-    benzene = ff_improper.apply(untyped_benzene)
+    benzene = ff_improper.apply(untyped_benzene, assert_dihedral_params=False)
     assert len(benzene.dihedrals) == 18
     assert len([dih for dih in benzene.dihedrals if dih.improper]) == 6
     assert len([dih for dih in benzene.dihedrals if not dih.improper]) == 12
