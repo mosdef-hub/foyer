@@ -453,6 +453,9 @@ class Forcefield(app.ForceField):
             else:
                 find_atomtypes(topology, forcefield=self)
 
+        # Overwrite previous _SystemData object
+        self._SystemData = app.ForceField._SystemData()
+
         data = self._SystemData
         data.atoms = list(topology.atoms())
         for atom in data.atoms:
