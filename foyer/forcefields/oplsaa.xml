@@ -182,15 +182,15 @@
   <Type name="opls_183" class="opls_183" element="C" mass="12.011"/>
   <Type name="opls_184" class="opls_184" element="C" mass="12.011"/>
   <Type name="opls_185" class="HC" element="C" mass="1.00800"   def="HC[O;%opls_180]" desc="H(COR), alpha H ether" overrides="opls_140" doi="10.1021/ja9621760"/>
-  <Type name="opls_186" class="opls_186" element="O" mass="15.9994" def="[O;X2][C;%opls_193](O)(C)H" desc="O: acetal ether" overrides="opls_180"/>
+  <Type name="opls_186" class="opls_186" element="O" mass="15.9994" def="[O;X2][C;%opls_193](O)(C)H" desc="O: acetal ether" overrides="opls_180" doi="10.1021/ja9621760"/>
   <Type name="opls_187" class="opls_187" element="O" mass="15.9994"/>
   <Type name="opls_188" class="opls_188" element="H" mass="1.008"/>
   <Type name="opls_189" class="opls_189" element="C" mass="12.011"/>
   <Type name="opls_190" class="opls_190" element="H" mass="1.008"/>
   <Type name="opls_191" class="opls_191" element="C" mass="12.011"/>
   <Type name="opls_192" class="opls_192" element="H" mass="1.008"/>
-  <Type name="opls_193" class="opls_193" element="C" mass="12.011" def="[C;X4](O)(O)(C)H" desc="C(HCO2), acetal OCHRO"/>
-  <Type name="opls_194" class="opls_194" element="H" mass="1.008" def="H[C;%opls_193][O;%opls_186]" desc="H(CHO2), acetal OCHRO" overrides="opls_185"/>
+  <Type name="opls_193" class="opls_193" element="C" mass="12.011" def="[C;X4](O)(O)(C)H" desc="C(HCO2), acetal OCHRO" doi="10.1021/ja9621760"/>
+  <Type name="opls_194" class="opls_194" element="H" mass="1.008" def="H[C;%opls_193][O;%opls_186]" desc="H(CHO2), acetal OCHRO" overrides="opls_185" doi="10.1021/ja9621760"/>
   <Type name="opls_195" class="opls_195" element="C" mass="12.011"/>
   <Type name="opls_196" class="opls_196" element="H" mass="1.008"/>
   <Type name="opls_197" class="opls_197" element="C" mass="12.011"/>
