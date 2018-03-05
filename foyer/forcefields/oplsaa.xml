@@ -801,11 +801,11 @@
   <Type name="opls_958" class="opls_958" element="H" mass="1.008"/>
   <Type name="opls_959" class="opls_959" element="C" mass="12.011"/>
   <Type name="opls_960" class="opls_960" element="C" mass="12.011"/>
-  <Type name="opls_961" class="CT" element="C" mass="12.01100"  def="[C;X4](F)(F)(F)*" desc="perfluoroalkane CF3" overrides="opls_962"/>
-  <Type name="opls_962" class="CT" element="C" mass="12.01100"  def="[C;X4](F)(F)(*)*" desc="perfluoroalkane CF2"/>
+  <Type name="opls_961" class="CT" element="C" mass="12.01100" def="[C;X4](F)(F)(F)*" desc="perfluoroalkane CF3" overrides="opls_962" doi="10.1021/jp004071w"/>
+  <Type name="opls_962" class="CT" element="C" mass="12.01100" def="[C;X4](F)(F)(*)*" desc="perfluoroalkane CF2" doi="10.1021/jp004071w"/>
   <Type name="opls_963" class="opls_963" element="C" mass="12.011"/>
   <Type name="opls_964" class="opls_964" element="C" mass="12.011"/>
-  <Type name="opls_965" class="F" element="F" mass="18.9984"  def="FC" desc="perfluoroalkane F"/>
+  <Type name="opls_965" class="F" element="F" mass="18.9984" def="FC" desc="perfluoroalkane F" doi="10.1021/jp004071w"/>
   <Type name="MNH3" class="MNH3" mass="0.0"/>
   <Type name="MNH2" class="MNH2" mass="0.0"/>
   <Type name="MCH3A" class="MCH3A" mass="0.0"/>
