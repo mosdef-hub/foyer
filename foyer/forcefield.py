@@ -444,25 +444,26 @@ class Forcefield(app.ForceField):
             else:
                 find_atomtypes(topology, forcefield=self)
 
-        self._SystemData.atoms = list(topology.atoms())
-        for atom in self._SystemData.atoms:
-            self._SystemData.excludeAtomWith.append([])
+        data = self._SystemData
+        data.atoms = list(topology.atoms())
+        for atom in data.atoms:
+            data.excludeAtomWith.append([])
 
         # Make a list of all bonds
         for bond in topology.bonds():
-            self._SystemData.bonds.append(app.ForceField._BondData(bond[0].index, bond[1].index))
+            data.bonds.append(app.ForceField._BondData(bond[0].index, bond[1].index))
 
         # Record which atoms are bonded to each other atom
         bonded_to_atom = []
-        for i in range(len(self._SystemData.atoms)):
+        for i in range(len(data.atoms)):
             bonded_to_atom.append(set())
-            self._SystemData.atomBonds.append([])
-        for i in range(len(self._SystemData.bonds)):
-            bond = self._SystemData.bonds[i]
+            data.atomBonds.append([])
+        for i in range(len(data.bonds)):
+            bond = data.bonds[i]
             bonded_to_atom[bond.atom1].add(bond.atom2)
             bonded_to_atom[bond.atom2].add(bond.atom1)
-            self._SystemData.atomBonds[bond.atom1].append(i)
-            self._SystemData.atomBonds[bond.atom2].append(i)
+            data.atomBonds[bond.atom1].append(i)
+            data.atomBonds[bond.atom2].append(i)
 
         # TODO: Better way to lookup nonbonded parameters...?
         nonbonded_params = None
@@ -474,18 +475,18 @@ class Forcefield(app.ForceField):
         for chain in topology.chains():
             for res in chain.residues():
                 for atom in res.atoms():
-                    self._SystemData.atomType[atom] = atom.id
+                    data.atomType[atom] = atom.id
                     if nonbonded_params:
                         params = nonbonded_params[atom.id]
-                        self._SystemData.atomParameters[atom] = params
+                        data.atomParameters[atom] = params
 
         # Create the System and add atoms
         sys = mm.System()
         for atom in topology.atoms():
             # Look up the atom type name, returning a helpful error message if it cannot be found.
-            if atom not in self._SystemData.atomType:
+            if atom not in data.atomType:
                 raise Exception("Could not identify atom type for atom '%s'." % str(atom))
-            typename = self._SystemData.atomType[atom]
+            typename = data.atomType[atom]
 
             # Look up the type name in the list of registered atom types, returning a helpful error message if it cannot be found.
             if typename not in self._atomTypes:
@@ -523,7 +524,7 @@ class Forcefield(app.ForceField):
 
         # Make a list of all unique angles
         unique_angles = set()
-        for bond in self._SystemData.bonds:
+        for bond in data.bonds:
             for atom in bonded_to_atom[bond.atom1]:
                 if atom != bond.atom2:
                     if atom < bond.atom2:
@@ -536,11 +537,11 @@ class Forcefield(app.ForceField):
                         unique_angles.add((bond.atom1, bond.atom2, atom))
                     else:
                         unique_angles.add((atom, bond.atom2, bond.atom1))
-        self._SystemData.angles = sorted(list(unique_angles))
+        data.angles = sorted(list(unique_angles))
 
         # Make a list of all unique proper torsions
         unique_propers = set()
-        for angle in self._SystemData.angles:
+        for angle in data.angles:
             for atom in bonded_to_atom[angle[0]]:
                 if atom not in angle:
                     if atom < angle[2]:
@@ -553,59 +554,59 @@ class Forcefield(app.ForceField):
                         unique_propers.add((angle[0], angle[1], angle[2], atom))
                     else:
                         unique_propers.add((atom, angle[2], angle[1], angle[0]))
-        self._SystemData.propers = sorted(list(unique_propers))
+        data.propers = sorted(list(unique_propers))
 
         # Make a list of all unique improper torsions
         for atom in range(len(bonded_to_atom)):
             bonded_to = bonded_to_atom[atom]
             if len(bonded_to) > 2:
                 for subset in itertools.combinations(bonded_to, 3):
-                    self._SystemData.impropers.append((atom, subset[0], subset[1], subset[2]))
+                    data.impropers.append((atom, subset[0], subset[1], subset[2]))
 
         # Identify bonds that should be implemented with constraints
         if constraints == AllBonds or constraints == HAngles:
-            for bond in self._SystemData.bonds:
+            for bond in data.bonds:
                 bond.isConstrained = True
         elif constraints == HBonds:
-            for bond in self._SystemData.bonds:
-                atom1 = self._SystemData.atoms[bond.atom1]
-                atom2 = self._SystemData.atoms[bond.atom2]
+            for bond in data.bonds:
+                atom1 = data.atoms[bond.atom1]
+                atom2 = data.atoms[bond.atom2]
                 bond.isConstrained = atom1.name.startswith('H') or atom2.name.startswith('H')
         if rigidWater:
-            for bond in self._SystemData.bonds:
-                atom1 = self._SystemData.atoms[bond.atom1]
-                atom2 = self._SystemData.atoms[bond.atom2]
+            for bond in data.bonds:
+                atom1 = data.atoms[bond.atom1]
+                atom2 = data.atoms[bond.atom2]
                 if atom1.residue.name == 'HOH' and atom2.residue.name == 'HOH':
                     bond.isConstrained = True
 
         # Identify angles that should be implemented with constraints
         if constraints == HAngles:
-            for angle in self._SystemData.angles:
-                atom1 = self._SystemData.atoms[angle[0]]
-                atom2 = self._SystemData.atoms[angle[1]]
-                atom3 = self._SystemData.atoms[angle[2]]
+            for angle in data.angles:
+                atom1 = data.atoms[angle[0]]
+                atom2 = data.atoms[angle[1]]
+                atom3 = data.atoms[angle[2]]
                 numH = 0
                 if atom1.name.startswith('H'):
                     numH += 1
                 if atom3.name.startswith('H'):
                     numH += 1
-                self._SystemData.isAngleConstrained.append(numH == 2 or (numH == 1 and atom2.name.startswith('O')))
+                data.isAngleConstrained.append(numH == 2 or (numH == 1 and atom2.name.startswith('O')))
         else:
-            self._SystemData.isAngleConstrained = len(self._SystemData.angles)*[False]
+            data.isAngleConstrained = len(data.angles)*[False]
         if rigidWater:
-            for i in range(len(self._SystemData.angles)):
-                angle = self._SystemData.angles[i]
-                atom1 = self._SystemData.atoms[angle[0]]
-                atom2 = self._SystemData.atoms[angle[1]]
-                atom3 = self._SystemData.atoms[angle[2]]
+            for i in range(len(data.angles)):
+                angle = data.angles[i]
+                atom1 = data.atoms[angle[0]]
+                atom2 = data.atoms[angle[1]]
+                atom3 = data.atoms[angle[2]]
                 if atom1.residue.name == 'HOH' and atom2.residue.name == 'HOH' and atom3.residue.name == 'HOH':
-                    self._SystemData.isAngleConstrained[i] = True
+                    data.isAngleConstrained[i] = True
 
         # Add virtual sites
-        for atom in self._SystemData.virtualSites:
-            (site, atoms, excludeWith) = self._SystemData.virtualSites[atom]
+        for atom in data.virtualSites:
+            (site, atoms, excludeWith) = data.virtualSites[atom]
             index = atom.index
-            self._SystemData.excludeAtomWith[excludeWith].append(index)
+            data.excludeAtomWith[excludeWith].append(index)
             if site.type == 'average2':
                 sys.setVirtualSite(index, mm.TwoParticleAverageSite(
                     atoms[0], atoms[1], site.weights[0], site.weights[1]))
@@ -628,14 +629,14 @@ class Forcefield(app.ForceField):
 
         # Add forces to the System
         for force in self._forces:
-            force.createForce(sys, self._SystemData, nonbondedMethod, nonbondedCutoff, args)
+            force.createForce(sys, data, nonbondedMethod, nonbondedCutoff, args)
         if removeCMMotion:
             sys.addForce(mm.CMMotionRemover())
 
         # Let force generators do postprocessing
         for force in self._forces:
             if 'postprocessSystem' in dir(force):
-                force.postprocessSystem(sys, self._SystemData, args)
+                force.postprocessSystem(sys, data, args)
 
         # Execute scripts found in the XML files.
         for script in self._scripts:
