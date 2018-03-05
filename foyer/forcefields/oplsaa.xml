@@ -538,12 +538,12 @@
   <Type name="opls_539" class="opls_539" element="C" mass="12.011"/>
   <Type name="opls_540" class="opls_540" element="H" mass="1.008"/>
   <Type name="opls_541" class="opls_541" element="H" mass="1.008"/>
-  <Type name="opls_542" class="NA" element="N" mass="14.0067"  def="[N;X3;r5]1[C;X3;r5][C;X3;r5][C;X3;r5][C;X3;r5]1H" desc="N in pyrrole"/>
-  <Type name="opls_543" class="CW" element="C" mass="12.01100" def="[C;X3;r5]([N;%opls_542])" desc="C2 in pyrrole"/>
-  <Type name="opls_544" class="CS" element="C" mass="12.01100" def="[C;X3;r5]([C;%opls_543])" desc="C3 in pyrrole" overrides="opls_142"/>
-  <Type name="opls_545" class="H"  element="H" mass="1.00800"  def="H[N;%opls_542]" desc="H1 in pyrrole"/>
-  <Type name="opls_546" class="HA" element="H" mass="1.00800"  def="H[C;%opls_543]" desc="H2 in pyrrole" overrides="opls_144"/>
-  <Type name="opls_547" class="HA" element="H" mass="1.00800"  def="H[C;%opls_544]" desc="H3 in pyrrole" overrides="opls_144"/>
+  <Type name="opls_542" class="NA" element="N" mass="14.0067"  def="[N;X3;r5]1[C;X3;r5][C;X3;r5][C;X3;r5][C;X3;r5]1H" desc="N in pyrrole" doi="10.1021/jp981200o"/>
+  <Type name="opls_543" class="CW" element="C" mass="12.01100" def="[C;X3;r5]([N;%opls_542])" desc="C2 in pyrrole" doi="10.1021/jp981200o"/>
+  <Type name="opls_544" class="CS" element="C" mass="12.01100" def="[C;X3;r5]([C;%opls_543])" desc="C3 in pyrrole" overrides="opls_142" doi="10.1021/jp981200o"/>
+  <Type name="opls_545" class="H"  element="H" mass="1.00800"  def="H[N;%opls_542]" desc="H1 in pyrrole" doi="10.1021/jp981200o"/>
+  <Type name="opls_546" class="HA" element="H" mass="1.00800"  def="H[C;%opls_543]" desc="H2 in pyrrole" overrides="opls_144" doi="10.1021/jp981200o"/>
+  <Type name="opls_547" class="HA" element="H" mass="1.00800"  def="H[C;%opls_544]" desc="H3 in pyrrole" overrides="opls_144" doi="10.1021/jp981200o"/>
   <Type name="opls_548" class="opls_548" element="N" mass="14.0067"/>
   <Type name="opls_549" class="opls_549" element="N" mass="14.0067"/>
   <Type name="opls_550" class="opls_550" element="C" mass="12.011"/>
