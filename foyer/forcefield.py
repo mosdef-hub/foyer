@@ -3,6 +3,7 @@ import glob
 import itertools
 import os
 from tempfile import mktemp, mkstemp
+import xml.etree.ElementTree as ET
 
 try:
     from cStringIO import StringIO
@@ -48,8 +49,15 @@ def preprocess_forcefield_files(forcefield_files=None):
         # read and preprocess
         xml_contents = f.read()
         f.close()
+
         xml_contents = re.sub(r"(def\w*=\w*[\"\'])(.*)([\"\'])", lambda m: m.group(1) + re.sub(r"&(?!amp;)", r"&amp;", m.group(2)) + m.group(3),
                               xml_contents)
+
+        xml = ET.fromstring(xml_contents)
+        for section in xml:
+            if 'Force' in section.tag:
+                section[:] = sorted(section, key=lambda child: -1 * len([aa for aa in child.keys() if 'type' in aa]))
+        xml_contents = str(ET.tostring(xml, encoding='unicode', method='xml'))
 
         # write to temp file
         _, temp_file_name = mkstemp(suffix=suffix)
