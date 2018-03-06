@@ -189,8 +189,8 @@
   <Type name="opls_190" class="opls_190" element="H" mass="1.008"/>
   <Type name="opls_191" class="opls_191" element="C" mass="12.011"/>
   <Type name="opls_192" class="opls_192" element="H" mass="1.008"/>
-  <Type name="opls_193" class="opls_193" element="C" mass="12.011" def="[C;X4](O)(O)(C)H" desc="C(HCO2), acetal OCHRO"/>
-  <Type name="opls_194" class="opls_194" element="H" mass="1.008" def="H[C;%opls_193][O;%opls_186]" desc="H(CHO2), acetal OCHRO" overrides="opls_185"/>
+  <Type name="opls_193" class="CO" element="C" mass="12.011" def="[C;X4](O)(O)(C)H" desc="C(HCO2), acetal OCHRO"/>
+  <Type name="opls_194" class="HC" element="H" mass="1.008" def="H[C;%opls_193][O;%opls_186]" desc="H(CHO2), acetal OCHRO" overrides="opls_185"/>
   <Type name="opls_195" class="opls_195" element="C" mass="12.011"/>
   <Type name="opls_196" class="opls_196" element="H" mass="1.008"/>
   <Type name="opls_197" class="opls_197" element="C" mass="12.011"/>
