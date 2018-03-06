@@ -144,3 +144,18 @@ def test_independent_residues_atoms():
     structure = argon.to_parmed()
     topo, NULL = generate_topology(structure)
     assert _check_independent_residues(topo)
+
+def test_topology_precedence():
+    """Test to see if topology precedence is properly adhered to."""
+    butane = Alkane(4)
+    ff = Forcefield(forcefield_files=get_fn('butane-precedence.xml'))
+    typed_butane = ff.apply(butane)
+
+    assert len([bond for bond in typed_butane.bonds
+                if round(bond.type.req, 2) == 1.15]) == 6
+    assert len([angle for angle in typed_butane.angles
+                if round(angle.type.theteq, 3) == 143.239]) == 6
+    assert len([angle for angle in typed_butane.angles
+                if round(angle.type.theteq, 3) == 114.592]) == 4
+    assert len([rb for rb in typed_butane.rb_torsions
+                if round(rb.type.c0, 3) == 0.239]) == 12
