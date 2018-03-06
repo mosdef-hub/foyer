@@ -777,12 +777,12 @@
   <Type name="opls_916" class="opls_916" element="C" mass="12.011"/>
   <Type name="opls_917" class="opls_917" element="C" mass="12.011"/>
   <Type name="opls_918" class="opls_918" element="C" mass="12.011"/>
-  <Type name="opls_925" class="opls_925" element="C" mass="12.011" def="[C;X2](C)H" desc="alkyne RC%CH terminal C"/>
-  <Type name="opls_926" class="opls_926" element="H" mass="1.008" def="H[C;%opls_925]" desc="alkyne RC%CH terminal H"/>
-  <Type name="opls_927" class="opls_927" element="C" mass="12.011" def="[C;X2](C(H)H)C" desc="alkyne RC%CH C2 R-with 2 or 3 H" overrides="opls_928"/>
+  <Type name="opls_925" class="CZ" element="C" mass="12.011" def="[C;X2](C)H" desc="alkyne RC%CH terminal C"/>
+  <Type name="opls_926" class="HC" element="H" mass="1.008" def="H[C;%opls_925]" desc="alkyne RC%CH terminal H"/>
+  <Type name="opls_927" class="CZ" element="C" mass="12.011" def="[C;X2](C(H)H)C" desc="alkyne RC%CH C2 R-with 2 or 3 H" overrides="opls_928"/>
   <Type name="opls_928" class="opls_928" element="C" mass="12.011"/>
   <Type name="opls_929" class="opls_929" element="C" mass="12.011"/>
-  <Type name="opls_930" class="opls_930" element="H" mass="1.008" def="H([*][C][C;%opls_925])" desc="alkyne RC%CH H on C3 (for C3 use #135-#139)" overrides="opls_140, opls_144"/>
+  <Type name="opls_930" class="HC" element="H" mass="1.008" def="H([*][C][C;%opls_925])" desc="alkyne RC%CH H on C3 (for C3 use #135-#139)" overrides="opls_140, opls_144"/>
   <Type name="opls_931" class="opls_931" element="C" mass="12.011"/>
   <Type name="opls_940" class="opls_940" element="N" mass="14.0067"/>
   <Type name="opls_941" class="opls_941" element="H" mass="1.008"/>
