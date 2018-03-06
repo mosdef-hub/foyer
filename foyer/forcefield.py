@@ -317,6 +317,7 @@ class Forcefield(app.ForceField):
             positions = np.empty(shape=(topology.getNumAtoms(), 3))
             positions[:] = np.nan
         box_vectors = topology.getPeriodicBoxVectors()
+        topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
         system = self.createSystem(topology, *args, **kwargs)
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
@@ -330,7 +331,7 @@ class Forcefield(app.ForceField):
 
         return structure
 
-    def run_atomtyping(self, topology, use_residue_map):
+    def run_atomtyping(self, topology, use_residue_map=True):
 
         if use_residue_map:
             independent_residues = _check_independent_residues(topology)
