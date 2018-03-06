@@ -298,7 +298,7 @@ class Forcefield(app.ForceField):
         if 'doi' in parameters:
             self.atomTypeRefs[name] = parameters['doi']
 
-    def apply(self, topology, references_file=None, *args, **kwargs):
+    def apply(self, topology, references_file=None, use_residue_map=True, *args, **kwargs):
         """Apply the force field to a molecular structure
 
         Parameters
