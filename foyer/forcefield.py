@@ -330,6 +330,31 @@ class Forcefield(app.ForceField):
 
         return structure
 
+    def run_atomtyping(self, topology, use_residue_map):
+
+        if use_residue_map:
+            independent_residues = _check_independent_residues(topology)
+
+            if independent_residues:
+                residue_map = dict()
+
+                for res in topology.residues():
+                    if res.name not in residue_map.keys():
+                        residue = _topology_from_residue(res)
+                        find_atomtypes(residue, forcefield=self)
+                        residue_map[res.name] = residue
+
+                for key, val in residue_map.items():
+                    _update_atomtypes(topology, key, val)
+
+            else:
+                find_atomtypes(topology, forcefield=self)
+
+        else:
+            find_atomtypes(topology, forcefield=self)
+
+        return topology
+
     def createSystem(self, topology, atomtype=True, use_residue_map=True,
                      nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
@@ -370,27 +395,6 @@ class Forcefield(app.ForceField):
         system
             the newly created System
         """
-        if atomtype:
-            if use_residue_map:
-                independent_residues = _check_independent_residues(topology)
-
-                if independent_residues:
-                    residue_map = dict()
-
-                    for res in topology.residues():
-                        if res.name not in residue_map.keys():
-                            residue = _topology_from_residue(res)
-                            find_atomtypes(residue, forcefield=self)
-                            residue_map[res.name] = residue
-
-                    for key, val in residue_map.items():
-                        _update_atomtypes(topology, key, val)
-
-                else:
-                    find_atomtypes(topology, forcefield=self)
-
-            else:
-                find_atomtypes(topology, forcefield=self)
 
         data = app.ForceField._SystemData()
         data.atoms = list(topology.atoms())
