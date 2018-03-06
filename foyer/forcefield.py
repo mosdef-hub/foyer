@@ -308,6 +308,8 @@ class Forcefield(app.ForceField):
         references_file : str, optional, default=None
             Name of file where force field references will be written (in Bibtex
             format)
+        use_residue_map : boolean
+            Bypass atomtyping duplicate residues using a residue map
         """
         if not isinstance(topology, app.Topology):
             residues = kwargs.get('residues')
@@ -332,7 +334,15 @@ class Forcefield(app.ForceField):
         return structure
 
     def run_atomtyping(self, topology, use_residue_map=True):
+        """Atomtype the topology
 
+        Parameters
+        ----------
+        topology : openmm.app.Topology
+            Molecular structure to find atom types of
+        use_residue_map : boolean
+            Bypass atomtyping duplicate residues using a residue map
+        """
         if use_residue_map:
             independent_residues = _check_independent_residues(topology)
 
