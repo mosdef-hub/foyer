@@ -53,12 +53,30 @@ def preprocess_forcefield_files(forcefield_files=None):
                               xml_contents)
 
         try:
-            xml = ET.fromstring(xml_contents)
-            for section in xml:
-                if 'Force' in section.tag:
-                    section[:] = sorted(section, key=lambda child: -1 * len([attr_name for attr_name in child.keys() if 'type' in attr_name]))
-            xml_contents = str(ET.tostring(xml, encoding='unicode', method='xml'))
-        except:
+            '''
+            Sort topology objects by precedence, defined by the number of
+            `type` attributes specified, where a `type` attribute indicates
+            increased specificity as opposed to use of `class`
+            '''
+            root = ET.fromstring(xml_contents)
+            for element in root:
+                if 'Force' in element.tag:
+                    element[:] = sorted(element, key=lambda child: -1 * len([attr_name for attr_name in child.keys() if 'type' in attr_name]))
+            xml_contents = ET.tostring(root, method='xml')
+            '''
+            Convert the output byte string to unicode. This method is specific to
+            the Python version (2 or 3)
+            '''
+            try:
+                xml_contents = unicode(xml_contents, 'utf-8')
+            except NameError:
+                xml_contents = str(xml_contents, 'utf-8')
+        except ET.ParseError:
+            '''
+            Provide the user with a warning if sorting could not be performed.
+            This indicates a bad XML file, which will be passed on to the
+            Validator to yield a more descriptive error message.
+            '''
             warnings.warn('Invalid XML detected. Could not auto-sort topology '
                           'objects by precedence.')
 
