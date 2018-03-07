@@ -61,7 +61,9 @@ def preprocess_forcefield_files(forcefield_files=None):
             root = ET.fromstring(xml_contents)
             for element in root:
                 if 'Force' in element.tag:
-                    element[:] = sorted(element, key=lambda child: -1 * len([attr_name for attr_name in child.keys() if 'type' in attr_name]))
+                    element[:] = sorted(element, key=lambda child: (
+                        -1 * len([attr_name for attr_name in child.keys()
+                                    if 'type' in attr_name])))
             xml_contents = ET.tostring(root, method='xml').decode()
         except ET.ParseError:
             '''
