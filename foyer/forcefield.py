@@ -62,15 +62,7 @@ def preprocess_forcefield_files(forcefield_files=None):
             for element in root:
                 if 'Force' in element.tag:
                     element[:] = sorted(element, key=lambda child: -1 * len([attr_name for attr_name in child.keys() if 'type' in attr_name]))
-            xml_contents = ET.tostring(root, method='xml')
-            '''
-            Convert the output byte string to unicode. This method is specific to
-            the Python version (2 or 3)
-            '''
-            try:
-                xml_contents = unicode(xml_contents, 'utf-8')
-            except NameError:
-                xml_contents = str(xml_contents, 'utf-8')
+            xml_contents = ET.tostring(root, method='xml').decode()
         except ET.ParseError:
             '''
             Provide the user with a warning if sorting could not be performed.
