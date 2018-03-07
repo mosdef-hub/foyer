@@ -49,15 +49,18 @@ def preprocess_forcefield_files(forcefield_files=None):
         # read and preprocess
         xml_contents = f.read()
         f.close()
-
         xml_contents = re.sub(r"(def\w*=\w*[\"\'])(.*)([\"\'])", lambda m: m.group(1) + re.sub(r"&(?!amp;)", r"&amp;", m.group(2)) + m.group(3),
                               xml_contents)
 
-        xml = ET.fromstring(xml_contents)
-        for section in xml:
-            if 'Force' in section.tag:
-                section[:] = sorted(section, key=lambda child: -1 * len([aa for aa in child.keys() if 'type' in aa]))
-        xml_contents = str(ET.tostring(xml, encoding='unicode', method='xml'))
+        try:
+            xml = ET.fromstring(xml_contents)
+            for section in xml:
+                if 'Force' in section.tag:
+                    section[:] = sorted(section, key=lambda child: -1 * len([attr_name for attr_name in child.keys() if 'type' in attr_name]))
+            xml_contents = str(ET.tostring(xml, encoding='unicode', method='xml'))
+        except:
+            warnings.warn('Invalid XML detected. Could not auto-sort topology '
+                          'objects by precedence.')
 
         # write to temp file
         _, temp_file_name = mkstemp(suffix=suffix)
