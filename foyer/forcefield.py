@@ -364,6 +364,9 @@ class Forcefield(app.ForceField):
         else:
             find_atomtypes(topology, forcefield=self)
 
+        if not all([a.id for a in topology.atoms()][0]):
+            raise ValueError('Not all atoms in topology have atom types')
+
         return topology
 
     def createSystem(self, topology, atomtype=True, use_residue_map=True,
