@@ -309,7 +309,14 @@ class Forcefield(app.ForceField):
             Name of file where force field references will be written (in Bibtex
             format)
         use_residue_map : boolean
-            Bypass atomtyping duplicate residues using a residue map
+            Store atomtyped topologies of residues to a dictionary that maps
+            them to residue names.  Each topology, including atomtypes, will be
+            copied to other residues with the same name. This avoids repeatedly
+            calling the subgraph isomorphism on idential residues and should
+            result in better performance for systems with many identital
+            residues, i.e. a box of water. Note that for this to be applied to
+            independent molecules, they must each be saved as different
+            residues in the topology.
         """
         if not isinstance(topology, app.Topology):
             residues = kwargs.get('residues')
@@ -341,7 +348,14 @@ class Forcefield(app.ForceField):
         topology : openmm.app.Topology
             Molecular structure to find atom types of
         use_residue_map : boolean
-            Bypass atomtyping duplicate residues using a residue map
+            Store atomtyped topologies of residues to a dictionary that maps
+            them to residue names.  Each topology, including atomtypes, will be
+            copied to other residues with the same name. This avoids repeatedly
+            calling the subgraph isomorphism on idential residues and should
+            result in better performance for systems with many identital
+            residues, i.e. a box of water. Note that for this to be applied to
+            independent molecules, they must each be saved as different
+            residues in the topology.
         """
         if use_residue_map:
             independent_residues = _check_independent_residues(topology)
