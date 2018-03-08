@@ -118,6 +118,8 @@ def test_residue_map():
     topo, NULL = generate_topology(ethane)
     topo_with = oplsaa.run_atomtyping(topo, use_residue_map=True)
     topo_without = oplsaa.run_atomtyping(topo, use_residue_map=False)
+    assert all([a.id for a in topo_with.atoms()][0])
+    assert all([a.id for a in topo_without.atoms()][0])
     struct_with = pmd.openmm.load_topology(topo_without, oplsaa.createSystem(topo_with))
     struct_without = pmd.openmm.load_topology(topo_without, oplsaa.createSystem(topo_without))
     for atom_with, atom_without in zip(struct_with.atoms, struct_without.atoms):
