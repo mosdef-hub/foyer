@@ -383,8 +383,7 @@ class Forcefield(app.ForceField):
 
         return topology
 
-    def createSystem(self, topology, atomtype=True, use_residue_map=True,
-                     nonbondedMethod=NoCutoff,
+    def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
                      **args):
@@ -394,8 +393,6 @@ class Forcefield(app.ForceField):
         ----------
         topology : Topology
             The Topology for which to create a System
-        use_residue_map : boolean
-            Bypass atomtyping duplicate residues using a residue map
         nonbondedMethod : object=NoCutoff
             The method to use for nonbonded interactions.  Allowed values are
             NoCutoff, CutoffNonPeriodic, CutoffPeriodic, Ewald, or PME.
