@@ -308,12 +308,12 @@ class Forcefield(app.ForceField):
         references_file : str, optional, default=None
             Name of file where force field references will be written (in Bibtex
             format)
-        use_residue_map : boolean
+        use_residue_map : boolean, optional, default=True
             Store atomtyped topologies of residues to a dictionary that maps
             them to residue names.  Each topology, including atomtypes, will be
             copied to other residues with the same name. This avoids repeatedly
             calling the subgraph isomorphism on idential residues and should
-            result in better performance for systems with many identital
+            result in better performance for systems with many identical
             residues, i.e. a box of water. Note that for this to be applied to
             independent molecules, they must each be saved as different
             residues in the topology.
@@ -347,12 +347,12 @@ class Forcefield(app.ForceField):
         ----------
         topology : openmm.app.Topology
             Molecular structure to find atom types of
-        use_residue_map : boolean
+        use_residue_map : boolean, optional, default=True
             Store atomtyped topologies of residues to a dictionary that maps
             them to residue names.  Each topology, including atomtypes, will be
             copied to other residues with the same name. This avoids repeatedly
             calling the subgraph isomorphism on idential residues and should
-            result in better performance for systems with many identital
+            result in better performance for systems with many identical
             residues, i.e. a box of water. Note that for this to be applied to
             independent molecules, they must each be saved as different
             residues in the topology.
