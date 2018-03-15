@@ -22,7 +22,7 @@ The currently supported functional forms for molecular forces are:
 Definitions for each molecular force follow the OpenMM standard.
 
 #### Classes vs. Types
-OpenMM allows users to specify force definitions using either a
+OpenMM allows users to specify either a
 [`class` or a `type`](http://docs.openmm.org/7.0.0/userguide/application.html#atom-types-and-atom-classes),
 to define each particle within the force definition.
 Here, `type` refers to a specific atom type (as defined in the
@@ -41,6 +41,7 @@ In contrast, Foyer assigns force parameters based on definition
 specificity, where definitions containing more `type` attributes are
 considered to be more specific.
 
+**Example:**
 ```
 <RBTorsionForce>
   <Proper class1="CT" class2="CT" class3="CT" class4="CT" c0="2.9288" c1="-1.4644" c2="0.2092" c3="-1.6736" c4="0.0" c5="0.0"/>
