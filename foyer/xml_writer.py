@@ -1,3 +1,5 @@
+from __future__ import division
+
 import collections
 from lxml import etree as ET
 
@@ -5,20 +7,51 @@ import numpy as np
 
 
 def write_foyer(self, filename, forcefield=None, unique=True):
+    """Outputs a Foyer XML from a ParmEd Structure
+
+    Information from a ParmEd Structure is used to create a Foyer force
+    field XML. If the Forcefield used to parameterize the Structure is
+    passed to this function through the `forcefield` argument then the
+    resulting XML should be able to be used to exacty reproduce the
+    parameterization. Otherwise, all topological information will be
+    written, but the `AtomTypes` section will be missing information
+    (such as SMARTS definitions).
+
+    This function can also be used to output the complete topology for a
+    system if the `unique` argument is set to `False`. This can be useful
+    for small molecules to be used to test the implementation of a Foyer
+    force field XML.
+
+    Additional features to be added include:
+    - Documentation (and better standardization) of parameter rounding.
+    - Addition of `coulomb14scale` and `lj14scale` attributes to the
+      `NonbondedForce` element
+    - Grouping of duplicate parameter definitions by atom class (the current
+      implementation considers parameters to be unique if atom `type`
+      definitions differ)
+    - Sort parameters by atom ids when `unique=False` (currently no sorting
+      is performed, this is minor but would make files slightly more readable)
+
+    Parameters
+    ----------
+    filename : str
+        Name of the Foyer XML file to be written
+    forcefield : foyer.Forcefield, optional, default=None
+        Foyer Forcefield used to parameterize the ParmEd Structure. This
+        is used to obtain additional information that is not available
+        from the Structure itself, e.g. atomtype SMARTS definitions.
+    unique : boolean, optional, default=True
+        Write only unique elements. If False, elements are written for each
+        atom, bond, etc. in the system. `unique=False` is primarily used
+        for storing the topology of "test" molecules for a Foyer forcefield.
+
     """
-    To-dos:
-    - Possibly standardize, and definitely document, the rounding for each
-      parameter.
-    - Break writers for each section into separate helper functions.
-    - Add `coulomb14scale` and `lj14scale` attributes to `NonbondedForce`
-    - Add a function that searches for class equivalences in force definitions
-      with equivalent parameters. This would allow the generated XML to write
-      parameter definitions with classes instead of types, reducing the XML size.
-    - Sort by atom ids when `unique=False` (currently no sorting is performed)
-    """
+    # Assume if a Structure has a bond and bond type that the Structure is
+    # parameterized. ParmEd uses the same logic to denote parameterization.
     if not (len(self.bonds) > 0 and self.bonds[0].type is not None):
         raise Exception("Cannot write Foyer XML from an unparametrized "
                         "Structure.")
+
     root = ET.Element('ForceField')
     _write_atoms(root, self.atoms, forcefield, unique)
     if len(self.bonds) > 0 and self.bonds[0].type is not None:
@@ -34,6 +67,7 @@ def write_foyer(self, filename, forcefield=None, unique=True):
 
     ET.ElementTree(root).write(filename, pretty_print=True)
 
+
 def _write_atoms(root, atoms, forcefield, unique):
     atomtypes = ET.SubElement(root, 'AtomTypes')
     nonbonded = ET.SubElement(root, 'NonbondedForce')
@@ -46,18 +80,17 @@ def _write_atoms(root, atoms, forcefield, unique):
         ('desc', 'forcefield.atomTypeDesc[name]'),
         ('doi', 'forcefield.atomTypeRefs[name]')
         ])
-    nonbonded_attrs = collections.OrderedDict([
-        ('type', 'name'),
-        ('charge', 'round(atom.charge, 4)'),
-        ('sigma', 'round(atom.atom_type.sigma, 4)'),
-        ('epsilon', 'round(atom.atom_type.epsilon * 4.184, 6)')
-        ])
     for atom in atoms:
         atomtype = ET.SubElement(atomtypes, 'Type')
         nb_force = ET.SubElement(nonbonded, 'Atom')
 
         name = atom.atom_type.name
         for key, val in atomtype_attrs.items():
+            '''
+            I'm not crazy about using `eval` here, but this is where we want
+            to handle `AttributeError` and `KeyError` exceptions to pass a
+            blank string for these attributes.
+            '''
             try:
                 label = str(eval(val))
             except (AttributeError, KeyError):
@@ -66,18 +99,13 @@ def _write_atoms(root, atoms, forcefield, unique):
 
         if not unique:
             nb_force.set('id', str(atom.idx))
-        for key, val in nonbonded_attrs.items():
-            label = str(eval(val))
-            nb_force.set(key, label)
+        nb_force.set('type', name)
+        nb_force.set('charge', str(round(atom.charge, 4)))
+        nb_force.set('sigma', str(round(atom.atom_type.sigma, 4)))
+        nb_force.set('epsilon', str(round(atom.atom_type.epsilon * 4.184, 6)))
 
 def _write_bonds(root, bonds, unique):
     bond_forces = ET.SubElement(root, 'HarmonicBondForce')
-    bond_attrs = collections.OrderedDict([
-        ('type1', 'atypes[0]'),
-        ('type2', 'atypes[1]'),
-        ('length', 'round(bond.type.req / 10, 4)'),
-        ('k', 'round(bond.type.k * 4.184 * 200, 1)')
-        ])
     for bond in bonds:
         bond_force = ET.SubElement(bond_forces, 'Bond')
         atypes = [atype for atype in [bond.atom1.type, bond.atom2.type]]
@@ -86,19 +114,13 @@ def _write_bonds(root, bonds, unique):
         else:
             bond_force.set('id1', str(bond.atom1.idx))
             bond_force.set('id2', str(bond.atom2.idx))
-        for key, val in bond_attrs.items():
-            label = str(eval(val))
-            bond_force.set(key, label)
+        for id in range(2):
+            bond_force.set('type{}'.format(id+1), atypes[id])
+        bond_force.set('length', str(round(bond.type.req / 10, 4)))
+        bond_force.set('k', str(round(bond.type.k * 4.184 * 200, 1)))
 
 def _write_angles(root, angles, unique):
     angle_forces = ET.SubElement(root, 'HarmonicAngleForce')
-    angle_attrs = collections.OrderedDict([
-        ('type1', 'atypes[0]'),
-        ('type2', 'atypes[1]'),
-        ('type3', 'atypes[2]'),
-        ('angle', 'round(angle.type.theteq * (np.pi / 180.), 10)'),
-        ('k', 'round(angle.type.k * 4.184 * 2, 3)')
-        ])
     for angle in angles:
         angle_force = ET.SubElement(angle_forces, 'Angle')
         atypes = [atype for atype in [angle.atom1.type,
@@ -111,21 +133,13 @@ def _write_angles(root, angles, unique):
             angle_force.set('id1', str(angle.atom1.idx))
             angle_force.set('id2', str(angle.atom2.idx))
             angle_force.set('id3', str(angle.atom3.idx))
-        for key, val in angle_attrs.items():
-            label = str(eval(val))
-            angle_force.set(key, label)
+        for id in range(3):
+            angle_force.set('type{}'.format(id+1), atypes[id])
+        angle_force.set('angle', str(round(angle.type.theteq * (np.pi / 180), 10)))
+        angle_force.set('k', str(round(angle.type.k * 4.184 * 2, 3)))
 
 def _write_periodic_torsions(root, dihedrals, unique):
     periodic_torsion_forces = ET.SubElement(root, 'PeriodicTorsionForce')
-    dihedral_attrs = collections.OrderedDict([
-        ('type1', 'atypes[0]'),
-        ('type2', 'atypes[1]'),
-        ('type3', 'atypes[2]'),
-        ('type4', 'atypes[3]'),
-        ('periodicity1', 'dihedral.type.per'),
-        ('phase1', 'round(dihedral.type.phase * (np.pi / 180.), 8)')
-        ('k1', 'round(dihedral.type.phi_k * 4.184, 3)')
-        ])
     for dihedral in dihedrals:
         dihedral_force = ET.SubElement(periodic_torsion_forces, dihedral_type)
         atypes = [atype for atype in [dihedral.atom1.type,
@@ -154,9 +168,12 @@ def _write_periodic_torsions(root, dihedrals, unique):
                 dihedral_force.set('id2', str(dihedral.atom2.idx))
                 dihedral_force.set('id3', str(dihedral.atom3.idx))
                 dihedral_force.set('id4', str(dihedral.atom4.idx))
-        for key, val in dihedral_attrs.items():
-            label = str(eval(val))
-            dihedral_force.set(key, label)
+        for id in range(4):
+            dihedral_force.set('type{}'.format(id+1), atypes[id])
+        dihedral_force.set('periodicity1', str(dihedral.type.per))
+        dihedral_force.set('phase1',
+                           str(round(dihedral.type.phase * (np.pi / 180), 8)))
+        dihedral_force.set('k1', str(round(dihedral.type.phi_k * 4.184, 3)))
 
 def _write_rb_torsions(root, rb_torsions, unique):
     rb_torsion_forces = ET.SubElement(root, 'RBTorsionForce')
@@ -174,10 +191,8 @@ def _write_rb_torsions(root, rb_torsions, unique):
             rb_torsion_force.set('id2', str(rb_torsion.atom2.idx))
             rb_torsion_force.set('id3', str(rb_torsion.atom3.idx))
             rb_torsion_force.set('id4', str(rb_torsion.atom4.idx))
-        rb_torsion_force.set('type1', atypes[0])
-        rb_torsion_force.set('type2', atypes[1])
-        rb_torsion_force.set('type3', atypes[2])
-        rb_torsion_force.set('type4', atypes[3])
+        for id in range(4):
+            rb_torsion_force.set('type{}'.format(id+1), atypes[id])
         for c_id in range(6):
             rb_torsion_force.set('c{}'.format(c_id),
                 str(round(getattr(rb_torsion.type, 'c{}'.format(c_id)) * 4.184,
@@ -206,6 +221,10 @@ def _remove_duplicate_elements(root, unique):
             child.remove(elem_to_remove)
 
 def _elements_equal(e1, e2):
+    """
+    Note: This was grabbed, basically verbatim, from:
+    https://stackoverflow.com/questions/7905380/testing-equivalence-of-xml-etree-elementtree
+    """
     if type(e1) != type(e2): return False
     if e1.tag != e1.tag: return False
     if e1.text != e2.text: return False
