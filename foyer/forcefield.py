@@ -298,7 +298,7 @@ class Forcefield(app.ForceField):
         if 'doi' in parameters:
             self.atomTypeRefs[name] = parameters['doi']
 
-    def apply(self, topology, references_file=None, *args, **kwargs):
+    def apply(self, topology, references_file=None, use_residue_map=True, *args, **kwargs):
         """Apply the force field to a molecular structure
 
         Parameters
@@ -308,6 +308,15 @@ class Forcefield(app.ForceField):
         references_file : str, optional, default=None
             Name of file where force field references will be written (in Bibtex
             format)
+        use_residue_map : boolean, optional, default=True
+            Store atomtyped topologies of residues to a dictionary that maps
+            them to residue names.  Each topology, including atomtypes, will be
+            copied to other residues with the same name. This avoids repeatedly
+            calling the subgraph isomorphism on idential residues and should
+            result in better performance for systems with many identical
+            residues, i.e. a box of water. Note that for this to be applied to
+            independent molecules, they must each be saved as different
+            residues in the topology.
         """
         if not isinstance(topology, app.Topology):
             residues = kwargs.get('residues')
@@ -317,6 +326,7 @@ class Forcefield(app.ForceField):
             positions = np.empty(shape=(topology.getNumAtoms(), 3))
             positions[:] = np.nan
         box_vectors = topology.getPeriodicBoxVectors()
+        topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
         system = self.createSystem(topology, *args, **kwargs)
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
@@ -330,8 +340,50 @@ class Forcefield(app.ForceField):
 
         return structure
 
-    def createSystem(self, topology, atomtype=True, use_residue_map=True,
-                     nonbondedMethod=NoCutoff,
+    def run_atomtyping(self, topology, use_residue_map=True):
+        """Atomtype the topology
+
+        Parameters
+        ----------
+        topology : openmm.app.Topology
+            Molecular structure to find atom types of
+        use_residue_map : boolean, optional, default=True
+            Store atomtyped topologies of residues to a dictionary that maps
+            them to residue names.  Each topology, including atomtypes, will be
+            copied to other residues with the same name. This avoids repeatedly
+            calling the subgraph isomorphism on idential residues and should
+            result in better performance for systems with many identical
+            residues, i.e. a box of water. Note that for this to be applied to
+            independent molecules, they must each be saved as different
+            residues in the topology.
+        """
+        if use_residue_map:
+            independent_residues = _check_independent_residues(topology)
+
+            if independent_residues:
+                residue_map = dict()
+
+                for res in topology.residues():
+                    if res.name not in residue_map.keys():
+                        residue = _topology_from_residue(res)
+                        find_atomtypes(residue, forcefield=self)
+                        residue_map[res.name] = residue
+
+                for key, val in residue_map.items():
+                    _update_atomtypes(topology, key, val)
+
+            else:
+                find_atomtypes(topology, forcefield=self)
+
+        else:
+            find_atomtypes(topology, forcefield=self)
+
+        if not all([a.id for a in topology.atoms()][0]):
+            raise ValueError('Not all atoms in topology have atom types')
+
+        return topology
+
+    def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
                      **args):
@@ -341,8 +393,6 @@ class Forcefield(app.ForceField):
         ----------
         topology : Topology
             The Topology for which to create a System
-        use_residue_map : boolean
-            Bypass atomtyping duplicate residues using a residue map
         nonbondedMethod : object=NoCutoff
             The method to use for nonbonded interactions.  Allowed values are
             NoCutoff, CutoffNonPeriodic, CutoffPeriodic, Ewald, or PME.
@@ -370,27 +420,6 @@ class Forcefield(app.ForceField):
         system
             the newly created System
         """
-        if atomtype:
-            if use_residue_map:
-                independent_residues = _check_independent_residues(topology)
-
-                if independent_residues:
-                    residue_map = dict()
-
-                    for res in topology.residues():
-                        if res.name not in residue_map.keys():
-                            residue = _topology_from_residue(res)
-                            find_atomtypes(residue, forcefield=self)
-                            residue_map[res.name] = residue
-
-                    for key, val in residue_map.items():
-                        _update_atomtypes(topology, key, val)
-
-                else:
-                    find_atomtypes(topology, forcefield=self)
-
-            else:
-                find_atomtypes(topology, forcefield=self)
 
         data = app.ForceField._SystemData()
         data.atoms = list(topology.atoms())
