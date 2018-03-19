@@ -17,6 +17,7 @@ ethane_box.save('ethane-box.gro')
 ethane_box.save('ethane-box.top', forcefield_name='oplsaa')
 ```
 ----
+
 #### Creating a box of coarse-grained ethane
 Again we will use mBuild to construct a box filled with ethane molecules.  However,
 now we will model ethane using a united-atom description and apply the TraPPE force

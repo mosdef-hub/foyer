@@ -30,3 +30,4 @@ script:
 
 after_success:
   - coveralls
+  - if [[ $PYTHON_VERSION == 3.5 ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source devtools/     travis-ci/update_gh_pages.sh; fi
