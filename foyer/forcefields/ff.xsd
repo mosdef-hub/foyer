@@ -70,24 +70,28 @@
           <xs:attribute type="xs:float" name="c3" use="optional"/>
           <xs:attribute type="xs:float" name="c4" use="optional"/>
           <xs:attribute type="xs:float" name="c5" use="optional"/>
+          <xs:attribute type="xs:float" name="c6" use="optional"/>
           <xs:attribute type="xs:float" name="k0" use="optional"/>
           <xs:attribute type="xs:float" name="k1" use="optional"/>
           <xs:attribute type="xs:float" name="k2" use="optional"/>
           <xs:attribute type="xs:float" name="k3" use="optional"/>
           <xs:attribute type="xs:float" name="k4" use="optional"/>
           <xs:attribute type="xs:float" name="k5" use="optional"/>
+          <xs:attribute type="xs:float" name="k6" use="optional"/>
           <xs:attribute type="xs:float" name="phase0" use="optional"/>
           <xs:attribute type="xs:float" name="phase1" use="optional"/>
           <xs:attribute type="xs:float" name="phase2" use="optional"/>
           <xs:attribute type="xs:float" name="phase3" use="optional"/>
           <xs:attribute type="xs:float" name="phase4" use="optional"/>
           <xs:attribute type="xs:float" name="phase5" use="optional"/>
+          <xs:attribute type="xs:float" name="phase6" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity0" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity1" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity2" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity3" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity4" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity5" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity6" use="optional"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
