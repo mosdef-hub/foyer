@@ -189,6 +189,14 @@
       </xs:choice>
     </xs:complexType>
   </xs:element>
+  <xs:element name="CustomTorsionForce">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="Proper" minOccurs="0"/>
+        <xs:element ref="Improper" minOccurs="0"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="NonbondedForce">
     <xs:complexType>
       <xs:sequence>
@@ -206,6 +214,7 @@
         <xs:element ref="HarmonicAngleForce" minOccurs="0"/>
         <xs:element ref="RBTorsionForce" minOccurs="0"/>
         <xs:element ref="PeriodicTorsionForce" minOccurs="0"/>
+        <xs:element ref="CustomTorsionForce" minOccurs="0"/>
         <xs:element ref="NonbondedForce" minOccurs="0"/>
       </xs:all>
     </xs:complexType>
