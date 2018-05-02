@@ -52,6 +52,20 @@
       </xs:simpleContent>
     </xs:complexType>
   </xs:element>
+  <xs:element name="UreyBradley">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:float" name="d" use="optional"/>
+          <xs:attribute type="xs:float" name="k" use="optional"/>
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
+          <xs:attribute type="xs:string" name="type3" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="Proper">
     <xs:complexType>
       <xs:simpleContent>
@@ -182,6 +196,13 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="Angle" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AmoebaUreyBradleyForce">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="UreyBradley" maxOccurs="unbounded" minOccurs="0"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
