@@ -96,6 +96,15 @@
       </xs:simpleContent>
     </xs:complexType>
   </xs:element>
+  <xs:element name="PerTorsionParameter">
+      <xs:complexType>
+          <xs:simpleContent>
+              <xs:extension base="xs:string">
+                  <xs:attribute type="xs:string" name="name"/>
+              </xs:extension>
+          </xs:simpleContent>
+      </xs:complexType>
+  </xs:element>
   <xs:element name="Improper">
     <xs:complexType>
       <xs:simpleContent>
@@ -132,6 +141,9 @@
           <xs:attribute type="xs:float" name="periodicity3" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity4" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity5" use="optional"/>
+          <xs:attribute type="xs:float" name="k" use="optional"/>
+          <xs:attribute type="xs:float" name="theta0" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity" use="optional"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
@@ -193,8 +205,10 @@
     <xs:complexType>
       <xs:choice maxOccurs="unbounded">
         <xs:element ref="Proper" minOccurs="0"/>
+        <xs:element ref="PerTorsionParameter" minOccurs="0"/>
         <xs:element ref="Improper" minOccurs="0"/>
       </xs:choice>
+      <xs:attribute type="xs:string" name="energy" use="optional"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="NonbondedForce">
