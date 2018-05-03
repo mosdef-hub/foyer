@@ -247,6 +247,7 @@
         <xs:element ref="AtomTypes" minOccurs="0"/>
         <xs:element ref="HarmonicBondForce" minOccurs="0"/>
         <xs:element ref="HarmonicAngleForce" minOccurs="0"/>
+        <xs:element ref="AmoebaUreyBradleyForce" minOccurs="0"/>
         <xs:element ref="RBTorsionForce" minOccurs="0"/>
         <xs:element ref="PeriodicTorsionForce" minOccurs="0"/>
         <xs:element ref="CustomTorsionForce" minOccurs="0"/>
