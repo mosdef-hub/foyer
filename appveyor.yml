@@ -18,5 +18,4 @@ install:
 build: false
 
 test_script:
-  - "conda build --quiet devtools\\conda-recipe"
-
+  - conda build --quiet devtools\\conda-recipe 
