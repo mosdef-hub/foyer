@@ -13,6 +13,7 @@ environment:
 
 install:
   - set PATH=%PYTHON%;%PYTHON%\Scripts;%PYTHON%\Library\bin;%PATH%
+  - where conda
   - conda config --add channels omnia
   - conda config --add channels conda-forge
   - conda config --add channels mosdef
