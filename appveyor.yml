@@ -22,5 +22,6 @@ install:
 build: false
 
 test_script:
+  - "PATH"
   - "%CMD_IN_ENV% conda build --quiet devtools\\conda-recipe"
 
