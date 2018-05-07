@@ -362,23 +362,27 @@ class Forcefield(app.ForceField):
             _error_or_warn(assert_angle_params, msg)
 
         proper_dihedrals = [dihedral for dihedral in structure.dihedrals
-                                if not dihedral.improper]
+                            if not dihedral.improper]
         if data.propers and len(data.propers) != \
                 len(proper_dihedrals) + len(structure.rb_torsions):
             msg = ("Parameters have not been assigned to all proper dihedrals. "
-                   "Total system dihedrals: {}, Parameterized dihedrals: {}"
-                   "".format(len(data.propers), len(proper_dihedrals) + \
-                   len(structure.rb_torsions)))
+                   "Total system dihedrals: {}, Parameterized dihedrals: {}. "
+                   "Note that if your system contains torsions of Ryckaert-"
+                   "Bellemans functional form, all of these torsions are "
+                   "processed as propers.".format(len(data.propers),
+                   len(proper_dihedrals) + len(structure.rb_torsions)))
             _error_or_warn(assert_dihedral_params, msg)
 
         improper_dihedrals = [dihedral for dihedral in structure.dihedrals
-                                if dihedral.improper]
+                              if dihedral.improper]
         if data.impropers and len(data.impropers) != \
                 len(improper_dihedrals) + len(structure.impropers):
             msg = ("Parameters have not been assigned to all impropers. Total "
-                   "system impropers: {}, Parameterized impropers: {}"
-                   "".format(len(data.impropers), len(improper_dihedrals) + \
-                   len(structure.impropers)))
+                   "system impropers: {}, Parameterized impropers: {}. "
+                   "Note that if your system contains torsions of Ryckaert-"
+                   "Bellemans functional form, all of these torsions are "
+                   "processed as propers".format(len(data.impropers),
+                   len(improper_dihedrals) + len(structure.impropers)))
             _error_or_warn(assert_improper_params, msg)
 
         structure.bonds.sort(key=lambda x: x.atom1.idx)
