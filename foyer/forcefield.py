@@ -187,6 +187,39 @@ def _update_atomtypes(unatomtyped_topology, res_name, prototype):
             for old_atom, new_atom_id in zip([atom for atom in res.atoms()], [atom.id for atom in prototype.atoms()]):
                 old_atom.id = new_atom_id
 
+def _resolve_urey_bradleys(system, topology):
+        """ Separate urey bradley bonds from harmonic bonds in OpenMM System
+
+        Parameters
+        ---------
+        topology : openmm.app.Topology
+            Molecular structure to find atom types of
+        system : openmm System
+
+        Returns
+        -------
+        system
+            the newly created System
+            """
+        atoms = [a for a in topology.atoms()]
+        bonds = [b for b in topology.bonds()]
+        ub_force = mm.HarmonicBondForce()
+        harmonic_bond_force = mm.HarmonicBondForce()
+        for i, force in enumerate(system.getForces()):
+            if isinstance(force, mm.HarmonicBondForce):
+                for j in range(force.getNumBonds()):
+                    if (atoms[force.getBondParameters(j)[0]], 
+                        atoms[force.getBondParameters(j)[1]]) not in bonds:
+                        ub_force.addBond(*force.getBondParameters(j))
+                    else:
+                        harmonic_bond_force.addBond(*force.getBondParameters(j))
+                system.removeForce(i)
+                
+
+        system.addForce(harmonic_bond_force)
+        system.addForce(ub_force)
+
+
 
 class Forcefield(app.ForceField):
     """Specialization of OpenMM's Forcefield allowing SMARTS based atomtyping.
@@ -328,6 +361,7 @@ class Forcefield(app.ForceField):
         box_vectors = topology.getPeriodicBoxVectors()
         topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
         system = self.createSystem(topology, *args, **kwargs)
+        _resolve_urey_bradleys(system, topology)
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
         structure.bonds.sort(key=lambda x: x.atom1.idx)
@@ -339,6 +373,10 @@ class Forcefield(app.ForceField):
             self._write_references_to_file(atom_types, references_file)
 
         return structure
+
+    
+
+
 
     def run_atomtyping(self, topology, use_residue_map=True):
         """Atomtype the topology
