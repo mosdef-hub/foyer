@@ -196,11 +196,7 @@ def _resolve_urey_bradleys(system, topology):
             Molecular structure to find atom types of
         system : openmm System
 
-        Returns
-        -------
-        system
-            the newly created System
-            """
+        """
         atoms = [a for a in topology.atoms()]
         bonds = [b for b in topology.bonds()]
         ub_force = mm.HarmonicBondForce()
