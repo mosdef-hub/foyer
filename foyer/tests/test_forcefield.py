@@ -106,7 +106,7 @@ def test_from_mbuild_customtype():
 def test_improper_dihedral():
     untyped_benzene = pmd.load_file(get_fn('benzene.mol2'), structure=True)
     ff_improper = Forcefield(forcefield_files=get_fn('improper_dihedral.xml'))
-    benzene = ff_improper.apply(untyped_benzene)
+    benzene = ff_improper.apply(untyped_benzene, assert_dihedral_params=False)
     assert len(benzene.dihedrals) == 18
     assert len([dih for dih in benzene.dihedrals if dih.improper]) == 6
     assert len([dih for dih in benzene.dihedrals if not dih.improper]) == 12
@@ -146,3 +146,16 @@ def test_independent_residues_atoms():
     structure = argon.to_parmed()
     topo, NULL = generate_topology(structure)
     assert _check_independent_residues(topo)
+
+@pytest.mark.parametrize("ff_filename,kwargs", [
+    ("ethane-angle-typo.xml", {"assert_angle_params": False}),
+    ("ethane-dihedral-typo.xml", {"assert_dihedral_params": False})
+])
+def test_missing_topo_params(ff_filename, kwargs):
+    """Test that the user is notified if not all topology parameters are found."""
+    ethane = mb.load(get_fn('ethane.mol2'))
+    oplsaa_with_typo = Forcefield(forcefield_files=get_fn(ff_filename))
+    with pytest.raises(Exception):
+        ethane = oplsaa_with_typo.apply(ethane)
+    with pytest.warns(UserWarning):
+        ethane = oplsaa_with_typo.apply(ethane, **kwargs)

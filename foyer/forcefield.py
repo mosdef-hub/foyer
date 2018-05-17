@@ -215,6 +215,20 @@ def _resolve_urey_bradleys(system, topology):
         system.addForce(harmonic_bond_force)
         system.addForce(ub_force)
 
+def _error_or_warn(error, msg):
+    """Raise an error or warning if topology objects are not fully parameterized.
+    
+    Parameters
+    ----------
+    error : bool
+        If True, raise an error, else raise a warning
+    msg : str
+        The message to be provided with the error or warning
+    """
+    if error:
+        raise Exception(msg)
+    else:
+        warnings.warn(msg)
 
 
 class Forcefield(app.ForceField):
@@ -260,6 +274,7 @@ class Forcefield(app.ForceField):
 
         super(Forcefield, self).__init__(*preprocessed_files)
         self.parser = smarts.SMARTS(self.non_element_types)
+        self._SystemData = self._SystemData()
 
     @property
     def included_forcefields(self):
@@ -327,7 +342,9 @@ class Forcefield(app.ForceField):
         if 'doi' in parameters:
             self.atomTypeRefs[name] = parameters['doi']
 
-    def apply(self, topology, references_file=None, use_residue_map=True, *args, **kwargs):
+    def apply(self, topology, references_file=None, use_residue_map=True,
+              assert_angle_params=True, assert_dihedral_params=True,
+              assert_improper_params=False, *args, **kwargs):
         """Apply the force field to a molecular structure
 
         Parameters
@@ -346,6 +363,15 @@ class Forcefield(app.ForceField):
             residues, i.e. a box of water. Note that for this to be applied to
             independent molecules, they must each be saved as different
             residues in the topology.
+        assert_angle_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all system
+            angles.
+        assert_dihedral_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all system
+            proper dihedrals.
+        assert_improper_params : bool, optional, default=False
+            If True, Foyer will exit if parameters are not found for all system
+            improper dihedrals.
         """
         if not isinstance(topology, app.Topology):
             residues = kwargs.get('residues')
@@ -360,6 +386,44 @@ class Forcefield(app.ForceField):
         _resolve_urey_bradleys(system, topology)
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
+
+        '''
+        Check that all topology objects (angles, dihedrals, and impropers)
+        have parameters assigned. OpenMM will generate an error if bond parameters
+        are not assigned.
+        '''
+        data = self._SystemData
+
+        if data.angles and (len(data.angles) != len(structure.angles)):
+            msg = ("Parameters have not been assigned to all angles. Total "
+                   "system angles: {}, Parameterized angles: {}"
+                   "".format(len(data.angles), len(structure.angles)))
+            _error_or_warn(assert_angle_params, msg)
+
+        proper_dihedrals = [dihedral for dihedral in structure.dihedrals
+                            if not dihedral.improper]
+        if data.propers and len(data.propers) != \
+                len(proper_dihedrals) + len(structure.rb_torsions):
+            msg = ("Parameters have not been assigned to all proper dihedrals. "
+                   "Total system dihedrals: {}, Parameterized dihedrals: {}. "
+                   "Note that if your system contains torsions of Ryckaert-"
+                   "Bellemans functional form, all of these torsions are "
+                   "processed as propers.".format(len(data.propers),
+                   len(proper_dihedrals) + len(structure.rb_torsions)))
+            _error_or_warn(assert_dihedral_params, msg)
+
+        improper_dihedrals = [dihedral for dihedral in structure.dihedrals
+                              if dihedral.improper]
+        if data.impropers and len(data.impropers) != \
+                len(improper_dihedrals) + len(structure.impropers):
+            msg = ("Parameters have not been assigned to all impropers. Total "
+                   "system impropers: {}, Parameterized impropers: {}. "
+                   "Note that if your system contains torsions of Ryckaert-"
+                   "Bellemans functional form, all of these torsions are "
+                   "processed as propers".format(len(data.impropers),
+                   len(improper_dihedrals) + len(structure.impropers)))
+            _error_or_warn(assert_improper_params, msg)
+
         structure.bonds.sort(key=lambda x: x.atom1.idx)
         structure.positions = positions
         if box_vectors is not None:
@@ -455,7 +519,10 @@ class Forcefield(app.ForceField):
             the newly created System
         """
 
-        data = app.ForceField._SystemData()
+        # Overwrite previous _SystemData object
+        self._SystemData = app.ForceField._SystemData()
+
+        data = self._SystemData
         data.atoms = list(topology.atoms())
         for atom in data.atoms:
             data.excludeAtomWith.append([])
@@ -652,6 +719,7 @@ class Forcefield(app.ForceField):
         # Execute scripts found in the XML files.
         for script in self._scripts:
             exec(script, locals())
+
         return sys
 
     def _write_references_to_file(self, atom_types, references_file):
