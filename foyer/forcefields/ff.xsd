@@ -226,13 +226,12 @@
   </xs:element>
   <xs:element name="CustomTorsionForce">
     <xs:complexType>
-      <xs:attribute type="xs:string" name="energy" use="required"/>
       <xs:choice maxOccurs="unbounded">
         <xs:element ref="Proper" minOccurs="0"/>
         <xs:element ref="PerTorsionParameter" minOccurs="0"/>
         <xs:element ref="Improper" minOccurs="0"/>
       </xs:choice>
-      <xs:attribute type="xs:string" name="energy" use="optional"/>
+      <xs:attribute type="xs:string" name="energy" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="NonbondedForce">
