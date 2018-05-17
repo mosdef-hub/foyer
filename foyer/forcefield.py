@@ -3,6 +3,7 @@ import glob
 import itertools
 import os
 from tempfile import mktemp, mkstemp
+import xml.etree.ElementTree as ET
 
 try:
     from cStringIO import StringIO
@@ -50,6 +51,28 @@ def preprocess_forcefield_files(forcefield_files=None):
         f.close()
         xml_contents = re.sub(r"(def\w*=\w*[\"\'])(.*)([\"\'])", lambda m: m.group(1) + re.sub(r"&(?!amp;)", r"&amp;", m.group(2)) + m.group(3),
                               xml_contents)
+
+        try:
+            '''
+            Sort topology objects by precedence, defined by the number of
+            `type` attributes specified, where a `type` attribute indicates
+            increased specificity as opposed to use of `class`
+            '''
+            root = ET.fromstring(xml_contents)
+            for element in root:
+                if 'Force' in element.tag:
+                    element[:] = sorted(element, key=lambda child: (
+                        -1 * len([attr_name for attr_name in child.keys()
+                                    if 'type' in attr_name])))
+            xml_contents = ET.tostring(root, method='xml').decode()
+        except ET.ParseError:
+            '''
+            Provide the user with a warning if sorting could not be performed.
+            This indicates a bad XML file, which will be passed on to the
+            Validator to yield a more descriptive error message.
+            '''
+            warnings.warn('Invalid XML detected. Could not auto-sort topology '
+                          'objects by precedence.')
 
         # write to temp file
         _, temp_file_name = mkstemp(suffix=suffix)
