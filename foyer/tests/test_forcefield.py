@@ -106,7 +106,7 @@ def test_from_mbuild_customtype():
 def test_improper_dihedral():
     untyped_benzene = pmd.load_file(get_fn('benzene.mol2'), structure=True)
     ff_improper = Forcefield(forcefield_files=get_fn('improper_dihedral.xml'))
-    benzene = ff_improper.apply(untyped_benzene)
+    benzene = ff_improper.apply(untyped_benzene, assert_dihedral_params=False)
     assert len(benzene.dihedrals) == 18
     assert len([dih for dih in benzene.dihedrals if dih.improper]) == 6
     assert len([dih for dih in benzene.dihedrals if not dih.improper]) == 12
@@ -116,11 +116,13 @@ def test_residue_map():
     ethane *= 2
     oplsaa = Forcefield(name='oplsaa')
     topo, NULL = generate_topology(ethane)
-    with_map = pmd.openmm.load_topology(topo,
-            oplsaa.createSystem(topo, use_residue_map=True))
-    without_map = pmd.openmm.load_topology(topo,
-            oplsaa.createSystem(topo, use_residue_map=False))
-    for atom_with, atom_without in zip(with_map.atoms, without_map.atoms):
+    topo_with = oplsaa.run_atomtyping(topo, use_residue_map=True)
+    topo_without = oplsaa.run_atomtyping(topo, use_residue_map=False)
+    assert all([a.id for a in topo_with.atoms()][0])
+    assert all([a.id for a in topo_without.atoms()][0])
+    struct_with = pmd.openmm.load_topology(topo_with, oplsaa.createSystem(topo_with))
+    struct_without = pmd.openmm.load_topology(topo_without, oplsaa.createSystem(topo_without))
+    for atom_with, atom_without in zip(struct_with.atoms, struct_without.atoms):
         assert atom_with.type == atom_without.type
         b_with = atom_with.bond_partners
         b_without = atom_without.bond_partners
@@ -172,3 +174,16 @@ def test_topology_precedence():
                 if round(angle.type.theteq, 3) == 97.403]) == 6
     assert len([rb for rb in typed_ethane.rb_torsions
                 if round(rb.type.c0, 3) == 0.287]) == 9
+
+@pytest.mark.parametrize("ff_filename,kwargs", [
+    ("ethane-angle-typo.xml", {"assert_angle_params": False}),
+    ("ethane-dihedral-typo.xml", {"assert_dihedral_params": False})
+])
+def test_missing_topo_params(ff_filename, kwargs):
+    """Test that the user is notified if not all topology parameters are found."""
+    ethane = mb.load(get_fn('ethane.mol2'))
+    oplsaa_with_typo = Forcefield(forcefield_files=get_fn(ff_filename))
+    with pytest.raises(Exception):
+        ethane = oplsaa_with_typo.apply(ethane)
+    with pytest.warns(UserWarning):
+        ethane = oplsaa_with_typo.apply(ethane, **kwargs)
