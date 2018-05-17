@@ -187,7 +187,7 @@ def _update_atomtypes(unatomtyped_topology, res_name, prototype):
             for old_atom, new_atom_id in zip([atom for atom in res.atoms()], [atom.id for atom in prototype.atoms()]):
                 old_atom.id = new_atom_id
 
-def _resolve_urey_bradleys(system, topology):
+def _separate_urey_bradleys(system, topology):
         """ Separate urey bradley bonds from harmonic bonds in OpenMM System
 
         Parameters
@@ -383,7 +383,7 @@ class Forcefield(app.ForceField):
         box_vectors = topology.getPeriodicBoxVectors()
         topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
         system = self.createSystem(topology, *args, **kwargs)
-        _resolve_urey_bradleys(system, topology)
+        _separate_urey_bradleys(system, topology)
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
 
@@ -433,10 +433,6 @@ class Forcefield(app.ForceField):
             self._write_references_to_file(atom_types, references_file)
 
         return structure
-
-    
-
-
 
     def run_atomtyping(self, topology, use_residue_map=True):
         """Atomtype the topology
