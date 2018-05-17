@@ -46,6 +46,8 @@ https://github.com/mosdef-hub/forcefield_template
 
 ### [Force field validation](docs/validation.md)
 
+### [Defining force field parameters](docs/parameter_definitions.md)
+
 ### [Usage examples](docs/usage_examples.md)
 
 

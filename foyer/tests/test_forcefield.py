@@ -147,6 +147,34 @@ def test_independent_residues_atoms():
     topo, NULL = generate_topology(structure)
     assert _check_independent_residues(topo)
 
+def test_topology_precedence():
+    """Test to see if topology precedence is properly adhered to.
+
+    This test uses a force field file where bond, angle, and dihedral
+    parameters are present with different counts of `type` definitions.
+    It checks that:
+        1. The parameters with the higher number of `type` definitions
+           are assigned (because they are given the highest precedence)
+        2. That if multiple definitions exist with the same number of
+           `type` definitions, that the convention from OpenMM is followed
+           whereby the definitions that occurs earliest in the XML is
+           assigned.
+    """
+    ethane = mb.load(get_fn('ethane.mol2'))
+    ff = Forcefield(forcefield_files=get_fn('ethane-topo-precedence.xml'))
+    typed_ethane = ff.apply(ethane)
+
+    assert len([bond for bond in typed_ethane.bonds
+                if round(bond.type.req, 2) == 1.15]) == 6
+    assert len([bond for bond in typed_ethane.bonds
+                if round(bond.type.req, 2) == 1.6]) == 1
+    assert len([angle for angle in typed_ethane.angles
+                if round(angle.type.theteq, 3) == 120.321]) == 6
+    assert len([angle for angle in typed_ethane.angles
+                if round(angle.type.theteq, 3) == 97.403]) == 6
+    assert len([rb for rb in typed_ethane.rb_torsions
+                if round(rb.type.c0, 3) == 0.287]) == 9
+
 @pytest.mark.parametrize("ff_filename,kwargs", [
     ("ethane-angle-typo.xml", {"assert_angle_params": False}),
     ("ethane-dihedral-typo.xml", {"assert_dihedral_params": False})
