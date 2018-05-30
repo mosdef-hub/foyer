@@ -1,3 +1,4 @@
+import difflib
 import glob
 import os
 from pkg_resources import resource_filename
@@ -73,6 +74,17 @@ def test_write_refs():
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
     assert os.path.isfile('ethane.bib')
+
+def test_write_refs_multiple():
+    mol2 = mb.load(get_fn('ethane.mol2'))
+    oplsaa = Forcefield(forcefield_files=get_fn('refs-multi.xml'))
+    ethane = oplsaa.apply(mol2, references_file='ethane-multi.bib')
+    assert os.path.isfile('ethane-multi.bib')
+    with open(get_fn('ethane-multi.bib')) as file1:
+        with open('ethane-multi.bib') as file2:
+            diff = difflib.ndiff(file1.readlines(), file2.readlines())
+        changes = [l for l in diff if l.startswith('+ ') or l.startswith('- ')]
+        assert not changes
 
 def test_preserve_resname():
     untyped_ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
