@@ -335,7 +335,9 @@ class Forcefield(app.ForceField):
         if 'des' in parameters:
             self.atomTypeDesc[name] = parameters['desc']
         if 'doi' in parameters:
-            self.atomTypeRefs[name] = parameters['doi']
+            dois = [doi.replace(',', '').strip() for doi
+                    in parameters['doi'].split(',')]
+            self.atomTypeRefs[name] = dois
 
     def apply(self, topology, references_file=None, use_residue_map=True,
               assert_angle_params=True, assert_dihedral_params=True,
@@ -721,14 +723,16 @@ class Forcefield(app.ForceField):
                 warnings.warn("Reference not found for atom type '{}'."
                               "".format(atype))
         unique_references = collections.defaultdict(list)
-        for key, value in atomtype_references.items():
-            unique_references[value].append(key)
+        for key, values in atomtype_references.items():
+            for doi in values:
+                unique_references[doi].append(key)
+        unique_references = collections.OrderedDict(sorted(unique_references.items()))
         with open(references_file, 'w') as f:
             for doi, atomtypes in unique_references.items():
                 url = "http://dx.doi.org/" + doi
                 headers = {"accept": "application/x-bibtex"}
                 bibtex_ref = requests.get(url, headers=headers).text
                 note = (',\n\tnote = {Parameters for atom types: ' +
-                        ', '.join(atomtypes) + '}')
+                        ', '.join(sorted(atomtypes)) + '}')
                 bibtex_ref = bibtex_ref[:-2] + note + bibtex_ref[-2:]
                 f.write('{}\n'.format(bibtex_ref))
