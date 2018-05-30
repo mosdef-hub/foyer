@@ -1,0 +1,31 @@
+ <ForceField>
+ <AtomTypes>
+    <Type name="foo_0" class="CT" element="C" mass="12.01100" def="C" desc="C"/>
+    <Type name="foo_1" class="HC" element="H" mass="1.00800" def="H" desc="H"/>
+ </AtomTypes>
+ <HarmonicBondForce>
+    <Bond class1="CT" class2="CT" length="0.15" k="200000.0"/>
+    <Bond class1="CT" class2="HC" length="0.11" k="300000.0"/>
+    <Bond type1="foo_0" class2="HC" length="0.115" k="300000.0"/> <!-- Target -->
+    <Bond class1="CT" type2="foo_1" length="0.12" k="300000.0"/>
+    <Bond type1="foo_0" type2="foo_0" length="0.16" k="200000.0"/> <!-- Target -->
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+    <Angle class1="CT" class2="CT" class3="HC" angle="1.9" k="300.0"/>
+    <Angle type1="foo_0" class2="CT" class3="HC" angle="2.0" k="300.0"/>
+    <Angle type1="foo_0" type2="foo_0" class3="HC" angle="2.1" k="300.0"/> <!-- Target -->
+    <Angle type1="foo_0" class2="CT" type3="foo_1" angle="2.2" k="300.0"/>
+    <Angle class1="HC" class2="CT" class3="HC" angle="1.8" k="275.0"/>
+    <Angle class1="HC" type2="foo_0" class3="HC" angle="1.7" k="275.0"/> <!-- Target -->
+ </HarmonicAngleForce>
+ <RBTorsionForce>
+    <Proper class1="HC" class2="CT" class3="CT" class4="HC" c0="1.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+    <Proper class1="HC" type2="foo_0" class3="CT" class4="HC" c0="1.1" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+    <Proper class1="HC" type2="foo_0" type3="foo_0" class4="HC" c0="1.2" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/> <!-- Target -->
+    <Proper type1="foo_1" class2="CT" class3="CT" type4="foo_1" c0="1.3" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+ </RBTorsionForce>
+ <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
+     <Atom type="foo_0" charge="-0.18" sigma="0.35" epsilon="0.276144"/>
+     <Atom type="foo_1" charge="0.06" sigma="0.25" epsilon="0.12552"/>
+ </NonbondedForce>
+</ForceField>

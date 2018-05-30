@@ -182,15 +182,15 @@
   <Type name="opls_183" class="opls_183" element="C" mass="12.011"/>
   <Type name="opls_184" class="opls_184" element="C" mass="12.011"/>
   <Type name="opls_185" class="HC" element="C" mass="1.00800"   def="HC[O;%opls_180]" desc="H(COR), alpha H ether" overrides="opls_140" doi="10.1021/ja9621760"/>
-  <Type name="opls_186" class="opls_186" element="O" mass="15.9994" def="[O;X2][C;%opls_193](O)(C)H" desc="O: acetal ether" overrides="opls_180" doi="10.1021/ja9621760"/>
+  <Type name="opls_186" class="OS" element="O" mass="15.9994" def="[O;X2][C;%opls_193](O)(C)H" desc="O: acetal ether" overrides="opls_180" doi="10.1021/ja9621760"/>
   <Type name="opls_187" class="opls_187" element="O" mass="15.9994"/>
   <Type name="opls_188" class="opls_188" element="H" mass="1.008"/>
   <Type name="opls_189" class="opls_189" element="C" mass="12.011"/>
   <Type name="opls_190" class="opls_190" element="H" mass="1.008"/>
   <Type name="opls_191" class="opls_191" element="C" mass="12.011"/>
   <Type name="opls_192" class="opls_192" element="H" mass="1.008"/>
-  <Type name="opls_193" class="opls_193" element="C" mass="12.011" def="[C;X4](O)(O)(C)H" desc="C(HCO2), acetal OCHRO" doi="10.1021/ja9621760"/>
-  <Type name="opls_194" class="opls_194" element="H" mass="1.008" def="H[C;%opls_193][O;%opls_186]" desc="H(CHO2), acetal OCHRO" overrides="opls_185" doi="10.1021/ja9621760"/>
+  <Type name="opls_193" class="CO" element="C" mass="12.011" def="[C;X4](O)(O)(C)H" desc="C(HCO2), acetal OCHRO" doi="10.1021/ja9621760"/>
+  <Type name="opls_194" class="HC" element="H" mass="1.008" def="H[C;%opls_193][O;%opls_186]" desc="H(CHO2), acetal OCHRO" overrides="opls_185" doi="10.1021/ja9621760"/>
   <Type name="opls_195" class="opls_195" element="C" mass="12.011"/>
   <Type name="opls_196" class="opls_196" element="H" mass="1.008"/>
   <Type name="opls_197" class="opls_197" element="C" mass="12.011"/>
@@ -528,23 +528,23 @@
   <Type name="opls_516" class="opls_516" element="C" mass="12.011"/>
   <Type name="opls_517" class="opls_517" element="C" mass="12.011"/>
   <Type name="opls_518" class="opls_518" element="C" mass="12.011"/>
-  <Type name="opls_520" class="opls_520" element="N" mass="14.0067" def="[N;X2;r6]1[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" desc="N in pyridine" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_521" class="opls_521" element="C" mass="12.011" def="[C;X3;r6][N;%opls_520]" desc="C1 in pyridine" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_522" class="opls_522" element="C" mass="12.011" def="[C;X3;r6][C;%opls_521]" desc="C2 in pyridine" overrides="opls_142" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_523" class="opls_523" element="C" mass="12.011" def="[C;X3;r6]([C;%opls_522])[C;%opls_522]" desc="C3 in pyridine" overrides="opls_142" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_524" class="opls_524" element="H" mass="1.008" def="H[C;%opls_521]" desc="H1 in pyridine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_525" class="opls_525" element="H" mass="1.008" def="H[C;%opls_522]" desc="H2 in pyridine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_526" class="opls_526" element="H" mass="1.008" def="H[C;%opls_523]" desc="H3 in pyridine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_520" class="NC" element="N" mass="14.0067" def="[N;X2;r6]1[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" desc="N in pyridine" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_521" class="CA" element="C" mass="12.011" def="[C;X3;r6][N;%opls_520]" desc="C1 in pyridine" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_522" class="CA" element="C" mass="12.011" def="[C;X3;r6][C;%opls_521]" desc="C2 in pyridine" overrides="opls_142" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_523" class="CA" element="C" mass="12.011" def="[C;X3;r6]([C;%opls_522])[C;%opls_522]" desc="C3 in pyridine" overrides="opls_142" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_524" class="HA" element="H" mass="1.008" def="H[C;%opls_521]" desc="H1 in pyridine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_525" class="HA" element="H" mass="1.008" def="H[C;%opls_522]" desc="H2 in pyridine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_526" class="HA" element="H" mass="1.008" def="H[C;%opls_523]" desc="H3 in pyridine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
   <Type name="opls_527" class="opls_527" element="N" mass="14.0067"/>
   <Type name="opls_528" class="opls_528" element="C" mass="12.011"/>
   <Type name="opls_529" class="opls_529" element="H" mass="1.008"/>
-  <Type name="opls_530" class="opls_530" element="N" mass="14.0067" def="[N;X2;r6]1[C;X3;r6][C;X3;r6][C;X3;r6][N;X2;r6][C;X3;r6]1" desc="N in pyrimidine" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_531" class="opls_531" element="C" mass="12.011" def="[C;X3;r6]([N;%opls_530])[N;%opls_530]" desc="C2 in pyrimidine" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_532" class="opls_532" element="C" mass="12.011" def="[C;X3;r6]([N;%opls_530])[C;X3;r6]" desc="C4 in pyrimidine" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_533" class="opls_533" element="C" mass="12.011" def="[C;X3;r6]([C;%opls_532])[C;%opls_532]" desc="C5 in pyrimidine" overrides="opls_142" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_534" class="opls_534" element="H" mass="1.008" def="H[C;%opls_531]" desc="H2 in pyrimidine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_535" class="opls_535" element="H" mass="1.008" def="H[C;%opls_532]" desc="H4 in pyrimidine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
-  <Type name="opls_536" class="opls_536" element="H" mass="1.008" def="H[C;%opls_533]" desc="H5 in pyrimidine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_530" class="NC" element="N" mass="14.0067" def="[N;X2;r6]1[C;X3;r6][C;X3;r6][C;X3;r6][N;X2;r6][C;X3;r6]1" desc="N in pyrimidine" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_531" class="CQ" element="C" mass="12.011" def="[C;X3;r6]([N;%opls_530])[N;%opls_530]" desc="C2 in pyrimidine" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_532" class="CA" element="C" mass="12.011" def="[C;X3;r6]([N;%opls_530])[C;X3;r6]" desc="C4 in pyrimidine" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_533" class="CA" element="C" mass="12.011" def="[C;X3;r6]([C;%opls_532])[C;%opls_532]" desc="C5 in pyrimidine" overrides="opls_142" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_534" class="HA" element="H" mass="1.008" def="H[C;%opls_531]" desc="H2 in pyrimidine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_535" class="HA" element="H" mass="1.008" def="H[C;%opls_532]" desc="H4 in pyrimidine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
+  <Type name="opls_536" class="HA" element="H" mass="1.008" def="H[C;%opls_533]" desc="H5 in pyrimidine" overrides="opls_144" doi="10.1016/S0166-1280(97)00237-6"/>
   <Type name="opls_537" class="opls_537" element="N" mass="14.0067"/>
   <Type name="opls_538" class="opls_538" element="C" mass="12.011"/>
   <Type name="opls_539" class="opls_539" element="C" mass="12.011"/>
@@ -801,12 +801,12 @@
   <Type name="opls_916" class="opls_916" element="C" mass="12.011"/>
   <Type name="opls_917" class="opls_917" element="C" mass="12.011"/>
   <Type name="opls_918" class="opls_918" element="C" mass="12.011"/>
-  <Type name="opls_925" class="opls_925" element="C" mass="12.011" def="[C;X2](C)H" desc="alkyne RC%CH terminal C"/>
-  <Type name="opls_926" class="opls_926" element="H" mass="1.008" def="H[C;%opls_925]" desc="alkyne RC%CH terminal H"/>
-  <Type name="opls_927" class="opls_927" element="C" mass="12.011" def="[C;X2](C(H)H)C" desc="alkyne RC%CH C2 R-with 2 or 3 H" overrides="opls_928"/>
+  <Type name="opls_925" class="CZ" element="C" mass="12.011" def="[C;X2](C)H" desc="alkyne RC%CH terminal C"/>
+  <Type name="opls_926" class="HC" element="H" mass="1.008" def="H[C;%opls_925]" desc="alkyne RC%CH terminal H"/>
+  <Type name="opls_927" class="CZ" element="C" mass="12.011" def="[C;X2](C(H)H)C" desc="alkyne RC%CH C2 R-with 2 or 3 H" overrides="opls_928"/>
   <Type name="opls_928" class="opls_928" element="C" mass="12.011"/>
   <Type name="opls_929" class="opls_929" element="C" mass="12.011"/>
-  <Type name="opls_930" class="opls_930" element="H" mass="1.008" def="H([*][C][C;%opls_925])" desc="alkyne RC%CH H on C3 (for C3 use #135-#139)" overrides="opls_140, opls_144"/>
+  <Type name="opls_930" class="HC" element="H" mass="1.008" def="H([*][C][C;%opls_925])" desc="alkyne RC%CH H on C3 (for C3 use #135-#139)" overrides="opls_140, opls_144"/>
   <Type name="opls_931" class="opls_931" element="C" mass="12.011"/>
   <Type name="opls_940" class="opls_940" element="N" mass="14.0067"/>
   <Type name="opls_941" class="opls_941" element="H" mass="1.008"/>
