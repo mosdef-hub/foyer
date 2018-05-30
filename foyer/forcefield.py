@@ -723,9 +723,9 @@ class Forcefield(app.ForceField):
                 warnings.warn("Reference not found for atom type '{}'."
                               "".format(atype))
         unique_references = collections.defaultdict(list)
-        for key, values in atomtype_references.items():
-            for doi in values:
-                unique_references[doi].append(key)
+        for atomtype, dois in atomtype_references.items():
+            for doi in dois:
+                unique_references[doi].append(atomtype)
         unique_references = collections.OrderedDict(sorted(unique_references.items()))
         with open(references_file, 'w') as f:
             for doi, atomtypes in unique_references.items():
