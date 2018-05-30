@@ -211,34 +211,34 @@ def _update_atomtypes(unatomtyped_topology, res_name, prototype):
                 old_atom.id = new_atom_id
 
 def _separate_urey_bradleys(system, topology):
-        """ Separate urey bradley bonds from harmonic bonds in OpenMM System
+    """ Separate urey bradley bonds from harmonic bonds in OpenMM System
 
-        Parameters
-        ---------
-        topology : openmm.app.Topology
-            Molecular structure to find atom types of
-        system : openmm System
+    Parameters
+    ---------
+    topology : openmm.app.Topology
+        Molecular structure to find atom types of
+    system : openmm System
 
-        """
-        atoms = [a for a in topology.atoms()]
-        bonds = [b for b in topology.bonds()]
-        ub_force = mm.HarmonicBondForce()
-        harmonic_bond_force = mm.HarmonicBondForce()
-        for force_idx, force in enumerate(system.getForces()):
-            if isinstance(force, mm.HarmonicBondForce):
-                for bond_idx in range(force.getNumBonds()):
-                    if (atoms[force.getBondParameters(bond_idx)[0]], 
-                        atoms[force.getBondParameters(bond_idx)[1]]) not in bonds and
-                       (atoms[force.getBondParameters(bond_idx)[1]],
-                        atoms[force.getBondParameters(bond_idx)[0]]) not in bonds:
+    """
+    atoms = [a for a in topology.atoms()]
+    bonds = [b for b in topology.bonds()]
+    ub_force = mm.HarmonicBondForce()
+    harmonic_bond_force = mm.HarmonicBondForce()
+    for force_idx, force in enumerate(system.getForces()):
+        if isinstance(force, mm.HarmonicBondForce):
+            for bond_idx in range(force.getNumBonds()):
+                if (atoms[force.getBondParameters(bond_idx)[0]],
+                    atoms[force.getBondParameters(bond_idx)[1]]) not in bonds and
+                    (atoms[force.getBondParameters(bond_idx)[1]],
+                     atoms[force.getBondParameters(bond_idx)[0]]) not in bonds:
                         ub_force.addBond(*force.getBondParameters(bond_idx))
-                    else:
-                        harmonic_bond_force.addBond(*force.getBondParameters(bond_idx))
-                system.removeForce(force_idx)
-                
+                else:
+                    harmonic_bond_force.addBond(
+                        *force.getBondParameters(bond_idx))
+            system.removeForce(force_idx)
 
-        system.addForce(harmonic_bond_force)
-        system.addForce(ub_force)
+    system.addForce(harmonic_bond_force)
+    system.addForce(ub_force)
 
 def _error_or_warn(error, msg):
     """Raise an error or warning if topology objects are not fully parameterized.
