@@ -4,4 +4,4 @@ graft examples
 include foyer/tests/implemented_opls_tests.txt
 graft foyer/trappe_validation
 include foyer/tests/implemented_trappe_tests.txt
-global-include *.xml *.mol2 *.top *.gro *.pdb
+global-include *.xml *.mol2 *.top *.gro *.pdb *.bib
