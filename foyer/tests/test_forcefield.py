@@ -83,8 +83,8 @@ def test_write_refs_multiple():
     with open(get_fn('ethane-multi.bib')) as file1:
         with open('ethane-multi.bib') as file2:
             diff = difflib.ndiff(file1.readlines(), file2.readlines())
-        changes = [l for l in diff if l.startswith('+ ') or l.startswith('- ')]
-        assert not changes
+    changes = [l for l in diff if l.startswith('+ ') or l.startswith('- ')]
+    assert not changes
 
 def test_preserve_resname():
     untyped_ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
