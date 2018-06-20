@@ -227,10 +227,10 @@ def _separate_urey_bradleys(system, topology):
     for force_idx, force in enumerate(system.getForces()):
         if isinstance(force, mm.HarmonicBondForce):
             for bond_idx in range(force.getNumBonds()):
-                if (atoms[force.getBondParameters(bond_idx)[0]],
+                if ((atoms[force.getBondParameters(bond_idx)[0]],
                     atoms[force.getBondParameters(bond_idx)[1]]) not in bonds and
                     (atoms[force.getBondParameters(bond_idx)[1]],
-                     atoms[force.getBondParameters(bond_idx)[0]]) not in bonds:
+                     atoms[force.getBondParameters(bond_idx)[0]]) not in bonds):
                         ub_force.addBond(*force.getBondParameters(bond_idx))
                 else:
                     harmonic_bond_force.addBond(
