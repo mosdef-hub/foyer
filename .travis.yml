@@ -11,7 +11,7 @@ matrix:
 
 env:
   global:
-  - ENCRYPTION_LABEL: "1c6c3b1940ee"
+  - ENCRYPTION_LABEL: "fa70a735182b"
   - COMMIT_AUTHOR_EMAIL: "andrew.z.summers@gmail.com"
 
 install:
