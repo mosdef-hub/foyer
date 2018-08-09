@@ -11,8 +11,8 @@ matrix:
 
 env:
   global:
-  - ENCRYPTION_LABEL: "898e0934cf65"
-  - COMMIT_AUTHOR_EMAIL: "janos.sallai@vanderbilt.edu"
+  - ENCRYPTION_LABEL: "1c6c3b1940ee"
+  - COMMIT_AUTHOR_EMAIL: "andrew.z.summers@gmail.com"
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
