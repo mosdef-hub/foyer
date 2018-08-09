@@ -77,6 +77,11 @@ views of the National Science Foundation.
 .. toctree::
     :hidden:
 
+    forcefields
+
+.. toctree::
+    :hidden:
+
     usage_examples
 
 .. toctree::
