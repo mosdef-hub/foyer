@@ -5,7 +5,7 @@
 
 Foyer
 ============
-*A package for atom-typing as well as applying and disseminating forcefields*
+*A package for atom-typing as well as applying and disseminating force fields*
 
 
 Annotate an `OpenMM .xml force
@@ -73,6 +73,11 @@ views of the National Science Foundation.
     :hidden:
 
     smarts
+
+.. toctree::
+    :hidden:
+
+    forcefields
 
 .. toctree::
     :hidden:

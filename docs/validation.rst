@@ -8,9 +8,8 @@ be intimately familiar with XML or our SMARTS parsing grammar can easily
 act upon.
 
 However, if you receive any unclear error messages or warnings we
-strongly encourage you to **`submit an
-issue <https://github.com/mosdef-hub/foyer/issues/new>`__** detailing
-the error message you received and, if possible, attach a minimal
+strongly encourage you to `submit an issue <https://github.com/mosdef-hub/foyer/issues/new>`_
+detailing the error message you received and, if possible, attach a minimal
 example of the force field file that created the problem.
 
 XML schema
@@ -35,5 +34,5 @@ welcome any contributions that help improve the clarity of our error
 messages.
 
 Additionally, we ensure that any atomtypes referenced using the
-```%type`` or ``overrides`` syntax <smarts.md>`__ are actually defined
+``%type`` or ``overrides`` `syntax <smarts.html>`__ are actually defined
 in the ``<AtomTypes>`` element.
