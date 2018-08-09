@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Validation of force field files &mdash; foyer 0.4.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Usage Examples" href="usage_examples.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> foyer
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="smarts.html">SMARTS-based atomtyping</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="forcefields.html">Parameter definitions</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage_examples.html">Usage Examples</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Validation of force field files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#xml-schema">XML schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#smarts-validation">SMARTS validation</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">foyer</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Validation of force field files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/validation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="validation-of-force-field-files">
+<h1>Validation of force field files<a class="headerlink" href="#validation-of-force-field-files" title="Permalink to this headline">¶</a></h1>
+<p>Foyer performs several validation steps to help prevent malformed force
+field files and SMARTS strings from making it into production code. Our
+goal is to provide human readable error messages that users who may not
+be intimately familiar with XML or our SMARTS parsing grammar can easily
+act upon.</p>
+<p>However, if you receive any unclear error messages or warnings we
+strongly encourage you to <a class="reference external" href="https://github.com/mosdef-hub/foyer/issues/new">submit an issue</a>
+detailing the error message you received and, if possible, attach a minimal
+example of the force field file that created the problem.</p>
+<div class="section" id="xml-schema">
+<h2>XML schema<a class="headerlink" href="#xml-schema" title="Permalink to this headline">¶</a></h2>
+<p>As a first line of defense, any force field files loaded by foyer is
+validated by this <a class="reference external" href="../foyer/forcefields/ff.xsd">XML schema
+definition</a>. Here we enforce which
+elements (e.g. <code class="docutils literal notranslate"><span class="pre">HarmonicBondForce</span></code>) are valid and how their attributes
+should be formatted. Additionally, the schema ensures that atomtypes are
+not 1) defined more than once and that 2) atomtypes referenced in other
+sections are actually defined in the <code class="docutils literal notranslate"><span class="pre">&lt;AtomTypes&gt;</span></code> element.</p>
+</div>
+<div class="section" id="smarts-validation">
+<h2>SMARTS validation<a class="headerlink" href="#smarts-validation" title="Permalink to this headline">¶</a></h2>
+<p>All SMARTS strings used to define atomtypes are parsed. Parsing errors
+are captured and re-raised with error messages that allow you to pin
+point the location of the problem in the XML file and within the SMARTS
+string. Wherever possible, we attempt to provide helpful hints and we
+welcome any contributions that help improve the clarity of our error
+messages.</p>
+<p>Additionally, we ensure that any atomtypes referenced using the
+<code class="docutils literal notranslate"><span class="pre">%type</span></code> or <code class="docutils literal notranslate"><span class="pre">overrides</span></code> <a class="reference external" href="smarts.html">syntax</a> are actually defined
+in the <code class="docutils literal notranslate"><span class="pre">&lt;AtomTypes&gt;</span></code> element.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="usage_examples.html" class="btn btn-neutral" title="Usage Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014-2018, Vanderbilt University.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

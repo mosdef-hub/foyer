@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Parameter definitions &mdash; foyer 0.4.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage Examples" href="usage_examples.html" />
+    <link rel="prev" title="SMARTS-based atomtyping" href="smarts.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> foyer
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="smarts.html">SMARTS-based atomtyping</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameter definitions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#classes-vs-types">Classes vs. Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#assigning-parameters-by-specificity">Assigning parameters by specificity</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage_examples.html">Usage Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">Validation of force field files</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">foyer</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Parameter definitions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/forcefields.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="parameter-definitions">
+<h1>Parameter definitions<a class="headerlink" href="#parameter-definitions" title="Permalink to this headline">¶</a></h1>
+<p>Parameter definitions within force field XMLs follow the same conventions as
+defined in the <a class="reference external" href="http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields">OpenMM documentation</a>.
+Currently, only certain functional forms for molecular forces are supported,
+while future developments are expected to allow Foyer to support any desired
+functional form, including reactive and tabulated potentials. The currently
+supported functional forms for molecular forces are:</p>
+<ul class="simple">
+<li><strong>Nonbonded</strong><ul>
+<li><a class="reference external" href="http://docs.openmm.org/7.0.0/userguide/application.html#nonbondedforce">Lennard-Jones (12-6)</a></li>
+</ul>
+</li>
+<li><strong>Bonds</strong><ul>
+<li><a class="reference external" href="http://docs.openmm.org/7.0.0/userguide/application.html#harmonicbondforce">Harmonic</a></li>
+</ul>
+</li>
+<li><strong>Angles</strong><ul>
+<li><a class="reference external" href="http://docs.openmm.org/7.0.0/userguide/application.html#harmonicangleforce">Harmonic</a></li>
+</ul>
+</li>
+<li><strong>Torsions (proper)</strong><ul>
+<li><a class="reference external" href="http://docs.openmm.org/7.0.0/userguide/application.html#periodictorsionforce">Periodic</a></li>
+<li><a class="reference external" href="http://docs.openmm.org/7.0.0/userguide/application.html#rbtorsionforce">Ryckaert-Bellemans</a></li>
+</ul>
+</li>
+<li><strong>Torsions (improper)</strong><ul>
+<li><a class="reference external" href="http://docs.openmm.org/7.0.0/userguide/application.html#periodictorsionforce">Periodic</a></li>
+</ul>
+</li>
+</ul>
+<p>Definitions for each molecular force follow the OpenMM standard.</p>
+<div class="section" id="classes-vs-types">
+<h2>Classes vs. Types<a class="headerlink" href="#classes-vs-types" title="Permalink to this headline">¶</a></h2>
+<p>OpenMM allows users to specify either a <code class="docutils literal notranslate"><span class="pre">class</span></code> or a <code class="docutils literal notranslate"><span class="pre">type</span></code>, to define
+each particle within the force definition. Here, <code class="docutils literal notranslate"><span class="pre">type</span></code> refers to a specific
+atom type (as defined in the <code class="docutils literal notranslate"><span class="pre">&lt;AtomTypes&gt;</span></code> section), while <code class="docutils literal notranslate"><span class="pre">class</span></code> refers
+to a more general description that can apply to multiple atomtypes (i.e. multiple
+atomtypes may share the same class). This aids in limiting the number of force
+definitions required in a force field XML, as many similar atom types may share
+force parameters.</p>
+</div>
+<div class="section" id="assigning-parameters-by-specificity">
+<h2>Assigning parameters by specificity<a class="headerlink" href="#assigning-parameters-by-specificity" title="Permalink to this headline">¶</a></h2>
+<p>Foyer deviates from OpenMM’s convention when matching force definitions in
+a force field XML to instances of these forces in a molecular system. In OpenMM,
+forces are assigned according to the first matching definition in a force field
+XML, even if multiple matching definitions exist. In contrast, Foyer assigns
+force parameters based on definition specificity, where definitions containing
+more <code class="docutils literal notranslate"><span class="pre">type</span></code> attributes are considered to be more specific.</p>
+<p><strong>Example:</strong></p>
+<div class="code xml highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">RBTorsionForce</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Proper</span> <span class="n">class1</span><span class="o">=</span><span class="s2">&quot;CT&quot;</span> <span class="n">class2</span><span class="o">=</span><span class="s2">&quot;CT&quot;</span> <span class="n">class3</span><span class="o">=</span><span class="s2">&quot;CT&quot;</span> <span class="n">class4</span><span class="o">=</span><span class="s2">&quot;CT&quot;</span> <span class="n">c0</span><span class="o">=</span><span class="s2">&quot;2.9288&quot;</span> <span class="n">c1</span><span class="o">=</span><span class="s2">&quot;-1.4644&quot;</span>
+          <span class="n">c2</span><span class="o">=</span><span class="s2">&quot;0.2092&quot;</span> <span class="n">c3</span><span class="o">=</span><span class="s2">&quot;-1.6736&quot;</span> <span class="n">c4</span><span class="o">=</span><span class="s2">&quot;0.0&quot;</span> <span class="n">c5</span><span class="o">=</span><span class="s2">&quot;0.0&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Proper</span> <span class="n">type1</span><span class="o">=</span><span class="s2">&quot;opls_961&quot;</span> <span class="n">type2</span><span class="o">=</span><span class="s2">&quot;opls_136&quot;</span> <span class="n">type3</span><span class="o">=</span><span class="s2">&quot;opls_136&quot;</span> <span class="n">type4</span><span class="o">=</span><span class="s2">&quot;opls_136&quot;</span> <span class="n">c0</span><span class="o">=</span><span class="s2">&quot;-0.987424&quot;</span>
+          <span class="n">c1</span><span class="o">=</span><span class="s2">&quot;0.08363&quot;</span> <span class="n">c2</span><span class="o">=</span><span class="s2">&quot;-0.08368&quot;</span> <span class="n">c3</span><span class="o">=</span><span class="s2">&quot;-0.401664&quot;</span> <span class="n">c4</span><span class="o">=</span><span class="s2">&quot;1.389088&quot;</span> <span class="n">c5</span><span class="o">=</span><span class="s2">&quot;0.0&quot;</span><span class="o">/&gt;</span>
+<span class="o">&lt;/</span><span class="n">RBTorsionForce</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Above, two proper torsions are defined, both describing a torsional force between
+four tetrahedral carbons. However, the first definition features four <code class="docutils literal notranslate"><span class="pre">class</span></code>
+attributes and zero <code class="docutils literal notranslate"><span class="pre">type</span></code> attributes, as this describes a general dihedral
+for all tetrahedral carbons. The second definition features zero <code class="docutils literal notranslate"><span class="pre">class</span></code> attributes
+and four <code class="docutils literal notranslate"><span class="pre">type</span></code> attributes, and describes a more specific dihedral for the
+case where one end carbon is of type <code class="docutils literal notranslate"><span class="pre">'opls_961'</span></code> (a fluorinated carbon)
+and the remaining three carbons are of type <code class="docutils literal notranslate"><span class="pre">'opls_136'</span></code> (alkane carbons).
+Now consider we want to use a force field containing the above torsion definitions
+to assign parameters to some molecular system that features partially fluorinated
+alkanes. When assigning torsion parameters to a quartet of atoms where one end
+carbon is fluorinated (<code class="docutils literal notranslate"><span class="pre">'opls_961'</span></code>) and the remaining three are hydrogenated
+(<code class="docutils literal notranslate"><span class="pre">'opls_136'</span></code>), if using the OpenMM procedure for parameter assignment the
+more general <code class="docutils literal notranslate"><span class="pre">'CT-CT-CT-CT'</span></code> torsion parameters (the first definition above)
+would be assigned because this would be the first matching definition in the
+force field XML. However, with Foyer, the second definition will be auto-detected
+as more specific, due to the greater number of <code class="docutils literal notranslate"><span class="pre">type</span></code> attributes (4 vs. 0)
+and those parameters will be assigned instead.</p>
+<p>It should be noted that if two definitions feature the same specificity level
+(i.e. the same number of <code class="docutils literal notranslate"><span class="pre">type</span></code> definitions) then automatic detection of
+precedence is not possible and parameter assignment will follow the OpenMM
+procedure whereby parameters from the first matching force definition in the
+XML will be assigned.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="usage_examples.html" class="btn btn-neutral float-right" title="Usage Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="smarts.html" class="btn btn-neutral" title="SMARTS-based atomtyping" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014-2018, Vanderbilt University.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

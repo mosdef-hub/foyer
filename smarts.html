@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SMARTS-based atomtyping &mdash; foyer 0.4.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Parameter definitions" href="forcefields.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> foyer
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SMARTS-based atomtyping</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overriding-atomtypes">Overriding atomtypes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#current-grammar-supported">Current Grammar Supported</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="forcefields.html">Parameter definitions</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage_examples.html">Usage Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">Validation of force field files</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">foyer</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>SMARTS-based atomtyping</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/smarts.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="smarts-based-atomtyping">
+<h1>SMARTS-based atomtyping<a class="headerlink" href="#smarts-based-atomtyping" title="Permalink to this headline">¶</a></h1>
+<p>Foyer allows users to describe atomtypes using a modified version of
+<a class="reference external" href="http://www.daylight.com/dayhtml/doc/theory/theory.smarts.html">SMARTS</a>
+You may already be familiar with
+<a class="reference external" href="https://www.wikiwand.com/en/Simplified_molecular-input_line-entry_system">SMILES</a>
+representations for describing chemical structures. SMARTS is a
+straightforward extension of this notation.</p>
+<div class="section" id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>Consider the following example defining the OPLS-AA atomtypes for a
+methyl group carbon and its hydrogen atoms:</p>
+<div class="code xml highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">ForceField</span><span class="o">&gt;</span>
+ <span class="o">&lt;</span><span class="n">AtomTypes</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Type</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;opls_135&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;CT&quot;</span> <span class="n">element</span><span class="o">=</span><span class="s2">&quot;C&quot;</span> <span class="n">mass</span><span class="o">=</span><span class="s2">&quot;12.01100&quot;</span> <span class="n">def</span><span class="o">=</span><span class="s2">&quot;[C;X4](C)(H)(H)H&quot;</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;alkane CH3&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Type</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;opls_140&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;HC&quot;</span> <span class="n">element</span><span class="o">=</span><span class="s2">&quot;H&quot;</span> <span class="n">mass</span><span class="o">=</span><span class="s2">&quot;1.00800&quot;</span>  <span class="n">def</span><span class="o">=</span><span class="s2">&quot;H[C;X4]&quot;</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;alkane H&quot;</span><span class="o">/&gt;</span>
+ <span class="o">&lt;/</span><span class="n">AtomTypes</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">ForceField</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>This <code class="docutils literal notranslate"><span class="pre">.xml</span></code> format is an extension of the <a class="reference external" href="http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields">OpenMM force field
+format</a>
+The above example utilizes two additional <code class="docutils literal notranslate"><span class="pre">.xml</span></code> attributes supported
+by foyer: <code class="docutils literal notranslate"><span class="pre">def</span></code> and <code class="docutils literal notranslate"><span class="pre">desc</span></code>. The atomtype that we are attempting to
+match is always the <strong>first</strong> token in the SMARTS string, in the above
+example, <code class="docutils literal notranslate"><span class="pre">[C;X4]</span></code> and <code class="docutils literal notranslate"><span class="pre">H</span></code>. The <code class="docutils literal notranslate"><span class="pre">opls_135</span></code> (methyl group carbon) is
+defined by a SMARTS string indicated a carbon with 4 bonds, a carbon
+neighbor and 3 hydrogen neighbors. The <code class="docutils literal notranslate"><span class="pre">opls_140</span></code> (alkane hydrogen) is
+defined simply as a hydrogen atom bonded to a carbon with 4 bonds.</p>
+</div>
+<div class="section" id="overriding-atomtypes">
+<h2>Overriding atomtypes<a class="headerlink" href="#overriding-atomtypes" title="Permalink to this headline">¶</a></h2>
+<p>When multiple atomtype definitions can apply to a given atom, we must
+establish precedence between those definitions. Many other atomtypers
+determine rule precedence by placing more specific rules first and
+evaluate those in sequence, breaking out of the loop as soon as a match
+is found.</p>
+<p>While this approach works, it becomes more challenging to maintain the
+correct ordering of rules as the number of atomtypes grows. Foyer
+iteratively runs all rules on all atoms and each atom maintains a
+whitelist (rules that apply) and a blacklist (rules that have been
+superceded by another rule). The set difference between the white- and
+blacklists yields the correct atomtype if the force field is implemented
+correctly.</p>
+<p>We can add a rule to a blacklist using the <code class="docutils literal notranslate"><span class="pre">overrides</span></code> attribute in
+the <code class="docutils literal notranslate"><span class="pre">.xml</span></code> file. To illustrate an example where overriding can be used
+consider the following types describing alkenes and benzene:</p>
+<div class="code xml highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">ForceField</span><span class="o">&gt;</span>
+ <span class="o">&lt;</span><span class="n">AtomTypes</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Type</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;opls_141&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;CM&quot;</span> <span class="n">element</span><span class="o">=</span><span class="s2">&quot;C&quot;</span> <span class="n">mass</span><span class="o">=</span><span class="s2">&quot;12.01100&quot;</span> <span class="n">def</span><span class="o">=</span><span class="s2">&quot;[C;X3](C)(C)C&quot;</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;alkene C (R2-C=)&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Type</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;opls_142&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;CM&quot;</span> <span class="n">element</span><span class="o">=</span><span class="s2">&quot;C&quot;</span> <span class="n">mass</span><span class="o">=</span><span class="s2">&quot;12.01100&quot;</span> <span class="n">def</span><span class="o">=</span><span class="s2">&quot;[C;X3](C)(C)H&quot;</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;alkene C (RH-C=)&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Type</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;opls_144&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;HC&quot;</span> <span class="n">element</span><span class="o">=</span><span class="s2">&quot;H&quot;</span> <span class="n">mass</span><span class="o">=</span><span class="s2">&quot;1.00800&quot;</span>  <span class="n">def</span><span class="o">=</span><span class="s2">&quot;[H][C;X3]&quot;</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;alkene H&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Type</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;opls_145&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;CA&quot;</span> <span class="n">element</span><span class="o">=</span><span class="s2">&quot;C&quot;</span> <span class="n">mass</span><span class="o">=</span><span class="s2">&quot;12.01100&quot;</span> <span class="n">def</span><span class="o">=</span><span class="s2">&quot;[C;X3;r6]1[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1&quot;</span> <span class="n">overrides</span><span class="o">=</span><span class="s2">&quot;opls_141,opls_142&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Type</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;opls_146&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;HA&quot;</span> <span class="n">element</span><span class="o">=</span><span class="s2">&quot;H&quot;</span> <span class="n">mass</span><span class="o">=</span><span class="s2">&quot;1.00800&quot;</span>  <span class="n">def</span><span class="o">=</span><span class="s2">&quot;[H][C;</span><span class="si">%o</span><span class="s2">pls_145]&quot;</span> <span class="n">overrides</span><span class="o">=</span><span class="s2">&quot;opls_144&quot;</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;benzene H&quot;</span><span class="o">/&gt;</span>
+ <span class="o">&lt;/</span><span class="n">AtomTypes</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">ForceField</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>If we’re atomtyping a benzene molecule, the carbon atoms will match the
+SMARTS patterns for both <code class="docutils literal notranslate"><span class="pre">opls_142</span></code> and <code class="docutils literal notranslate"><span class="pre">opls_145</span></code>. Without the
+<code class="docutils literal notranslate"><span class="pre">overrides</span></code> attribute, foyer will notify you that multiple atomtypes
+were found for each carbon. Providing the <code class="docutils literal notranslate"><span class="pre">overrides</span></code> indicates that
+if the <code class="docutils literal notranslate"><span class="pre">opls_145</span></code> pattern matches, it should supercede the specified
+rules.</p>
+</div>
+<div class="section" id="current-grammar-supported">
+<h2>Current Grammar Supported<a class="headerlink" href="#current-grammar-supported" title="Permalink to this headline">¶</a></h2>
+<p>We currently do not (yet) support all of <a class="reference external" href="http://www.daylight.com/dayhtml/doc/theory/theory.smarts.html">SMARTS’
+features</a>.
+<a class="reference external" href="https://github.com/mosdef-hub/foyer/issues/63">Here</a> we’re keeping
+track of which portions are supported.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="forcefields.html" class="btn btn-neutral float-right" title="Parameter definitions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014-2018, Vanderbilt University.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

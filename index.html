@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Foyer &mdash; foyer 0.4.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> foyer
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="smarts.html">SMARTS-based atomtyping</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="forcefields.html">Parameter definitions</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage_examples.html">Usage Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">Validation of force field files</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">foyer</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Foyer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="foyer">
+<h1>Foyer<a class="headerlink" href="#foyer" title="Permalink to this headline">¶</a></h1>
+<p><em>A package for atom-typing as well as applying and disseminating force fields</em></p>
+<p>Annotate an <a class="reference external" href="http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields">OpenMM .xml force
+field</a>
+file with SMARTS-based atomtypes:</p>
+<div class="code xml highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">ForceField</span><span class="o">&gt;</span>
+ <span class="o">&lt;</span><span class="n">AtomTypes</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Type</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;opls_135&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;CT&quot;</span> <span class="n">element</span><span class="o">=</span><span class="s2">&quot;C&quot;</span> <span class="n">mass</span><span class="o">=</span><span class="s2">&quot;12.01100&quot;</span> <span class="n">def</span><span class="o">=</span><span class="s2">&quot;[C;X4](C)(H)(H)H&quot;</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;alkane CH3&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Type</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;opls_140&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;HC&quot;</span> <span class="n">element</span><span class="o">=</span><span class="s2">&quot;H&quot;</span> <span class="n">mass</span><span class="o">=</span><span class="s2">&quot;1.00800&quot;</span>  <span class="n">def</span><span class="o">=</span><span class="s2">&quot;H[C;X4]&quot;</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;alkane H&quot;</span><span class="o">/&gt;</span>
+ <span class="o">&lt;/</span><span class="n">AtomTypes</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">ForceField</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Apply the forcefield to arbitrary chemical topologies. We currently
+support:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://docs.openmm.org/7.0.0/api-python/generated/simtk.openmm.app.topology.Topology.html#">OpenMM.Topology</a></li>
+<li><a class="reference external" href="http://parmed.github.io/ParmEd/html/structure.html">ParmEd.Structure</a></li>
+<li><a class="reference external" href="http://mosdef-hub.github.io/mbuild/data_structures.html">mBuild.Compound</a></li>
+</ul>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">foyer</span> <span class="k">import</span> <span class="n">Forcefield</span>
+<span class="kn">import</span> <span class="nn">parmed</span> <span class="k">as</span> <span class="nn">pmd</span>
+
+<span class="n">untyped_ethane</span> <span class="o">=</span> <span class="n">pmd</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="s1">&#39;ethane.mol2&#39;</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">oplsaa</span> <span class="o">=</span> <span class="n">Forcefield</span><span class="p">(</span><span class="n">forcefield_files</span><span class="o">=</span><span class="s1">&#39;oplsaa.xml&#39;</span><span class="p">)</span>
+<span class="n">ethane</span> <span class="o">=</span> <span class="n">oplsaa</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">untyped_ethane</span><span class="p">)</span>
+
+<span class="c1"># Save to any format supported by ParmEd</span>
+<span class="n">ethane</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;ethane.top&#39;</span><span class="p">)</span>
+<span class="n">ethane</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;ethane.gro&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting started?<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>Check out our example template for disseminating force fields:
+<a class="reference external" href="https://github.com/mosdef-hub/forcefield_template">https://github.com/mosdef-hub/forcefield_template</a></p>
+<div class="section" id="license">
+<h3><a class="reference external" href="http://opensource.org/licenses/MIT"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg" /></a><a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h3>
+<p>Various sub-portions of this library may be independently distributed
+under different licenses. See those files for their specific terms.</p>
+<p>This material is based upon work supported by the National Science
+Foundation under grants NSF ACI-1047828 and NSF ACI-1535150. Any
+opinions, findings, and conclusions or recommendations expressed in this
+material are those of the author(s) and do not necessarily reflect the
+views of the National Science Foundation.</p>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014-2018, Vanderbilt University.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

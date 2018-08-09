@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Usage Examples &mdash; foyer 0.4.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Validation of force field files" href="validation.html" />
+    <link rel="prev" title="Parameter definitions" href="forcefields.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> foyer
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="smarts.html">SMARTS-based atomtyping</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="forcefields.html">Parameter definitions</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-box-of-ethane">Creating a box of ethane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-box-of-coarse-grained-ethane">Creating a box of coarse-grained ethane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#combining-force-fields">Combining force fields</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">Validation of force field files</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">foyer</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Usage Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/usage_examples.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="usage-examples">
+<h1>Usage Examples<a class="headerlink" href="#usage-examples" title="Permalink to this headline">¶</a></h1>
+<p>Foyer supports atomtyping of both all-atom and coarse-grained molecular
+systems, and also allows for separate force fields to be used to
+atom-type separate portions of a molecular system.</p>
+<div class="section" id="creating-a-box-of-ethane">
+<h2>Creating a box of ethane<a class="headerlink" href="#creating-a-box-of-ethane" title="Permalink to this headline">¶</a></h2>
+<p>Here we use mBuild to construct a box filled with ethane molecules and
+use Foyer to atom-type the system, applying the OPLS force field, and
+save to run-able GROMACS files.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mbuild</span> <span class="k">as</span> <span class="nn">mb</span>
+<span class="kn">from</span> <span class="nn">mbuild.examples</span> <span class="k">import</span> <span class="n">Ethane</span>
+
+<span class="n">ethane_box</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">fill_box</span><span class="p">(</span><span class="n">compound</span><span class="o">=</span><span class="n">Ethane</span><span class="p">(),</span> <span class="n">n_compounds</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">ethane_box</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;ethane-box.gro&#39;</span><span class="p">)</span>
+<span class="n">ethane_box</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;ethane-box.top&#39;</span><span class="p">,</span> <span class="n">forcefield_name</span><span class="o">=</span><span class="s1">&#39;oplsaa&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="creating-a-box-of-coarse-grained-ethane">
+<h2>Creating a box of coarse-grained ethane<a class="headerlink" href="#creating-a-box-of-coarse-grained-ethane" title="Permalink to this headline">¶</a></h2>
+<p>Again we will use mBuild to construct a box filled with ethane
+molecules. However, now we will model ethane using a united-atom
+description and apply the TraPPE force field during atom-typing. Note
+how particle names are prefixed with an underscore so that Foyer knows
+these particles are non-atomistic.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mbuild</span> <span class="k">as</span> <span class="nn">mb</span>
+
+<span class="n">ethane_UA</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">Compound</span><span class="p">()</span>
+<span class="n">ch3_1</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">Particle</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;_CH3&#39;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">ch3_2</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">Particle</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;_CH3&#39;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mf">0.15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">ethane_UA</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">ch3_1</span><span class="p">,</span> <span class="n">ch3_2</span><span class="p">])</span>
+<span class="n">ethane_UA</span><span class="o">.</span><span class="n">add_bond</span><span class="p">((</span><span class="n">ch3_1</span><span class="p">,</span> <span class="n">ch3_2</span><span class="p">))</span>
+
+<span class="n">ethane_UA_box</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">fill_box</span><span class="p">(</span><span class="n">ethane_UA</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">ethane_UA_box</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;ethane-UA-box.gro&#39;</span><span class="p">)</span>
+<span class="n">ethane_UA_box</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;ethane-UA-box.top&#39;</span><span class="p">,</span> <span class="n">forcefield_name</span><span class="o">=</span><span class="s1">&#39;trappe-ua&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="combining-force-fields">
+<h2>Combining force fields<a class="headerlink" href="#combining-force-fields" title="Permalink to this headline">¶</a></h2>
+<p>In some instances, the use of multiple force fields may be desired to
+describe a molecular system. For example, the user may want to use one
+force field for a surface and another for a fluid in the same system.
+Foyer supports this functionality by allowing the user to separately
+atom-type parts of a system. In this example, we take a system featuring
+bulk united atom ethane above a silica surface and apply the OPLS force
+field to the surface and the TraPPE force field to the ethane. The two
+atomtyped Parmed structures are then combined using a simple ‘+’
+operator and can be saved to Gromacs files.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">foyer</span> <span class="k">import</span> <span class="n">Forcefield</span>
+<span class="kn">from</span> <span class="nn">foyer.tests.utils</span> <span class="k">import</span> <span class="n">get_fn</span>
+<span class="kn">import</span> <span class="nn">mbuild</span> <span class="k">as</span> <span class="nn">mb</span>
+<span class="kn">from</span> <span class="nn">mbuild.examples</span> <span class="k">import</span> <span class="n">Ethane</span>
+<span class="kn">from</span> <span class="nn">mbuild.lib.atoms</span> <span class="k">import</span> <span class="n">H</span>
+<span class="kn">from</span> <span class="nn">mbuild.lib.bulk_materials</span> <span class="k">import</span> <span class="n">AmorphousSilica</span>
+
+<span class="n">interface</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">SilicaInterface</span><span class="p">(</span><span class="n">bulk_silica</span><span class="o">=</span><span class="n">AmorphousSilica</span><span class="p">())</span>
+<span class="n">interface</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">Monolayer</span><span class="p">(</span><span class="n">surface</span><span class="o">=</span><span class="n">interface</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="n">H</span><span class="p">(),</span> <span class="n">guest_port_name</span><span class="o">=</span><span class="s1">&#39;up&#39;</span><span class="p">)</span>
+
+<span class="n">box</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">mins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">interface</span><span class="o">.</span><span class="n">xyz</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])],</span>
+             <span class="n">maxs</span><span class="o">=</span><span class="n">interface</span><span class="o">.</span><span class="n">periodicity</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+
+<span class="n">ethane_box</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">fill_box</span><span class="p">(</span><span class="n">compound</span><span class="o">=</span><span class="n">Ethane</span><span class="p">(),</span> <span class="n">n_compounds</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">)</span>
+
+<span class="n">opls</span> <span class="o">=</span> <span class="n">Forcefield</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;oplsaa&#39;</span><span class="p">)</span>
+<span class="n">opls_silica</span> <span class="o">=</span> <span class="n">Forcefield</span><span class="p">(</span><span class="n">forcefield_files</span><span class="o">=</span><span class="n">get_fn</span><span class="p">(</span><span class="s1">&#39;opls-silica.xml&#39;</span><span class="p">))</span>
+<span class="n">ethane_box</span> <span class="o">=</span> <span class="n">opls</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">ethane_box</span><span class="p">)</span>
+<span class="n">interface</span> <span class="o">=</span> <span class="n">opls_silica</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">interface</span><span class="p">)</span>
+
+<span class="n">system</span> <span class="o">=</span> <span class="n">interface</span> <span class="o">+</span> <span class="n">ethane_box</span>
+
+<span class="n">system</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;ethane-silica.gro&#39;</span><span class="p">)</span>
+<span class="n">system</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;ethane-silica.top&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="validation.html" class="btn btn-neutral float-right" title="Validation of force field files" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="forcefields.html" class="btn btn-neutral" title="Parameter definitions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014-2018, Vanderbilt University.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
