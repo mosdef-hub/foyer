@@ -5,7 +5,7 @@ Install from conda:
 
 .. code:: bash
 
-    conda install -c omnia -c mosdef foyer
+    conda install -c conda-forge -c omnia -c mosdef foyer
 
 Install an editable version from source:
 
