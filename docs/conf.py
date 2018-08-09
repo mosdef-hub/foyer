@@ -156,6 +156,9 @@ html_sidebars = {
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
+# If true, the index is split into individual pages for each
+html_split_index = False
+
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'foyerdoc'
 
@@ -184,7 +187,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'foyer.tex', u'foyer Documentation',
+    ('index', 'foyer.tex', u'foyer Documentation',
      u'Author', 'manual'),
 ]
 
@@ -194,7 +197,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'foyer', u'foyer Documentation',
+    ('index', 'foyer', u'foyer Documentation',
      [u'Author'], 1)
 ]
 
@@ -205,7 +208,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'foyer', u'foyer Documentation',
+    ('index', 'foyer', u'foyer Documentation',
      u'Author', 'foyer', 'One line description of project.',
      'Miscellaneous'),
 ]
