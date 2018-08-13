@@ -11,8 +11,8 @@ matrix:
 
 env:
   global:
-  - ENCRYPTION_LABEL: "898e0934cf65"
-  - COMMIT_AUTHOR_EMAIL: "janos.sallai@vanderbilt.edu"
+  - ENCRYPTION_LABEL: "fa70a735182b"
+  - COMMIT_AUTHOR_EMAIL: "andrew.z.summers@gmail.com"
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
@@ -31,3 +31,4 @@ script:
 
 after_success:
   - coveralls
+  - if [[ $PYTHON_VERSION == 3.5 ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source devtools/travis-ci/update_gh_pages.sh; fi
