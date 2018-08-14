@@ -1,0 +1,13 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="Ar" class="" element="C" mass="12.011" def="Ar"/>
+  <Type name="Xe" class="" element="C" mass="12.011" def="Xe"/>
+ </AtomTypes>
+ <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
+  <Atom type="Ar" charge="0.0" sigma="1.0" epsilon="1.0"/>
+  <Atom type="Xe" charge="0.0" sigma="1.0" epsilon="1.0"/>
+ </NonbondedForce>
+ <LennardJonesForce lj14scale="1.0">
+  <NBFixPair type1="Ar" type2="Xe" sigma="1.0" epsilon="2.0"/>
+ </LennardJonesForce>
+</ForceField>
