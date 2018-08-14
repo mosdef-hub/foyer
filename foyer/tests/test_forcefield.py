@@ -32,8 +32,7 @@ def test_duplicate_type_definitions():
 
 
 def test_load_nbfix():
-    ff_nbfix = get_fn('nbfixpair.xml')
-    dir(ff_nbfix)
+    ff_nbfix = Forcefield(get_fn('nbfixpair.xml'))
 
 
 def test_from_parmed():
