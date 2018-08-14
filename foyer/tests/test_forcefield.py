@@ -31,6 +31,10 @@ def test_duplicate_type_definitions():
         ff4 = Forcefield(name='oplsaa', forcefield_files=FORCEFIELDS)
 
 
+def test_load_nbfix():
+    ff_nbfix = get_fn('nbfixpair.xml')
+    dir(ff_nbfix)
+
 
 def test_from_parmed():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
