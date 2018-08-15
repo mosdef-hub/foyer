@@ -35,6 +35,14 @@ def test_load_nbfix():
     ff_nbfix = Forcefield(get_fn('nbfixpair.xml'))
 
 
+def test_apply_nbfix():
+    ff_nbfix = Forcefield(get_fn('nbfixpair.xml'))
+    ar = mb.Compound(name='Ar')
+    xe = mb.Compound(name='Xe')
+    system = mb.fill_box(compound=[ar, xe], n_compounds=[10, 10], box=[4, 4, 4])
+    ff_nbfix.apply(system.to_parmed(residues=['Ar', 'Xe']))
+
+
 def test_from_parmed():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     oplsaa = Forcefield(name='oplsaa')
