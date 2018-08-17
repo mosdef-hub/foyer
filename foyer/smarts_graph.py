@@ -239,6 +239,12 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
 
 
 def _find_chordless_cycles(bond_graph, max_cycle_size):
+    """Find all chordless cycles (i.e. rings) in the bond graph
+
+    Traverses the bond graph to determine all cycles (i.e. rings) each
+    atom is contained within. Algorithm has been adapted from:
+    https://stackoverflow.com/questions/4022662/find-all-chordless-cycles-in-an-undirected-graph/4028855#4028855
+    """
     cycles = [[] for _ in bond_graph.nodes]
 
     ''' 
