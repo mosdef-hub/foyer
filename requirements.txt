@@ -9,3 +9,4 @@ lxml
 pytest >=3.0
 python-coveralls
 pytest-cov
+pytest-timeout

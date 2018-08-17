@@ -1,4 +1,5 @@
 from collections import OrderedDict, defaultdict
+import itertools
 import sys
 
 import networkx as nx
@@ -237,6 +238,69 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
         # For all other cases, we don't have any candidate pairs.
 
 
+def _find_chordless_cycles(bond_graph, max_cycle_size):
+    """Find all chordless cycles (i.e. rings) in the bond graph
+
+    Traverses the bond graph to determine all cycles (i.e. rings) each
+    atom is contained within. Algorithm has been adapted from:
+    https://stackoverflow.com/questions/4022662/find-all-chordless-cycles-in-an-undirected-graph/4028855#4028855
+    """
+    cycles = [[] for _ in bond_graph.nodes]
+
+    ''' 
+    For all nodes we need to find the cycles that they are included within.
+    '''
+    for i, node in enumerate(bond_graph.nodes):
+        neighbors = list(bond_graph.neighbors(node))
+        pairs = list(itertools.combinations(neighbors, 2)) 
+        ''' 
+        Loop over all pairs of neighbors of the node. We will see if a ring
+        exists that includes these branches.
+        '''
+        for pair in pairs:
+            ''' 
+            We need to store all node sequences that could be rings. We will
+            update this as we traverse the graph.
+            '''
+            connected = False
+            possible_rings = []
+
+            last_node = pair[0]
+            ring = [last_node, node, pair[1]]
+            possible_rings.append(ring)
+
+            if bond_graph.has_edge(last_node, pair[1]):
+                cycles[i].append(ring)
+                connected = True
+
+            while not connected:
+                '''
+                Branch and create a new list of possible rings
+                '''
+                new_possible_rings = []
+                for possible_ring in possible_rings:
+                    next_neighbors = list(bond_graph.neighbors(possible_ring[-1]))
+                    for next_neighbor in next_neighbors:
+                        if next_neighbor != possible_ring[-2]:
+                            new_possible_rings.append(possible_ring + \
+                                                      [next_neighbor])
+                possible_rings = new_possible_rings
+
+                for possible_ring in possible_rings:
+                    if bond_graph.has_edge(possible_ring[-1], last_node):
+                        if any([bond_graph.has_edge(possible_ring[-1], internal_node)
+                                for internal_node in possible_ring[1:-2]]):
+                            pass
+                        else:
+                            cycles[i].append(possible_ring)
+                            connected = True
+
+                if not possible_rings or len(possible_rings[0]) == max_cycle_size:
+                    break
+
+    return cycles
+
+
 def _prepare_atoms(topology, compute_cycles=False):
     """Compute cycles and add white-/blacklists to atoms."""
     atom1 = next(topology.atoms())
@@ -256,10 +320,7 @@ def _prepare_atoms(topology, compute_cycles=False):
         bond_graph = nx.Graph()
         bond_graph.add_nodes_from(topology.atoms())
         bond_graph.add_edges_from(topology.bonds())
-        cycles = nx.cycle_basis(bond_graph)
-        for cycle in cycles:
-            # NOTE: Only considering cycles containing less than 8 atoms
-            if len(cycle) > 8:
-                continue
-            for atom in cycle:
+        all_cycles = _find_chordless_cycles(bond_graph, max_cycle_size=8)
+        for atom, cycles in zip(bond_graph.nodes, all_cycles):
+            for cycle in cycles:
                 atom.cycles.add(tuple(cycle))
