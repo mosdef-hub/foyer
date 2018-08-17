@@ -111,6 +111,44 @@ def test_improper_dihedral():
     assert len([dih for dih in benzene.dihedrals if dih.improper]) == 6
     assert len([dih for dih in benzene.dihedrals if not dih.improper]) == 12
 
+def test_urey_bradley():
+    system = mb.Compound()
+    first = mb.Particle(name='_CTL2',pos=[-1,0,0])
+    second = mb.Particle(name='_CL', pos=[0,0,0])
+    third = mb.Particle(name='_OBL', pos=[1,0,0])
+    fourth = mb.Particle(name='_OHL', pos = [0,1,0])
+
+    system.add([first, second, third, fourth])
+
+    system.add_bond((first,second))
+    system.add_bond((second, third))
+    system.add_bond((second, fourth))
+
+    ff = Forcefield(forcefield_files=[get_fn('charmm36_cooh.xml')])
+    struc = ff.apply(system, assert_angle_params=False, asset_dihedral_params=False,
+            assert_improper_params=False)
+    assert len(struc.angles) == 3
+    assert len(struc.urey_bradleys) ==2
+
+def test_charmm_improper():
+    system = mb.Compound()
+    first = mb.Particle(name='_CTL2',pos=[-1,0,0])
+    second = mb.Particle(name='_CL', pos=[0,0,0])
+    third = mb.Particle(name='_OBL', pos=[1,0,0])
+    fourth = mb.Particle(name='_OHL', pos = [0,1,0])
+
+    system.add([first, second, third, fourth])
+
+    system.add_bond((first,second))
+    system.add_bond((second, third))
+    system.add_bond((second, fourth))
+
+    ff = Forcefield(forcefield_files=[get_fn('charmm36_cooh.xml')])
+    struc = ff.apply(system, assert_angle_params=False, asset_dihedral_params=False,
+            assert_improper_params=False)
+    assert len(struc.impropers) == 1
+    assert len(struc.dihedrals) == 0
+
 def test_residue_map():
     ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     ethane *= 2
