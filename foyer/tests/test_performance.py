@@ -13,14 +13,14 @@ def test_fullerene():
     forcefield.apply(fullerene, assert_dihedral_params=False)
 
 
-@pytest.mark.timeout(5)
+@pytest.mark.timeout(10)
 def test_surface():
     surface = mb.load(get_fn('silica.mol2'))
     forcefield = Forcefield(get_fn('opls-silica.xml'))
     forcefield.apply(surface)
 
 
-@pytest.mark.timeout(20)
+@pytest.mark.timeout(30)
 def test_polymer():
     peg100 = mb.load(get_fn('peg100.mol2'))
     forcefield = Forcefield(name='oplsaa')
