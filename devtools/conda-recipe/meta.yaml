@@ -29,6 +29,7 @@ requirements:
 test:
   requires:
     - pytest >=3.0
+    - pytest-timeout
 
   source_files:
     - foyer/forcefields/*
