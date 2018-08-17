@@ -335,8 +335,7 @@ class Forcefield(app.ForceField):
         if 'des' in parameters:
             self.atomTypeDesc[name] = parameters['desc']
         if 'doi' in parameters:
-            dois = [doi.replace(',', '').strip() for doi
-                    in parameters['doi'].split(',')]
+            dois = set(doi.strip() for doi in parameters['doi'].split(','))
             self.atomTypeRefs[name] = dois
 
     def apply(self, topology, references_file=None, use_residue_map=True,
