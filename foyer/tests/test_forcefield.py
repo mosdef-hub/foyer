@@ -200,3 +200,9 @@ def test_missing_topo_params(ff_filename, kwargs):
         ethane = oplsaa_with_typo.apply(ethane)
     with pytest.warns(UserWarning):
         ethane = oplsaa_with_typo.apply(ethane, **kwargs)
+
+def test_overrides_space():
+    ethane = mb.load(get_fn('ethane.mol2'))
+    ff = Forcefield(forcefield_files=get_fn('overrides-space.xml'))
+    typed_ethane = ff.apply(ethane)
+    assert typed_ethane.atoms[0].type == 'CT3'
