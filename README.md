@@ -40,15 +40,15 @@ ethane.save('ethane.gro')
 Check out our example template for disseminating force fields:
 https://github.com/mosdef-hub/forcefield_template
 
-### [Installation instructions](docs/installation.md)
+### [Installation instructions](docs/installation.rst)
 
-### [SMARTS-based atomtyping](docs/smarts.md)
+### [SMARTS-based atomtyping](docs/smarts.rst)
 
-### [Force field validation](docs/validation.md)
+### [Force field validation](docs/validation.rst)
 
 ### [Defining force field parameters](docs/parameter_definitions.md)
 
-### [Usage examples](docs/usage_examples.md)
+### [Usage examples](docs/usage_examples.rst)
 
 
 #### [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
