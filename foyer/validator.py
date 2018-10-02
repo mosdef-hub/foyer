@@ -120,6 +120,8 @@ class Validator(object):
         errors = []
         for entry in self.atom_types:
             smarts_string = entry.attrib.get('def')
+            if not smarts_string:
+                continue
             name = entry.attrib['name']
             if smarts_string is None:
                 missing_smarts.append(name)
