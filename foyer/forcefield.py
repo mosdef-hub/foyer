@@ -212,7 +212,7 @@ def _update_atomtypes(unatomtyped_topology, res_name, prototype):
 
 def _error_or_warn(error, msg):
     """Raise an error or warning if topology objects are not fully parameterized.
-    
+
     Parameters
     ----------
     error : bool
@@ -327,7 +327,8 @@ class Forcefield(app.ForceField):
 
         name = parameters['name']
         if 'def' in parameters:
-            self.atomTypeDefinitions[name] = parameters['def']
+            if parameters['def']:
+                self.atomTypeDefinitions[name] = parameters['def']
         if 'overrides' in parameters:
             overrides = set(atype.strip() for atype
                             in parameters['overrides'].split(","))
