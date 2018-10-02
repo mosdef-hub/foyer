@@ -206,3 +206,8 @@ def test_overrides_space():
     ff = Forcefield(forcefield_files=get_fn('overrides-space.xml'))
     typed_ethane = ff.apply(ethane)
     assert typed_ethane.atoms[0].type == 'CT3'
+
+def test_allow_empty_def():
+    ethane = mb.load(get_fn('ethane.mol2'))
+    ff = Forcefield(forcefield_files=get_fn('empty_def.xml'))
+    typed_ethane = ff.apply(ethane)
