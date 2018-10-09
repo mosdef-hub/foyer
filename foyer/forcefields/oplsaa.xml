@@ -565,15 +565,15 @@
   <Type name="opls_554" class="opls_554" element="H" mass="1.008"/>
   <Type name="opls_555" class="opls_555" element="H" mass="1.008"/>
   <Type name="opls_556" class="opls_556" element="H" mass="1.008"/>
-  <Type name="opls_557" class="opls_557" element="N" mass="14.0067"/>
-  <Type name="opls_558" class="opls_558" element="C" mass="12.011"/>
-  <Type name="opls_559" class="opls_559" element="N" mass="14.0067"/>
-  <Type name="opls_560" class="opls_560" element="C" mass="12.011"/>
-  <Type name="opls_561" class="opls_561" element="C" mass="12.011"/>
-  <Type name="opls_562" class="opls_562" element="H" mass="1.008"/>
-  <Type name="opls_563" class="opls_563" element="H" mass="1.008"/>
-  <Type name="opls_564" class="opls_564" element="H" mass="1.008"/>
-  <Type name="opls_565" class="opls_565" element="H" mass="1.008"/>
+  <Type name="opls_557" class="NA" element="N" mass="14.0067" def="[N;X3;r5]1CNCC1" desc="N1 (hydrogen-bearing N) in imidazole"  doi="10.1021/jp981200o"/>
+  <Type name="opls_558" class="CR" element="C" mass="12.011" def="[C;X3;r5](N)(N)H" desc="C2 in imidazole" doi="10.1021/jp981200o"/>
+  <Type name="opls_559" class="NB" element="N" mass="14.0067" def="[N;X2;r5]1CCNC1" desc="N3 (not hydrogen-bearing) in imidazole" doi="10.1021/jp981200o"/>
+  <Type name="opls_560" class="CV" element="C" mass="12.011" def="[C;X3;r5]1[N;X2]CNC1" desc="C4 in imidazole" doi="10.1021/jp981200o"/>
+  <Type name="opls_561" class="CW" element="C" mass="12.011" def="[C;X3;r5]1[N;X3]CNC1" desc="C5 in imidazole" doi="10.1021/jp981200o"/>
+  <Type name="opls_562" class="H" element="H" mass="1.008" def="H[%opls_557]" desc="H1 in imidazole" overrides="opls_144" doi="10.1021/jp981200o"/>
+  <Type name="opls_563" class="HA" element="H" mass="1.008" def="H[%opls_558]" desc="H2 in imidazole" overrides="opls_144" doi="10.1021/jp981200o"/>
+  <Type name="opls_564" class="HA" element="H" mass="1.008" def="H[%opls_560]" desc="H4 in imidazole" overrides="opls_144" doi="10.1021/jp981200o"/>
+  <Type name="opls_565" class="HA" element="H" mass="1.008" def="H[%opls_561]" desc="H5 in imidazole" overrides="opls_144" doi="10.1021/jp981200o"/>
   <Type name="opls_566" class="opls_566" element="O" mass="15.9994"/>
   <Type name="opls_567" class="opls_567" element="C" mass="12.011"/>
   <Type name="opls_568" class="opls_568" element="C" mass="12.011"/>
