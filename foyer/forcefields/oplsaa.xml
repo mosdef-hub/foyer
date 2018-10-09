@@ -1159,6 +1159,7 @@
   <Angle class1="C!" class2="CW" class3="OS" angle="2.12232037043" k="585.76"/>
   <Angle class1="CA" class2="CW" class3="NA" angle="2.12232037043" k="585.76"/>
   <Angle class1="HA" class2="CW" class3="CV" angle="2.28114533236" k="292.88"/>
+  <Angle class1="HA" class2="CV" class3="CV" angle="2.28114533236" k="292.88"/>
   <Angle class1="HA" class2="CV" class3="CW" angle="2.23751210106" k="292.88"/>
   <Angle class1="HC" class2="CT" class3="CZ" angle="1.89368223841" k="292.88"/>
   <Angle class1="CT" class2="CT" class3="CR" angle="1.98967534727" k="527.184"/>
@@ -1388,6 +1389,7 @@
   <Angle class1="CW" class2="NA" class3="CW" angle="1.91637151869" k="585.76"/>
   <Angle class1="CW" class2="NA" class3="CT" angle="2.19562419901" k="585.76"/>
   <Angle class1="CV" class2="CW" class3="NA" angle="1.85528499487" k="585.76"/>
+  <Angle class1="CV" class2="CV" class3="NB" angle="1.85528499487" k="585.76"/>
   <Angle class1="CV" class2="CW" class3="N" angle="1.85528499487" k="585.76"/>
   <Angle class1="CW" class2="CV" class3="NB" angle="1.93731546971" k="585.76"/>
   <Angle class1="CW" class2="NA" class3="CR" angle="1.91637151869" k="585.76"/>
@@ -1591,6 +1593,7 @@
   <Angle class1="HA" class2="CK" class3="NB" angle="2.09439510239" k="292.88"/>
   <Angle class1="NA" class2="CR" class3="NA" angle="2.09439510239" k="585.76"/>
   <Angle class1="NA" class2="CR" class3="NB" angle="2.09439510239" k="585.76"/>
+  <Angle class1="NB" class2="CR" class3="NB" angle="2.09439510239" k="585.76"/>
   <Angle class1="NA" class2="CR" class3="CT" angle="2.18166156499" k="585.76"/>
   <Angle class1="NB" class2="CR" class3="CT" angle="2.18166156499" k="585.76"/>
   <Angle class1="NA" class2="CR" class3="SY" angle="2.09439510239" k="585.76"/>
@@ -2494,6 +2497,7 @@
   <Proper class1="CW" class2="CV" class3="CT" class4="HC" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="CW" class2="NA" class3="CR" class4="HA" c0="19.4556" c1="0.0" c2="-19.4556" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="CW" class2="NA" class3="CR" class4="NB" c0="19.4556" c1="0.0" c2="-19.4556" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="CW" class2="NB" class3="CR" class4="NB" c0="19.4556" c1="0.0" c2="-19.4556" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="CX" class2="CT" class3="CT" class4="HC" c0="0.9665" c1="2.89951" c2="0.0" c3="-3.86601" c4="0.0" c5="0.0"/>
   <Proper class1="CX" class2="CT" class3="CT_2" class4="N" c0="-0.76567" c1="2.70705" c2="4.02501" c3="-5.96639" c4="0.0" c5="0.0"/>
   <Proper class1="CX" class2="CT" class3="CT_2" class4="HC" c0="0.9665" c1="2.89951" c2="0.0" c3="-3.86601" c4="0.0" c5="0.0"/>
@@ -2747,6 +2751,7 @@
   <Proper class1="" class2="CS" class3="CW" class4="" c0="30.334" c1="0.0" c2="-30.334" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="" class2="CU" class3="NB" class4="" c0="30.334" c1="0.0" c2="-30.334" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="" class2="CV" class3="CW" class4="" c0="44.978" c1="0.0" c2="-44.978" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="" class2="CV" class3="CV" class4="" c0="44.978" c1="0.0" c2="-44.978" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="" class2="CV" class3="NA" class4="" c0="30.334" c1="0.0" c2="-30.334" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="" class2="CV" class3="NB" class4="" c0="20.0832" c1="0.0" c2="-20.0832" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="" class2="CW" class3="S" class4="" c0="30.334" c1="0.0" c2="-30.334" c3="0.0" c4="0.0" c5="0.0"/>
