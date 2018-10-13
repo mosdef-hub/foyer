@@ -976,6 +976,7 @@
   <Bond class1="CA" class2="HA" length="0.108" k="307105.6"/>
   <Bond class1="CB" class2="CB" length="0.137" k="435136.0"/>
   <Bond class1="CR" class2="CS" length="0.137" k="435136.0"/>
+  <Bond class1="CV" class2="CV" length="0.137" k="435136.0"/>
   <Bond class1="CV" class2="CW" length="0.137" k="435136.0"/>
   <Bond class1="CB" class2="CN" length="0.1419" k="374049.6"/>
   <Bond class1="CB" class2="N*" length="0.1374" k="364844.8"/>
