@@ -341,7 +341,7 @@ class Forcefield(app.ForceField):
 
     def apply(self, topology, references_file=None, use_residue_map=True,
               assert_angle_params=True, assert_dihedral_params=True,
-              assert_improper_params=False, *args, **kwargs):
+              assert_improper_params=False, verbose=False, *args, **kwargs):
         """Apply the force field to a molecular structure
 
         Parameters
@@ -369,6 +369,9 @@ class Forcefield(app.ForceField):
         assert_improper_params : bool, optional, default=False
             If True, Foyer will exit if parameters are not found for all system
             improper dihedrals.
+        verbose : bool, optional, default=False
+            If True, Foyer will print debug-level information about notable or
+            potentially problematic details it encounters.
         """
         if not isinstance(topology, app.Topology):
             residues = kwargs.get('residues')
