@@ -26,6 +26,9 @@ requirements:
     - requests
     - lxml
 
+  run_contrained:
+    - mdtraj==1.9.1
+
 test:
   requires:
     - pytest >=3.0
