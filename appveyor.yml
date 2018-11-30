@@ -16,6 +16,7 @@ install:
   - conda config --add channels omnia
   - conda config --add channels conda-forge
   - conda config --add channels mosdef
+  - conda install python=3.5
   - conda update -yq --all
   - conda install -yq conda-build jinja2
 
