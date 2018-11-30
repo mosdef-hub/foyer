@@ -26,7 +26,7 @@ requirements:
     - requests
     - lxml
 
-  run_contrained:
+  run_constrained:
     - mdtraj==1.9.1
 
 test:
