@@ -21,7 +21,7 @@ requirements:
     - networkx
     - oset
     - six
-    - openmm
+    - openmm <7.3
     - plyplus
     - requests
     - lxml
