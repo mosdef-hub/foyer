@@ -11,6 +11,7 @@ import pytest
 from foyer import Forcefield
 from foyer.forcefield import generate_topology
 from foyer.forcefield import _check_independent_residues
+from foyer.exceptions import FoyerError
 from foyer.tests.utils import get_fn
 
 
@@ -32,6 +33,11 @@ def test_duplicate_type_definitions():
         ff4 = Forcefield(name='oplsaa', forcefield_files=FORCEFIELDS)
 
 
+def test_missing_type_definitions():
+    with pytest.raises(FoyerError):
+        FF = Forcefield()
+        ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+        FF.apply(ethane)
 
 def test_from_parmed():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)

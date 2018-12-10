@@ -370,6 +370,10 @@ class Forcefield(app.ForceField):
             If True, Foyer will exit if parameters are not found for all system
             improper dihedrals.
         """
+        if self.atomTypeDefinitions == {}:
+            raise FoyerError('Attempting to atom-type using a force field '
+                    'with no atom type defitions.')
+
         if not isinstance(topology, app.Topology):
             residues = kwargs.get('residues')
             topology, positions = generate_topology(topology,
