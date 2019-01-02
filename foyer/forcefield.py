@@ -394,6 +394,15 @@ class Forcefield(app.ForceField):
             msg = ("Parameters have not been assigned to all angles. Total "
                    "system angles: {}, Parameterized angles: {}"
                    "".format(len(data.angles), len(structure.angles)))
+            msg += "\nMissing angle parameters for:\n"
+            idx_reprs = [(angle.atom1.idx, angle.atom2.idx, angle.atom3.idx)
+                         for angle in structure.angles]
+            for angle in data.angles:
+                if angle in idx_reprs:
+                    continue
+                msg += '{} {} {}\n'.format(structure[angle[0]].type,
+                                           structure[angle[1]].type,
+                                           structure[angle[2]].type)
             _error_or_warn(assert_angle_params, msg)
 
         proper_dihedrals = [dihedral for dihedral in structure.dihedrals
