@@ -221,3 +221,5 @@ def test_assert_bonds():
 
     with pytest.raises(Exception):
         ff.apply(derponium)
+    thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False)
+    assert any(b.type is None for b in thing.bonds)
