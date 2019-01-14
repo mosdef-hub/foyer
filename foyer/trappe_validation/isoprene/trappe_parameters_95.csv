@@ -1,0 +1,23 @@
+isoprene
+
+#,(pseudo)atom,type,"epsilon/kB [K]","sigma [Ang.]","charge [e]"
+5,CH3,[CH3]-CHx,98.0,3.750,0.000
+1,CH2,[CH2]=CHx,85.0,3.675,0.000
+4,CH2,[CH2]=CHx,85.0,3.675,0.000
+3,CH,CHx=[CH](sp2)-CHy(sp2),52.0,3.710,0.000
+2,C,CHx=[C](sp2)-CHy(sp2),22.0,3.850,0.000
+
+#,stretch,type,"length [Ang.]"
+1,"'1 - 2'",CHx=CHy,1.3300
+2,"'2 - 3'",CHx-CHy,1.5400
+3,"'2 - 5'",CHx-CHy,1.5400
+4,"'3 - 4'",CHx=CHy,1.3300
+
+#,bend,type,"theta [degrees]","k_theta/kB [K/rad^2]"
+1,"'1 - 2 - 3'",CHx=(C)-CHy,119.70,70420
+2,"'1 - 2 - 5'",CHx=(C)-CHy,119.70,70420
+3,"'2 - 3 - 4'",CHx=(CH)-CHx,119.70,70420
+4,"'3 - 2 - 5'",CHx-(C)[=CHz]-CHy,119.70,70420
+
+#,torsion,type,"c0/kB [K]","c1/kB [K]","c2/kB [K]","c3/kB [K]","c4/kB [K]"
+2,"'5 - 2 - 3 - 4'",CH2=(CH)-(C)[=CHx]-CH3,1861.27,-349.97,-1048.70,-580.54,117.92
