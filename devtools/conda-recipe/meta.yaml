@@ -21,14 +21,18 @@ requirements:
     - networkx
     - oset
     - six
-    - openmm
+    - openmm <7.3
     - plyplus
     - requests
     - lxml
 
+  run_constrained:
+    - mdtraj==1.9.1
+
 test:
   requires:
     - pytest >=3.0
+    - pytest-timeout
 
   source_files:
     - foyer/forcefields/*

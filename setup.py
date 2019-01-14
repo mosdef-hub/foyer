@@ -7,7 +7,7 @@ import subprocess
 from setuptools import setup, find_packages
 
 #####################################
-VERSION = "0.4.0"
+VERSION = "0.5.1"
 ISRELEASED = True
 if ISRELEASED:
     __version__ = VERSION
