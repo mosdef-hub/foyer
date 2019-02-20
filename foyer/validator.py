@@ -121,7 +121,7 @@ class Validator(object):
         for entry in self.atom_types:
             smarts_string = entry.attrib.get('def')
             if not smarts_string:
-                #warn("You have empty smart definition(s)", ValidationWarning)
+                warn("You have empty smart definition(s)", ValidationWarning)
                 continue
             name = entry.attrib['name']
             if smarts_string is None:
