@@ -6,6 +6,7 @@ six
 plyplus
 requests
 lxml
+oset
 pytest >=3.0
 python-coveralls
 # TODO: Remove the pinning of the pytest-cov version again once issue
