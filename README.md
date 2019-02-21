@@ -36,6 +36,9 @@ ethane = oplsaa.apply(untyped_ethane)
 ethane.save('ethane.top')
 ethane.save('ethane.gro')
 ```
+
+If you use this package, please cite [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print.
+
 ### Getting started?
 Check out our example template for disseminating force fields:
 https://github.com/mosdef-hub/forcefield_template
@@ -50,8 +53,6 @@ https://github.com/mosdef-hub/forcefield_template
 
 ### [Usage examples](docs/usage_examples.rst)
 
-
-If you use this package, please cite [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print.
 
 #### [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
