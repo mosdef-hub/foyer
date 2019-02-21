@@ -23,4 +23,5 @@ build: false
 
 test_script:
   - "%CMD_IN_ENV% activate base"
+  - "%CMD_IN_ENV% pip install git+https://github.com/mosdef-hub/mbuild.git"
   - "%CMD_IN_ENV% conda build --quiet devtools\\conda-recipe"
