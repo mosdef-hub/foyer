@@ -12,6 +12,7 @@ from foyer import Forcefield
 from foyer.forcefield import generate_topology
 from foyer.forcefield import _check_independent_residues
 from foyer.tests.utils import get_fn
+from foyer.utils.io import has_mbuild
 
 
 FF_DIR = resource_filename('foyer', 'forcefields')
@@ -54,7 +55,7 @@ def test_from_parmed():
 
     assert ethane.box_vectors == mol2.box_vectors
 
-
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_from_mbuild():
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
@@ -69,12 +70,14 @@ def test_from_mbuild():
     assert len(ethane.rb_torsions) == 9
     assert all(x.type for x in ethane.dihedrals)
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_write_refs():
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
     assert os.path.isfile('ethane.bib')
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_write_refs_multiple():
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(forcefield_files=get_fn('refs-multi.xml'))
@@ -95,6 +98,7 @@ def test_preserve_resname():
     typed_resname = typed_ethane.residues[0].name
     assert typed_resname == untyped_resname
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_apply_residues():
     from mbuild.examples import Ethane
     ethane = Ethane()
@@ -102,6 +106,7 @@ def test_apply_residues():
     typed = opls.apply(ethane, residues='CH3')
     assert len([res for res in typed.residues if res.name == 'CH3']) == 2
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_from_mbuild_customtype():
     mol2 = mb.load(get_fn('ethane_customtype.pdb'))
     customtype_ff = Forcefield(forcefield_files=get_fn('validate_customtypes.xml'))
@@ -152,6 +157,7 @@ def test_independent_residues_molecules():
     topo, NULL = generate_topology(structure)
     assert not _check_independent_residues(topo)
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_independent_residues_atoms():
     """Test to see that _check_independent_residues works for single aotms."""
     argon = mb.Compound()
@@ -160,6 +166,7 @@ def test_independent_residues_atoms():
     topo, NULL = generate_topology(structure)
     assert _check_independent_residues(topo)
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_topology_precedence():
     """Test to see if topology precedence is properly adhered to.
 
@@ -188,6 +195,7 @@ def test_topology_precedence():
     assert len([rb for rb in typed_ethane.rb_torsions
                 if round(rb.type.c0, 3) == 0.287]) == 9
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 @pytest.mark.parametrize("ff_filename,kwargs", [
     ("ethane-angle-typo.xml", {"assert_angle_params": False}),
     ("ethane-dihedral-typo.xml", {"assert_dihedral_params": False})
@@ -201,6 +209,7 @@ def test_missing_topo_params(ff_filename, kwargs):
     with pytest.warns(UserWarning):
         ethane = oplsaa_with_typo.apply(ethane, **kwargs)
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_overrides_space():
     ethane = mb.load(get_fn('ethane.mol2'))
     ff = Forcefield(forcefield_files=get_fn('overrides-space.xml'))
