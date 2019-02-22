@@ -14,7 +14,6 @@ import requests
 import warnings
 import re
 
-import mbuild as mb
 import numpy as np
 import parmed as pmd
 import simtk.openmm.app.element as elem
@@ -30,7 +29,7 @@ from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
 from foyer.validator import Validator
-
+from foyer.utils.io import import_, has_mbuild
 
 def preprocess_forcefield_files(forcefield_files=None):
     if forcefield_files is None:
@@ -93,9 +92,11 @@ def generate_topology(non_omm_topology, non_element_types=None,
 
     if isinstance(non_omm_topology, pmd.Structure):
         return _topology_from_parmed(non_omm_topology, non_element_types)
-    elif isinstance(non_omm_topology, mb.Compound):
-        pmdCompoundStructure = non_omm_topology.to_parmed(residues=residues)
-        return _topology_from_parmed(pmdCompoundStructure, non_element_types)
+    elif has_mbuild:
+        mb = import_('mbuild')
+        if (non_omm_topology, mb.Compound):
+            pmdCompoundStructure = non_omm_topology.to_parmed(residues=residues)
+            return _topology_from_parmed(pmdCompoundStructure, non_element_types)
     else:
         raise FoyerError('Unknown topology format: {}\n'
                          'Supported formats are: '
