@@ -27,4 +27,4 @@ test_script:
   - "%CMD_IN_ENV% activate test-environment"
   - "%CMD_IN_ENV% pip install git+https://github.com/mosdef-hub/mbuild.git"
   - "%CMD_IN_ENV% pip install -e ."
-  - "%CMD_IN_ENV% py.test -v --cov=foyer --cov-report= --pyargs foyer"
+  - "%CMD_IN_ENV% python -m pytest -v --cov=foyer --cov-report= --pyargs foyer"
