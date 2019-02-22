@@ -4,6 +4,7 @@ import pytest
 
 from foyer import Forcefield
 from foyer.tests.utils import get_fn
+from foyer.utils.io import has_mbuild
 
 
 @pytest.mark.timeout(1)
