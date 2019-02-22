@@ -17,7 +17,7 @@ def test_fullerene():
 def test_surface():
     surface = mb.load(get_fn('silica.mol2'))
     forcefield = Forcefield(get_fn('opls-silica.xml'))
-    forcefield.apply(surface)
+    forcefield.apply(surface, assert_bond_params=False)
 
 
 @pytest.mark.timeout(45)
