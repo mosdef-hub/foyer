@@ -30,6 +30,7 @@ requirements:
 
 test:
   requires:
+    - mbuild >=0.6.1
     - pytest >=3.0
     - pytest-timeout
 
