@@ -11,6 +11,7 @@ import pytest
 from foyer import Forcefield
 from foyer.forcefield import generate_topology
 from foyer.forcefield import _check_independent_residues
+from foyer.exceptions import FoyerError
 from foyer.tests.utils import get_fn
 from foyer.utils.io import has_mbuild
 
@@ -33,6 +34,11 @@ def test_duplicate_type_definitions():
         ff4 = Forcefield(name='oplsaa', forcefield_files=FORCEFIELDS)
 
 
+def test_missing_type_definitions():
+    with pytest.raises(FoyerError):
+        FF = Forcefield()
+        ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+        FF.apply(ethane)
 
 def test_from_parmed():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
@@ -215,3 +221,20 @@ def test_overrides_space():
     ff = Forcefield(forcefield_files=get_fn('overrides-space.xml'))
     typed_ethane = ff.apply(ethane)
     assert typed_ethane.atoms[0].type == 'CT3'
+
+def test_assert_bonds():
+    ff = Forcefield(name='trappe-ua')
+
+    derponium = mb.Compound()
+    at1 = mb.Particle(name='H')
+    at2 = mb.Particle(name='O')
+    at3 = mb.Particle(name='_CH4')
+
+    derponium.add([at1, at2, at3])
+    derponium.add_bond((at1, at2))
+    derponium.add_bond((at2, at3))
+
+    with pytest.raises(Exception):
+        ff.apply(derponium)
+    thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False)
+    assert any(b.type is None for b in thing.bonds)
