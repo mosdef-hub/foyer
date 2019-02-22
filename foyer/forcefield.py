@@ -340,8 +340,9 @@ class Forcefield(app.ForceField):
             self.atomTypeRefs[name] = dois
 
     def apply(self, topology, references_file=None, use_residue_map=True,
-              assert_angle_params=True, assert_dihedral_params=True,
-              assert_improper_params=False, *args, **kwargs):
+              assert_bond_params=True, assert_angle_params=True,
+              assert_dihedral_params=True, assert_improper_params=False,
+              *args, **kwargs):
         """Apply the force field to a molecular structure
 
         Parameters
@@ -360,6 +361,9 @@ class Forcefield(app.ForceField):
             residues, i.e. a box of water. Note that for this to be applied to
             independent molecules, they must each be saved as different
             residues in the topology.
+        assert_bond_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all system
+            bonds.
         assert_angle_params : bool, optional, default=True
             If True, Foyer will exit if parameters are not found for all system
             angles.
@@ -393,6 +397,16 @@ class Forcefield(app.ForceField):
         are not assigned.
         '''
         data = self._SystemData
+
+        if data.bonds:
+            missing = [b for b in structure.bonds
+                       if b.type is None]
+            if missing:
+                nmissing = len(structure.bonds) - len(missing)
+                msg = ("Parameters have not been assigned to all bonds. "
+                       "Total system bonds: {}, Parametrized bonds: {}"
+                       "".format(len(structure.bonds), nmissing))
+                _error_or_warn(assert_bond_params, msg)
 
         if data.angles and (len(data.angles) != len(structure.angles)):
             msg = ("Parameters have not been assigned to all angles. Total "
