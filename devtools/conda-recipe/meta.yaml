@@ -17,7 +17,7 @@ requirements:
   run:
     - python
     - parmed
-    - networkx
+    - networkx >=2.0
     - oset
     - six
     - openmm <7.3

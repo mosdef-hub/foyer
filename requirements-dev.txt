@@ -2,7 +2,7 @@ oset
 openmm < 7.3
 mbuild
 parmed
-networkx
+networkx >=2.0
 six
 plyplus
 requests
