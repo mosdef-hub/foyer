@@ -25,9 +25,6 @@ requirements:
     - requests
     - lxml
 
-  run_constrained:
-    - mdtraj==1.9.1
-
 test:
   requires:
     - mbuild >=0.6.1
