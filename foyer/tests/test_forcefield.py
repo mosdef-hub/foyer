@@ -243,8 +243,3 @@ def test_assert_bonds():
         ff.apply(derponium)
     thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False)
     assert any(b.type is None for b in thing.bonds)
-
-def test_allow_empty_def():
-    ethane = mb.load(get_fn('ethane.mol2'))
-    ff = Forcefield(forcefield_files=get_fn('empty_def.xml'))
-    typed_ethane = ff.apply(ethane)

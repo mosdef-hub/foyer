@@ -328,8 +328,7 @@ class Forcefield(app.ForceField):
 
         name = parameters['name']
         if 'def' in parameters:
-            if parameters['def']:
-                self.atomTypeDefinitions[name] = parameters['def']
+            self.atomTypeDefinitions[name] = parameters['def']
         if 'overrides' in parameters:
             overrides = set(atype.strip() for atype
                             in parameters['overrides'].split(","))
