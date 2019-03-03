@@ -82,16 +82,64 @@ def test_from_mbuild():
 def test_write_refs(mock_get):
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
+    ethane_ref = str(
+        '@article{Jorgensen_1996,\n'
+        '\tdoi = {10.1021/ja9621760},\n'
+        '\turl = {https://doi.org/10.1021%2Fja9621760},\n'
+        '\tyear = 1996,\n'
+        '\tmonth = {jan},\n'
+        '\tpublisher = {American Chemical Society ({ACS})},\n'
+        '\tvolume = {118},\n'
+        '\tnumber = {45},\n'
+        '\tpages = {11225--11236},\n'
+        '\tauthor = {William L. Jorgensen and David S. Maxwell and Julian Tirado-Rives},\n'
+        '\ttitle = {Development and Testing of the {OPLS} All-Atom Force Field '
+        'on Conformational Energetics and Properties of Organic Liquids},\n'
+        '\tjournal = {Journal of the American Chemical Society},\n}')
     mock_get.return_value.ok = True
-    ethane = oplsaa.apply(mol2, references_file='/Users/mwt/ethane.bib')
+    mock_get.return_value.text = ethane_ref
+    ethane = oplsaa.apply(mol2, references_file='ethane.bib')
     assert os.path.isfile('ethane.bib')
+    fi = open('ethane.bib', mode='r')
+    written_bib = fi .read()
+    fi.close()
+    print(ethane_ref)
+    assert written_bib == ethane_ref[:-2] + '\n\tnote = {Parameters for atom types: opls_135, opls_140}\n}\n'
 
 @patch('foyer.utils.external.requests.get')
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_write_refs_multiple(mock_get):
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(forcefield_files=get_fn('refs-multi.xml'))
+    ethane_ref1 = str(
+        '@article{Jorgensen_1996,\n'
+        '\tdoi = {10.1021/ja9621760},\n'
+        '\turl = {https://doi.org/10.1021%2Fja9621760},\n'
+        '\tyear = 1996,\n'
+        '\tmonth = {jan},\n'
+        '\tpublisher = {American Chemical Society ({ACS})},\n'
+        '\tvolume = {118},\n'
+        '\tnumber = {45},\n'
+        '\tpages = {11225--11236},\n'
+        '\tauthor = {William L. Jorgensen and David S. Maxwell and Julian Tirado-Rives},\n'
+        '\ttitle = {Development and Testing of the {OPLS} All-Atom Force Field '
+        'on Conformational Energetics and Properties of Organic Liquids},\n'
+        '\tjournal = {Journal of the American Chemical Society},\n}')
+    ethane_ref2 = str(
+        '@article{Jorgensen_2004,\n'
+        '\tdoi = {10.1021/jp0484579},\n'
+        '\turl = {https://doi.org/10.1021%2Fjp0484579},\n'
+        '\tyear = 2004,\n'
+        '\tmonth = {oct},\n'
+        '\tpublisher = {American Chemical Society ({ACS})},\n'
+        '\tvolume = {108},\n'
+        '\tnumber = {41},\n'
+        '\tpages = {16264--16270},\n'
+        '\tauthor = {William L. Jorgensen and Jakob P. Ulmschneider and Julian Tirado-Rives},\n'
+        '\ttitle = {Free Energies of Hydration from a Generalized Born Model and an All-Atom Force Field},\n'
+        '\tjournal = {The Journal of Physical Chemistry B},\n')
     mock_get.return_value.ok = True
+    mock_get.return_value.text = ethane_ref1 + '\n' + ethane_ref2
     ethane = oplsaa.apply(mol2, references_file='ethane-multi.bib')
     assert os.path.isfile('ethane-multi.bib')
     with open(get_fn('ethane-multi.bib')) as file1:
