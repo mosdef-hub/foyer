@@ -30,6 +30,7 @@ from foyer.exceptions import FoyerError
 from foyer import smarts
 from foyer.validator import Validator
 from foyer.utils.io import import_, has_mbuild
+from foyer.utils.external import get_ref
 
 def preprocess_forcefield_files(forcefield_files=None):
     if forcefield_files is None:
@@ -750,7 +751,7 @@ class Forcefield(app.ForceField):
             for doi, atomtypes in unique_references.items():
                 url = "http://dx.doi.org/" + doi
                 headers = {"accept": "application/x-bibtex"}
-                bibtex_ref = requests.get(url, headers=headers).text
+                bibtex_ref = get_ref(url, headers=headers).text
                 note = (',\n\tnote = {Parameters for atom types: ' +
                         ', '.join(sorted(atomtypes)) + '}')
                 bibtex_ref = bibtex_ref[:-2] + note + bibtex_ref[-2:]
