@@ -2,6 +2,7 @@ import difflib
 import glob
 import os
 from pkg_resources import resource_filename
+from unittest.mock import Mock, patch
 
 import mbuild as mb
 from mbuild.examples import Alkane
@@ -14,7 +15,7 @@ from foyer.forcefield import _check_independent_residues
 from foyer.exceptions import FoyerError
 from foyer.tests.utils import get_fn
 from foyer.utils.io import has_mbuild
-
+from foyer.utils.external import get_ref
 
 FF_DIR = resource_filename('foyer', 'forcefields')
 FORCEFIELDS = glob.glob(os.path.join(FF_DIR, '*.xml'))
@@ -76,17 +77,21 @@ def test_from_mbuild():
     assert len(ethane.rb_torsions) == 9
     assert all(x.type for x in ethane.dihedrals)
 
+@patch('foyer.utils.external.requests.get')
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-def test_write_refs():
+def test_write_refs(mock_get):
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
-    ethane = oplsaa.apply(mol2, references_file='ethane.bib')
+    mock_get.return_value.ok = True
+    ethane = oplsaa.apply(mol2, references_file='/Users/mwt/ethane.bib')
     assert os.path.isfile('ethane.bib')
 
+@patch('foyer.utils.external.requests.get')
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-def test_write_refs_multiple():
+def test_write_refs_multiple(mock_get):
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(forcefield_files=get_fn('refs-multi.xml'))
+    mock_get.return_value.ok = True
     ethane = oplsaa.apply(mol2, references_file='ethane-multi.bib')
     assert os.path.isfile('ethane-multi.bib')
     with open(get_fn('ethane-multi.bib')) as file1:
