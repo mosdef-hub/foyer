@@ -95,7 +95,7 @@ def test_write_refs(mock_get):
         '\tauthor = {William L. Jorgensen and David S. Maxwell and Julian Tirado-Rives},\n'
         '\ttitle = {Development and Testing of the {OPLS} All-Atom Force Field '
         'on Conformational Energetics and Properties of Organic Liquids},\n'
-        '\tjournal = {Journal of the American Chemical Society},\n}')
+        '\tjournal = {Journal of the American Chemical Society}\n}')
     mock_get.return_value.ok = True
     mock_get.return_value.text = ethane_ref
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
@@ -104,7 +104,7 @@ def test_write_refs(mock_get):
     written_bib = fi .read()
     fi.close()
     print(ethane_ref)
-    assert written_bib == ethane_ref[:-2] + '\n\tnote = {Parameters for atom types: opls_135, opls_140}\n}\n'
+    assert written_bib == ethane_ref[:-2] + ',\n\tnote = {Parameters for atom types: opls_135, opls_140}\n}\n'
 
 @patch('foyer.utils.external.requests.get')
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
