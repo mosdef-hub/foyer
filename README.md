@@ -46,7 +46,7 @@ https://github.com/mosdef-hub/forcefield_template
 ### [Installation instructions](docs/installation.rst)
 
 ### [SMARTS-based atomtyping](docs/smarts.rst)
-* [Supported Smart Grammer](https://github.com/mosdef-hub/foyer/issues/63)
+* [Supported SMARTS Grammar](https://github.com/mosdef-hub/foyer/issues/63)
 
 ### [Force field validation](docs/validation.rst)
 
