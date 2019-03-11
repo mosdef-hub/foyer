@@ -26,8 +26,6 @@ install:
   - conda config --add channels mosdef
   - conda create -n test-environment python=$PYTHON_VERSION --file requirements-dev.txt
   - source activate test-environment
-  # Install mbuild from source instead of conda for testing
-  - pip install git+https://github.com/mosdef-hub/mbuild.git
   - pip install -e .
 
 script:
