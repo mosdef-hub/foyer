@@ -17,8 +17,7 @@ requirements:
   run:
     - python
     - parmed
-    - mbuild >=0.6.1
-    - networkx
+    - networkx >=2.0
     - oset
     - six
     - openmm <7.3
@@ -26,11 +25,9 @@ requirements:
     - requests
     - lxml
 
-  run_constrained:
-    - mdtraj==1.9.1
-
 test:
   requires:
+    - mbuild >=0.6.1
     - pytest >=3.0
     - pytest-timeout
 
