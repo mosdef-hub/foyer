@@ -238,3 +238,12 @@ def test_assert_bonds():
         ff.apply(derponium)
     thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False)
     assert any(b.type is None for b in thing.bonds)
+
+def test_write_xml():
+    ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+    oplsaa = Forcefield(name='oplsaa')
+    typed = oplsaa.apply(ethane)
+    typed.write_foyer(filename='/Users/mwt/Dropbox/opls-snippet.xml',
+                      forcefield=oplsaa, unique=True)
+    oplsaa_partial = Forcefield('opls-snippet.xml')
+    typed_by_partial = oplsaa.apply(ethane)
