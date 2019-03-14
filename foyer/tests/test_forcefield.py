@@ -1,3 +1,4 @@
+import difflib
 import glob
 import os
 from pkg_resources import resource_filename
@@ -10,7 +11,9 @@ import pytest
 from foyer import Forcefield
 from foyer.forcefield import generate_topology
 from foyer.forcefield import _check_independent_residues
+from foyer.exceptions import FoyerError
 from foyer.tests.utils import get_fn
+from foyer.utils.io import has_mbuild
 
 
 FF_DIR = resource_filename('foyer', 'forcefields')
@@ -31,6 +34,11 @@ def test_duplicate_type_definitions():
         ff4 = Forcefield(name='oplsaa', forcefield_files=FORCEFIELDS)
 
 
+def test_missing_type_definitions():
+    with pytest.raises(FoyerError):
+        FF = Forcefield()
+        ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+        FF.apply(ethane)
 
 def test_from_parmed():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
@@ -53,7 +61,7 @@ def test_from_parmed():
 
     assert ethane.box_vectors == mol2.box_vectors
 
-
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_from_mbuild():
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
@@ -68,11 +76,25 @@ def test_from_mbuild():
     assert len(ethane.rb_torsions) == 9
     assert all(x.type for x in ethane.dihedrals)
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_write_refs():
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
     assert os.path.isfile('ethane.bib')
+
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+def test_write_refs_multiple():
+    mol2 = mb.load(get_fn('ethane.mol2'))
+    oplsaa = Forcefield(forcefield_files=get_fn('refs-multi.xml'))
+    ethane = oplsaa.apply(mol2, references_file='ethane-multi.bib')
+    assert os.path.isfile('ethane-multi.bib')
+    with open(get_fn('ethane-multi.bib')) as file1:
+        with open('ethane-multi.bib') as file2:
+            diff = list(difflib.unified_diff(file1.readlines(),
+                                             file2.readlines(),
+                                             n=0))
+    assert not diff
 
 def test_preserve_resname():
     untyped_ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
@@ -82,6 +104,7 @@ def test_preserve_resname():
     typed_resname = typed_ethane.residues[0].name
     assert typed_resname == untyped_resname
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_apply_residues():
     from mbuild.examples import Ethane
     ethane = Ethane()
@@ -89,6 +112,7 @@ def test_apply_residues():
     typed = opls.apply(ethane, residues='CH3')
     assert len([res for res in typed.residues if res.name == 'CH3']) == 2
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_from_mbuild_customtype():
     mol2 = mb.load(get_fn('ethane_customtype.pdb'))
     customtype_ff = Forcefield(forcefield_files=get_fn('validate_customtypes.xml'))
@@ -106,7 +130,7 @@ def test_from_mbuild_customtype():
 def test_improper_dihedral():
     untyped_benzene = pmd.load_file(get_fn('benzene.mol2'), structure=True)
     ff_improper = Forcefield(forcefield_files=get_fn('improper_dihedral.xml'))
-    benzene = ff_improper.apply(untyped_benzene)
+    benzene = ff_improper.apply(untyped_benzene, assert_dihedral_params=False)
     assert len(benzene.dihedrals) == 18
     assert len([dih for dih in benzene.dihedrals if dih.improper]) == 6
     assert len([dih for dih in benzene.dihedrals if not dih.improper]) == 12
@@ -116,11 +140,13 @@ def test_residue_map():
     ethane *= 2
     oplsaa = Forcefield(name='oplsaa')
     topo, NULL = generate_topology(ethane)
-    with_map = pmd.openmm.load_topology(topo,
-            oplsaa.createSystem(topo, use_residue_map=True))
-    without_map = pmd.openmm.load_topology(topo,
-            oplsaa.createSystem(topo, use_residue_map=False))
-    for atom_with, atom_without in zip(with_map.atoms, without_map.atoms):
+    topo_with = oplsaa.run_atomtyping(topo, use_residue_map=True)
+    topo_without = oplsaa.run_atomtyping(topo, use_residue_map=False)
+    assert all([a.id for a in topo_with.atoms()][0])
+    assert all([a.id for a in topo_without.atoms()][0])
+    struct_with = pmd.openmm.load_topology(topo_with, oplsaa.createSystem(topo_with))
+    struct_without = pmd.openmm.load_topology(topo_without, oplsaa.createSystem(topo_without))
+    for atom_with, atom_without in zip(struct_with.atoms, struct_without.atoms):
         assert atom_with.type == atom_without.type
         b_with = atom_with.bond_partners
         b_without = atom_without.bond_partners
@@ -137,6 +163,7 @@ def test_independent_residues_molecules():
     topo, NULL = generate_topology(structure)
     assert not _check_independent_residues(topo)
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_independent_residues_atoms():
     """Test to see that _check_independent_residues works for single aotms."""
     argon = mb.Compound()
@@ -144,3 +171,70 @@ def test_independent_residues_atoms():
     structure = argon.to_parmed()
     topo, NULL = generate_topology(structure)
     assert _check_independent_residues(topo)
+
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+def test_topology_precedence():
+    """Test to see if topology precedence is properly adhered to.
+
+    This test uses a force field file where bond, angle, and dihedral
+    parameters are present with different counts of `type` definitions.
+    It checks that:
+        1. The parameters with the higher number of `type` definitions
+           are assigned (because they are given the highest precedence)
+        2. That if multiple definitions exist with the same number of
+           `type` definitions, that the convention from OpenMM is followed
+           whereby the definitions that occurs earliest in the XML is
+           assigned.
+    """
+    ethane = mb.load(get_fn('ethane.mol2'))
+    ff = Forcefield(forcefield_files=get_fn('ethane-topo-precedence.xml'))
+    typed_ethane = ff.apply(ethane)
+
+    assert len([bond for bond in typed_ethane.bonds
+                if round(bond.type.req, 2) == 1.15]) == 6
+    assert len([bond for bond in typed_ethane.bonds
+                if round(bond.type.req, 2) == 1.6]) == 1
+    assert len([angle for angle in typed_ethane.angles
+                if round(angle.type.theteq, 3) == 120.321]) == 6
+    assert len([angle for angle in typed_ethane.angles
+                if round(angle.type.theteq, 3) == 97.403]) == 6
+    assert len([rb for rb in typed_ethane.rb_torsions
+                if round(rb.type.c0, 3) == 0.287]) == 9
+
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+@pytest.mark.parametrize("ff_filename,kwargs", [
+    ("ethane-angle-typo.xml", {"assert_angle_params": False}),
+    ("ethane-dihedral-typo.xml", {"assert_dihedral_params": False})
+])
+def test_missing_topo_params(ff_filename, kwargs):
+    """Test that the user is notified if not all topology parameters are found."""
+    ethane = mb.load(get_fn('ethane.mol2'))
+    oplsaa_with_typo = Forcefield(forcefield_files=get_fn(ff_filename))
+    with pytest.raises(Exception):
+        ethane = oplsaa_with_typo.apply(ethane)
+    with pytest.warns(UserWarning):
+        ethane = oplsaa_with_typo.apply(ethane, **kwargs)
+
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+def test_overrides_space():
+    ethane = mb.load(get_fn('ethane.mol2'))
+    ff = Forcefield(forcefield_files=get_fn('overrides-space.xml'))
+    typed_ethane = ff.apply(ethane)
+    assert typed_ethane.atoms[0].type == 'CT3'
+
+def test_assert_bonds():
+    ff = Forcefield(name='trappe-ua')
+
+    derponium = mb.Compound()
+    at1 = mb.Particle(name='H')
+    at2 = mb.Particle(name='O')
+    at3 = mb.Particle(name='_CH4')
+
+    derponium.add([at1, at2, at3])
+    derponium.add_bond((at1, at2))
+    derponium.add_bond((at2, at3))
+
+    with pytest.raises(Exception):
+        ff.apply(derponium)
+    thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False)
+    assert any(b.type is None for b in thing.bonds)

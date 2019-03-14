@@ -1,11 +1,8 @@
-openmm
-mbuild
+oset
+openmm < 7.3
 parmed
-networkx
+networkx >=2.0
 six
 plyplus
 requests
 lxml
-pytest >=3.0
-python-coveralls
-pytest-cov

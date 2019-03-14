@@ -6,13 +6,15 @@ matrix:
   include:
     - { os: linux, env: PYTHON_VERSION=2.7 }
     - { os: linux, env: PYTHON_VERSION=3.5 }
+    - { os: linux, env: PYTHON_VERSION=3.6 }
     - { os: osx, env: PYTHON_VERSION=2.7 }
     - { os: osx, env: PYTHON_VERSION=3.5 }
+    - { os: osx, env: PYTHON_VERSION=3.6 }
 
 env:
   global:
-  - ENCRYPTION_LABEL: "898e0934cf65"
-  - COMMIT_AUTHOR_EMAIL: "janos.sallai@vanderbilt.edu"
+  - ENCRYPTION_LABEL: "fa70a735182b"
+  - COMMIT_AUTHOR_EMAIL: "andrew.z.summers@gmail.com"
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
@@ -20,8 +22,9 @@ install:
   - source devtools/travis-ci/install_conda.sh
   - conda config --set always_yes yes --set changeps1 no
   - conda config --add channels omnia
+  - conda config --add channels conda-forge
   - conda config --add channels mosdef
-  - conda create -n test-environment python=$PYTHON_VERSION --file requirements.txt
+  - conda create -n test-environment python=$PYTHON_VERSION --file requirements-dev.txt
   - source activate test-environment
   - pip install -e .
 
@@ -30,3 +33,4 @@ script:
 
 after_success:
   - coveralls
+  - if [[ $PYTHON_VERSION == 3.5 ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source devtools/travis-ci/update_gh_pages.sh; fi

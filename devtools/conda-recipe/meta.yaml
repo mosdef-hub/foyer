@@ -17,18 +17,19 @@ requirements:
   run:
     - python
     - parmed
-    - mbuild >=0.6.1
-    - networkx
+    - networkx >=2.0
     - oset
     - six
-    - openmm
+    - openmm <7.3
     - plyplus
     - requests
     - lxml
 
 test:
   requires:
+    - mbuild >=0.6.1
     - pytest >=3.0
+    - pytest-timeout
 
   source_files:
     - foyer/forcefields/*

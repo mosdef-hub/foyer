@@ -1,7 +1,7 @@
 import parmed as pmd
 
 from foyer.forcefield import generate_topology
-from foyer.smarts_graph import SMARTSGraph
+from foyer.smarts_graph import SMARTSGraph, _prepare_atoms
 from foyer.tests.utils import get_fn
 
 
@@ -37,3 +37,13 @@ def test_lazy_cycle_finding():
         rule = SMARTSGraph(smarts_string='[C;{}]'.format(token))
         list(rule.find_matches(top))
         assert all([hasattr(a, 'cycles') for a in top.atoms()])
+
+
+def test_cycle_finding_multiple():
+    fullerene = pmd.load_file(get_fn('fullerene.pdb'), structure=True)
+    top, _ = generate_topology(fullerene)
+
+    _prepare_atoms(top, compute_cycles=True)
+    cycle_lengths = [list(map(len, atom.cycles)) for atom in top.atoms()]
+    expected = [5, 6, 6]
+    assert all(sorted(lengths) == expected for lengths in cycle_lengths)

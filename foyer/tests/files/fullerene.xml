@@ -1,0 +1,14 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="C" class="C" element="C" mass="12.01" def="[C;r5;r6]" desc="carbon"/>
+ </AtomTypes>
+ <NonbondedForce coulomb14scale="1.0" lj14scale="1.0">
+  <Atom type="C" charge="0.0" sigma="0.1" epsilon="0.1"/>
+ </NonbondedForce>
+ <HarmonicBondForce>
+  <Bond class1="C" class2="C" length="0.1" k="1000"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="C" class2="C" class3="C" angle="3.141592" k="1000"/>
+ </HarmonicAngleForce>
+</ForceField>

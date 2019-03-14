@@ -36,17 +36,23 @@ ethane = oplsaa.apply(untyped_ethane)
 ethane.save('ethane.top')
 ethane.save('ethane.gro')
 ```
+
+If you use this package, please cite [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print.
+
 ### Getting started?
 Check out our example template for disseminating force fields:
 https://github.com/mosdef-hub/forcefield_template
 
-### [Installation instructions](docs/installation.md)
+### [Installation instructions](docs/installation.rst)
 
-### [SMARTS-based atomtyping](docs/smarts.md)
+### [SMARTS-based atomtyping](docs/smarts.rst)
+* [Supported SMARTS Grammar](https://github.com/mosdef-hub/foyer/issues/63)
 
-### [Force field validation](docs/validation.md)
+### [Force field validation](docs/validation.rst)
 
-### [Usage examples](docs/usage_examples.md)
+### [Defining force field parameters](docs/parameter_definitions.md)
+
+### [Usage examples](docs/usage_examples.rst)
 
 
 #### [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
