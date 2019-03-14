@@ -343,7 +343,6 @@ class Forcefield(app.ForceField):
         if 'doi' in parameters:
             dois = set(doi.strip() for doi in parameters['doi'].split(','))
             self.atomTypeRefs[name] = dois
-            self.atomTypeRefs[name] = parameters['doi']
         if 'element' in parameters:
             self.atomTypeElements[name] = parameters['element']
         if 'class' in parameters:
