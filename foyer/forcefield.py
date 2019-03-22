@@ -14,7 +14,6 @@ import requests
 import warnings
 import re
 
-import mbuild as mb
 import numpy as np
 import parmed as pmd
 import simtk.openmm.app.element as elem
@@ -30,7 +29,7 @@ from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
 from foyer.validator import Validator
-
+from foyer.utils.io import import_, has_mbuild
 
 def preprocess_forcefield_files(forcefield_files=None):
     if forcefield_files is None:
@@ -93,9 +92,11 @@ def generate_topology(non_omm_topology, non_element_types=None,
 
     if isinstance(non_omm_topology, pmd.Structure):
         return _topology_from_parmed(non_omm_topology, non_element_types)
-    elif isinstance(non_omm_topology, mb.Compound):
-        pmdCompoundStructure = non_omm_topology.to_parmed(residues=residues)
-        return _topology_from_parmed(pmdCompoundStructure, non_element_types)
+    elif has_mbuild:
+        mb = import_('mbuild')
+        if (non_omm_topology, mb.Compound):
+            pmdCompoundStructure = non_omm_topology.to_parmed(residues=residues)
+            return _topology_from_parmed(pmdCompoundStructure, non_element_types)
     else:
         raise FoyerError('Unknown topology format: {}\n'
                          'Supported formats are: '
@@ -370,8 +371,9 @@ class Forcefield(app.ForceField):
             self.atomTypeRefs[name] = dois
 
     def apply(self, topology, references_file=None, use_residue_map=True,
-              assert_angle_params=True, assert_dihedral_params=True,
-              assert_improper_params=False, *args, **kwargs):
+              assert_bond_params=True, assert_angle_params=True,
+              assert_dihedral_params=True, assert_improper_params=False,
+              *args, **kwargs):
         """Apply the force field to a molecular structure
 
         Parameters
@@ -390,6 +392,9 @@ class Forcefield(app.ForceField):
             residues, i.e. a box of water. Note that for this to be applied to
             independent molecules, they must each be saved as different
             residues in the topology.
+        assert_bond_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all system
+            bonds.
         assert_angle_params : bool, optional, default=True
             If True, Foyer will exit if parameters are not found for all system
             angles.
@@ -400,6 +405,10 @@ class Forcefield(app.ForceField):
             If True, Foyer will exit if parameters are not found for all system
             improper dihedrals.
         """
+        if self.atomTypeDefinitions == {}:
+            raise FoyerError('Attempting to atom-type using a force field '
+                    'with no atom type defitions.')
+
         if not isinstance(topology, app.Topology):
             residues = kwargs.get('residues')
             topology, positions = generate_topology(topology,
@@ -420,6 +429,16 @@ class Forcefield(app.ForceField):
         are not assigned.
         '''
         data = self._SystemData
+
+        if data.bonds:
+            missing = [b for b in structure.bonds
+                       if b.type is None]
+            if missing:
+                nmissing = len(structure.bonds) - len(missing)
+                msg = ("Parameters have not been assigned to all bonds. "
+                       "Total system bonds: {}, Parametrized bonds: {}"
+                       "".format(len(structure.bonds), nmissing))
+                _error_or_warn(assert_bond_params, msg)
 
         if data.angles and (len(data.angles) != len(structure.angles)):
             msg = ("Parameters have not been assigned to all angles. Total "
