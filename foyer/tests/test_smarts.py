@@ -1,5 +1,5 @@
 import parmed as pmd
-import plyplus
+import lark
 import pytest
 
 from foyer.exceptions import FoyerError
@@ -144,7 +144,7 @@ def test_not_ast():
 
     illegal_nots = ['[!CH]', '[!C!H]']
     for smart in illegal_nots:
-        with pytest.raises(plyplus.ParseError):
+        with pytest.raises(lark.ParseError):
             PARSER.parse(smart)
 
 

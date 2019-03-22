@@ -5,8 +5,7 @@ from warnings import warn
 from lxml import etree
 from lxml.etree import DocumentInvalid
 import networkx as nx
-from plyplus.common import ParseError
-
+import lark
 from foyer.exceptions import (ValidationError, ValidationWarning,
                               raise_collected)
 from foyer.smarts_graph import SMARTSGraph
@@ -127,7 +126,7 @@ class Validator(object):
             # make sure smarts string can be parsed
             try:
                 self.smarts_parser.parse(smarts_string)
-            except ParseError as ex:
+            except lark.ParseError as ex:
                 if " col " in ex.args[0]:
                     column = ex.args[0][ex.args[0].find(" col ") + 5:].strip()
                     column = " at character {} of {}".format(column, smarts_string)

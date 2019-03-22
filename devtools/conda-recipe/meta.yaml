@@ -21,7 +21,7 @@ requirements:
     - oset
     - six
     - openmm <7.3
-    - plyplus
+    - lark-parser
     - requests
     - lxml
 
