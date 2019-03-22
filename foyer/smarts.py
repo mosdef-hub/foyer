@@ -2,28 +2,24 @@ import lark
 
 from foyer.exceptions import FoyerError
 
-GRAMMAR = (r"""
+GRAMMAR = r"""
     start: _string
 
     // Rules
     _string: _chain _nonlastbranch* _lastbranch?
     _chain: atom _chain | atom
-    _nonlastbranch: LPAR branch RPAR
+    _nonlastbranch: "(" branch ")"
     _lastbranch: branch
     branch: _string
-    atom: (LBRACKET weak_and_expression RBRACKET | atom_symbol) atom_label?
+    atom: ("[" weak_and_expression "]" | atom_symbol) atom_label?
     atom_label: NUM
-    ?weak_and_expression: (weak_and_expression _weak_and_symbol)? or_expression
-    ?or_expression: (or_expression _or_symbol)? and_expression
-    ?and_expression: (and_expression _and_symbol)? (atom_id | not_expression)
-    not_expression: _not_symbol atom_id
-    _and_symbol: AMP
-    _weak_and_symbol: SEMI
-    _or_symbol: COMMA
-    _not_symbol: EXCL
+    ?weak_and_expression: (weak_and_expression ";")? or_expression
+    ?or_expression: (or_expression ",")? and_expression
+    ?and_expression: (and_expression "&")? (atom_id | not_expression)
+    not_expression: "!" atom_id
     atom_id: atom_symbol
-             | HASH atomic_num
-             | DOLLAR LPAR matches_string RPAR
+             | "#" atomic_num
+             | "$(" matches_string ")"
              | has_label
              | "X" neighbor_count
              | "r" ring_size
@@ -37,17 +33,7 @@ GRAMMAR = (r"""
     ring_count: NUM
 
     // Terminals
-    HASH: "#"
-    LBRACKET: "["
-    RBRACKET: "]"
-    LPAR: "("
-    RPAR: ")"
-    COMMA: ","
-    SEMI: ";"
-    AMP: "&"
     STAR: "*"
-    DOLLAR: "$"
-    EXCL: "!"
     NUM: /[\d]+/
     LABEL: /\%[A-Za-z_0-9]+/
 
@@ -55,7 +41,7 @@ GRAMMAR = (r"""
     // Optional, custom, non-element underscore-prefixed symbols are pre-pended
     SYMBOL: /{optional}C[laroudsemf]?|Os?|N[eaibdpos]?|S[icernbmg]?|P[drmtboau]?|H[eofgas]?|A[lrsgutcm]|B[eraik]?|Dy|E[urs]|F[erm]?|G[aed]|I[nr]?|Kr?|L[iaur]|M[gnodt]|R[buhenaf]|T[icebmalh]|U|V|W|Xe|Yb?|Z[nr]/
 
-""")
+"""
 
 
 class SMARTS(object):
