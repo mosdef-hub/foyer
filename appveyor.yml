@@ -22,7 +22,7 @@ init:
   - "ECHO \"%APPVEYOR_SCHEDULED_BUILD%\""
 
 install:
-  - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
   - conda config --add channels omnia
   - conda config --add channels conda-forge
   - conda config --add channels mosdef
