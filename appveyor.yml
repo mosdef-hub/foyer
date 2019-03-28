@@ -17,6 +17,10 @@ environment:
       PYTHON_VERSION: 3.6
       PYTHON_ARCH: 64
 
+init:
+  - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
+  - "ECHO \"%APPVEYOR_SCHEDULED_BUILD%\""
+
 install:
   - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
   - conda config --add channels omnia
