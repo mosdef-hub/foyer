@@ -4,12 +4,12 @@ from foyer.exceptions import FoyerError
 from foyer.smarts_graph import SMARTSGraph
 
 
-def find_atomtypes(topology, forcefield, max_iter=10):
+def find_atomtypes(top, forcefield, max_iter=10):
     """Determine atomtypes for all atoms.
 
     Parameters
     ----------
-    topology : topology.Topology
+    top : topology.Topology
         The topology that we are trying to atomtype.
     forcefield : foyer.Forcefield
         The forcefield object.
@@ -21,7 +21,7 @@ def find_atomtypes(topology, forcefield, max_iter=10):
 
     # Only consider rules for elements found in topology
     subrules = dict()
-    system_elements = {a.name for a in topology.sites} # We don't have any elements in topology, so I think this might be okay?
+    system_elements = {a.name for a in top.sites} # We don't have any elements in topology, so I think this might be okay?
     for key,val in rules.items():
         atom = val.node[0]['atom']
         if len(atom.select('atom_symbol')) == 1 and not atom.select('not_expression'):
@@ -39,8 +39,8 @@ def find_atomtypes(topology, forcefield, max_iter=10):
             subrules[key] = val
     rules = subrules
 
-    _iterate_rules(rules, topology, max_iter=max_iter)
-    _resolve_atomtypes(topology)
+    _iterate_rules(rules, top, max_iter=max_iter)
+    _resolve_atomtypes(top)
 
 
 def _load_rules(forcefield):
@@ -59,7 +59,7 @@ def _load_rules(forcefield):
     return rules
 
 
-def _iterate_rules(rules, topology, max_iter):
+def _iterate_rules(rules, top, max_iter):
     """Iteratively run all the rules until the white- and backlists converge.
 
     Parameters
@@ -67,18 +67,18 @@ def _iterate_rules(rules, topology, max_iter):
     rules : dict
         A dictionary mapping rule names (typically atomtype names) to
         SMARTSGraphs that evaluate those rules.
-    topology : topology.Topology
+    top : topology.Topology
         The topology that we are trying to atomtype.
     max_iter : int
         The maximum number of iterations.
 
     """
-    atoms = list(topology.sites)
+    atoms = list(top.sites)
     for _ in range(max_iter):
         max_iter -= 1
         found_something = False
         for rule in rules.values():
-            for match_index in rule.find_matches(topology):
+            for match_index in rule.find_matches(top):
                 atom = atoms[match_index]
                 if rule.name not in atom.whitelist:
                     atom.whitelist.add(rule.name)
@@ -90,9 +90,9 @@ def _iterate_rules(rules, topology, max_iter):
         warn("Reached maximum iterations. Something probably went wrong.")
 
 
-def _resolve_atomtypes(topology):
+def _resolve_atomtypes(top):
     """Determine the final atomtypes from the white- and blacklists. """
-    for atom in topology.sites:
+    for atom in top.sites:
         atomtype = [rule_name for rule_name in atom.whitelist - atom.blacklist]
         if len(atomtype) == 1:
             atom.id = atomtype[0] # this is just a string
