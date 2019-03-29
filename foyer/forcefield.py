@@ -470,28 +470,29 @@ class Forcefield(object):
             independent molecules, they must each be saved as different
             residues in the topology.
         """
-        if use_residue_map:
-            independent_residues = _check_independent_residues(topology)
+        #if use_residue_map:
+        #    independent_residues = _check_independent_residues(topology)
 
-            if independent_residues:
-                residue_map = dict()
+        #    if independent_residues:
+        #        residue_map = dict()
 
-                for res in topology.residues():
-                    if res.name not in residue_map.keys():
-                        residue = _topology_from_residue(res)
-                        find_atomtypes(residue, forcefield=self)
-                        residue_map[res.name] = residue
+        #        for res in topology.residues():
+        #            if res.name not in residue_map.keys():
+        #                residue = _topology_from_residue(res)
+        #                find_atomtypes(residue, forcefield=self)
+        #                residue_map[res.name] = residue
 
-                for key, val in residue_map.items():
-                    _update_atomtypes(topology, key, val)
+        #        for key, val in residue_map.items():
+        #            _update_atomtypes(topology, key, val)
 
-            else:
-                find_atomtypes(topology, forcefield=self)
+        #    else:
+        #        find_atomtypes(topology, forcefield=self)
 
-        else:
-            find_atomtypes(topology, forcefield=self)
+        #else:
+        #    find_atomtypes(topology, forcefield=self)
+        find_atomtypes(topology, forcefield=self)
 
-        if not all([a.id for a in topology.atoms()][0]):
+        if not all([a.id for a in topology.sites][0]):
             raise ValueError('Not all atoms in topology have atom types')
 
         return topology
