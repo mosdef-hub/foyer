@@ -9,7 +9,7 @@ def find_atomtypes(topology, forcefield, max_iter=10):
 
     Parameters
     ----------
-    topology : simtk.openmm.app.Topology
+    topology : topology.Topology
         The topology that we are trying to atomtype.
     forcefield : foyer.Forcefield
         The forcefield object.
@@ -21,7 +21,7 @@ def find_atomtypes(topology, forcefield, max_iter=10):
 
     # Only consider rules for elements found in topology
     subrules = dict()
-    system_elements = {a.element.symbol for a in topology.atoms()}
+    system_elements = {a.name for a in topology.sites} # We don't have any elements in topology, so I think this might be okay?
     for key,val in rules.items():
         atom = val.node[0]['atom']
         if len(atom.select('atom_symbol')) == 1 and not atom.select('not_expression'):
@@ -67,13 +67,13 @@ def _iterate_rules(rules, topology, max_iter):
     rules : dict
         A dictionary mapping rule names (typically atomtype names) to
         SMARTSGraphs that evaluate those rules.
-    topology : simtk.openmm.app.Topology
+    topology : topology.Topology
         The topology that we are trying to atomtype.
     max_iter : int
         The maximum number of iterations.
 
     """
-    atoms = list(topology.atoms())
+    atoms = list(topology.sites)
     for _ in range(max_iter):
         max_iter -= 1
         found_something = False
@@ -92,10 +92,10 @@ def _iterate_rules(rules, topology, max_iter):
 
 def _resolve_atomtypes(topology):
     """Determine the final atomtypes from the white- and blacklists. """
-    for atom in topology.atoms():
+    for atom in topology.sites:
         atomtype = [rule_name for rule_name in atom.whitelist - atom.blacklist]
         if len(atomtype) == 1:
-            atom.id = atomtype[0]
+            atom.id = atomtype[0] # this is just a string
         elif len(atomtype) > 1:
             raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
                 atom.index, atom.element.name, atomtype))

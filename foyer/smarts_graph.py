@@ -168,10 +168,11 @@ class SMARTSGraph(nx.Graph):
         _prepare_atoms(topology, compute_cycles=has_ring_rules)
 
         top_graph = nx.Graph()
-        top_graph.add_nodes_from(((a.index, {'atom': a})
-                                  for a in topology.atoms()))
-        top_graph.add_edges_from(((b[0].index, b[1].index)
-                                  for b in topology.bonds()))
+        top_graph.add_nodes_from(((i, {'atom': a})
+                                  for i, a in enumerate(topology.sites)))
+        top_graph.add_edges_from(((topology.sites.index(b.connection_members[0]), 
+                                   topology.sites.index(b.connection_members[1]))
+                                  for b in topology.bonds))
 
         if self._graph_matcher is None:
             atom = nx.get_node_attributes(self, name='atom')[0]
@@ -303,13 +304,15 @@ def _find_chordless_cycles(bond_graph, max_cycle_size):
 
 def _prepare_atoms(topology, compute_cycles=False):
     """Compute cycles and add white-/blacklists to atoms."""
-    atom1 = next(topology.atoms())
+    #atom1 = next(topology.atoms())
+    atom1 = topology.sites[0]
     has_whitelists = hasattr(atom1, 'whitelist')
     has_cycles = hasattr(atom1, 'cycles')
     compute_cycles = compute_cycles and not has_cycles
 
     if compute_cycles or not has_whitelists:
-        for atom in topology.atoms():
+        #for atom in topology.atoms():
+        for atom in topology.sites:
             if compute_cycles:
                 atom.cycles = set()
             if not has_whitelists:
@@ -318,8 +321,10 @@ def _prepare_atoms(topology, compute_cycles=False):
 
     if compute_cycles:
         bond_graph = nx.Graph()
-        bond_graph.add_nodes_from(topology.atoms())
-        bond_graph.add_edges_from(topology.bonds())
+        bond_graph.add_nodes_from(topology.sites)
+        bond_graph.add_edges_from([
+            (b.connection_members[0], b.connection_members[1]) 
+            for b in topology.bonds])
         all_cycles = _find_chordless_cycles(bond_graph, max_cycle_size=8)
         for atom, cycles in zip(bond_graph.nodes, all_cycles):
             for cycle in cycles:
