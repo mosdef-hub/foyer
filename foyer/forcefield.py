@@ -18,6 +18,7 @@ import numpy as np
 import parmed as pmd
 import simtk.openmm.app.element as elem
 import foyer.element as custom_elem
+import topology 
 import simtk.unit as u
 from simtk import openmm as mm
 from simtk.openmm import app
@@ -227,8 +228,8 @@ def _error_or_warn(error, msg):
         warnings.warn(msg)
 
 
-class Forcefield(app.ForceField):
-    """Specialization of OpenMM's Forcefield allowing SMARTS based atomtyping.
+class Forcefield(object):
+    """Forcefield allowing SMARTS based atomtyping.
 
     Parameters
     ----------
@@ -268,9 +269,9 @@ class Forcefield(app.ForceField):
             for ff_file_name in preprocessed_files:
                 Validator(ff_file_name, debug)
 
-        super(Forcefield, self).__init__(*preprocessed_files)
+        #super(Forcefield, self).__init__(*preprocessed_files)
         self.parser = smarts.SMARTS(self.non_element_types)
-        self._SystemData = self._SystemData()
+        #self._SystemData = self._SystemData()
 
     @property
     def included_forcefields(self):
@@ -379,14 +380,17 @@ class Forcefield(app.ForceField):
             raise FoyerError('Attempting to atom-type using a force field '
                     'with no atom type defitions.')
 
-        if not isinstance(topology, app.Topology):
-            residues = kwargs.get('residues')
-            topology, positions = generate_topology(topology,
-                    self.non_element_types, residues=residues)
-        else:
-            positions = np.empty(shape=(topology.getNumAtoms(), 3))
-            positions[:] = np.nan
-        box_vectors = topology.getPeriodicBoxVectors()
+        if not (isinstance(topology, top.Topology) and 
+                isinstance(topology, mb.Compound)):
+            from topology.external.convert_mbuild import from_mbuild
+            topology = from_mbuild(topology)
+            #residues = kwargs.get('residues')
+            #topology, positions = generate_topology(topology,
+            #        self.non_element_types, residues=residues)
+        #else:
+            #positions = np.empty(shape=(topology.getNumAtoms(), 3))
+            #positions[:] = np.nan
+        box_vectors = topology.box.get_vectors()
         topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
         system = self.createSystem(topology, *args, **kwargs)
 
@@ -454,7 +458,7 @@ class Forcefield(app.ForceField):
 
         Parameters
         ----------
-        topology : openmm.app.Topology
+        topology : topology.Topology
             Molecular structure to find atom types of
         use_residue_map : boolean, optional, default=True
             Store atomtyped topologies of residues to a dictionary that maps
