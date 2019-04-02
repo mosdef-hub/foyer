@@ -299,12 +299,11 @@ class Forcefield(object):
             mass = atype_ele.get('mass', default="0")
             charge = atype_ele.get('charge', default=None)
             name = atype_ele.get('name', default=None)
+            aclass = atype_ele.get('class', default=None) #This doesn't get used in constructing the AtomType, and seems the same as the name attribute, but we'll parse it just in case
+            non_parameter_strings = ['expression', 'independent_variables',
+                    'mass', 'charge', 'name', 'class']
             parameters = {key:_parse_unyt(val) for key,val in atype_ele.items() 
-                          if (key != 'expression' and 
-                              key != 'independent_variables' and
-                              key != 'mass' and
-                              key != 'charge' and
-                              key != 'name') }
+                          if key not in non_parameter_strings}
             new_atype = topology.AtomType(name=name,
                                         expression=expression, 
                                         parameters=parameters,
@@ -319,27 +318,42 @@ class Forcefield(object):
         """ From an ET, generate topology.BondType terms"""
         all_btypes =[]
         for btype_ele in root.findall('BondType'):
+            class1 = btype_ele.get('class1', default=None)
+            class2 = btype_ele.get('class2', default=None)
+            type1 = btype_ele.get('type1', default=class1)
+            type2 = btype_ele.get('type2', default=class2)
+
             expression = btype_ele.get('expression', default=None)
             ivars = btype_ele.get('independent_variables', default=None)
+            non_parameter_strings = ['expression', 'independent_variables',
+                    'class1', 'class2', 'type1', 'type2']
             parameters = {key:_parse_unyt(val) for key,val in btype_ele.items() 
-                          if (key != 'expression' and 
-                              key != 'independent_variables')}
+                          if key not in non_parameter_strings}
+            
             if len(btype_ele.getchildren()) > 0:
                 for subele in btype_ele.getchildren():
-                    parameters.update({key:_parse_unyt(val) 
-                                        for key,val in subele.items() 
-                                       if (key !='expression' and 
-                                           key !='independent_variables')
-                                      })
+                    class1 = btype_ele.get('class1', default=type1)
+                    class2 = btype_ele.get('class2', default=type2)
+                    type1 = btype_ele.get('type1', default=class1)
+                    type2 = btype_ele.get('type2', default=class2)
+
                     expression = subele.get('expression', default=expression)
                     ivars = subele.get('independent_variables', default=ivars)
+                    parameters.update({key:_parse_unyt(val) 
+                                        for key,val in subele.items() 
+                                        if key not in non_parameter_strings
+                                      })
+
                     new_btype = topology.BondType(expression=expression, 
                                             parameters=copy.copy(parameters), 
-                                            independent_variables=ivars)
+                                            independent_variables=ivars,
+                                            types=[type1, type2])
                     all_btypes.append(new_btype)
             else:
-                new_btype = topology.BondType(expression=expression, parameters=parameters,
-                                        independent_variables=ivars)
+                new_btype = topology.BondType(expression=expression, 
+                                        parameters=parameters,
+                                        independent_variables=ivars,
+                                        types=[type1, type2])
                 all_btypes.append(new_btype)
         return all_btypes
 
@@ -347,27 +361,46 @@ class Forcefield(object):
         """ From an ET, generate topology.AngleType terms"""
         all_angtypes =[]
         for angtype_ele in root.findall('AngleType'):
+            class1 = angtype_ele.get('class1', default=None)
+            class2 = angtype_ele.get('class2', default=None)
+            class3 = angtype_ele.get('class3', default=None)
+            type1 = angtype_ele.get('type1', default=class1)
+            type2 = angtype_ele.get('type2', default=class2)
+            type3 = angtype_ele.get('type3', default=class3)
+
             expression = angtype_ele.get('expression', default=None)
             ivars = angtype_ele.get('independent_variables', default=None)
+            non_parameter_strings = ['expression', 'independent_variables',
+                    'class1', 'class2', 'class3', 'type1', 'type2', 'type3']
             parameters = {key:_parse_unyt(val) for key,val in angtype_ele.items() 
-                          if (key != 'expression' and 
-                              key != 'independent_variables')}
+                          if key not in non_parameter_strings}
+
             if len(angtype_ele.getchildren()) > 0:
                 for subele in angtype_ele.getchildren():
-                    parameters.update({key:_parse_unyt(val) 
-                                        for key,val in subele.items() 
-                                       if (key !='expression' and 
-                                           key !='independent_variables')
-                                      })
+                    class1 = angtype_ele.get('class1', default=type1)
+                    class2 = angtype_ele.get('class2', default=type2)
+                    class3 = angtype_ele.get('class3', default=type3)
+                    type1 = angtype_ele.get('type1', default=class1)
+                    type2 = angtype_ele.get('type2', default=class2)
+                    type3 = angtype_ele.get('type3', default=class3)
+                    
                     expression = subele.get('expression', default=expression)
                     ivars = subele.get('independent_variables', default=ivars)
+                    parameters.update({key:_parse_unyt(val) 
+                                        for key,val in subele.items() 
+                                        if key not in non_parameter_strings 
+                                      })
+
                     new_angtype = topology.AngleType(expression=expression, 
                                             parameters=copy.copy(parameters), 
-                                            independent_variables=ivars)
+                                            independent_variables=ivars,
+                                            types=[type1, type2, type3])
                     all_angtypes.append(new_angtype)
             else:
-                new_angtype = topology.AngleType(expression=expression, parameters=parameters,
-                                        independent_variables=ivars)
+                new_angtype = topology.AngleType(expression=expression, 
+                                        parameters=parameters,
+                                        independent_variables=ivars,
+                                        types=[type1, type2, type3])
                 all_angtypes.append(new_angtype)
         return all_angtypes
 
@@ -555,8 +588,8 @@ class Forcefield(object):
 
     def parametrize_topology(self, top):
         """ Specify Potential terms for all sites, bonds, angles, etc in top"""
-        for site in top.sites:
-            site.atom_type = _parametrize_atomtype(site)
+        #for site in top.sites:
+            #site.atom_type = _parametrize_atomtype(site)
 
         for bond in top.bonds:
             bond.connection_type = _parametrize_bondtype(bond)
