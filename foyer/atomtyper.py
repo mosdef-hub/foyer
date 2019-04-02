@@ -101,7 +101,7 @@ def _resolve_atomtypes(top, forcefield):
             atom.atom_type = atomtype_param[0]
         elif len(atomtype) > 1:
             raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
-                atom.index, atom.element.name, atomtype))
+                atom.index, atom.name, atomtype))
         else:
             raise FoyerError("Found no types for atom {} ({}).".format(
-                atom.index, atom.element.name))
+                atom.index, atom.name))
