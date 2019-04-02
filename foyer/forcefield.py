@@ -307,7 +307,7 @@ class Forcefield(object):
             new_atype = topology.AtomType(name=name,
                                         expression=expression, 
                                         parameters=parameters,
-                                        independent_variables=ivars
+                                        independent_variables=ivars,
                                         mass=float(mass) * u.amu,
                                         charge=charge)
             all_atypes.append(new_atype)
