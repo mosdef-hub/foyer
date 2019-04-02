@@ -40,7 +40,7 @@ def find_atomtypes(top, forcefield, max_iter=10):
     rules = subrules
 
     _iterate_rules(rules, top, max_iter=max_iter)
-    _resolve_atomtypes(top)
+    _resolve_atomtypes(top, forcefield)
 
 
 def _load_rules(forcefield):
@@ -90,12 +90,15 @@ def _iterate_rules(rules, top, max_iter):
         warn("Reached maximum iterations. Something probably went wrong.")
 
 
-def _resolve_atomtypes(top):
+def _resolve_atomtypes(top, forcefield):
     """Determine the final atomtypes from the white- and blacklists. """
     for atom in top.sites:
         atomtype = [rule_name for rule_name in atom.whitelist - atom.blacklist]
         if len(atomtype) == 1:
-            atom.id = atomtype[0] # this is just a string
+            #atom.id = atomtype[0] # this is just a string
+            atomtype_param = [atype for atype in forcefield.atomtypes 
+                    if atype.name==atomtype]
+            atom.atom_type = atomtype_param[0]
         elif len(atomtype) > 1:
             raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
                 atom.index, atom.element.name, atomtype))
