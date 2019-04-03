@@ -339,7 +339,8 @@ class Forcefield(object):
                                         parameters=parameters,
                                         independent_variables=ivars,
                                         mass=_parse_unyt(mass),
-                                        charge=charge)
+                                        charge=charge,
+                                        atomclass=aclass)
             all_atypes.append(new_atype)
         return all_atypes
 
@@ -553,8 +554,14 @@ class Forcefield(object):
         #else:
             #positions = np.empty(shape=(topology.getNumAtoms(), 3))
             #positions[:] = np.nan
-        box_vectors = top.box.get_vectors()
+        #box_vectors = top.box.get_vectors()
         top = self.run_atomtyping(top, use_residue_map=use_residue_map)
+        # After we determine atomtypes, we need to apply parameters to ever
+        # Connection in our topology. However, this will only
+        # look at the Connections the topology is aware of 
+        # (just 2-connection Bonds)
+        # We would need an extra call to enumerate the angles/dihedrals
+        # unless the topology has already enuemrated them
         top = self.parametrize_topology(top)
         #system = self.createSystem(topology, *args, **kwargs)
 
@@ -640,6 +647,9 @@ class Forcefield(object):
         if len(found_angletype) > 1:
             raise FoyerError("Multiple AngleType parameters "
                             "found for {}".format(angle))
+        elif len(found_angletype) == 0:
+            raise FoyerError("No AngleType parameters "
+                            "found for {}".format(bond))
         else:
             return found_angletype[0]
 
@@ -649,6 +659,9 @@ class Forcefield(object):
                 if _matching_constituents(bond, btype)]
         if len(found_bondtype) > 1:
             raise FoyerError("Multiple BondType parameters "
+                            "found for {}".format(bond))
+        elif len(found_bondtype) == 0:
+            raise FoyerError("No BondType parameters "
                             "found for {}".format(bond))
         else:
             return found_bondtype[0]
@@ -985,6 +998,8 @@ def _matching_constituents(connection, connectiontype):
     presecribed in the ConnectionType """
     # This is a list of strings based on connection member atomtype names
     c_member_types = [a.atom_type.name for a in connection.connection_members]
+    c_member_classes = [a.atom_type.atomclass 
+            for a in connection.connection_members]
 
     # This is a list of strings based on the connectiontype types
     ctype_member_types = [a for a in connectiontype.types]
@@ -994,6 +1009,11 @@ def _matching_constituents(connection, connectiontype):
     # each item's __eq__ is compared, and each item should just be a string
     if c_member_types == ctype_member_types:
         return True
-    if c_member_types.reverse() == ctype_member_types:
+    if c_member_types[::-1] == ctype_member_types:
         return True
+    if c_member_classes == ctype_member_types:
+        return True
+    if c_member_classes[::-1] == ctype_member_types:
+        return True
+
     return False
