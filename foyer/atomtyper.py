@@ -97,7 +97,7 @@ def _resolve_atomtypes(top, forcefield):
         if len(atomtype) == 1:
             #atom.id = atomtype[0] # this is just a string
             atomtype_param = [atype for atype in forcefield.atomtypes 
-                    if atype.name==atomtype]
+                    if atype.name==atomtype[0]]
             atom.atom_type = atomtype_param[0]
         elif len(atomtype) > 1:
             raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
