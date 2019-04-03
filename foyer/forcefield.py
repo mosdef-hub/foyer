@@ -87,63 +87,63 @@ def preprocess_forcefield_files(forcefield_files=None):
     return preprocessed_files
 
 
-def generate_topology(non_omm_topology, non_element_types=None,
-        residues=None):
-    """Create an OpenMM Topology from another supported topology structure."""
-    if non_element_types is None:
-        non_element_types = set()
-
-    if isinstance(non_omm_topology, pmd.Structure):
-        return _topology_from_parmed(non_omm_topology, non_element_types)
-    elif has_mbuild:
-        mb = import_('mbuild')
-        if (non_omm_topology, mb.Compound):
-            pmdCompoundStructure = non_omm_topology.to_parmed(residues=residues)
-            return _topology_from_parmed(pmdCompoundStructure, non_element_types)
-    else:
-        raise FoyerError('Unknown topology format: {}\n'
-                         'Supported formats are: '
-                         '"parmed.Structure", '
-                         '"mbuild.Compound", '
-                         '"openmm.app.Topology"'.format(non_omm_topology))
-
-
-def _topology_from_parmed(structure, non_element_types):
-    """Convert a ParmEd Structure to an OpenMM Topology."""
-    topology = app.Topology()
-    residues = dict()
-    for pmd_residue in structure.residues:
-        chain = topology.addChain()
-        omm_residue = topology.addResidue(pmd_residue.name, chain)
-        residues[pmd_residue] = omm_residue
-    atoms = dict()  # pmd.Atom: omm.Atom
-
-    for pmd_atom in structure.atoms:
-        name = pmd_atom.name
-        if pmd_atom.name in non_element_types:
-            element = non_element_types[pmd_atom.name]
-        else:
-            if (isinstance(pmd_atom.atomic_number, int) and
-                    pmd_atom.atomic_number != 0):
-                element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
-            else:
-                element = elem.Element.getBySymbol(pmd_atom.name)
-
-        omm_atom = topology.addAtom(name, element, residues[pmd_atom.residue])
-        atoms[pmd_atom] = omm_atom
-        omm_atom.bond_partners = []
-
-    for bond in structure.bonds:
-        atom1 = atoms[bond.atom1]
-        atom2 = atoms[bond.atom2]
-        topology.addBond(atom1, atom2)
-        atom1.bond_partners.append(atom2)
-        atom2.bond_partners.append(atom1)
-    if structure.box_vectors and np.any([x._value for x in structure.box_vectors]):
-        topology.setPeriodicBoxVectors(structure.box_vectors)
-
-    positions = structure.positions
-    return topology, positions
+#def generate_topology(non_omm_topology, non_element_types=None,
+#        residues=None):
+#    """Create an OpenMM Topology from another supported topology structure."""
+#    if non_element_types is None:
+#        non_element_types = set()
+#
+#    if isinstance(non_omm_topology, pmd.Structure):
+#        return _topology_from_parmed(non_omm_topology, non_element_types)
+#    elif has_mbuild:
+#        mb = import_('mbuild')
+#        if (non_omm_topology, mb.Compound):
+#            pmdCompoundStructure = non_omm_topology.to_parmed(residues=residues)
+#            return _topology_from_parmed(pmdCompoundStructure, non_element_types)
+#    else:
+#        raise FoyerError('Unknown topology format: {}\n'
+#                         'Supported formats are: '
+#                         '"parmed.Structure", '
+#                         '"mbuild.Compound", '
+#                         '"openmm.app.Topology"'.format(non_omm_topology))
+#
+#
+#def _topology_from_parmed(structure, non_element_types):
+#    """Convert a ParmEd Structure to an OpenMM Topology."""
+#    topology = app.Topology()
+#    residues = dict()
+#    for pmd_residue in structure.residues:
+#        chain = topology.addChain()
+#        omm_residue = topology.addResidue(pmd_residue.name, chain)
+#        residues[pmd_residue] = omm_residue
+#    atoms = dict()  # pmd.Atom: omm.Atom
+#
+#    for pmd_atom in structure.atoms:
+#        name = pmd_atom.name
+#        if pmd_atom.name in non_element_types:
+#            element = non_element_types[pmd_atom.name]
+#        else:
+#            if (isinstance(pmd_atom.atomic_number, int) and
+#                    pmd_atom.atomic_number != 0):
+#                element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
+#            else:
+#                element = elem.Element.getBySymbol(pmd_atom.name)
+#
+#        omm_atom = topology.addAtom(name, element, residues[pmd_atom.residue])
+#        atoms[pmd_atom] = omm_atom
+#        omm_atom.bond_partners = []
+#
+#    for bond in structure.bonds:
+#        atom1 = atoms[bond.atom1]
+#        atom2 = atoms[bond.atom2]
+#        topology.addBond(atom1, atom2)
+#        atom1.bond_partners.append(atom2)
+#        atom2.bond_partners.append(atom1)
+#    if structure.box_vectors and np.any([x._value for x in structure.box_vectors]):
+#        topology.setPeriodicBoxVectors(structure.box_vectors)
+#
+#    positions = structure.positions
+#    return topology, positions
 
 
 def _topology_from_residue(res):
@@ -251,6 +251,8 @@ class Forcefield(object):
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
         self.atomTypeRefs = dict()
+        self._atomTypes = dict()
+        self._atomClasses = {'':set()}
         self._included_forcefields = dict()
         self.non_element_types = dict()
         self.atomtypes = list()
@@ -301,8 +303,35 @@ class Forcefield(object):
             charge = atype_ele.get('charge', default=None)
             name = atype_ele.get('name', default=None)
             aclass = atype_ele.get('class', default=None) #This doesn't get used in constructing the AtomType, and seems the same as the name attribute, but we'll parse it just in case
+            definition = atype_ele.get('def', default=None)
+            overrides = atype_ele.get('overrides', default=None)
+            doi = atype_ele.get('doi', default=None)
+            desc = atype_ele.get('desc', default=None)
+
+            if aclass in self._atomClasses:
+                type_set = self._atomClasses[aclass]
+            else:
+                type_set = set()
+                self._atomClasses[aclass] = type_set
+            type_set.add(name)
+            self._atomClasses[''].add(name)
+
+            if definition:
+                self.atomTypeDefinitions[name] = definition
+            if overrides:
+                overrides = set(atype.strip() for atype
+                                in overrides.split(","))
+                if overrides:
+                    self.atomTypeOverrides[name] = overrides
+            if desc:
+                self.atomTypeDesc[name] = desc
+            if doi:
+                dois = set(doi_item.strip() for doi_item in doi.split(','))
+                self.atomTypeRefs[name] = dois
+
             non_parameter_strings = ['expression', 'independent_variables',
-                    'mass', 'charge', 'name', 'class']
+                    'mass', 'charge', 'name', 'class', 
+                    'def', 'overrides', 'doi', 'desc']
             parameters = {key:_parse_unyt(val) for key,val in atype_ele.items() 
                           if key not in non_parameter_strings}
             new_atype = topology.AtomType(name=name,
@@ -437,41 +466,41 @@ class Forcefield(object):
 
         return element, True
 
-    def registerAtomType(self, parameters):
-        """Register a new atom type. """
-        name = parameters['name']
-        if name in self._atomTypes:
-            raise ValueError('Found multiple definitions for atom type: ' + name)
-        atom_class = parameters['class']
-        mass = _convertParameterToNumber(parameters['mass'])
-        element = None
-        if 'element' in parameters:
-            element, custom = self._create_element(parameters['element'], mass)
-            if custom:
-                self.non_element_types[element.symbol] = element
+    #def registerAtomType(self, parameters):
+    #    """Register a new atom type. """
+    #    name = parameters['name']
+    #    if name in self._atomTypes:
+    #        raise ValueError('Found multiple definitions for atom type: ' + name)
+    #    atom_class = parameters['class']
+    #    #mass = _convertParameterToNumber(parameters['mass'])
+    #    #element = None
+    #    #if 'element' in parameters:
+    #    #    element, custom = self._create_element(parameters['element'], mass)
+    #    #    if custom:
+    #    #        self.non_element_types[element.symbol] = element
 
-        self._atomTypes[name] = self.__class__._AtomType(name, atom_class, mass, element)
-        if atom_class in self._atomClasses:
-            type_set = self._atomClasses[atom_class]
-        else:
-            type_set = set()
-            self._atomClasses[atom_class] = type_set
-        type_set.add(name)
-        self._atomClasses[''].add(name)
+    #    #self._atomTypes[name] = self.__class__._AtomType(name, atom_class, mass, element)
+    #    if atom_class in self._atomClasses:
+    #        type_set = self._atomClasses[atom_class]
+    #    else:
+    #        type_set = set()
+    #        self._atomClasses[atom_class] = type_set
+    #    type_set.add(name)
+    #    self._atomClasses[''].add(name)
 
-        name = parameters['name']
-        if 'def' in parameters:
-            self.atomTypeDefinitions[name] = parameters['def']
-        if 'overrides' in parameters:
-            overrides = set(atype.strip() for atype
-                            in parameters['overrides'].split(","))
-            if overrides:
-                self.atomTypeOverrides[name] = overrides
-        if 'des' in parameters:
-            self.atomTypeDesc[name] = parameters['desc']
-        if 'doi' in parameters:
-            dois = set(doi.strip() for doi in parameters['doi'].split(','))
-            self.atomTypeRefs[name] = dois
+    #    name = parameters['name']
+    #    if 'def' in parameters:
+    #        self.atomTypeDefinitions[name] = parameters['def']
+    #    if 'overrides' in parameters:
+    #        overrides = set(atype.strip() for atype
+    #                        in parameters['overrides'].split(","))
+    #        if overrides:
+    #            self.atomTypeOverrides[name] = overrides
+    #    if 'des' in parameters:
+    #        self.atomTypeDesc[name] = parameters['desc']
+    #    if 'doi' in parameters:
+    #        dois = set(doi.strip() for doi in parameters['doi'].split(','))
+    #        self.atomTypeRefs[name] = dois
 
     def apply(self, top, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
@@ -512,13 +541,15 @@ class Forcefield(object):
             raise FoyerError('Attempting to atom-type using a force field '
                     'with no atom type defitions.')
 
-        if not (isinstance(top, topology.Topology) and 
+        if has_mbuild:
+            mb = import_('mbuild')
+            if ((not isinstance(top, topology.Topology)) and 
                 isinstance(top, mb.Compound)):
-            from topology.external.convert_mbuild import from_mbuild
-            top = from_mbuild(top)
-            #residues = kwargs.get('residues')
-            #topology, positions = generate_topology(topology,
-            #        self.non_element_types, residues=residues)
+                from topology.external.convert_mbuild import from_mbuild
+                top = from_mbuild(top)
+                #residues = kwargs.get('residues')
+                #topology, positions = generate_topology(topology,
+                #        self.non_element_types, residues=residues)
         #else:
             #positions = np.empty(shape=(topology.getNumAtoms(), 3))
             #positions[:] = np.nan
@@ -593,10 +624,10 @@ class Forcefield(object):
             #site.atom_type = _parametrize_atomtype(site)
 
         for bond in top.bonds:
-            bond.connection_type = _parametrize_bondtype(bond)
+            bond.connection_type = self._parametrize_bondtype(bond)
 
         for angle in top.angles:
-            angle.connection_type = _parametrize_angletype(angle)
+            angle.connection_type = self._parametrize_angletype(angle)
 
         #Todo: dihedrals/impropers/etc 
 
@@ -616,7 +647,7 @@ class Forcefield(object):
         """ Specify BondType term for Bond"""
         found_bondtype = [btype for btype in self.bondtypes 
                 if _matching_constituents(bond, btype)]
-        if len(found_bondtype) > 0:
+        if len(found_bondtype) > 1:
             raise FoyerError("Multiple BondType parameters "
                             "found for {}".format(bond))
         else:
@@ -626,7 +657,7 @@ class Forcefield(object):
         """ Specify AtomType term for Site """
         found_atomtype = [atype for atype in self.atomtypes
                 if atype.name == site.id]
-        if len(found_atomtype) > 0:
+        if len(found_atomtype) > 1:
             raise FoyerError("Multiple AtomType parameters "
                             "found for {}".format(site.id))
         else:
@@ -671,10 +702,10 @@ class Forcefield(object):
         #    find_atomtypes(topology, forcefield=self)
         find_atomtypes(top, forcefield=self)
 
-        if not all([a.id for a in top.sites][0]):
+        if not all([a.atom_type for a in top.sites]):
             raise ValueError('Not all atoms in topology have atom types')
 
-        return topology
+        return top
 
     #def createSystem(self, topology, nonbondedMethod=NoCutoff,
     #                 nonbondedCutoff=1.0 * u.nanometer, constraints=None,
@@ -921,7 +952,7 @@ class Forcefield(object):
         atomtype_references = {}
         for atype in atom_types:
             try:
-                atomtype_references[atype] = self.atomTypeRefs[atype]
+                atomtype_references[atype.name] = self.atomTypeRefs[atype.name]
             except KeyError:
                 warnings.warn("Reference not found for atom type '{}'."
                               "".format(atype))
