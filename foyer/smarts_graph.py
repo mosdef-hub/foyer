@@ -118,16 +118,17 @@ class SMARTSGraph(nx.Graph):
 
     @staticmethod
     def _atom_id_matches(atom_id, atom):
-        atomic_num = atom.element.atomic_number
+        #atomic_num = atom.element.atomic_number
         if atom_id.head == 'atomic_num':
             return atomic_num == int(atom_id.tail[0])
         elif atom_id.head == 'atom_symbol':
             if str(atom_id.tail[0]) == '*':
                 return True
-            elif str(atom_id.tail[0]).startswith('_'):
-                return atom.element.name == str(atom_id.tail[0])
+            #elif str(atom_id.tail[0]).startswith('_'):
             else:
-                return atomic_num == pt.AtomicNum[str(atom_id.tail[0])]
+                return atom.name == str(atom_id.tail[0])
+            #else:
+                #return atomic_num == pt.AtomicNum[str(atom_id.tail[0])]
         elif atom_id.head == 'has_label':
             label = atom_id.tail[0][1:]  # Strip the % sign from the beginning.
             return label in atom.whitelist
@@ -210,7 +211,8 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
         self.element = element
         if element not in [None, '*']:
             self.valid_nodes = [n for n, atom in nx.get_node_attributes(G1, name='atom').items()
-                                if atom.element.symbol == element]
+                                #if atom.element.symbol == element]
+                                if atom.name == element]
         else:
             self.valid_nodes = G1.nodes()
 
