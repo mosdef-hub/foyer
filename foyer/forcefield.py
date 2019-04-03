@@ -637,7 +637,7 @@ class Forcefield(object):
         """ Specify AngleType term for Angle"""
         found_angletype = [angtype for angtype in self.angletypes 
                 if _matching_constituents(angle, angtype)]
-        if len(found_angletype) > 0:
+        if len(found_angletype) > 1:
             raise FoyerError("Multiple AngleType parameters "
                             "found for {}".format(angle))
         else:
