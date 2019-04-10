@@ -1,4 +1,3 @@
-boltons
 openmm < 7.3
 parmed
 networkx >=2.0
