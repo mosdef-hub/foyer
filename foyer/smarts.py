@@ -64,7 +64,7 @@ class SMARTS(object):
 
         else:
             self.grammar = GRAMMAR.format(optional='')
-        self.PARSER = lark.Lark(self.grammar)
+        self.PARSER = lark.Lark(self.grammar, parser="lalr")
 
     def parse(self, smarts_string):
         return self.PARSER.parse(smarts_string)

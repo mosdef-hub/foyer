@@ -143,7 +143,7 @@ def test_not_ast():
 
     illegal_nots = ['[!CH]', '[!C!H]']
     for smart in illegal_nots:
-        with pytest.raises(lark.UnexpectedCharacters):
+        with pytest.raises(lark.UnexpectedInput):
             PARSER.parse(smart)
 
 
