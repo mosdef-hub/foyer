@@ -144,6 +144,18 @@
       </xs:simpleContent>
     </xs:complexType>
   </xs:element>
+  <xs:element name="NBFix">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
+          <xs:attribute type="xs:float" name="sigma" use="optional"/>
+          <xs:attribute type="xs:float" name="epsilon" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="AtomTypes">
     <xs:complexType>
       <xs:sequence>
@@ -192,6 +204,13 @@
       </xs:sequence>
       <xs:attribute type="xs:float" name="coulomb14scale" use="required"/>
       <xs:attribute type="xs:float" name="lj14scale" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NBFixes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NBFix" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="ForceField">
