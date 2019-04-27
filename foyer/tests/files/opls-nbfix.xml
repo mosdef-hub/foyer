@@ -7,9 +7,9 @@
     <Atom type="opls_135" charge="-0.18" sigma="3.5" epsilon="0.276144"/>
     <Atom type="opls_140" charge="0.06" sigma="2.5" epsilon="0.12552"/>
   </NonbondedForce>
-  <NBFixes>
-    <NBFix type1="opls_135" type2="opls_140" sigma="3.03" epsilon="0.22222"/>
-  </NBFixes>
+  <LennardJonesForce lj14scale="1.0">
+    <NBFixPair type1="opls_135" type2="opls_140" sigma="3.03" epsilon="0.22222"/>
+  </LennardJonesForce>
   <HarmonicBondForce>
     <Bond type1="opls_135" type2="opls_135" length="0.1529" k="224262.4"/>
     <Bond type1="opls_135" type2="opls_140" length="0.109" k="284512.0"/>

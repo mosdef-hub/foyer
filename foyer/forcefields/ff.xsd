@@ -144,14 +144,14 @@
       </xs:simpleContent>
     </xs:complexType>
   </xs:element>
-  <xs:element name="NBFix">
+  <xs:element name="NBFixPair">
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:string">
-          <xs:attribute type="xs:string" name="type1" use="optional"/>
-          <xs:attribute type="xs:string" name="type2" use="optional"/>
           <xs:attribute type="xs:float" name="sigma" use="optional"/>
           <xs:attribute type="xs:float" name="epsilon" use="optional"/>
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
@@ -206,11 +206,12 @@
       <xs:attribute type="xs:float" name="lj14scale" use="required"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="NBFixes">
+  <xs:element name="LennardJonesForce">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="NBFix" maxOccurs="unbounded" minOccurs="0"/>
+        <xs:element ref="NBFixPair" maxOccurs="unbounded" minOccurs="0"/>
       </xs:sequence>
+      <xs:attribute type="xs:float" name="lj14scale" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="ForceField">
@@ -222,7 +223,7 @@
         <xs:element ref="RBTorsionForce" minOccurs="0"/>
         <xs:element ref="PeriodicTorsionForce" minOccurs="0"/>
         <xs:element ref="NonbondedForce" minOccurs="0"/>
-        <xs:element ref="NBFixes" minOccurs="0"/>
+        <xs:element ref="LennardJonesForce" minOccurs="0"/>
       </xs:all>
     </xs:complexType>
     <xs:key name="atomtype_name_key">
