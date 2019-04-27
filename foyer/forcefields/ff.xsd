@@ -222,6 +222,7 @@
         <xs:element ref="RBTorsionForce" minOccurs="0"/>
         <xs:element ref="PeriodicTorsionForce" minOccurs="0"/>
         <xs:element ref="NonbondedForce" minOccurs="0"/>
+        <xs:element ref="NBFixes" minOccurs="0"/>
       </xs:all>
     </xs:complexType>
     <xs:key name="atomtype_name_key">
