@@ -3,7 +3,7 @@ mbuild
 parmed
 networkx >=2.0
 six
-plyplus
+lark-parser
 requests
 lxml
 pytest >=3.0
