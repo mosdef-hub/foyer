@@ -13,7 +13,7 @@ build:
 
 requirements:
   build:
-    - python
+    - noarch: python
 
   run:
     - python
