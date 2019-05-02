@@ -19,7 +19,7 @@ def test_init():
     """Initialization test. """
     for smarts in TEST_BANK:
         graph = SMARTSGraph(smarts)
-        atoms = graph.ast.select('atom')
+        atoms = graph.ast.find_data('atom')
         for n, atom in enumerate(atoms):
             assert n in graph.nodes()
 
