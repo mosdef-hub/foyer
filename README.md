@@ -1,10 +1,12 @@
 ### Foyer: A package for atom-typing as well as applying and disseminating forcefields
 
+[![Gitter chat](https://badges.gitter.im/mosdef-hub/gitter.png)](https://gitter.im/mosdef-hub/Lobby)
 [![Linux Build Status](https://travis-ci.org/mosdef-hub/foyer.svg?branch=master)](https://travis-ci.org/mosdef-hub/foyer)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/r6b2ny2hjo1t1ulb/branch/master?svg=true)](https://ci.appveyor.com/project/ctk3b/foyer/branch/master)
 [![PyPI Version](https://badge.fury.io/py/foyer.svg)](https://pypi.python.org/pypi/foyer)
 [![Anaconda Badge](https://anaconda.org/mosdef/foyer/badges/version.svg)](https://anaconda.org/mosdef/foyer)
 [![Coverage Status](https://coveralls.io/repos/github/mosdef-hub/foyer/badge.svg?branch=master)](https://coveralls.io/github/mosdef-hub/foyer?branch=master)
+[![codecov](https://codecov.io/gh/mosdef-hub/foyer/branch/master/graph/badge.svg)](https://codecov.io/gh/mosdef-hub/foyer)
 
 Annotate an [OpenMM .xml force field](http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields)
 file with SMARTS-based atomtypes:
@@ -36,6 +38,9 @@ ethane = oplsaa.apply(untyped_ethane)
 ethane.save('ethane.top')
 ethane.save('ethane.gro')
 ```
+
+If you use this package, please cite [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print.
+
 ### Getting started?
 Check out our example template for disseminating force fields:
 https://github.com/mosdef-hub/forcefield_template
@@ -43,6 +48,7 @@ https://github.com/mosdef-hub/forcefield_template
 ### [Installation instructions](docs/installation.rst)
 
 ### [SMARTS-based atomtyping](docs/smarts.rst)
+* [Supported SMARTS Grammar](https://github.com/mosdef-hub/foyer/issues/63)
 
 ### [Force field validation](docs/validation.rst)
 
