@@ -1,9 +1,7 @@
-oset
 openmm < 7.3
-mdtraj==1.9.1
 parmed
 networkx >=2.0
 six
-plyplus
+lark-parser
 requests
 lxml

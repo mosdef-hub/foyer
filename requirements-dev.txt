@@ -1,11 +1,9 @@
-oset
 openmm < 7.3
-mdtraj==1.9.1
 mbuild
 parmed
-networkx
+networkx >=2.0
 six
-plyplus
+lark-parser
 requests
 lxml
 pytest >=3.0
@@ -21,3 +19,4 @@ python-coveralls
 # https://github.com/pywbem/pywbem/commit/d85a3e73e08d2846073087733b790b5a8864d93f
 pytest-cov>=2.4.0,<2.6
 pytest-timeout
+codecov
