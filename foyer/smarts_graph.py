@@ -4,7 +4,6 @@ import sys
 
 import networkx as nx
 from networkx.algorithms import isomorphism
-from oset import oset as OrderedSet
 import parmed.periodic_table as pt
 
 from foyer.smarts import SMARTS
@@ -304,8 +303,8 @@ def _prepare_atoms(topology, compute_cycles=False):
             if compute_cycles:
                 atom.cycles = set()
             if not has_whitelists:
-                atom.whitelist = OrderedSet()
-                atom.blacklist = OrderedSet()
+                atom.whitelist = set()
+                atom.blacklist = set()
 
     if compute_cycles:
         bond_graph = nx.Graph()
