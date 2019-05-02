@@ -1,5 +1,5 @@
 import parmed as pmd
-import plyplus
+import lark
 import pytest
 
 from foyer.exceptions import FoyerError
@@ -24,11 +24,10 @@ def _rule_match_count(top, smart, count):
 
 def test_ast():
     ast = PARSER.parse('O([H&X1])(H)')
-    assert ast.head == "start"
-    assert ast.tail[0].head == "atom"
-    assert ast.tail[0].tail[0].head == "atom_symbol"
-    assert ast.tail[0].tail[0].head == "atom_symbol"
-    assert str(ast.tail[0].tail[0].tail[0]) == "O"
+    assert ast.data == "start"
+    assert ast.children[0].data == "atom"
+    assert ast.children[0].children[0].data == "atom_symbol"
+    assert str(ast.children[0].children[0].children[0]) == "O"
 
 
 def test_parse():
@@ -103,19 +102,19 @@ def test_ring_count():
 def test_precedence_ast():
     ast1 = PARSER.parse('[C,H;O]')
     ast2 = PARSER.parse('[O;H,C]')
-    assert ast1.tail[0].tail[0].head == 'weak_and_expression'
-    assert ast2.tail[0].tail[0].head == 'weak_and_expression'
+    assert ast1.children[0].children[0].data == 'weak_and_expression'
+    assert ast2.children[0].children[0].data == 'weak_and_expression'
 
-    assert ast1.tail[0].tail[0].tail[0].head == 'or_expression'
-    assert ast2.tail[0].tail[0].tail[1].head == 'or_expression'
+    assert ast1.children[0].children[0].children[0].data == 'or_expression'
+    assert ast2.children[0].children[0].children[1].data == 'or_expression'
 
     ast1 = PARSER.parse('[C,H&O]')
     ast2 = PARSER.parse('[O&H,C]')
-    assert ast1.tail[0].tail[0].head == 'or_expression'
-    assert ast2.tail[0].tail[0].head == 'or_expression'
+    assert ast1.children[0].children[0].data == 'or_expression'
+    assert ast2.children[0].children[0].data == 'or_expression'
 
-    assert ast1.tail[0].tail[0].tail[1].head == 'and_expression'
-    assert ast2.tail[0].tail[0].tail[0].head == 'and_expression'
+    assert ast1.children[0].children[0].children[1].data == 'and_expression'
+    assert ast2.children[0].children[0].children[0].data == 'and_expression'
 
 
 def test_precedence():
@@ -138,13 +137,13 @@ def test_not_ast():
               '[!C;H]': 'weak_and_expression',
               '[!C]': 'not_expression'}
 
-    for smart, tail2head in checks.items():
+    for smart, grandchild in checks.items():
         ast = PARSER.parse(smart)
-        assert ast.tail[0].tail[0].head == tail2head
+        assert ast.children[0].children[0].data == grandchild
 
     illegal_nots = ['[!CH]', '[!C!H]']
     for smart in illegal_nots:
-        with pytest.raises(plyplus.ParseError):
+        with pytest.raises(lark.UnexpectedInput):
             PARSER.parse(smart)
 
 
@@ -197,6 +196,6 @@ def test_optional_name_parser():
     optional_names = ['_C', '_CH2', '_CH']
     S = SMARTS(optional_names=optional_names)
     ast = S.parse('_CH2_C_CH')
-    symbols = [a.tail[0] for a in ast.select('atom_symbol').strees]
+    symbols = [a.children[0] for a in ast.find_data('atom_symbol')]
     for name in optional_names:
         assert name in symbols
