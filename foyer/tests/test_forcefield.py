@@ -243,7 +243,7 @@ def test_write_xml():
     ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     oplsaa = Forcefield(name='oplsaa')
     typed = oplsaa.apply(ethane)
-    typed.write_foyer(filename='/Users/mwt/Dropbox/opls-snippet.xml',
-                      forcefield=oplsaa, unique=True)
+
+    typed.write_foyer(filename='opls-snippet.xml', forcefield=oplsaa, unique=True)
     oplsaa_partial = Forcefield('opls-snippet.xml')
     typed_by_partial = oplsaa.apply(ethane)
