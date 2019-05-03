@@ -24,8 +24,6 @@ def write_foyer(self, filename, forcefield=None, unique=True):
 
     Additional features to be added include:
     - Documentation (and better standardization) of parameter rounding.
-    - Addition of `coulomb14scale` and `lj14scale` attributes to the
-      `NonbondedForce` element
     - Grouping of duplicate parameter definitions by atom class (the current
       implementation considers parameters to be unique if atom `type`
       definitions differ)
@@ -53,7 +51,7 @@ def write_foyer(self, filename, forcefield=None, unique=True):
                         "Structure.")
 
     root = ET.Element('ForceField')
-    _write_atoms(root, self.atoms, forcefield, unique)
+    _write_atoms(self, root, self.atoms, forcefield, unique)
     if len(self.bonds) > 0 and self.bonds[0].type is not None:
         _write_bonds(root, self.bonds, unique)
     if len(self.angles) > 0 and self.angles[0].type is not None:
@@ -68,9 +66,11 @@ def write_foyer(self, filename, forcefield=None, unique=True):
     ET.ElementTree(root).write(filename, pretty_print=True)
 
 
-def _write_atoms(root, atoms, forcefield, unique):
+def _write_atoms(self, root, atoms, forcefield, unique):
     atomtypes = ET.SubElement(root, 'AtomTypes')
     nonbonded = ET.SubElement(root, 'NonbondedForce')
+    nonbonded.set('coulomb14scale', str(_infer_coulomb14scale(self)))
+    nonbonded.set('lj14scale', str(_infer_lj14scale(self)))
     atomtype_attrs = collections.OrderedDict([
         ('name', 'name'),
         ('class', 'forcefield.atomTypeClasses[name]'),
@@ -232,3 +232,45 @@ def _elements_equal(e1, e2):
     if e1.attrib != e2.attrib: return False
     if len(e1) != len(e2): return False
     return all([_elements_equal(c1, c2) for c1, c2 in zip(e1, e2)])
+
+def _infer_coulomb14scale(struct):
+    """Attempt to infer the coulombic 1-4 scaling factor by parsing the
+    list of adjusts in the structure"""
+
+    coul14 = [t.type.chgscale for t in struct.adjusts]
+
+    if len(set(coul14)) == 1:
+        return coul14[0]
+    else:
+        raise ValueError(
+            'Structure has inconsistent 1-4 coulomb scaling factors. This is '
+            'currently not supported'
+        )
+
+def _infer_lj14scale(struct):
+    """Attempt to infer the Lennard-Jones 1-4 scaling factor by parsing the
+    list of adjusts in the structure"""
+
+    lj14scale = list()
+
+    for adj in struct.adjusts:
+        type1 = adj.atom1.atom_type
+        type2 = adj.atom1.atom_type
+        expected_sigma = (type1.sigma + type2.sigma) * 0.5
+        expected_epsilon = (type1.epsilon * type2.epsilon) ** 0.5
+
+        # We expect sigmas to be the same but epsilons to be scaled by a factor
+        if adj.type.sigma != expected_sigma:
+            raise ValueError(
+                'Unexpected 1-4 sigma value found in adj {}'.format(adj)
+            )
+
+        lj14scale.append(adj.type.epsilon/expected_epsilon)
+
+    if len(set(lj14scale)) == 1:
+        return lj14scale[0]
+    else:
+        raise ValueError(
+            'Structure has inconsistent 1-4 LJ scaling factors. This is '
+            'currently not supported'
+        )
