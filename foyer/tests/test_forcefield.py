@@ -246,4 +246,19 @@ def test_write_xml():
 
     typed.write_foyer(filename='opls-snippet.xml', forcefield=oplsaa, unique=True)
     oplsaa_partial = Forcefield('opls-snippet.xml')
-    typed_by_partial = oplsaa.apply(ethane)
+    typed_by_partial = oplsaa_partial.apply(ethane)
+
+    for adj in typed.adjusts:
+        type1 = adj.atom1.atom_type
+        type2 = adj.atom1.atom_type
+        sigma_factor_pre = adj.type.sigma / ((type1.sigma + type2.sigma) / 2)
+        epsilon_factor_pre = adj.type.epsilon / ((type1.epsilon * type2.epsilon) ** 0.5)
+
+    for adj in typed_by_partial.adjusts:
+        type1 = adj.atom1.atom_type
+        type2 = adj.atom1.atom_type
+        sigma_factor_post = adj.type.sigma / ((type1.sigma + type2.sigma) / 2)
+        epsilon_factor_post = adj.type.epsilon / ((type1.epsilon * type2.epsilon) ** 0.5)
+
+    assert sigma_factor_pre == sigma_factor_post
+    assert epsilon_factor_pre == epsilon_factor_post
