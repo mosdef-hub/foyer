@@ -6,6 +6,7 @@
 [![PyPI Version](https://badge.fury.io/py/foyer.svg)](https://pypi.python.org/pypi/foyer)
 [![Anaconda Badge](https://anaconda.org/mosdef/foyer/badges/version.svg)](https://anaconda.org/mosdef/foyer)
 [![Coverage Status](https://coveralls.io/repos/github/mosdef-hub/foyer/badge.svg?branch=master)](https://coveralls.io/github/mosdef-hub/foyer?branch=master)
+[![codecov](https://codecov.io/gh/mosdef-hub/foyer/branch/master/graph/badge.svg)](https://codecov.io/gh/mosdef-hub/foyer)
 
 Annotate an [OpenMM .xml force field](http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields)
 file with SMARTS-based atomtypes:
