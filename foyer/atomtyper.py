@@ -24,12 +24,12 @@ def find_atomtypes(topology, forcefield, max_iter=10):
     system_elements = {a.element.symbol for a in topology.atoms()}
     for key,val in rules.items():
         atom = val.node[0]['atom']
-        if len(atom.select('atom_symbol')) == 1 and not atom.select('not_expression'):
+        if len(list(atom.find_data('atom_symbol'))) == 1 and not list(atom.find_data('not_expression')):
             try:
-                element = atom.select('atom_symbol').strees[0].tail[0]
+                element = next(atom.find_data('atom_symbol')).children[0]
             except IndexError:
                 try:
-                    atomic_num = atom.select('atomic_num').strees[0].tail[0]
+                    atomic_num = next(atom.find_data('atomic_num')).children[0]
                     element = pt.Element[int(atomic_num)]
                 except IndexError:
                     element = None

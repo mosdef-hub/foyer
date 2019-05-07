@@ -5,8 +5,7 @@ from warnings import warn
 from lxml import etree
 from lxml.etree import DocumentInvalid
 import networkx as nx
-from plyplus.common import ParseError
-
+import lark
 from foyer.exceptions import (ValidationError, ValidationWarning,
                               raise_collected)
 from foyer.smarts_graph import SMARTSGraph
@@ -127,7 +126,7 @@ class Validator(object):
             # make sure smarts string can be parsed
             try:
                 self.smarts_parser.parse(smarts_string)
-            except ParseError as ex:
+            except lark.ParseError as ex:
                 if " col " in ex.args[0]:
                     column = ex.args[0][ex.args[0].find(" col ") + 5:].strip()
                     column = " at character {} of {}".format(column, smarts_string)
@@ -144,9 +143,9 @@ class Validator(object):
             smarts_graph = SMARTSGraph(smarts_string, parser=self.smarts_parser,
                                        name=name, overrides=entry.attrib.get('overrides'))
             for atom_expr in nx.get_node_attributes(smarts_graph, name='atom').values():
-                labels = atom_expr.select('has_label')
+                labels = atom_expr.find_data('has_label')
                 for label in labels:
-                    atom_type = label.tail[0][1:]
+                    atom_type = label.children[0][1:]
                     if atom_type not in self.atom_type_names:
                         undefined = ValidationError(
                             "Reference to undefined atomtype '{}' in SMARTS "
