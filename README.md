@@ -8,7 +8,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/mosdef-hub/foyer/badge.svg?branch=master)](https://coveralls.io/github/mosdef-hub/foyer?branch=master)
 [![codecov](https://codecov.io/gh/mosdef-hub/foyer/branch/master/graph/badge.svg)](https://codecov.io/gh/mosdef-hub/foyer)
 
-### Overview
+## Overview
 Foyer is an open-source Python tool for defining and applying force field atom-typing 
 rules in a format that is both human- and machine-readable.  Foyer provides a framework for force field 
 dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility 
@@ -49,18 +49,18 @@ ethane.save('ethane.top')
 ethane.save('ethane.gro')
 ```
 
-### Getting started
+## Getting started
 
 #### Getting started with SMARTS-based atom-typing
 * [SMARTS-based atomtyping](docs/smarts.rst)
 * [Supported SMARTS Grammar](https://github.com/mosdef-hub/foyer/issues/63)
 
-#### Defining force field files: 
+#### Defining force fields: 
 * [Defining force field parameters](docs/parameter_definitions.md)
 * [Force field file validation](docs/validation.rst)
 
  
-#### Example force field files:
+#### Example foyer force field files:
 Foyer currently includes a subset of the OPLS AA and TraPPE forcefields, currently part of the source distribution:
 * https://github.com/mosdef-hub/foyer/tree/master/foyer/forcefields
 
@@ -76,7 +76,7 @@ Example template for disseminating force fields:
 #### Using Foyer to perform atom typing:
 * [Basic usage examples](docs/usage_examples.rst)
 * [Detailed Jupyter notebook tutorials, including integration with mBuild](https://github.com/mosdef-hub/foyer_tutorials)
-* [Jupyter notebook tutorials, from [our paper]
+* [Jupyter notebook tutorials, from [our paper](https://arxiv.org/abs/1812.06779)]()
 
 ### Documentation site:
 * Mirror of github doc pages: http://mosdef-hub.github.io/foyer/
