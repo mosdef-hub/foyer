@@ -8,17 +8,17 @@
 [![Coverage Status](https://coveralls.io/repos/github/mosdef-hub/foyer/badge.svg?branch=master)](https://coveralls.io/github/mosdef-hub/foyer?branch=master)
 [![codecov](https://codecov.io/gh/mosdef-hub/foyer/branch/master/graph/badge.svg)](https://codecov.io/gh/mosdef-hub/foyer)
 
-
+### Overview
 Foyer is an open-source Python tool for defining and applying force field atom-typing 
 rules in a format that is both human- and machine-readable.  Foyer provides a framework for force field 
-dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility. 
-(see [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print).
+dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility 
+(for more information, see [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print).
 
 
 Foyer defines force fields in an XML format, where SMARTS strings are used to define the chemical context 
 of a particular atom type and “overrides” are used to set rule precedence, rather than a rigid hierarchical scheme. 
 Foyer builds upon the [OpenMM .xml force field](http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields)
-file, annotated with SMARTS-based atomtypes:
+file, annotated with SMARTS-based atomtypes, e.g.:
 
 ```xml
 <ForceField>
@@ -35,6 +35,7 @@ Foyer can apply the forcefield to arbitrary chemical topologies. We currently su
 * [ParmEd.Structure](http://parmed.github.io/ParmEd/html/structure.html)
 * [mBuild.Compound](http://mosdef-hub.github.io/mbuild/data_structures.html)
 
+Application of a force field can be as simple as:
 ```python
 from foyer import Forcefield
 import parmed as pmd
@@ -47,8 +48,6 @@ ethane = oplsaa.apply(untyped_ethane)
 ethane.save('ethane.top')
 ethane.save('ethane.gro')
 ```
-
-If you use this package, please cite [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print.
 
 ### Getting started
 
@@ -74,7 +73,7 @@ Example template for disseminating force fields:
 * https://github.com/mosdef-hub/forcefield_template
 
 
-#### Using Foyer to perform atom tpying:
+#### Using Foyer to perform atom typing:
 * [Basic usage examples](docs/usage_examples.rst)
 * [Detailed Jupyter notebook tutorials, including integration with mBuild](https://github.com/mosdef-hub/foyer_tutorials)
 * [Jupyter notebook tutorials, from [our paper]
@@ -85,6 +84,9 @@ Example template for disseminating force fields:
 ### Installation instructions
 * [Installation instructions](docs/installation.rst)
 
+### Citing Foyer:
+* If you use this package, please cite [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print.
+* Please also cite the github repository
 
 #### [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
