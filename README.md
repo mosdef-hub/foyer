@@ -86,7 +86,7 @@ Example template for disseminating force fields:
 
 ### Citing Foyer:
 * If you use this package, please cite [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print.
-* Please also cite the github repository
+* Please also cite the github repository, https://github.com/mosdef-hub/foyer
 
 #### [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
