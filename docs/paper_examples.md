@@ -14,7 +14,7 @@ While the second approach creates a `foyer` `Forcefield` object, which then call
 ```python
 import mbuild as mb
 from mbuild.examples import Ethane
-from foyer.test.utils import get_fn
+from foyer.tests.utils import get_fn
 from foyer import Forcefield
 
 ### Approach 1 ###
@@ -41,21 +41,21 @@ The two parameterized systems that are generated are then combined into a single
 
 ```python
 from foyer import Forcefield
-from foyer.test.utils import get_fn
+from foyer.tests.utils import get_fn
 import mbuild as mb
 from mbuild.examples import Ethane
 from mbuild.lib.atoms import H
 from mbuild.lib.bulk_materials import AmorphousSilica
 
 # Create a silica substrate, capping surface oxygens with hydrogen
-silica=mb.SilicaInterface(bulk_silica=AmorphousSilica())
-silica_substrate=mb.Monolayer(surface=silica,chains=H(),guest_port_name=’up’)
+silica=mb.recipes.SilicaInterface(bulk_silica=AmorphousSilica())
+silica_substrate=mb.recipes.Monolayer(surface=silica,chains=H(),guest_port_name=’up’)
 # Determine the box dimensions dictated by the silica substrate
 box=mb.Box(mins=[0, 0,max(silica.xyz[:,2])],maxs=silica.periodicity+ [0, 0, 4])
 # Fill the box with ethane
 ethane_fluid=mb.fill_box(compound=Ethane(),n_compounds=200,box=box)
 # Load the forcefields
-opls_silica=Forcefield(forcefield_files=get_fn(’opls-silica.xml’))
+opls_silica=Forcefield(forcefield_files=get_fn(’oplsaa_with_silica.xml’))
 opls_alkane=Forcefield(forcefield_files=get_fn(’oplsaa_alkane.xml’))
 # Apply the forcefields
 silica_substrate=opls_silica.apply(silica_substrate)
