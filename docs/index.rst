@@ -87,5 +87,10 @@ views of the National Science Foundation.
 .. toctree::
     :hidden:
 
+    paper_examples
+
+.. toctree::
+    :hidden:
+
     validation
 
