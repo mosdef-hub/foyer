@@ -78,7 +78,7 @@ Example template for disseminating force fields:
 * [Detailed Jupyter notebook tutorials, including integration with mBuild](https://github.com/mosdef-hub/foyer_tutorials)
 * [Jupyter notebook tutorials, from [our paper](https://arxiv.org/abs/1812.06779)]()
 
-### Documentation site:
+### Documentation:
 * Mirror of github doc pages: http://mosdef-hub.github.io/foyer/
 
 ### Installation instructions
