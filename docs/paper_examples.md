@@ -10,6 +10,10 @@ Below is *Listing 6* from the paper, a python script to fill a $$2x2x2 nm$$ box 
 The system is then atomtyped using the OPLS-AA forcefield.
 There are two approaches to the same problem detailed below in this listing, the first approach uses the `forcefield_files` function argument from [`mBuild`](https://github.com/mosdef-hub/mbuild) to atomptype the system (using foyer under the hood).
 While the second approach creates a `foyer` `Forcefield` object, which then calls its `apply` function, operating on the `mBuild` `Compound` to return the properly atomtyped structure.
+Note that in all instances when using `foyer`, the chemical system of interest is converted into a `ParmEd` `Structure`.
+Even the `mBuild` `Compounds`, when calling the `save` routine, are converted into a `ParmEd` `Structure` before `foyer` can atomtype them.
+The object returned by `foyer` after the atomtypes have been applied are `ParmEd` `Structures`.
+This is subject to change in later iterations of `foyer`, 
 
 ```python
 import mbuild as mb
@@ -17,14 +21,14 @@ from mbuild.examples import Ethane
 from foyer.tests.utils import get_fn
 from foyer import Forcefield
 
-### Approach 1 ###
+### Applying a force field while saving from mBuild ###
 # Create the chemical topology
 ethane_fluid = mb.fill_box(compound=Ethane(), n_compounds=100, box=[2, 2, 2])
 # Apply and save the topology
 ethane_fluid.save(’ethane-box.top’, forcefield_files=get_fn(’oplsaa_alkane.xml’))
 ethane_fluid.save(’ethane-box.gro’)
 
-### Approach 2 ###
+### Applying a force field directly with foyer ###
 # Create the chemical topology
 ethane_fluid = mb.fill_box(compound=Ethane(), n_compounds=100, box=[2, 2, 2])
 # Load the forcefield
