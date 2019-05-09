@@ -3,7 +3,7 @@
 Contained below are the toy examples from the *Usage Examples* section of the [`foyer` paper](https://arxiv.org/pdf/1812.06779.pdf).
 The source code selections are listed below on this page, there are [Jupyter Notebooks](https://github.com/mosdef-hub/foyer/tree/master/docs/examples) where you can try these examples yourself.
 Note that these examples are meant to showcase the abilities of `foyer` through simple examples.
-If the user would like to examine more in-depth and complex examples, please refer to the [tutorial repository](https://github.com/mosdef-hub/mosdef_tutorials).
+If the user would like to examine more in-depth examples using `foyer` with `mBuild`, please refer to the [tutorial repository](https://github.com/mosdef-hub/mosdef_tutorials).
 
 
 Below is *Listing 6* from the paper, a python script to fill a $$2x2x2 nm$$ box with 100 ethane molecules.
