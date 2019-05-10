@@ -82,7 +82,17 @@ views of the National Science Foundation.
 .. toctree::
     :hidden:
 
+    atom-typing_options
+
+.. toctree::
+    :hidden:
+
     usage_examples
+
+.. toctree::
+    :hidden:
+
+    paper_examples
 
 .. toctree::
     :hidden:
