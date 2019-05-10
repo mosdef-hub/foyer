@@ -10,7 +10,8 @@
 
 ## Overview
 Foyer is an open-source Python tool for defining and applying force field atom-typing
-rules in a format that is both human- and machine-readable.  Foyer provides a framework for force field
+rules in a format that is both human- and machine-readable.  It parametrizes chemical topologies, 
+generating, syntactically correct input files for various simulation engines. Foyer provides a framework for force field
 dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility
 (for more information, see [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print).
 
