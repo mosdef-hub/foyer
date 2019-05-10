@@ -9,14 +9,14 @@
 [![codecov](https://codecov.io/gh/mosdef-hub/foyer/branch/master/graph/badge.svg)](https://codecov.io/gh/mosdef-hub/foyer)
 
 ## Overview
-Foyer is an open-source Python tool for defining and applying force field atom-typing 
-rules in a format that is both human- and machine-readable.  Foyer provides a framework for force field 
-dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility 
+Foyer is an open-source Python tool for defining and applying force field atom-typing
+rules in a format that is both human- and machine-readable.  Foyer provides a framework for force field
+dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility
 (for more information, see [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print).
 
 
-Foyer defines force fields in an XML format, where SMARTS strings are used to define the chemical context 
-of a particular atom type and “overrides” are used to set rule precedence, rather than a rigid hierarchical scheme. 
+Foyer defines force fields in an XML format, where SMARTS strings are used to define the chemical context
+of a particular atom type and “overrides” are used to set rule precedence, rather than a rigid hierarchical scheme.
 Foyer builds upon the [OpenMM .xml force field](http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields)
 file, annotated with SMARTS-based atomtypes, e.g.:
 
@@ -55,11 +55,11 @@ ethane.save('ethane.gro')
 * [SMARTS-based atomtyping](docs/smarts.rst)
 * [Supported SMARTS Grammar](https://github.com/mosdef-hub/foyer/issues/63)
 
-#### Defining force fields: 
+#### Defining force fields:
 * [Defining force field parameters](docs/parameter_definitions.md)
 * [Force field file validation](docs/validation.rst)
 
- 
+
 #### Example foyer force field files:
 Foyer currently includes a subset of the OPLS AA and TraPPE forcefields, currently part of the source distribution:
 * https://github.com/mosdef-hub/foyer/tree/master/foyer/forcefields
@@ -76,10 +76,10 @@ Example template for disseminating force fields:
 #### Using Foyer to perform atom typing:
 * [Basic usage examples](docs/usage_examples.rst)
 * [Detailed Jupyter notebook tutorials, including integration with mBuild](https://github.com/mosdef-hub/foyer_tutorials)
-* [Jupyter notebook tutorials, from [our paper](https://arxiv.org/abs/1812.06779)]()
+* [Jupyter notebook tutorials](https://github.com/mosdef-hub/foyer/docs/examples), from [our paper](https://arxiv.org/abs/1812.06779)
 
-### Documentation site:
-* Mirror of github doc pages: http://mosdef-hub.github.io/foyer/
+### Documentation:
+* Documentation website: http://mosdef-hub.github.io/foyer/
 
 ### Installation instructions
 * [Installation instructions](docs/installation.rst)
