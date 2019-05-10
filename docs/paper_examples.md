@@ -35,7 +35,7 @@ ethane_fluid = mb.fill_box(compound=Ethane(), n_compounds=100, box=[2, 2, 2])
 opls_alkane = Forcefield(forcefield_files=get_fn(’oplsaa_alkane.xml’))
 # Apply the forcefield to atom-type
 ethane_fluid = opls_alkane.apply(ethane_fluid)
-# Save the atom-typedsystem
+# Save the atom-typed system
 ethane_fluid.save(’ethane-box.top’, overwrite=True)
 ethane_fluid.save(’ethane-box.gro’, overwrite=True)
 ```
