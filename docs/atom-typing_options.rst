@@ -9,7 +9,7 @@ parametrized ``ParmEd`` ``Structure``. The user may pass some otions to this
 function based on a particular use case.
 
 Forcefield
---------
+----------
 
 .. autoclass:: foyer.forcefield.Forcefield
     :members:
