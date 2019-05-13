@@ -6,9 +6,20 @@
 [![PyPI Version](https://badge.fury.io/py/foyer.svg)](https://pypi.python.org/pypi/foyer)
 [![Anaconda Badge](https://anaconda.org/mosdef/foyer/badges/version.svg)](https://anaconda.org/mosdef/foyer)
 [![Coverage Status](https://coveralls.io/repos/github/mosdef-hub/foyer/badge.svg?branch=master)](https://coveralls.io/github/mosdef-hub/foyer?branch=master)
+[![codecov](https://codecov.io/gh/mosdef-hub/foyer/branch/master/graph/badge.svg)](https://codecov.io/gh/mosdef-hub/foyer)
 
-Annotate an [OpenMM .xml force field](http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields)
-file with SMARTS-based atomtypes:
+## Overview
+Foyer is an open-source Python tool for defining and applying force field atom-typing
+rules in a format that is both human- and machine-readable.  It parametrizes chemical topologies, 
+generating, syntactically correct input files for various simulation engines. Foyer provides a framework for force field
+dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility
+(for more information, see [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print).
+
+
+Foyer defines force fields in an XML format, where SMARTS strings are used to define the chemical context
+of a particular atom type and “overrides” are used to set rule precedence, rather than a rigid hierarchical scheme.
+Foyer builds upon the [OpenMM .xml force field](http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields)
+file, annotated with SMARTS-based atomtypes, e.g.:
 
 ```xml
 <ForceField>
@@ -19,12 +30,13 @@ file with SMARTS-based atomtypes:
 </ForceField>
 ```
 
-Apply the forcefield to arbitrary chemical topologies. We currently support:
+Foyer can apply the forcefield to arbitrary chemical topologies. We currently support:
 
 * [OpenMM.Topology](http://docs.openmm.org/7.0.0/api-python/generated/simtk.openmm.app.topology.Topology.html#)
 * [ParmEd.Structure](http://parmed.github.io/ParmEd/html/structure.html)
 * [mBuild.Compound](http://mosdef-hub.github.io/mbuild/data_structures.html)
 
+Application of a force field can be as simple as:
 ```python
 from foyer import Forcefield
 import parmed as pmd
@@ -38,23 +50,44 @@ ethane.save('ethane.top')
 ethane.save('ethane.gro')
 ```
 
-If you use this package, please cite [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print.
+## Getting started
 
-### Getting started?
-Check out our example template for disseminating force fields:
-https://github.com/mosdef-hub/forcefield_template
-
-### [Installation instructions](docs/installation.rst)
-
-### [SMARTS-based atomtyping](docs/smarts.rst)
+#### Getting started with SMARTS-based atom-typing
+* [SMARTS-based atomtyping](docs/smarts.rst)
 * [Supported SMARTS Grammar](https://github.com/mosdef-hub/foyer/issues/63)
 
-### [Force field validation](docs/validation.rst)
+#### Defining force fields:
+* [Defining force field parameters](docs/parameter_definitions.md)
+* [Force field file validation](docs/validation.rst)
 
-### [Defining force field parameters](docs/parameter_definitions.md)
 
-### [Usage examples](docs/usage_examples.rst)
+#### Example foyer force field files:
+Foyer currently includes a subset of the OPLS AA and TraPPE forcefields, currently part of the source distribution:
+* https://github.com/mosdef-hub/foyer/tree/master/foyer/forcefields
 
+Additional example force field XML files:
+* https://github.com/chrisiacovella/OPLSaa_perfluoroalkanes
+* https://github.com/mosdef-hub/forcefield_perfluoroethers
+* https://github.com/summeraz/OPLSaa_alkylsilanes
+
+Example template for disseminating force fields:
+* https://github.com/mosdef-hub/forcefield_template
+
+
+#### Using Foyer to perform atom typing:
+* [Basic usage examples](docs/usage_examples.rst)
+* [Detailed Jupyter notebook tutorials, including integration with mBuild](https://github.com/mosdef-hub/foyer_tutorials)
+* [Jupyter notebook tutorials](https://github.com/mosdef-hub/foyer/docs/examples), from [our paper](https://arxiv.org/abs/1812.06779)
+
+### Documentation:
+* Documentation website: http://mosdef-hub.github.io/foyer/
+
+### Installation instructions
+* [Installation instructions](docs/installation.rst)
+
+### Citing Foyer:
+* If you use this package, please cite [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print.
+* Please also cite the github repository, https://github.com/mosdef-hub/foyer
 
 #### [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
