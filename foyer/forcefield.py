@@ -343,7 +343,7 @@ class Forcefield(app.ForceField):
     def apply(self, topology, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
               assert_dihedral_params=True, assert_improper_params=False,
-              *args, **kwargs):
+              verbose=False, *args, **kwargs):
         """Apply the force field to a molecular structure
 
         Parameters
@@ -374,6 +374,9 @@ class Forcefield(app.ForceField):
         assert_improper_params : bool, optional, default=False
             If True, Foyer will exit if parameters are not found for all system
             improper dihedrals.
+        verbose : bool, optional, default=False
+            If True, Foyer will print debug-level information about notable or
+            potentially problematic details it encounters.
         """
         if self.atomTypeDefinitions == {}:
             raise FoyerError('Attempting to atom-type using a force field '
@@ -399,6 +402,16 @@ class Forcefield(app.ForceField):
         '''
         data = self._SystemData
 
+        if verbose:
+            for omm_ids in data.angles:
+                missing_angle = True
+                for pmd_angle in structure.angles:
+                    pmd_ids = (pmd_angle.atom1.idx, pmd_angle.atom2.idx, pmd_angle.atom3.idx)
+                    if pmd_ids == omm_ids:
+                        missing_angle = False
+                if missing_angle:
+                    print("Missing angle with ids {} and types {}.".format(
+                          omm_ids, [structure.atoms[idx].type for idx in omm_ids]))
         if data.bonds:
             missing = [b for b in structure.bonds
                        if b.type is None]
@@ -417,6 +430,17 @@ class Forcefield(app.ForceField):
 
         proper_dihedrals = [dihedral for dihedral in structure.dihedrals
                             if not dihedral.improper]
+
+        if verbose:
+            for omm_ids in data.propers:
+                missing_dihedral = True
+                for pmd_proper in structure.rb_torsions:
+                    pmd_ids = (pmd_proper.atom1.idx, pmd_proper.atom2.idx, pmd_proper.atom3.idx, pmd_proper.atom4.idx)
+                    if pmd_ids == omm_ids:
+                        missing_dihedral = False
+                if missing_dihedral:
+                    print('missing improper with ids {}'.format(pmd_ids))
+
         if data.propers and len(data.propers) != \
                 len(proper_dihedrals) + len(structure.rb_torsions):
             msg = ("Parameters have not been assigned to all proper dihedrals. "
