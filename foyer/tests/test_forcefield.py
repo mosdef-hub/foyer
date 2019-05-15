@@ -239,14 +239,15 @@ def test_assert_bonds():
     thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False)
     assert any(b.type is None for b in thing.bonds)
 
-def test_write_xml():
-    ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+@pytest.mark.parametrize("filename", ['ethane.mol2', 'benzene.mol2'])
+def test_write_xml(filename):
+    mol = pmd.load_file(get_fn(filename), structure=True)
     oplsaa = Forcefield(name='oplsaa')
-    typed = oplsaa.apply(ethane)
+    typed = oplsaa.apply(mol)
 
     typed.write_foyer(filename='opls-snippet.xml', forcefield=oplsaa, unique=True)
     oplsaa_partial = Forcefield('opls-snippet.xml')
-    typed_by_partial = oplsaa_partial.apply(ethane)
+    typed_by_partial = oplsaa_partial.apply(mol)
 
     for adj in typed.adjusts:
         type1 = adj.atom1.atom_type
