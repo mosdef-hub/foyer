@@ -255,22 +255,25 @@ def _infer_lj14scale(struct):
 
     for adj in struct.adjusts:
         type1 = adj.atom1.atom_type
-        type2 = adj.atom1.atom_type
+        type2 = adj.atom2.atom_type
         expected_sigma = (type1.sigma + type2.sigma) * 0.5
         expected_epsilon = (type1.epsilon * type2.epsilon) ** 0.5
 
         # We expect sigmas to be the same but epsilons to be scaled by a factor
         if adj.type.sigma != expected_sigma:
             raise ValueError(
-                'Unexpected 1-4 sigma value found in adj {}'.format(adj)
+                'Unexpected 1-4 sigma value found in adj {}. Expected {}'
+                'and found {}'.format(adj, adj.type.sigma, expected_sigma)
             )
 
         lj14scale.append(adj.type.epsilon/expected_epsilon)
 
-    if len(set(lj14scale)) == 1:
+    unique_lj14_scales = np.unique(np.array(lj14scale).round(8))
+    if len(unique_lj14_scales) == 1:
         return lj14scale[0]
     else:
         raise ValueError(
             'Structure has inconsistent 1-4 LJ scaling factors. This is '
-            'currently not supported'
+            'currently not supported. Found these factors: '
+            '{}'.format(unique_lj14_scales)
         )
