@@ -7,6 +7,8 @@
 [![Anaconda Badge](https://anaconda.org/mosdef/foyer/badges/version.svg)](https://anaconda.org/mosdef/foyer)
 [![Coverage Status](https://coveralls.io/repos/github/mosdef-hub/foyer/badge.svg?branch=master)](https://coveralls.io/github/mosdef-hub/foyer?branch=master)
 [![codecov](https://codecov.io/gh/mosdef-hub/foyer/branch/master/graph/badge.svg)](https://codecov.io/gh/mosdef-hub/foyer)
+[![DOI](https://zenodo.org/badge/34077879.svg)](https://zenodo.org/badge/latestdoi/34077879)
+
 
 ## Overview
 Foyer is an open-source Python tool for defining and applying force field atom-typing
@@ -86,7 +88,10 @@ Example template for disseminating force fields:
 * [Installation instructions](docs/installation.rst)
 
 ### Citing Foyer:
-* If you use this package, please cite [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print.
+* If you use this package, please cite [our paper](https://arxiv.org/abs/1812.06779), which is currently a pre-print, and has been accepted for publication at [Computational Materials Science](https://www.journals.elsevier.com/computational-materials-science). 
+ * The paper and examples in this work were developed for tag [paper_COMMAT_2019](https://github.com/mosdef-hub/foyer/tree/paper_COMMAT_2019)
+
+
 * Please also cite the github repository, https://github.com/mosdef-hub/foyer
 
 #### [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
