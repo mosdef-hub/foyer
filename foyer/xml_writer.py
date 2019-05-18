@@ -101,7 +101,7 @@ def _write_atoms(self, root, atoms, forcefield, unique):
             nb_force.set('id', str(atom.idx))
         nb_force.set('type', name)
         nb_force.set('charge', str(round(atom.charge, 4)))
-        nb_force.set('sigma', str(round(atom.atom_type.sigma, 4)))
+        nb_force.set('sigma', str(round(atom.atom_type.sigma/10, 4)))
         nb_force.set('epsilon', str(round(atom.atom_type.epsilon * 4.184, 6)))
 
 def _write_bonds(root, bonds, unique):
