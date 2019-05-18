@@ -262,7 +262,7 @@ def _infer_lj14scale(struct):
         expected_epsilon = (type1.epsilon * type2.epsilon) ** 0.5
 
         # We expect sigmas to be the same but epsilons to be scaled by a factor
-        if adj.type.sigma != expected_sigma:
+        if not np.isclose(adj.type.sigma, expected_sigma):
             raise ValueError(
                 'Unexpected 1-4 sigma value found in adj {}. Expected {}'
                 'and found {}'.format(adj, adj.type.sigma, expected_sigma)
