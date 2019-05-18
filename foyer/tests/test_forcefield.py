@@ -245,7 +245,6 @@ def test_write_xml(filename):
     oplsaa = Forcefield(name='oplsaa')
     typed = oplsaa.apply(mol)
 
-    typed.write_foyer(filename='/Users/mwt/opls-snippet.xml', forcefield=oplsaa, unique=True)
     typed.write_foyer(filename='opls-snippet.xml', forcefield=oplsaa, unique=True)
     oplsaa_partial = Forcefield('opls-snippet.xml')
     typed_by_partial = oplsaa_partial.apply(mol)
