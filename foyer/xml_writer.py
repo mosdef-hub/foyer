@@ -141,13 +141,16 @@ def _write_angles(root, angles, unique):
 def _write_periodic_torsions(root, dihedrals, unique):
     periodic_torsion_forces = ET.SubElement(root, 'PeriodicTorsionForce')
     for dihedral in dihedrals:
+        if dihedral.improper:
+            dihedral_type = 'Improper'
+        else:
+            dihedral_type = 'Proper'
         dihedral_force = ET.SubElement(periodic_torsion_forces, dihedral_type)
         atypes = [atype for atype in [dihedral.atom1.type,
                                       dihedral.atom2.type,
                                       dihedral.atom3.type,
                                       dihedral.atom4.type]]
         if dihedral.improper:
-            dihedral_type = 'Improper'
             # We want the central atom listed first and then sort the
             # remaining atom types.
             atypes[0], atypes[2] = atypes[2], atypes[0]
@@ -159,7 +162,6 @@ def _write_periodic_torsions(root, dihedrals, unique):
                 dihedral_force.set('id3', str(dihedral.atom1.idx))
                 dihedral_force.set('id4', str(dihedral.atom4.idx))
         else:
-            dihedral_type = 'Proper'
             if unique:
                 if atypes[0] > atypes[-1]:
                     atypes = atypes[::-1]
