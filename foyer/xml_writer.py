@@ -92,7 +92,11 @@ def _write_atoms(self, root, atoms, forcefield, unique):
             blank string for these attributes.
             '''
             try:
-                label = str(eval(val))
+                if key == 'doi':
+                    label = eval(val)#[a for a in label]
+                    label = ','.join([a for a in label])
+                else:
+                    label = str(eval(val))
             except (AttributeError, KeyError):
                 label = ''
             atomtype.set(key, label)
