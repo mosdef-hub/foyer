@@ -29,7 +29,9 @@ from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
 from foyer.validator import Validator
+from foyer.xml_writer import write_foyer
 from foyer.utils.io import import_, has_mbuild
+
 
 def preprocess_forcefield_files(forcefield_files=None):
     if forcefield_files is None:
@@ -244,6 +246,8 @@ class Forcefield(app.ForceField):
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
         self.atomTypeRefs = dict()
+        self.atomTypeClasses = dict()
+        self.atomTypeElements = dict()
         self._included_forcefields = dict()
         self.non_element_types = dict()
 
@@ -339,6 +343,10 @@ class Forcefield(app.ForceField):
         if 'doi' in parameters:
             dois = set(doi.strip() for doi in parameters['doi'].split(','))
             self.atomTypeRefs[name] = dois
+        if 'element' in parameters:
+            self.atomTypeElements[name] = parameters['element']
+        if 'class' in parameters:
+            self.atomTypeClasses[name] = parameters['class']
 
     def apply(self, topology, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
@@ -779,3 +787,5 @@ class Forcefield(app.ForceField):
                         ', '.join(sorted(atomtypes)) + '}')
                 bibtex_ref = bibtex_ref[:-2] + note + bibtex_ref[-2:]
                 f.write('{}\n'.format(bibtex_ref))
+
+pmd.Structure.write_foyer = write_foyer
