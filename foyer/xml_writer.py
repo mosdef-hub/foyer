@@ -144,6 +144,7 @@ def _write_angles(root, angles, unique):
 
 def _write_periodic_torsions(root, dihedrals, unique):
     periodic_torsion_forces = ET.SubElement(root, 'PeriodicTorsionForce')
+    last_dihedral_force = None
     for dihedral in dihedrals:
         if dihedral.improper:
             dihedral_type = 'Improper'
@@ -180,6 +181,60 @@ def _write_periodic_torsions(root, dihedrals, unique):
         dihedral_force.set('phase1',
                            str(round(dihedral.type.phase * (np.pi / 180), 8)))
         dihedral_force.set('k1', str(round(dihedral.type.phi_k * 4.184, 3)))
+        if last_dihedral_force is not None:
+            # Check to see if this current dihedral force needs to be
+            # "merged" into the last dihedral force
+            last_dihedral_tuple = (last_dihedral_force.attrib['type1'],
+                                    last_dihedral_force.attrib['type2'],
+                                    last_dihedral_force.attrib['type3'],
+                                    last_dihedral_force.attrib['type4'])
+            current_dihedral_tuple = (dihedral_force.attrib['type1'],
+                                        dihedral_force.attrib['type2'],
+                                        dihedral_force.attrib['type3'],
+                                        dihedral_force.attrib['type4'])
+            if last_dihedral_tuple == current_dihedral_tuple and \
+                    _unique_periodictorsion_parameters(last_dihedral_force, 
+                            dihedral_force):
+                # Merge the last and current dihedral forces
+                # Find the nth periodicity we can set
+                n = 1
+                while 'periodicity{}'.format(n) in last_dihedral_force.attrib:
+                    n +=1
+                last_dihedral_force.attrib['periodicity{}'.format(n)] = \
+                        dihedral_force.attrib['periodicity1']
+                last_dihedral_force.attrib['phase{}'.format(n)] = \
+                        dihedral_force.attrib['phase1']
+                last_dihedral_force.attrib['k{}'.format(n)] = \
+                        dihedral_force.attrib['k1']
+                periodic_torsion_forces.remove(dihedral_force)
+            else:
+                last_dihedral_force = dihedral_force
+
+        else:
+            last_dihedral_force = dihedral_force
+
+def _unique_periodictorsion_parameters(dihedral1, dihedral2):
+    """ Return true if dihedral1 contains the parameters of dihedral2
+    
+    Parameters
+    ---------
+    dihedral1: ET.subelement
+        This is the "larger" dihedral ETelement that is collecting multiple
+        periodicities
+    dihedral2: ET.subelement
+        This should only contain periodicity1, phase1, k1 attributes
+    """
+    n = 1
+    param_tuples = set()
+    while 'periodicity{}'.format(n) in dihedral1.attrib:
+        param_tuples.add((dihedral1.attrib['periodicity{}'.format(n)],
+                            dihedral1.attrib['phase{}'.format(n)],
+                            dihedral1.attrib['k{}'.format(n)]))
+        n+=1
+    if (dihedral2.attrib['periodicity1'], dihedral2.attrib['phase1'], dihedral2.attrib['k1']) in param_tuples:
+        return False
+    else:
+        return True
 
 def _write_rb_torsions(root, rb_torsions, unique):
     rb_torsion_forces = ET.SubElement(root, 'RBTorsionForce')
