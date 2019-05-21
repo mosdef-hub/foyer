@@ -1,10 +1,10 @@
 <ForceField>
   <!-- Not a valid FF, just one that has periodic diehdrals for testing -->
   <AtomTypes>
-    <Type name="opls_135" class="CT" element="C" mass="12.01078" def="[C;X4](C)(H)(H)H" desc="" doi="{'10.1021/ja9621760'}"/>
-    <Type name="opls_140" class="HC" element="H" mass="1.007947" def="H[C;X4]" desc="" doi="{'10.1021/ja9621760'}"/>
-    <Type name="opls_145" class="CA" element="C" mass="12.01078" def="[C;X3;r6]1[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" desc="" doi="{'10.1021/ja9621760'}"/>
-    <Type name="opls_146" class="HA" element="H" mass="1.007947" def="[H][C;%opls_145]" desc="" doi="{'10.1021/ja9621760'}"/>
+    <Type name="opls_135" class="CT" element="C" mass="12.01078" def="[C;X4](C)(H)(H)H" desc="" doi="10.1021/ja9621760"/>
+    <Type name="opls_140" class="HC" element="H" mass="1.007947" def="H[C;X4]" desc="" doi="10.1021/ja9621760"/>
+    <Type name="opls_145" class="CA" element="C" mass="12.01078" def="[C;X3;r6]1[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" desc="" doi="10.1021/ja9621760"/>
+    <Type name="opls_146" class="HA" element="H" mass="1.007947" def="[H][C;%opls_145]" desc="" doi="10.1021/ja9621760"/>
   </AtomTypes>
   <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
     <Atom type="opls_135" charge="-0.18" sigma="3.5" epsilon="0.276144"/>
