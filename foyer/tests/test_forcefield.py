@@ -287,3 +287,11 @@ def test_write_xml(filename):
 
     assert sigma_factor_pre == sigma_factor_post
     assert epsilon_factor_pre == epsilon_factor_post
+
+@pytest.mark.parametrize("filename", ['ethane.mol2', 'benzene.mol2'])
+def test_write_xml_multiple_periodictorsions(filename):
+    cmpd = pmd.load_file(get_fn(filename), structure=True)
+    ff = Forcefield(forcefield_files=get_fn('oplsaa_multiperiodicitytorsion.xml'))
+    typed_struc = ff.apply(cmpd, assert_dihedral_params=False)
+    typed_struc.write_foyer(filename='multi-periodictorsions.xml', forcefield=ff, unique=True)
+
