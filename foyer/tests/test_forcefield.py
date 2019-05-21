@@ -295,3 +295,10 @@ def test_write_xml_multiple_periodictorsions(filename):
     typed_struc = ff.apply(cmpd, assert_dihedral_params=False)
     typed_struc.write_foyer(filename='multi-periodictorsions.xml', forcefield=ff, unique=True)
 
+    partial_ff = Forcefield(forcefield_files='multi-periodictorsions.xml')
+    typed_by_partial = partial_ff.apply(cmpd, assert_dihedral_params=False)
+
+    assert len(typed_struc.bonds) == len(typed_by_partial.bonds)
+    assert len(typed_struc.angles) == len(typed_by_partial.angles)
+    assert len(typed_struc.dihedrals) == len(typed_by_partial.dihedrals)
+
