@@ -8,16 +8,13 @@ import pytest
 
 from foyer import Forcefield
 from foyer.tests.utils import atomtype
+from foyer.tests.base_test import BaseTest
 
 OPLSAA = Forcefield(name='oplsaa')
 
 OPLS_TESTFILES_DIR = resource_filename('foyer', 'opls_validation')
 
-class TestOPLS(object):
-
-    @pytest.fixture(autouse=True)
-    def initdir(self, tmpdir):
-        tmpdir.chdir()
+class TestOPLS(BaseTest):
 
     top_files = glob.glob(os.path.join(OPLS_TESTFILES_DIR, '*/*.top'))
     mol2_files = glob.glob(os.path.join(OPLS_TESTFILES_DIR, '*/*.mol2'))

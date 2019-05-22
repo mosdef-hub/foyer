@@ -8,16 +8,13 @@ import pytest
 
 from foyer import Forcefield
 from foyer.tests.utils import atomtype
+from foyer.tests.base_test import BaseTest
 
 TRAPPE_UA = Forcefield(name='trappe-ua')
 
 TRAPPE_TESTFILES_DIR = resource_filename('foyer', 'trappe_validation')
 
-class TestTraPPE(object):
-
-    @pytest.fixture(autouse=True)
-    def initdir(self, tmpdir):
-        tmpdir.chdir()
+class TestTraPPE(BaseTest):
 
     mol2_files = glob.glob(os.path.join(TRAPPE_TESTFILES_DIR, '*/*.mol2'))
 
