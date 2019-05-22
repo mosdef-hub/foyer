@@ -3,6 +3,8 @@ import glob
 import os
 from pkg_resources import resource_filename
 
+from lxml import etree as ET
+
 import mbuild as mb
 from mbuild.examples import Alkane
 import parmed as pmd
@@ -301,4 +303,10 @@ def test_write_xml_multiple_periodictorsions(filename):
     assert len(typed_struc.bonds) == len(typed_by_partial.bonds)
     assert len(typed_struc.angles) == len(typed_by_partial.angles)
     assert len(typed_struc.dihedrals) == len(typed_by_partial.dihedrals)
+
+    root = ET.parse('multi-periodictorsions.xml')
+    periodic_element = root.find('PeriodicTorsionForce')
+    assert 'periodicity2' in periodic_element[0].attrib
+    assert 'k2' in periodic_element[0].attrib
+    assert 'phase2' in periodic_element[0].attrib
 
