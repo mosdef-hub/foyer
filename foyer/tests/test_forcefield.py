@@ -135,6 +135,44 @@ def test_improper_dihedral():
     assert len([dih for dih in benzene.dihedrals if dih.improper]) == 6
     assert len([dih for dih in benzene.dihedrals if not dih.improper]) == 12
 
+def test_urey_bradley():
+    system = mb.Compound()
+    first = mb.Particle(name='_CTL2',pos=[-1,0,0])
+    second = mb.Particle(name='_CL', pos=[0,0,0])
+    third = mb.Particle(name='_OBL', pos=[1,0,0])
+    fourth = mb.Particle(name='_OHL', pos = [0,1,0])
+
+    system.add([first, second, third, fourth])
+
+    system.add_bond((first,second))
+    system.add_bond((second, third))
+    system.add_bond((second, fourth))
+
+    ff = Forcefield(forcefield_files=[get_fn('charmm36_cooh.xml')])
+    struc = ff.apply(system, assert_angle_params=False, asset_dihedral_params=False,
+            assert_improper_params=False)
+    assert len(struc.angles) == 3
+    assert len(struc.urey_bradleys) ==2
+
+def test_charmm_improper():
+    system = mb.Compound()
+    first = mb.Particle(name='_CTL2',pos=[-1,0,0])
+    second = mb.Particle(name='_CL', pos=[0,0,0])
+    third = mb.Particle(name='_OBL', pos=[1,0,0])
+    fourth = mb.Particle(name='_OHL', pos = [0,1,0])
+
+    system.add([first, second, third, fourth])
+
+    system.add_bond((first,second))
+    system.add_bond((second, third))
+    system.add_bond((second, fourth))
+
+    ff = Forcefield(forcefield_files=[get_fn('charmm36_cooh.xml')])
+    struc = ff.apply(system, assert_angle_params=False, asset_dihedral_params=False,
+            assert_improper_params=False)
+    assert len(struc.impropers) == 1
+    assert len(struc.dihedrals) == 0
+
 def test_residue_map():
     ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     ethane *= 2
@@ -238,3 +276,52 @@ def test_assert_bonds():
         ff.apply(derponium)
     thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False)
     assert any(b.type is None for b in thing.bonds)
+
+@pytest.mark.parametrize("filename", ['ethane.mol2', 'benzene.mol2'])
+def test_write_xml(filename):
+    mol = pmd.load_file(get_fn(filename), structure=True)
+    oplsaa = Forcefield(name='oplsaa')
+    typed = oplsaa.apply(mol)
+
+    typed.write_foyer(filename='opls-snippet.xml', forcefield=oplsaa, unique=True)
+    oplsaa_partial = Forcefield('opls-snippet.xml')
+    typed_by_partial = oplsaa_partial.apply(mol)
+
+    for adj in typed.adjusts:
+        type1 = adj.atom1.atom_type
+        type2 = adj.atom1.atom_type
+        sigma_factor_pre = adj.type.sigma / ((type1.sigma + type2.sigma) / 2)
+        epsilon_factor_pre = adj.type.epsilon / ((type1.epsilon * type2.epsilon) ** 0.5)
+
+    for adj in typed_by_partial.adjusts:
+        type1 = adj.atom1.atom_type
+        type2 = adj.atom1.atom_type
+        sigma_factor_post = adj.type.sigma / ((type1.sigma + type2.sigma) / 2)
+        epsilon_factor_post = adj.type.epsilon / ((type1.epsilon * type2.epsilon) ** 0.5)
+
+    assert sigma_factor_pre == sigma_factor_post
+    assert epsilon_factor_pre == epsilon_factor_post
+
+    # Do it again but with an XML including periodic dihedrals
+    mol = pmd.load_file(get_fn(filename), structure=True)
+    oplsaa = Forcefield(get_fn('oplsaa-periodic.xml'))
+    typed = oplsaa.apply(mol)
+
+    typed.write_foyer(filename='opls-snippet.xml', forcefield=oplsaa, unique=True)
+    oplsaa_partial = Forcefield('opls-snippet.xml')
+    typed_by_partial = oplsaa_partial.apply(mol)
+
+    for adj in typed.adjusts:
+        type1 = adj.atom1.atom_type
+        type2 = adj.atom1.atom_type
+        sigma_factor_pre = adj.type.sigma / ((type1.sigma + type2.sigma) / 2)
+        epsilon_factor_pre = adj.type.epsilon / ((type1.epsilon * type2.epsilon) ** 0.5)
+
+    for adj in typed_by_partial.adjusts:
+        type1 = adj.atom1.atom_type
+        type2 = adj.atom1.atom_type
+        sigma_factor_post = adj.type.sigma / ((type1.sigma + type2.sigma) / 2)
+        epsilon_factor_post = adj.type.epsilon / ((type1.epsilon * type2.epsilon) ** 0.5)
+
+    assert sigma_factor_pre == sigma_factor_post
+    assert epsilon_factor_pre == epsilon_factor_post

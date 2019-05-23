@@ -29,7 +29,9 @@ from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
 from foyer.validator import Validator
+from foyer.xml_writer import write_foyer
 from foyer.utils.io import import_, has_mbuild
+
 
 def preprocess_forcefield_files(forcefield_files=None):
     if forcefield_files is None:
@@ -211,6 +213,36 @@ def _update_atomtypes(unatomtyped_topology, res_name, prototype):
             for old_atom, new_atom_id in zip([atom for atom in res.atoms()], [atom.id for atom in prototype.atoms()]):
                 old_atom.id = new_atom_id
 
+def _separate_urey_bradleys(system, topology):
+    """ Separate urey bradley bonds from harmonic bonds in OpenMM System
+
+    Parameters
+    ---------
+    topology : openmm.app.Topology
+        Molecular structure to find atom types of
+    system : openmm System
+
+    """
+    atoms = [a for a in topology.atoms()]
+    bonds = [b for b in topology.bonds()]
+    ub_force = mm.HarmonicBondForce()
+    harmonic_bond_force = mm.HarmonicBondForce()
+    for force_idx, force in enumerate(system.getForces()):
+        if isinstance(force, mm.HarmonicBondForce):
+            for bond_idx in range(force.getNumBonds()):
+                if ((atoms[force.getBondParameters(bond_idx)[0]],
+                    atoms[force.getBondParameters(bond_idx)[1]]) not in bonds and
+                    (atoms[force.getBondParameters(bond_idx)[1]],
+                     atoms[force.getBondParameters(bond_idx)[0]]) not in bonds):
+                        ub_force.addBond(*force.getBondParameters(bond_idx))
+                else:
+                    harmonic_bond_force.addBond(
+                        *force.getBondParameters(bond_idx))
+            system.removeForce(force_idx)
+
+    system.addForce(harmonic_bond_force)
+    system.addForce(ub_force)
+
 def _error_or_warn(error, msg):
     """Raise an error or warning if topology objects are not fully parameterized.
     
@@ -244,6 +276,8 @@ class Forcefield(app.ForceField):
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
         self.atomTypeRefs = dict()
+        self.atomTypeClasses = dict()
+        self.atomTypeElements = dict()
         self._included_forcefields = dict()
         self.non_element_types = dict()
 
@@ -339,6 +373,10 @@ class Forcefield(app.ForceField):
         if 'doi' in parameters:
             dois = set(doi.strip() for doi in parameters['doi'].split(','))
             self.atomTypeRefs[name] = dois
+        if 'element' in parameters:
+            self.atomTypeElements[name] = parameters['element']
+        if 'class' in parameters:
+            self.atomTypeClasses[name] = parameters['class']
 
     def apply(self, topology, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
@@ -392,6 +430,7 @@ class Forcefield(app.ForceField):
         box_vectors = topology.getPeriodicBoxVectors()
         topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
         system = self.createSystem(topology, *args, **kwargs)
+        _separate_urey_bradleys(system, topology)
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
 
@@ -779,3 +818,5 @@ class Forcefield(app.ForceField):
                         ', '.join(sorted(atomtypes)) + '}')
                 bibtex_ref = bibtex_ref[:-2] + note + bibtex_ref[-2:]
                 f.write('{}\n'.format(bibtex_ref))
+
+pmd.Structure.write_foyer = write_foyer
