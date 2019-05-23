@@ -52,6 +52,22 @@
       </xs:simpleContent>
     </xs:complexType>
   </xs:element>
+  <xs:element name="UreyBradley">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:float" name="d" use="optional"/>
+          <xs:attribute type="xs:float" name="k" use="optional"/>
+          <xs:attribute type="xs:string" name="type1" use="optional"/>
+          <xs:attribute type="xs:string" name="type2" use="optional"/>
+          <xs:attribute type="xs:string" name="type3" use="optional"/>
+          <xs:attribute type="xs:string" name="class1" use="optional"/>
+          <xs:attribute type="xs:string" name="class2" use="optional"/>
+          <xs:attribute type="xs:string" name="class3" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="Proper">
     <xs:complexType>
       <xs:simpleContent>
@@ -70,27 +86,40 @@
           <xs:attribute type="xs:float" name="c3" use="optional"/>
           <xs:attribute type="xs:float" name="c4" use="optional"/>
           <xs:attribute type="xs:float" name="c5" use="optional"/>
+          <xs:attribute type="xs:float" name="c6" use="optional"/>
           <xs:attribute type="xs:float" name="k0" use="optional"/>
           <xs:attribute type="xs:float" name="k1" use="optional"/>
           <xs:attribute type="xs:float" name="k2" use="optional"/>
           <xs:attribute type="xs:float" name="k3" use="optional"/>
           <xs:attribute type="xs:float" name="k4" use="optional"/>
           <xs:attribute type="xs:float" name="k5" use="optional"/>
+          <xs:attribute type="xs:float" name="k6" use="optional"/>
           <xs:attribute type="xs:float" name="phase0" use="optional"/>
           <xs:attribute type="xs:float" name="phase1" use="optional"/>
           <xs:attribute type="xs:float" name="phase2" use="optional"/>
           <xs:attribute type="xs:float" name="phase3" use="optional"/>
           <xs:attribute type="xs:float" name="phase4" use="optional"/>
           <xs:attribute type="xs:float" name="phase5" use="optional"/>
+          <xs:attribute type="xs:float" name="phase6" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity0" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity1" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity2" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity3" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity4" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity5" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity6" use="optional"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
+  </xs:element>
+  <xs:element name="PerTorsionParameter">
+      <xs:complexType>
+          <xs:simpleContent>
+              <xs:extension base="xs:string">
+                  <xs:attribute type="xs:string" name="name"/>
+              </xs:extension>
+          </xs:simpleContent>
+      </xs:complexType>
   </xs:element>
   <xs:element name="Improper">
     <xs:complexType>
@@ -128,6 +157,9 @@
           <xs:attribute type="xs:float" name="periodicity3" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity4" use="optional"/>
           <xs:attribute type="xs:float" name="periodicity5" use="optional"/>
+          <xs:attribute type="xs:float" name="k" use="optional"/>
+          <xs:attribute type="xs:float" name="theta0" use="optional"/>
+          <xs:attribute type="xs:float" name="periodicity" use="optional"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
@@ -169,6 +201,13 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="AmoebaUreyBradleyForce">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="UreyBradley" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="RBTorsionForce">
     <xs:complexType>
       <xs:choice maxOccurs="unbounded">
@@ -183,6 +222,16 @@
         <xs:element ref="Proper" minOccurs="0"/>
         <xs:element ref="Improper" minOccurs="0"/>
       </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CustomTorsionForce">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="Proper" minOccurs="0"/>
+        <xs:element ref="PerTorsionParameter" minOccurs="0"/>
+        <xs:element ref="Improper" minOccurs="0"/>
+      </xs:choice>
+      <xs:attribute type="xs:string" name="energy" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="NonbondedForce">
@@ -200,8 +249,10 @@
         <xs:element ref="AtomTypes" minOccurs="0"/>
         <xs:element ref="HarmonicBondForce" minOccurs="0"/>
         <xs:element ref="HarmonicAngleForce" minOccurs="0"/>
+        <xs:element ref="AmoebaUreyBradleyForce" minOccurs="0"/>
         <xs:element ref="RBTorsionForce" minOccurs="0"/>
         <xs:element ref="PeriodicTorsionForce" minOccurs="0"/>
+        <xs:element ref="CustomTorsionForce" minOccurs="0"/>
         <xs:element ref="NonbondedForce" minOccurs="0"/>
       </xs:all>
     </xs:complexType>
