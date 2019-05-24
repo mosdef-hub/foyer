@@ -25,9 +25,9 @@
     <Angle type1="opls_145" type2="opls_145" type3="opls_146" angle="2.0943951024" k="292.88"/>
   </HarmonicAngleForce>
   <PeriodicTorsionForce>
-    <Proper type1="opls_140" type2="opls_135" type3="opls_135" type4="opls_140" periodicity1="1" phase1="3.14" k1="3.1"/>
-    <Proper type1="opls_145" type2="opls_145" type3="opls_145" type4="opls_145" periodicity1="1" phase1="3.14" k1="3.1"/>
-    <Proper type1="opls_145" type2="opls_145" type3="opls_145" type4="opls_146" periodicity1="1" phase1="3.14" k1="3.1"/>
-    <Proper type1="opls_146" type2="opls_145" type3="opls_145" type4="opls_146" periodicity1="1" phase1="3.14" k1="3.1"/>
+    <Proper type1="opls_140" type2="opls_135" type3="opls_135" type4="opls_140" periodicity1="1" phase1="3.14" k1="3.1" periodicity2="4" phase2="1.57" k2="100" periodicity3="3" phase3="1.00" k3="400"/>
+    <Proper type1="opls_145" type2="opls_145" type3="opls_145" type4="opls_145" periodicity1="1" phase1="3.14" k1="3.1" periodicity2="3" phase2="3.14" k2="350"/>
+    <Proper type1="opls_145" type2="opls_145" type3="opls_145" type4="opls_146" periodicity1="1" phase1="3.14" k1="3.1" periodicity2="3" phase2="3.14" k2="350"/>
+    <Proper type1="opls_146" type2="opls_145" type3="opls_145" type4="opls_146" periodicity1="1" phase1="3.14" k1="3.1" periodicity2="3" phase2="3.14" k2="350"/>
   </PeriodicTorsionForce>
 </ForceField>
