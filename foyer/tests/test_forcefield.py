@@ -76,7 +76,6 @@ def test_from_mbuild():
     assert len(ethane.rb_torsions) == 9
     assert all(x.type for x in ethane.dihedrals)
 
-@pytest.fixture(scope="session")
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_write_refs():
     mol2 = mb.load(get_fn('ethane.mol2'))
@@ -84,7 +83,6 @@ def test_write_refs():
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
     assert os.path.isfile('ethane.bib')
 
-@pytest.fixture(scope="session")
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_write_refs_multiple():
     mol2 = mb.load(get_fn('ethane.mol2'))
@@ -241,7 +239,6 @@ def test_assert_bonds():
     thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False)
     assert any(b.type is None for b in thing.bonds)
 
-@pytest.fixture(scope="session")
 @pytest.mark.parametrize("filename", ['ethane.mol2', 'benzene.mol2'])
 def test_write_xml(filename):
     mol = pmd.load_file(get_fn(filename), structure=True)
