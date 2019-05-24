@@ -1,5 +1,5 @@
 import pytest
 
-@pytest.fixture(scope="session")
+@pytest.fixture(autouse=True)
 def initdir(tmpdir):
     tmpdir.chdir()
