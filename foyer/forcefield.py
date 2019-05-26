@@ -590,6 +590,8 @@ class Forcefield(app.ForceField):
             The mass to use for hydrogen atoms bound to heavy atoms.  Any mass
             added to a hydrogen is subtracted from the heavy atom to keep
             their total mass the same.
+        switchDistance : float=None
+            The distance at which the potential energy switching function is turned on for
         args
              Arbitrary additional keyword arguments may also be specified.
              This allows extra parameters to be specified that are specific to
