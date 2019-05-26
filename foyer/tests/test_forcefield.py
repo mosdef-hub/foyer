@@ -184,8 +184,8 @@ def test_residue_map():
     topo_without = oplsaa.run_atomtyping(topo, use_residue_map=False)
     assert all([a.id for a in topo_with.atoms()][0])
     assert all([a.id for a in topo_without.atoms()][0])
-    struct_with = pmd.openmm.load_topology(topo_with, oplsaa.createSystem(topo_with, switchDistance=None))
-    struct_without = pmd.openmm.load_topology(topo_without, oplsaa.createSystem(topo_without, switchDistance=None))
+    struct_with = pmd.openmm.load_topology(topo_with, oplsaa.createSystem(topo_with))
+    struct_without = pmd.openmm.load_topology(topo_without, oplsaa.createSystem(topo_without))
     for atom_with, atom_without in zip(struct_with.atoms, struct_without.atoms):
         assert atom_with.type == atom_without.type
         b_with = atom_with.bond_partners
