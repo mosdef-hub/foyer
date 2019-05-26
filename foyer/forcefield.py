@@ -434,7 +434,9 @@ class Forcefield(app.ForceField):
         #kwargs['switchDistance'] = None
         #system = self.createSystem(topology, *args, **kwargs)
         # Option 2: Explicitly specify switchDistance 
-        system = self.createSystem(topology, switchDistance=None, *args, **kwargs)
+        #system = self.createSystem(topology, switchDistance=None, *args, **kwargs)
+        # Option 3: Default kwarg in createSystem
+        system = self.createSystem(topology, *args, **kwargs)
         _separate_urey_bradleys(system, topology)
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
@@ -563,6 +565,7 @@ class Forcefield(app.ForceField):
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
+                     switchDistance=None,
                      **args):
         """Construct an OpenMM System representing a Topology with this force field.
 
@@ -597,7 +600,7 @@ class Forcefield(app.ForceField):
         system
             the newly created System
         """
-
+        args['switchDistance'] = None
         # Overwrite previous _SystemData object
         self._SystemData = app.ForceField._SystemData()
 
