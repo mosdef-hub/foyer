@@ -429,7 +429,12 @@ class Forcefield(app.ForceField):
             positions[:] = np.nan
         box_vectors = topology.getPeriodicBoxVectors()
         topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
-        system = self.createSystem(topology, *args, **kwargs)
+        # Extra args to make OMM 7.3 happy
+        # Option 1: Add to the kwargs dictionary
+        #kwargs['switchDistance'] = None
+        #system = self.createSystem(topology, *args, **kwargs)
+        # Option 2: Explicitly specify switchDistance 
+        system = self.createSystem(topology, switchDistance=None, *args, **kwargs)
         _separate_urey_bradleys(system, topology)
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
