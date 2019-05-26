@@ -602,7 +602,7 @@ class Forcefield(app.ForceField):
         system
             the newly created System
         """
-        args['switchDistance'] = None
+        args['switchDistance'] = switchDistance
         # Overwrite previous _SystemData object
         self._SystemData = app.ForceField._SystemData()
 
