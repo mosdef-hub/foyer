@@ -1,6 +1,6 @@
 ### Foyer: A package for atom-typing as well as applying and disseminating forcefields
 
-[![Gitter chat](https://badges.gitter.im/mosdef-hub/gitter.png)](https://gitter.im/mosdef-hub/Lobby)
+[![Gitter chat](https://badges.gitter.im/mosdef-hub/gitter.svg)](https://gitter.im/mosdef-hub/Lobby)
 [![Linux Build Status](https://travis-ci.org/mosdef-hub/foyer.svg?branch=master)](https://travis-ci.org/mosdef-hub/foyer)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/r6b2ny2hjo1t1ulb/branch/master?svg=true)](https://ci.appveyor.com/project/ctk3b/foyer/branch/master)
 [![PyPI Version](https://badge.fury.io/py/foyer.svg)](https://pypi.python.org/pypi/foyer)
