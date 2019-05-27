@@ -429,6 +429,13 @@ class Forcefield(app.ForceField):
             positions[:] = np.nan
         box_vectors = topology.getPeriodicBoxVectors()
         topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
+        # Extra args to make OMM 7.3 happy
+        # Option 1: Add to the kwargs dictionary
+        #kwargs['switchDistance'] = None
+        #system = self.createSystem(topology, *args, **kwargs)
+        # Option 2: Explicitly specify switchDistance 
+        #system = self.createSystem(topology, switchDistance=None, *args, **kwargs)
+        # Option 3: Default kwarg in createSystem
         system = self.createSystem(topology, *args, **kwargs)
         _separate_urey_bradleys(system, topology)
 
@@ -558,6 +565,7 @@ class Forcefield(app.ForceField):
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
+                     switchDistance=None,
                      **args):
         """Construct an OpenMM System representing a Topology with this force field.
 
@@ -582,6 +590,8 @@ class Forcefield(app.ForceField):
             The mass to use for hydrogen atoms bound to heavy atoms.  Any mass
             added to a hydrogen is subtracted from the heavy atom to keep
             their total mass the same.
+        switchDistance : float=None
+            The distance at which the potential energy switching function is turned on for
         args
              Arbitrary additional keyword arguments may also be specified.
              This allows extra parameters to be specified that are specific to
@@ -592,7 +602,7 @@ class Forcefield(app.ForceField):
         system
             the newly created System
         """
-
+        args['switchDistance'] = switchDistance
         # Overwrite previous _SystemData object
         self._SystemData = app.ForceField._SystemData()
 
