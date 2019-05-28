@@ -1,64 +1,51 @@
-import plyplus
+import lark
 
 from foyer.exceptions import FoyerError
 
-GRAMMAR = (r"""
-    start: string;
+GRAMMAR = r"""
+    start: _string
 
     // Rules
-    @string: chain nonlastbranch* lastbranch?;
-    @chain: atom chain | atom;
-    @nonlastbranch: LPAR branch RPAR;
-    @lastbranch: branch;
-    branch: string;
-    atom: (LBRACKET weak_and_expression RBRACKET | atom_symbol) atom_label?;
-    atom_label: NUM;
-    ?weak_and_expression: (weak_and_expression weak_and_symbol)? or_expression;
-    ?or_expression: (or_expression or_symbol)? and_expression;
-    ?and_expression: (and_expression and_symbol)? (atom_id | not_expression);
-    not_expression: not_symbol atom_id;
-    @and_symbol: AMP;
-    @weak_and_symbol: SEMI;
-    @or_symbol: COMMA;
-    @not_symbol: EXCL;
+    _string: _chain _nonlastbranch* _lastbranch?
+    _chain: atom _chain | atom
+    _nonlastbranch: "(" branch ")"
+    _lastbranch: branch
+    branch: _string
+    atom: ("[" weak_and_expression "]" | atom_symbol) atom_label?
+    atom_label: NUM
+    ?weak_and_expression: (weak_and_expression ";")? or_expression
+    ?or_expression: (or_expression ",")? and_expression
+    ?and_expression: (and_expression "&")? (atom_id | not_expression)
+    not_expression: "!" atom_id
     atom_id: atom_symbol
-             | HASH atomic_num
-             | DOLLAR LPAR matches_string RPAR
+             | "#" atomic_num
+             | "$(" matches_string ")"
              | has_label
-             | 'X' neighbor_count
-             | 'r' ring_size
-             | 'R' ring_count;
-    atom_symbol: SYMBOL | STAR;
-    atomic_num: NUM;
-    matches_string: string ;
-    has_label: LABEL ;
-    neighbor_count: NUM;
-    ring_size: NUM;
-    ring_count: NUM;
+             | "X" neighbor_count
+             | "r" ring_size
+             | "R" ring_count
+    atom_symbol: SYMBOL | STAR
+    atomic_num: NUM
+    matches_string: _string
+    has_label: LABEL
+    neighbor_count: NUM
+    ring_size: NUM
+    ring_count: NUM
 
-    // Tokens
-    HASH: '\#';
-    LBRACKET: '\[';
-    RBRACKET: '\]';
-    LPAR: '\(';
-    RPAR: '\)';
-    COMMA: '\,';
-    SEMI: '\;';
-    AMP: '\&';
-    STAR: '\*';
-    DOLLAR: '\$';
-    NUM: '[\d]+';
-    LABEL: '\%[A-Za-z_0-9]+';
-    EXCL: '\!';
+    // Terminals
+    STAR: "*"
+    NUM: /[\d]+/
+    LABEL: /\%[A-Za-z_0-9]+/
+
     // Tokens for chemical elements
     // Optional, custom, non-element underscore-prefixed symbols are pre-pended
-    SYMBOL: '{optional}C[laroudsemf]?|Os?|N[eaibdpos]?|S[icernbmg]?|P[drmtboau]?|H[eofgas]?|A[lrsgutcm]|B[eraik]?|Dy|E[urs]|F[erm]?|G[aed]|I[nr]?|Kr?|L[iaur]|M[gnodt]|R[buhenaf]|T[icebmalh]|U|V|W|Xe|Yb?|Z[nr]';
+    SYMBOL: /{optional}C[laroudsemf]?|Os?|N[eaibdpos]?|S[icernbmg]?|P[drmtboau]?|H[eofgas]?|A[lrsgutcm]|B[eraik]?|Dy|E[urs]|F[erm]?|G[aed]|I[nr]?|Kr?|L[iaur]|M[gnodt]|R[buhenaf]|T[icebmalh]|U|V|W|Xe|Yb?|Z[nr]/
 
-""")
+"""
 
 
 class SMARTS(object):
-    """A wrapper class for parsing SMARTS grammar using plyplus.
+    """A wrapper class for parsing SMARTS grammar using lark.
 
     Provides functionality for injecting optional, custom, non-element symbols
     denoted by an underscore-prefix as additional tokens that the parser can
@@ -77,7 +64,7 @@ class SMARTS(object):
 
         else:
             self.grammar = GRAMMAR.format(optional='')
-        self.PARSER = plyplus.Grammar(self.grammar)
+        self.PARSER = lark.Lark(self.grammar, parser="lalr")
 
     def parse(self, smarts_string):
         return self.PARSER.parse(smarts_string)
