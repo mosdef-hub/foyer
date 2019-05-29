@@ -496,7 +496,9 @@ class Forcefield(app.ForceField):
 
         topology, positions = self._prepare_topology(topology, **kwargs)
 
-        topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
+        typemap = self.run_atomtyping(topology, use_residue_map=use_residue_map)
+
+        self._apply_typemap(topology, typemap)
 
         system = self.createSystem(topology, *args, **kwargs)
 
@@ -548,22 +550,22 @@ class Forcefield(app.ForceField):
                 for res in topology.residues():
                     if res.name not in residue_map.keys():
                         residue = _topology_from_residue(res)
-                        find_atomtypes(residue, forcefield=self)
+                        typemap = find_atomtypes(residue, forcefield=self)
                         residue_map[res.name] = residue
 
                 for key, val in residue_map.items():
                     _update_atomtypes(topology, key, val)
 
             else:
-                find_atomtypes(topology, forcefield=self)
+                typemap = find_atomtypes(topology, forcefield=self)
 
         else:
-            find_atomtypes(topology, forcefield=self)
+            typemap = find_atomtypes(topology, forcefield=self)
 
         if not all([a.id for a in topology.atoms()][0]):
             raise ValueError('Not all atoms in topology have atom types')
 
-        return topology
+        return typemap
 
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
@@ -808,6 +810,11 @@ class Forcefield(app.ForceField):
             exec(script, locals())
 
         return sys
+
+    def _apply_typemap(self, topology, typemap):
+        """Add atomtypes to the topology according to the typemap"""
+        for atom in topology.atoms():
+            atom.id = typemap[atom.index]['atomtype']
 
     def _prepare_topology(self, topology, **kwargs):
         if not isinstance(topology, app.Topology):
