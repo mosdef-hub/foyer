@@ -18,6 +18,7 @@ def find_atomtypes(topology, forcefield, max_iter=10):
 
     """
     typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} for atom in topology.atoms()}
+
     rules = _load_rules(forcefield, typemap)
 
     # Only consider rules for elements found in topology
