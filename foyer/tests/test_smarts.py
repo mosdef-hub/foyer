@@ -21,7 +21,7 @@ def _rule_match(top, typemap, smart, result):
 def _rule_match_count(top, typemap, smart, count):
     rule = SMARTSGraph(name='test', parser=PARSER, smarts_string=smart, 
             typemap=typemap)
-    assert len(list(rule.find_matches(top))) is count
+    assert len(list(rule.find_matches(top, typemap))) is count
 
 
 def test_ast():
