@@ -134,7 +134,8 @@ class SMARTSGraph(nx.Graph):
                     return True
             return False
         elif atom_id.data == 'ring_count':
-            n_cycles = len(atom.cycles)
+            #n_cycles = len(atom.cycles)
+            n_cycles = len(typemap[atom.index]['cycles'])
             if n_cycles == int(atom_id.children[0]):
                 return True
             return False
