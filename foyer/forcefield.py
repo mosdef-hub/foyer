@@ -195,23 +195,14 @@ def _check_independent_residues(topology):
     return True
 
 
-def _update_atomtypes(unatomtyped_topology, res_name, prototype):
-    """Update atomtypes in residues in a topology using a prototype topology.
-
-    Atomtypes are updated when residues in each topology have matching names.
-
-    Parameters
-    ----------
-    unatomtyped_topology : openmm.app.Topology
-        Topology lacking atomtypes defined by `find_atomtypes`.
-    prototype : openmm.app.Topology
-        Prototype topology with atomtypes defined by `find_atomtypes`.
-
-    """
-    for res in unatomtyped_topology.residues():
-        if res.name == res_name:
-            for old_atom, new_atom_id in zip([atom for atom in res.atoms()], [atom.id for atom in prototype.atoms()]):
-                old_atom.id = new_atom_id
+def _unwrap_typemap(topology, residue_map):
+    master_typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} for atom in topology.atoms()}
+    for res in topology.residues():
+        for res_name, val in residue_map.items():
+            if res.name == res_name:
+                for i, atom in enumerate(res.atoms()):
+                    master_typemap[int(atom.index)]['atomtype'] = val[i]['atomtype']
+    return master_typemap
 
 
 def _separate_urey_bradleys(system, topology):
@@ -551,10 +542,9 @@ class Forcefield(app.ForceField):
                     if res.name not in residue_map.keys():
                         residue = _topology_from_residue(res)
                         typemap = find_atomtypes(residue, forcefield=self)
-                        residue_map[res.name] = residue
+                        residue_map[res.name] = typemap
 
-                for key, val in residue_map.items():
-                    _update_atomtypes(topology, key, val)
+                typemap = _unwrap_typemap(topology, residue_map)
 
             else:
                 typemap = find_atomtypes(topology, forcefield=self)

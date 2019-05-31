@@ -180,10 +180,14 @@ def test_residue_map():
     ethane *= 2
     oplsaa = Forcefield(name='oplsaa')
     topo, NULL = generate_topology(ethane)
-    topo_with = oplsaa.run_atomtyping(topo, use_residue_map=True)
-    topo_without = oplsaa.run_atomtyping(topo, use_residue_map=False)
-    assert all([a.id for a in topo_with.atoms()][0])
-    assert all([a.id for a in topo_without.atoms()][0])
+    map_with = oplsaa.run_atomtyping(topo, use_residue_map=True)
+    map_without = oplsaa.run_atomtyping(topo, use_residue_map=False)
+    assert all([a['atomtype'] for a in map_with.values()][0])
+    assert all([a['atomtype'] for a in map_without.values()][0])
+    topo_with = topo
+    topo_without = topo
+    oplsaa._apply_typemap(topo_with, map_with)
+    oplsaa._apply_typemap(topo_without, map_without)
     struct_with = pmd.openmm.load_topology(topo_with, oplsaa.createSystem(topo_with))
     struct_without = pmd.openmm.load_topology(topo_without, oplsaa.createSystem(topo_without))
     for atom_with, atom_without in zip(struct_with.atoms, struct_without.atoms):
