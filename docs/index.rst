@@ -99,3 +99,7 @@ views of the National Science Foundation.
 
     validation
 
+.. toctree::
+   :hidden:
+
+   citing_foyer
