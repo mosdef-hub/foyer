@@ -2,7 +2,7 @@ import collections
 import glob
 import itertools
 import os
-from tempfile import mktemp, mkstemp
+from tempfile import NamedTemporaryFile
 import xml.etree.ElementTree as ET
 
 try:
@@ -76,12 +76,12 @@ def preprocess_forcefield_files(forcefield_files=None):
                           'objects by precedence.')
 
         # write to temp file
-        _, temp_file_name = mkstemp(suffix=suffix)
-        with open(temp_file_name, 'w') as temp_f:
+        temp_file = NamedTemporaryFile(suffix=suffix, delete=False)
+        with open(temp_file.name, 'w') as temp_f:
             temp_f.write(xml_contents)
 
         # append temp file name to list
-        preprocessed_files.append(temp_file_name)
+        preprocessed_files.append(temp_file.name)
 
     return preprocessed_files
 
@@ -301,8 +301,11 @@ class Forcefield(app.ForceField):
         if validation:
             for ff_file_name in preprocessed_files:
                 Validator(ff_file_name, debug)
-
-        super(Forcefield, self).__init__(*preprocessed_files)
+        try:
+            super(Forcefield, self).__init__(*preprocessed_files)
+        finally:
+            for ff_file_name in preprocessed_files:
+                os.remove(ff_file_name)
         self.parser = smarts.SMARTS(self.non_element_types)
         self._SystemData = self._SystemData()
 
