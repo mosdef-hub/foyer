@@ -1,0 +1,25 @@
+TY  - JOUR
+T1  - Formalizing atom-typing and the dissemination of force fields with foyer
+AU  - Klein, Christoph
+AU  - Summers, Andrew Z.
+AU  - Thompson, Matthew W.
+AU  - Gilmer, Justin B.
+AU  - McCabe, Clare
+AU  - Cummings, Peter T.
+AU  - Sallai, Janos
+AU  - Iacovella, Christopher R.
+JO  - Computational Materials Science
+VL  - 167
+SP  - 215
+EP  - 227
+PY  - 2019
+DA  - 2019/09/01/
+SN  - 0927-0256
+DO  - https://doi.org/10.1016/j.commatsci.2019.05.026
+UR  - http://www.sciencedirect.com/science/article/pii/S0927025619303040
+KW  - Molecular simulation
+KW  - Force fields
+KW  - Reproducibility
+KW  - Open-source software
+AB  - A key component to enhancing reproducibility in the molecular simulation community is reducing ambiguity in the parameterization of molecular models used to perform a study. Ambiguity in molecular models often stems from inadequate usage documentation of molecular force fields and the fact that force fields are not typically disseminated in a format that is directly usable by software. Specifically, the lack of a generally applicable scheme for the annotation of the rules of a particular force field and a general purpose tool for performing automated parameterization (i.e., atom-typing) based on these rules, may lead to errors in model parameterization that are not easily identified. Here, we present Foyer, an open-source Python tool that enables users to define and apply force field atom-typing rules in a format that is both human- and machine-readable and provides a framework for force field dissemination, thus eliminating ambiguity in atom-typing and improving reproducibility. Foyer defines force fields in an XML format, where SMARTS strings are used to define the chemical context of a particular atom type and “overrides” are used to set rule precedence, rather than a rigid hierarchical scheme. Herein we describe the underlying methodology and force field annotation scheme of the Foyer software, demonstrate its application in several use-cases, and discuss specific aspects of the Foyer approach that are designed to improve reproducibility.
+ER  - 
