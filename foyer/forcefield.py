@@ -2,7 +2,7 @@ import collections
 import glob
 import itertools
 import os
-from tempfile import mktemp, mkstemp
+from tempfile import NamedTemporaryFile
 import xml.etree.ElementTree as ET
 
 try:
@@ -29,7 +29,9 @@ from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
 from foyer.validator import Validator
+from foyer.xml_writer import write_foyer
 from foyer.utils.io import import_, has_mbuild
+
 
 def preprocess_forcefield_files(forcefield_files=None):
     if forcefield_files is None:
@@ -74,12 +76,12 @@ def preprocess_forcefield_files(forcefield_files=None):
                           'objects by precedence.')
 
         # write to temp file
-        _, temp_file_name = mkstemp(suffix=suffix)
-        with open(temp_file_name, 'w') as temp_f:
+        temp_file = NamedTemporaryFile(suffix=suffix, delete=False)
+        with open(temp_file.name, 'w') as temp_f:
             temp_f.write(xml_contents)
 
         # append temp file name to list
-        preprocessed_files.append(temp_file_name)
+        preprocessed_files.append(temp_file.name)
 
     return preprocessed_files
 
@@ -211,6 +213,36 @@ def _update_atomtypes(unatomtyped_topology, res_name, prototype):
             for old_atom, new_atom_id in zip([atom for atom in res.atoms()], [atom.id for atom in prototype.atoms()]):
                 old_atom.id = new_atom_id
 
+def _separate_urey_bradleys(system, topology):
+    """ Separate urey bradley bonds from harmonic bonds in OpenMM System
+
+    Parameters
+    ---------
+    topology : openmm.app.Topology
+        Molecular structure to find atom types of
+    system : openmm System
+
+    """
+    atoms = [a for a in topology.atoms()]
+    bonds = [b for b in topology.bonds()]
+    ub_force = mm.HarmonicBondForce()
+    harmonic_bond_force = mm.HarmonicBondForce()
+    for force_idx, force in enumerate(system.getForces()):
+        if isinstance(force, mm.HarmonicBondForce):
+            for bond_idx in range(force.getNumBonds()):
+                if ((atoms[force.getBondParameters(bond_idx)[0]],
+                    atoms[force.getBondParameters(bond_idx)[1]]) not in bonds and
+                    (atoms[force.getBondParameters(bond_idx)[1]],
+                     atoms[force.getBondParameters(bond_idx)[0]]) not in bonds):
+                        ub_force.addBond(*force.getBondParameters(bond_idx))
+                else:
+                    harmonic_bond_force.addBond(
+                        *force.getBondParameters(bond_idx))
+            system.removeForce(force_idx)
+
+    system.addForce(harmonic_bond_force)
+    system.addForce(ub_force)
+
 def _error_or_warn(error, msg):
     """Raise an error or warning if topology objects are not fully parameterized.
     
@@ -244,6 +276,8 @@ class Forcefield(app.ForceField):
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
         self.atomTypeRefs = dict()
+        self.atomTypeClasses = dict()
+        self.atomTypeElements = dict()
         self._included_forcefields = dict()
         self.non_element_types = dict()
 
@@ -267,8 +301,11 @@ class Forcefield(app.ForceField):
         if validation:
             for ff_file_name in preprocessed_files:
                 Validator(ff_file_name, debug)
-
-        super(Forcefield, self).__init__(*preprocessed_files)
+        try:
+            super(Forcefield, self).__init__(*preprocessed_files)
+        finally:
+            for ff_file_name in preprocessed_files:
+                os.remove(ff_file_name)
         self.parser = smarts.SMARTS(self.non_element_types)
         self._SystemData = self._SystemData()
 
@@ -339,6 +376,10 @@ class Forcefield(app.ForceField):
         if 'doi' in parameters:
             dois = set(doi.strip() for doi in parameters['doi'].split(','))
             self.atomTypeRefs[name] = dois
+        if 'element' in parameters:
+            self.atomTypeElements[name] = parameters['element']
+        if 'class' in parameters:
+            self.atomTypeClasses[name] = parameters['class']
 
     def apply(self, topology, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
@@ -391,7 +432,15 @@ class Forcefield(app.ForceField):
             positions[:] = np.nan
         box_vectors = topology.getPeriodicBoxVectors()
         topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
+        # Extra args to make OMM 7.3 happy
+        # Option 1: Add to the kwargs dictionary
+        #kwargs['switchDistance'] = None
+        #system = self.createSystem(topology, *args, **kwargs)
+        # Option 2: Explicitly specify switchDistance 
+        #system = self.createSystem(topology, switchDistance=None, *args, **kwargs)
+        # Option 3: Default kwarg in createSystem
         system = self.createSystem(topology, *args, **kwargs)
+        _separate_urey_bradleys(system, topology)
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
 
@@ -519,6 +568,7 @@ class Forcefield(app.ForceField):
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
+                     switchDistance=None,
                      **args):
         """Construct an OpenMM System representing a Topology with this force field.
 
@@ -543,6 +593,8 @@ class Forcefield(app.ForceField):
             The mass to use for hydrogen atoms bound to heavy atoms.  Any mass
             added to a hydrogen is subtracted from the heavy atom to keep
             their total mass the same.
+        switchDistance : float=None
+            The distance at which the potential energy switching function is turned on for
         args
              Arbitrary additional keyword arguments may also be specified.
              This allows extra parameters to be specified that are specific to
@@ -553,7 +605,7 @@ class Forcefield(app.ForceField):
         system
             the newly created System
         """
-
+        args['switchDistance'] = switchDistance
         # Overwrite previous _SystemData object
         self._SystemData = app.ForceField._SystemData()
 
@@ -779,3 +831,5 @@ class Forcefield(app.ForceField):
                         ', '.join(sorted(atomtypes)) + '}')
                 bibtex_ref = bibtex_ref[:-2] + note + bibtex_ref[-2:]
                 f.write('{}\n'.format(bibtex_ref))
+
+pmd.Structure.write_foyer = write_foyer

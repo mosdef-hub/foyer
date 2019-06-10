@@ -19,14 +19,14 @@ requirements:
     - parmed
     - networkx >=2.0
     - six
-    - openmm <7.3
+    - openmm
     - lark-parser
     - requests
     - lxml
 
 test:
   requires:
-    - mbuild >=0.6.1
+    - mbuild
     - pytest >=3.0
     - pytest-timeout
 
