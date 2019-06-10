@@ -59,7 +59,7 @@ ethane.save('ethane.gro')
 * [Supported SMARTS Grammar](https://github.com/mosdef-hub/foyer/issues/63)
 
 #### Defining force fields:
-* [Defining force field parameters](docs/parameter_definitions.md)
+* [Defining force field parameters](docs/parameter_definitions.rst)
 * [Force field file validation](docs/validation.rst)
 
 
