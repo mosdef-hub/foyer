@@ -78,8 +78,7 @@ def _write_atoms(self, root, atoms, forcefield, unique):
         ('mass', 'atom.mass'),
         ('def', 'forcefield.atomTypeDefinitions[name]'),
         ('desc', 'forcefield.atomTypeDesc[name]'),
-        ('doi', 'forcefield.atomTypeRefs[name]'),
-        ('overrides', 'forcefield.atomTypeOverrides[name]')
+        ('doi', 'forcefield.atomTypeRefs[name]')
         ])
     for atom in atoms:
         atomtype = ET.SubElement(atomtypes, 'Type')
