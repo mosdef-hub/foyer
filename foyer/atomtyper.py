@@ -47,6 +47,8 @@ def _load_rules(forcefield):
     """Load atomtyping rules from a forcefield into SMARTSGraphs. """
     rules = dict()
     for rule_name, smarts in forcefield.atomTypeDefinitions.items():
+        if not smarts:  # We want to skip over empty smarts definitions
+            continue
         overrides = forcefield.atomTypeOverrides.get(rule_name)
         if overrides is not None:
             overrides = set(overrides)

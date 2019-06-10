@@ -13,7 +13,7 @@ import pytest
 from foyer import Forcefield
 from foyer.forcefield import generate_topology
 from foyer.forcefield import _check_independent_residues
-from foyer.exceptions import FoyerError
+from foyer.exceptions import FoyerError, ValidationWarning
 from foyer.tests.utils import get_fn
 from foyer.utils.io import has_mbuild
 
@@ -264,8 +264,9 @@ def test_overrides_space():
 
 def test_allow_empty_def():
     ethane = mb.load(get_fn('ethane.mol2'))
-    ff = Forcefield(forcefield_files=get_fn('empty_def.xml'))
-    typed_ethane = ff.apply(ethane)
+    with pytest.warns(ValidationWarning):
+        ff = Forcefield(forcefield_files=get_fn('empty_def.xml'))
+    ff.apply(ethane)
 
 def test_assert_bonds():
     ff = Forcefield(name='trappe-ua')
