@@ -105,10 +105,8 @@ def _write_atoms(self, root, atoms, forcefield, unique):
                     for item in eval(val):
                         if item in atom_type_dict:
                             label.append(item)
-                        else:
-                            label.append('')
                     if len(label) == 0:
-                        label == ' '
+                        label = ''
                     else:
                         label = ','.join([a for a in label])
                 else:
