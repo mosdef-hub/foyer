@@ -83,7 +83,7 @@ def _write_atoms(self, root, atoms, forcefield, unique):
         ])
     atom_type_dict = {}
     for atom in atoms:
-        atom_type_dict[atom.atom_type]=None
+        atom_type_dict[atom.atom_type.name]=None
     for atom in atoms:
         atomtype = ET.SubElement(atomtypes, 'Type')
         nb_force = ET.SubElement(nonbonded, 'Atom')
