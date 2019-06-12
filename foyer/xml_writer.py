@@ -129,17 +129,15 @@ def _update_defs(atomtypes, nonbonded, forcefield):
     extra_types = [i for i in smarts_list if i not in name_list]
 
     for extra in extra_types:
-        for definition in def_list:
+        for i, definition in enumerate(def_list):
             if extra in definition:
                 extra_edit = '%' + extra
                 extra_index = definition.find(extra_edit)
                 if definition[extra_index-1] == ';':
-                    new_def = definition.replace(extra_edit + ',', '')
+                    new_def = definition.replace(extra_edit + ',' , '')
                 else:
                     new_def = definition.replace(',' + extra_edit, '')
-                for i in atomtypes:
-                    if extra in i.get('def'):
-                        i.set('def', new_def)
+                atomtypes[i].set('def', new_def)
 
 def _write_bonds(root, bonds, unique):
     bond_forces = ET.SubElement(root, 'HarmonicBondForce')
