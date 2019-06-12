@@ -1,25 +1,30 @@
-import glob
-import itertools as it
+import parmed as pmd
+import pytest
 import os
 
-import parmed as pmd
 from pkg_resources import resource_filename
-import pytest
-
 from foyer import Forcefield
-from foyer.tests.utils import atomtype
 from foyer.xml_writer import write_foyer
 
-def test_write_xml(filename, ff_file):
-   structure = pmd.loadfile(filename)
-   forcefield = Forcefield(ff_file)
 
-   structure.write_foyer('test.xml', forcefield=forcefield)
+OPLS_TESTFILES_DIR = resource_filename('foyer', 'opls_validation')
+
+def test_write_xml():
+    top = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.top')
+    gro = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.gro')
+    structure = pmd.load_file(top, xyz=gro)
+    forcefield = Forcefield(name='oplsaa')
+    param_struc = forcefield.apply(structure)
+
+    param_struc.write_foyer('test.xml', forcefield=forcefield)
 
 def test_load_xml():
-   structure = pmd.loadfile(filename)
-   forcefield = Forcefield(ff_file)
+    top = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.top')
+    gro = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.gro')
+    structure = pmd.load_file(top, xyz=gro)
+    forcefield = Forcefield(name='oplsaa')
+    param_struc = forcefield.apply(structure)
 
-   structure.write_foyer('test.xml', forcefield=forcefield)
+    param_struc.write_foyer('test.xml', forcefield=forcefield)
 
-   generated_ff = Forcefield('text.xml')
+    generated_ff = Forcefield('test.xml')
