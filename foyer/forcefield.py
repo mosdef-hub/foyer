@@ -245,7 +245,7 @@ def _separate_urey_bradleys(system, topology):
 
 def _error_or_warn(error, msg):
     """Raise an error or warning if topology objects are not fully parameterized.
-    
+
     Parameters
     ----------
     error : bool
