@@ -2,6 +2,8 @@ from __future__ import division
 
 import collections
 from lxml import etree as ET
+from foyer.smarts_graph import SMARTSGraph
+import networkx as nx
 
 import numpy as np
 
@@ -107,6 +109,37 @@ def _write_atoms(self, root, atoms, forcefield, unique):
         nb_force.set('charge', str(round(atom.charge, 4)))
         nb_force.set('sigma', str(round(atom.atom_type.sigma/10, 4)))
         nb_force.set('epsilon', str(round(atom.atom_type.epsilon * 4.184, 6)))
+
+    _update_defs(atomtypes, nonbonded, forcefield)
+
+def _update_defs(atomtypes, nonbonded, forcefield):
+    def_list = [i.get('def') for i in atomtypes.iterchildren()]
+    name_list = [i.get('name') for i in atomtypes.iterchildren()]
+    smarts_list = list()
+    smarts_parser = forcefield.parser
+    for smarts_string, name in zip(def_list, name_list):
+        smarts_graph = SMARTSGraph(smarts_string, parser=smarts_parser,
+                                   name=name)
+        for atom_expr in nx.get_node_attributes(smarts_graph, name='atom').values():
+            labels = atom_expr.find_data('has_label')
+            for label in labels:
+                atom_type = label.children[0][1:]
+                smarts_list.append(atom_type)
+    smarts_list = list(set(smarts_list))
+    extra_types = [i for i in smarts_list if i not in name_list]
+
+    for extra in extra_types:
+        for definition in def_list:
+            if extra in definition:
+                extra_edit = '%' + extra
+                extra_index = definition.find(extra_edit)
+                if definition[extra_index-1] == ';':
+                    new_def = definition.replace(extra_edit + ',', '')
+                else:
+                    new_def = definition.replace(',' + extra_edit, '')
+                for i in atomtypes:
+                    if extra in i.get('def'):
+                        i.set('def', new_def)
 
 def _write_bonds(root, bonds, unique):
     bond_forces = ET.SubElement(root, 'HarmonicBondForce')
