@@ -77,13 +77,11 @@ def _write_atoms(self, root, atoms, forcefield, unique):
         ('element', 'forcefield.atomTypeElements[name]'),
         ('mass', 'atom.mass'),
         ('def', 'forcefield.atomTypeDefinitions[name]'),
-        ('overrides', 'forcefield.atomTypeOverrides[name]'),
         ('desc', 'forcefield.atomTypeDesc[name]'),
-        ('doi', 'forcefield.atomTypeRefs[name]')
+        ('doi', 'forcefield.atomTypeRefs[name]'),
+        ('overrides', 'forcefield.atomTypeOverrides[name]')
         ])
-    atom_type_dict = {}
-    for atom in atoms:
-        atom_type_dict[atom.atom_type.name]=None
+    atom_type_set = set([atom.atom_type.name for atom in atoms])
     for atom in atoms:
         atomtype = ET.SubElement(atomtypes, 'Type')
         nb_force = ET.SubElement(nonbonded, 'Atom')
@@ -102,13 +100,17 @@ def _write_atoms(self, root, atoms, forcefield, unique):
                 elif key == 'overrides':
                 # Only write overrides atomtypes if they are in self.atom_type
                     label = []
+                    original_label = []
                     for item in eval(val):
-                        if item in atom_type_dict:
+                        original_label.append(item)
+                        if item in atom_type_set:
                             label.append(item)
                     if len(label) == 0:
                         label = ''
                     else:
                         label = ','.join([a for a in label])
+                # Write out the original overrides atom type as a comment.
+                    atomtype.append(ET.Comment('Note: original overrides=\"{}\"'.format(','.join([a for a in original_label]))))
                 else:
                     label = str(eval(val))
             except (AttributeError, KeyError):
