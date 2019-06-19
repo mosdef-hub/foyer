@@ -349,7 +349,7 @@ def test_write_xml_multiple_periodictorsions(filename):
     assert 'phase2' in periodic_element[0].attrib
 
 def test_write_xml_overrides():
-    #Test xml_writer new overrides features
+    #Test xml_writer new overrides and comments features
     mol = pmd.load_file(get_fn('styrene.mol2'), structure=True)
     oplsaa = Forcefield(name='oplsaa')
     typed = oplsaa.apply(mol, assert_dihedral_params=False)
@@ -360,5 +360,7 @@ def test_write_xml_overrides():
         attributes = atom_types[i].attrib
         if attributes['name'] == 'opls_145':
             assert attributes['overrides'] == 'opls_142'
+            assert str(atom_types[i].xpath('comment()')) == '[<!--Note: original overrides="opls_142,opls_141"-->]'
         elif attributes['name'] == 'opls_146':
             assert attributes['overrides'] == 'opls_144'
+            assert str(atom_types[i].xpath('comment()')) == '[<!--Note: original overrides="opls_144"-->]'
