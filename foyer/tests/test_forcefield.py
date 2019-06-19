@@ -355,12 +355,16 @@ def test_write_xml_overrides():
     typed = oplsaa.apply(mol, assert_dihedral_params=False)
     typed.write_foyer(filename='opls-styrene.xml', forcefield=oplsaa, unique=True)
     styrene = ET.parse('opls-styrene.xml')
-    atom_types = styrene.getroot().find('AtomTypes').findall('Type')
-    for i in range(len(atom_types)):
-        attributes = atom_types[i].attrib
+    #atom_types = styrene.getroot().find('AtomTypes').findall('Type')
+    root = styrene.getroot()
+    Atom_Types = root.find('AtomTypes')
+    atom_types = Atom_Types.findall('Type')
+    for item in atom_types:
+        attributes = item.attrib
         if attributes['name'] == 'opls_145':
-            #assert attributes['overrides'] == 'opls_142'
-            assert str(atom_types[i].xpath('comment()')) == '[<!--Note: original overrides="opls_142,opls_141"-->]'
+            assert attributes['overrides'] == 'opls_142'
+            assert str(item.xpath('comment()')) in {'[<!--Note: original overrides="opls_141,opls_142"-->]',
+                                                             '[<!--Note: original overrides="opls_142,opls_141"-->]'}
         elif attributes['name'] == 'opls_146':
-            #assert attributes['overrides'] == 'opls_144'
-            assert str(atom_types[i].xpath('comment()')) == '[<!--Note: original overrides="opls_144"-->]'
+            assert attributes['overrides'] == 'opls_144'
+            assert str(item.xpath('comment()')) == '[<!--Note: original overrides="opls_144"-->]'
