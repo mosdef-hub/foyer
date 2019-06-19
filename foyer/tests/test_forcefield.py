@@ -348,3 +348,17 @@ def test_write_xml_multiple_periodictorsions(filename):
     assert 'k2' in periodic_element[0].attrib
     assert 'phase2' in periodic_element[0].attrib
 
+def test_write_xml_overrides():
+    #Test xml_writer new overrides features
+    mol = pmd.load_file(get_fn('styrene.mol2'), structure=True)
+    oplsaa = Forcefield(name='oplsaa')
+    typed = oplsaa.apply(mol, assert_dihedral_params=False)
+    typed.write_foyer(filename='opls-styrene.xml', forcefield=oplsaa, unique=True)
+    styrene = ET.parse('opls-styrene.xml')
+    atom_types = styrene.getroot().find('AtomTypes').findall('Type')
+    for i in range(len(atom_types)):
+        attributes = atom_types[i].attrib
+        if attributes['name'] == 'opls_145':
+            assert attributes['overrides'] == 'opls_142'
+        elif attributes['name'] == 'opls_146':
+            assert attributes['overrides'] == 'opls_144'
