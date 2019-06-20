@@ -98,7 +98,7 @@ def _write_atoms(self, root, atoms, forcefield, unique):
                     label = eval(val)#[a for a in label]
                     label = ','.join([a for a in label])
                 elif key == 'overrides':
-                # Only write overrides atomtypes if they are in self.atom_type
+                # Only write overrides atomtypes if they are in atom_type_set
                     label = []
                     original_label = []
                     for item in eval(val):
@@ -109,7 +109,7 @@ def _write_atoms(self, root, atoms, forcefield, unique):
                         label = ''
                     else:
                         label = ','.join([a for a in label])
-                # Write out the original overrides atom type as a comment.
+                # Write out the original overrides atomtypes as a comment
                     atomtype.append(ET.Comment('Note: original overrides=\"{}\"'.format(','.join([a for a in original_label]))))
                 else:
                     label = str(eval(val))
