@@ -2,7 +2,7 @@ import collections
 import glob
 import itertools
 import os
-from tempfile import mktemp, mkstemp
+from tempfile import NamedTemporaryFile
 import xml.etree.ElementTree as ET
 
 try:
@@ -76,12 +76,12 @@ def preprocess_forcefield_files(forcefield_files=None):
                           'objects by precedence.')
 
         # write to temp file
-        _, temp_file_name = mkstemp(suffix=suffix)
-        with open(temp_file_name, 'w') as temp_f:
+        temp_file = NamedTemporaryFile(suffix=suffix, delete=False)
+        with open(temp_file.name, 'w') as temp_f:
             temp_f.write(xml_contents)
 
         # append temp file name to list
-        preprocessed_files.append(temp_file_name)
+        preprocessed_files.append(temp_file.name)
 
     return preprocessed_files
 
@@ -245,7 +245,7 @@ def _separate_urey_bradleys(system, topology):
 
 def _error_or_warn(error, msg):
     """Raise an error or warning if topology objects are not fully parameterized.
-    
+
     Parameters
     ----------
     error : bool
@@ -301,8 +301,11 @@ class Forcefield(app.ForceField):
         if validation:
             for ff_file_name in preprocessed_files:
                 Validator(ff_file_name, debug)
-
-        super(Forcefield, self).__init__(*preprocessed_files)
+        try:
+            super(Forcefield, self).__init__(*preprocessed_files)
+        finally:
+            for ff_file_name in preprocessed_files:
+                os.remove(ff_file_name)
         self.parser = smarts.SMARTS(self.non_element_types)
         self._SystemData = self._SystemData()
 
@@ -429,6 +432,13 @@ class Forcefield(app.ForceField):
             positions[:] = np.nan
         box_vectors = topology.getPeriodicBoxVectors()
         topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
+        # Extra args to make OMM 7.3 happy
+        # Option 1: Add to the kwargs dictionary
+        #kwargs['switchDistance'] = None
+        #system = self.createSystem(topology, *args, **kwargs)
+        # Option 2: Explicitly specify switchDistance 
+        #system = self.createSystem(topology, switchDistance=None, *args, **kwargs)
+        # Option 3: Default kwarg in createSystem
         system = self.createSystem(topology, *args, **kwargs)
         _separate_urey_bradleys(system, topology)
 
@@ -558,6 +568,7 @@ class Forcefield(app.ForceField):
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
                      rigidWater=True, removeCMMotion=True, hydrogenMass=None,
+                     switchDistance=None,
                      **args):
         """Construct an OpenMM System representing a Topology with this force field.
 
@@ -582,6 +593,8 @@ class Forcefield(app.ForceField):
             The mass to use for hydrogen atoms bound to heavy atoms.  Any mass
             added to a hydrogen is subtracted from the heavy atom to keep
             their total mass the same.
+        switchDistance : float=None
+            The distance at which the potential energy switching function is turned on for
         args
              Arbitrary additional keyword arguments may also be specified.
              This allows extra parameters to be specified that are specific to
@@ -592,7 +605,7 @@ class Forcefield(app.ForceField):
         system
             the newly created System
         """
-
+        args['switchDistance'] = switchDistance
         # Overwrite previous _SystemData object
         self._SystemData = app.ForceField._SystemData()
 
