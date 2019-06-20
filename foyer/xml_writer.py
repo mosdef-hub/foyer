@@ -78,7 +78,8 @@ def _write_atoms(self, root, atoms, forcefield, unique):
         ('mass', 'atom.mass'),
         ('def', 'forcefield.atomTypeDefinitions[name]'),
         ('desc', 'forcefield.atomTypeDesc[name]'),
-        ('doi', 'forcefield.atomTypeRefs[name]')
+        ('doi', 'forcefield.atomTypeRefs[name]'),
+        ('overrides', 'forcefield.atomTypeOverrides[name]')
         ])
     atom_type_set = set([atom.atom_type.name for atom in atoms])
     for atom in atoms:
