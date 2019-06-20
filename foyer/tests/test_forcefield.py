@@ -367,6 +367,6 @@ def test_write_xml_overrides():
             assert str(item.xpath('comment()')) in {'[<!--Note: original overrides="opls_141,opls_142"-->]',
                                                     '[<!--Note: original overrides="opls_142,opls_141"-->]'}
         elif attributes['name'] == 'opls_146':
-            assert attributes['doi'] == 10.1021/ja9621760
+            assert attributes['doi'] == '10.1021/ja9621760'
             assert attributes['overrides'] == 'opls_144'
             assert str(item.xpath('comment()')) == '[<!--Note: original overrides="opls_144"-->]'
