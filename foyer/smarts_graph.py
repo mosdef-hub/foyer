@@ -29,12 +29,14 @@ class SMARTSGraph(nx.Graph):
     node_dict_factory = OrderedDict
 
     def __init__(self, smarts_string, parser=None, name=None, overrides=None,
+                typemap=None,
                  *args, **kwargs):
         super(SMARTSGraph, self).__init__(*args, **kwargs)
 
         self.smarts_string = smarts_string
         self.name = name
         self.overrides = overrides
+        self.typemap = typemap
 
         if parser is None:
             self.ast = SMARTS().parse(smarts_string)
@@ -98,16 +100,16 @@ class SMARTSGraph(nx.Graph):
             return (self._atom_expr_matches(atom_expr.children[0], atom) or
                     self._atom_expr_matches(atom_expr.children[1], atom))
         elif atom_expr.data == 'atom_id':
-            return self._atom_id_matches(atom_expr.children[0], atom)
+            return self._atom_id_matches(atom_expr.children[0], atom, self.typemap)
         elif atom_expr.data == 'atom_symbol':
-            return self._atom_id_matches(atom_expr, atom)
+            return self._atom_id_matches(atom_expr, atom, self.typemap)
         else:
             raise TypeError('Expected atom_id, atom_symbol, and_expression, '
                             'or_expression, or not_expression. '
                             'Got {}'.format(atom_expr.data))
 
     @staticmethod
-    def _atom_id_matches(atom_id, atom):
+    def _atom_id_matches(atom_id, atom, typemap):
         atomic_num = atom.element.atomic_number
         if atom_id.data == 'atomic_num':
             return atomic_num == int(atom_id.children[0])
@@ -120,24 +122,27 @@ class SMARTSGraph(nx.Graph):
                 return atomic_num == pt.AtomicNum[str(atom_id.children[0])]
         elif atom_id.data == 'has_label':
             label = atom_id.children[0][1:]  # Strip the % sign from the beginning.
-            return label in atom.whitelist
+            return label in typemap[atom.index]['whitelist']
+            #return label in atom.whitelist
         elif atom_id.data == 'neighbor_count':
             return len(atom.bond_partners) == int(atom_id.children[0])
         elif atom_id.data == 'ring_size':
             cycle_len = int(atom_id.children[0])
-            for cycle in atom.cycles:
+            #for cycle in atom.cycles:
+            for cycle in typemap[atom.index]['cycles']:
                 if len(cycle) == cycle_len:
                     return True
             return False
         elif atom_id.data == 'ring_count':
-            n_cycles = len(atom.cycles)
+            #n_cycles = len(atom.cycles)
+            n_cycles = len(typemap[atom.index]['cycles'])
             if n_cycles == int(atom_id.children[0]):
                 return True
             return False
         elif atom_id.data == 'matches_string':
             raise NotImplementedError('matches_string is not yet implemented')
 
-    def find_matches(self, topology):
+    def find_matches(self, topology, typemap):
         """Return sets of atoms that match this SMARTS pattern in a topology.
 
         Notes:
@@ -155,7 +160,7 @@ class SMARTSGraph(nx.Graph):
         ring_tokens = ['ring_size', 'ring_count']
         has_ring_rules = any(list(self.ast.find_data(token))
                              for token in ring_tokens)
-        _prepare_atoms(topology, compute_cycles=has_ring_rules)
+        _prepare_atoms(topology, typemap, compute_cycles=has_ring_rules)
 
         top_graph = nx.Graph()
         top_graph.add_nodes_from(((a.index, {'atom': a})
@@ -178,7 +183,8 @@ class SMARTSGraph(nx.Graph):
                 element = None
             self._graph_matcher = SMARTSMatcher(top_graph, self,
                                                 node_match=self._node_match,
-                                                element=element)
+                                                element=element,
+                                                typemap=typemap)
 
         matched_atoms = set()
         for mapping in self._graph_matcher.subgraph_isomorphisms_iter():
@@ -194,7 +200,7 @@ class SMARTSGraph(nx.Graph):
 
 
 class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
-    def __init__(self, G1, G2, node_match, element):
+    def __init__(self, G1, G2, node_match, element, typemap):
         super(SMARTSMatcher, self).__init__(G1, G2, node_match)
         self.element = element
         if element not in [None, '*']:
@@ -291,20 +297,25 @@ def _find_chordless_cycles(bond_graph, max_cycle_size):
     return cycles
 
 
-def _prepare_atoms(topology, compute_cycles=False):
+def _prepare_atoms(topology, typemap, compute_cycles=False):
     """Compute cycles and add white-/blacklists to atoms."""
     atom1 = next(topology.atoms())
-    has_whitelists = hasattr(atom1, 'whitelist')
-    has_cycles = hasattr(atom1, 'cycles')
+    #has_whitelists = hasattr(atom1, 'whitelist')
+    #has_cycles = hasattr(atom1, 'cycles')
+    has_whitelists = 'whitelist' in typemap[atom1.index]
+    has_cycles = 'cycles' in typemap[atom1.index]
     compute_cycles = compute_cycles and not has_cycles
 
     if compute_cycles or not has_whitelists:
         for atom in topology.atoms():
             if compute_cycles:
-                atom.cycles = set()
+                #atom.cycles = set()
+                typemap[atom.index]['cycles'] = set()
             if not has_whitelists:
-                atom.whitelist = set()
-                atom.blacklist = set()
+                #atom.whitelist = set()
+                #atom.blacklist = set()
+                typemap[atom.index]['whitelist'] = set()
+                typemap[atom.index]['blacklist'] = set()
 
     if compute_cycles:
         bond_graph = nx.Graph()
@@ -313,4 +324,5 @@ def _prepare_atoms(topology, compute_cycles=False):
         all_cycles = _find_chordless_cycles(bond_graph, max_cycle_size=8)
         for atom, cycles in zip(bond_graph.nodes, all_cycles):
             for cycle in cycles:
-                atom.cycles.add(tuple(cycle))
+                #atom.cycles.add(tuple(cycle))
+                typemap[atom.index]['cycles'].add(tuple(cycle))
