@@ -27,23 +27,34 @@ def test_init():
 def test_lazy_cycle_finding():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     top, _ = generate_topology(mol2)
+    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+                            'atomtype': None}     
+                            for atom in top.atoms()}
 
-    rule = SMARTSGraph(smarts_string='[C]')
-    list(rule.find_matches(top))
-    assert not any([hasattr(a, 'cycles') for a in top.atoms()])
+    rule = SMARTSGraph(smarts_string='[C]', typemap=typemap)
+    list(rule.find_matches(top, typemap))
+    #assert not any([hasattr(a, 'cycles') for a in top.atoms()])
+    assert not any(['cycles' in typemap[a.index] for a in top.atoms()])
 
     ring_tokens = ['R1', 'r6']
     for token in ring_tokens:
-        rule = SMARTSGraph(smarts_string='[C;{}]'.format(token))
-        list(rule.find_matches(top))
-        assert all([hasattr(a, 'cycles') for a in top.atoms()])
+        rule = SMARTSGraph(smarts_string='[C;{}]'.format(token),
+                            typemap=typemap)
+        list(rule.find_matches(top, typemap))
+        #assert all([hasattr(a, 'cycles') for a in top.atoms()])
+        assert all(['cycles' in typemap[a.index] for a in top.atoms()])
 
 
 def test_cycle_finding_multiple():
     fullerene = pmd.load_file(get_fn('fullerene.pdb'), structure=True)
     top, _ = generate_topology(fullerene)
+    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+                            'atomtype': None}     
+                            for atom in top.atoms()}
 
-    _prepare_atoms(top, compute_cycles=True)
-    cycle_lengths = [list(map(len, atom.cycles)) for atom in top.atoms()]
+    _prepare_atoms(top, typemap, compute_cycles=True)
+    #cycle_lengths = [list(map(len, atom.cycles)) for atom in top.atoms()]
+    cycle_lengths = [list(map(len, typemap[atom.index]['cycles'])) 
+                        for atom in top.atoms()]
     expected = [5, 6, 6]
     assert all(sorted(lengths) == expected for lengths in cycle_lengths)

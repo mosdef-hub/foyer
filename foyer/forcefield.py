@@ -2,7 +2,7 @@ import collections
 import glob
 import itertools
 import os
-from tempfile import mktemp, mkstemp
+from tempfile import NamedTemporaryFile
 import xml.etree.ElementTree as ET
 
 try:
@@ -76,12 +76,12 @@ def preprocess_forcefield_files(forcefield_files=None):
                           'objects by precedence.')
 
         # write to temp file
-        _, temp_file_name = mkstemp(suffix=suffix)
-        with open(temp_file_name, 'w') as temp_f:
+        temp_file = NamedTemporaryFile(suffix=suffix, delete=False)
+        with open(temp_file.name, 'w') as temp_f:
             temp_f.write(xml_contents)
 
         # append temp file name to list
-        preprocessed_files.append(temp_file_name)
+        preprocessed_files.append(temp_file.name)
 
     return preprocessed_files
 
@@ -195,23 +195,15 @@ def _check_independent_residues(topology):
     return True
 
 
-def _update_atomtypes(unatomtyped_topology, res_name, prototype):
-    """Update atomtypes in residues in a topology using a prototype topology.
+def _unwrap_typemap(topology, residue_map):
+    master_typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} for atom in topology.atoms()}
+    for res in topology.residues():
+        for res_name, val in residue_map.items():
+            if res.name == res_name:
+                for i, atom in enumerate(res.atoms()):
+                    master_typemap[int(atom.index)]['atomtype'] = val[i]['atomtype']
+    return master_typemap
 
-    Atomtypes are updated when residues in each topology have matching names.
-
-    Parameters
-    ----------
-    unatomtyped_topology : openmm.app.Topology
-        Topology lacking atomtypes defined by `find_atomtypes`.
-    prototype : openmm.app.Topology
-        Prototype topology with atomtypes defined by `find_atomtypes`.
-
-    """
-    for res in unatomtyped_topology.residues():
-        if res.name == res_name:
-            for old_atom, new_atom_id in zip([atom for atom in res.atoms()], [atom.id for atom in prototype.atoms()]):
-                old_atom.id = new_atom_id
 
 def _separate_urey_bradleys(system, topology):
     """ Separate urey bradley bonds from harmonic bonds in OpenMM System
@@ -243,9 +235,10 @@ def _separate_urey_bradleys(system, topology):
     system.addForce(harmonic_bond_force)
     system.addForce(ub_force)
 
+
 def _error_or_warn(error, msg):
     """Raise an error or warning if topology objects are not fully parameterized.
-    
+
     Parameters
     ----------
     error : bool
@@ -257,6 +250,78 @@ def _error_or_warn(error, msg):
         raise Exception(msg)
     else:
         warnings.warn(msg)
+
+
+def _check_bonds(data, structure, assert_bond_params):
+    """Check if any bonds lack paramters."""
+    if data.bonds:
+        missing = [b for b in structure.bonds
+                   if b.type is None]
+        if missing:
+            nmissing = len(structure.bonds) - len(missing)
+            msg = ("Parameters have not been assigned to all bonds. "
+                   "Total system bonds: {}, Parametrized bonds: {}"
+                   "".format(len(structure.bonds), nmissing))
+            _error_or_warn(assert_bond_params, msg)
+
+
+def _check_angles(data, structure, verbose, assert_angle_params):
+    """Check if all angles were found and parametrized."""
+    if data.angles and (len(data.angles) != len(structure.angles)):
+        msg = ("Parameters have not been assigned to all angles. Total "
+               "system angles: {}, Parameterized angles: {}"
+               "".format(len(data.angles), len(structure.angles)))
+        _error_or_warn(assert_angle_params, msg)
+
+    if verbose:
+        for omm_ids in data.angles:
+            missing_angle = True
+            for pmd_angle in structure.angles:
+                pmd_ids = (pmd_angle.atom1.idx, pmd_angle.atom2.idx, pmd_angle.atom3.idx)
+                if pmd_ids == omm_ids:
+                    missing_angle = False
+            if missing_angle:
+                print("Missing angle with ids {} and types {}.".format(
+                    omm_ids, [structure.atoms[idx].type for idx in omm_ids]))
+
+
+def _check_dihedrals(data, structure, verbose,
+                     assert_dihedral_params, assert_improper_params):
+    """Check if all dihedrals, including impropers, were found and parametrized."""
+    proper_dihedrals = [dihedral for dihedral in structure.dihedrals
+                        if not dihedral.improper]
+
+    if verbose:
+        for omm_ids in data.propers:
+            missing_dihedral = True
+            for pmd_proper in structure.rb_torsions:
+                pmd_ids = (pmd_proper.atom1.idx, pmd_proper.atom2.idx, pmd_proper.atom3.idx, pmd_proper.atom4.idx)
+                if pmd_ids == omm_ids:
+                    missing_dihedral = False
+            if missing_dihedral:
+                print('missing improper with ids {}'.format(pmd_ids))
+
+    if data.propers and len(data.propers) != \
+            len(proper_dihedrals) + len(structure.rb_torsions):
+        msg = ("Parameters have not been assigned to all proper dihedrals. "
+               "Total system dihedrals: {}, Parameterized dihedrals: {}. "
+               "Note that if your system contains torsions of Ryckaert-"
+               "Bellemans functional form, all of these torsions are "
+               "processed as propers.".format(len(data.propers),
+                                              len(proper_dihedrals) + len(structure.rb_torsions)))
+        _error_or_warn(assert_dihedral_params, msg)
+
+    improper_dihedrals = [dihedral for dihedral in structure.dihedrals
+                          if dihedral.improper]
+    if data.impropers and len(data.impropers) != \
+            len(improper_dihedrals) + len(structure.impropers):
+        msg = ("Parameters have not been assigned to all impropers. Total "
+               "system impropers: {}, Parameterized impropers: {}. "
+               "Note that if your system contains torsions of Ryckaert-"
+               "Bellemans functional form, all of these torsions are "
+               "processed as propers".format(len(data.impropers),
+                                             len(improper_dihedrals) + len(structure.impropers)))
+        _error_or_warn(assert_improper_params, msg)
 
 
 class Forcefield(app.ForceField):
@@ -301,8 +366,11 @@ class Forcefield(app.ForceField):
         if validation:
             for ff_file_name in preprocessed_files:
                 Validator(ff_file_name, debug)
-
-        super(Forcefield, self).__init__(*preprocessed_files)
+        try:
+            super(Forcefield, self).__init__(*preprocessed_files)
+        finally:
+            for ff_file_name in preprocessed_files:
+                os.remove(ff_file_name)
         self.parser = smarts.SMARTS(self.non_element_types)
         self._SystemData = self._SystemData()
 
@@ -420,99 +488,30 @@ class Forcefield(app.ForceField):
             raise FoyerError('Attempting to atom-type using a force field '
                     'with no atom type defitions.')
 
-        if not isinstance(topology, app.Topology):
-            residues = kwargs.get('residues')
-            topology, positions = generate_topology(topology,
-                    self.non_element_types, residues=residues)
-        else:
-            positions = np.empty(shape=(topology.getNumAtoms(), 3))
-            positions[:] = np.nan
-        box_vectors = topology.getPeriodicBoxVectors()
-        topology = self.run_atomtyping(topology, use_residue_map=use_residue_map)
-        # Extra args to make OMM 7.3 happy
-        # Option 1: Add to the kwargs dictionary
-        #kwargs['switchDistance'] = None
-        #system = self.createSystem(topology, *args, **kwargs)
-        # Option 2: Explicitly specify switchDistance 
-        #system = self.createSystem(topology, switchDistance=None, *args, **kwargs)
-        # Option 3: Default kwarg in createSystem
+        topology, positions = self._prepare_topology(topology, **kwargs)
+
+        typemap = self.run_atomtyping(topology, use_residue_map=use_residue_map)
+
+        self._apply_typemap(topology, typemap)
+
         system = self.createSystem(topology, *args, **kwargs)
+
         _separate_urey_bradleys(system, topology)
 
-        structure = pmd.openmm.load_topology(topology=topology, system=system)
-
-        '''
-        Check that all topology objects (angles, dihedrals, and impropers)
-        have parameters assigned. OpenMM will generate an error if bond parameters
-        are not assigned.
-        '''
         data = self._SystemData
 
-        if verbose:
-            for omm_ids in data.angles:
-                missing_angle = True
-                for pmd_angle in structure.angles:
-                    pmd_ids = (pmd_angle.atom1.idx, pmd_angle.atom2.idx, pmd_angle.atom3.idx)
-                    if pmd_ids == omm_ids:
-                        missing_angle = False
-                if missing_angle:
-                    print("Missing angle with ids {} and types {}.".format(
-                          omm_ids, [structure.atoms[idx].type for idx in omm_ids]))
-        if data.bonds:
-            missing = [b for b in structure.bonds
-                       if b.type is None]
-            if missing:
-                nmissing = len(structure.bonds) - len(missing)
-                msg = ("Parameters have not been assigned to all bonds. "
-                       "Total system bonds: {}, Parametrized bonds: {}"
-                       "".format(len(structure.bonds), nmissing))
-                _error_or_warn(assert_bond_params, msg)
-
-        if data.angles and (len(data.angles) != len(structure.angles)):
-            msg = ("Parameters have not been assigned to all angles. Total "
-                   "system angles: {}, Parameterized angles: {}"
-                   "".format(len(data.angles), len(structure.angles)))
-            _error_or_warn(assert_angle_params, msg)
-
-        proper_dihedrals = [dihedral for dihedral in structure.dihedrals
-                            if not dihedral.improper]
-
-        if verbose:
-            for omm_ids in data.propers:
-                missing_dihedral = True
-                for pmd_proper in structure.rb_torsions:
-                    pmd_ids = (pmd_proper.atom1.idx, pmd_proper.atom2.idx, pmd_proper.atom3.idx, pmd_proper.atom4.idx)
-                    if pmd_ids == omm_ids:
-                        missing_dihedral = False
-                if missing_dihedral:
-                    print('missing improper with ids {}'.format(pmd_ids))
-
-        if data.propers and len(data.propers) != \
-                len(proper_dihedrals) + len(structure.rb_torsions):
-            msg = ("Parameters have not been assigned to all proper dihedrals. "
-                   "Total system dihedrals: {}, Parameterized dihedrals: {}. "
-                   "Note that if your system contains torsions of Ryckaert-"
-                   "Bellemans functional form, all of these torsions are "
-                   "processed as propers.".format(len(data.propers),
-                   len(proper_dihedrals) + len(structure.rb_torsions)))
-            _error_or_warn(assert_dihedral_params, msg)
-
-        improper_dihedrals = [dihedral for dihedral in structure.dihedrals
-                              if dihedral.improper]
-        if data.impropers and len(data.impropers) != \
-                len(improper_dihedrals) + len(structure.impropers):
-            msg = ("Parameters have not been assigned to all impropers. Total "
-                   "system impropers: {}, Parameterized impropers: {}. "
-                   "Note that if your system contains torsions of Ryckaert-"
-                   "Bellemans functional form, all of these torsions are "
-                   "processed as propers".format(len(data.impropers),
-                   len(improper_dihedrals) + len(structure.impropers)))
-            _error_or_warn(assert_improper_params, msg)
-
+        structure = pmd.openmm.load_topology(topology=topology, system=system)
         structure.bonds.sort(key=lambda x: x.atom1.idx)
         structure.positions = positions
+        box_vectors = topology.getPeriodicBoxVectors()
         if box_vectors is not None:
             structure.box_vectors = box_vectors
+
+        _check_bonds(data, structure, assert_bond_params)
+        _check_angles(data, structure, verbose, assert_angle_params)
+        _check_dihedrals(data, structure, verbose,
+                              assert_dihedral_params, assert_improper_params)
+
         if references_file:
             atom_types = set(atom.type for atom in structure.atoms)
             self._write_references_to_file(atom_types, references_file)
@@ -545,22 +544,21 @@ class Forcefield(app.ForceField):
                 for res in topology.residues():
                     if res.name not in residue_map.keys():
                         residue = _topology_from_residue(res)
-                        find_atomtypes(residue, forcefield=self)
-                        residue_map[res.name] = residue
+                        typemap = find_atomtypes(residue, forcefield=self)
+                        residue_map[res.name] = typemap
 
-                for key, val in residue_map.items():
-                    _update_atomtypes(topology, key, val)
+                typemap = _unwrap_typemap(topology, residue_map)
 
             else:
-                find_atomtypes(topology, forcefield=self)
+                typemap = find_atomtypes(topology, forcefield=self)
 
         else:
-            find_atomtypes(topology, forcefield=self)
+            typemap = find_atomtypes(topology, forcefield=self)
 
         if not all([a.id for a in topology.atoms()][0]):
             raise ValueError('Not all atoms in topology have atom types')
 
-        return topology
+        return typemap
 
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
@@ -806,6 +804,22 @@ class Forcefield(app.ForceField):
 
         return sys
 
+    def _apply_typemap(self, topology, typemap):
+        """Add atomtypes to the topology according to the typemap"""
+        for atom in topology.atoms():
+            atom.id = typemap[atom.index]['atomtype']
+
+    def _prepare_topology(self, topology, **kwargs):
+        if not isinstance(topology, app.Topology):
+            residues = kwargs.get('residues')
+            topology, positions = generate_topology(topology,
+                                                    self.non_element_types, residues=residues)
+        else:
+            positions = np.empty(shape=(topology.getNumAtoms(), 3))
+            positions[:] = np.nan
+
+        return topology, positions
+
     def _write_references_to_file(self, atom_types, references_file):
         atomtype_references = {}
         for atype in atom_types:
@@ -828,5 +842,6 @@ class Forcefield(app.ForceField):
                         ', '.join(sorted(atomtypes)) + '}')
                 bibtex_ref = bibtex_ref[:-2] + note + bibtex_ref[-2:]
                 f.write('{}\n'.format(bibtex_ref))
+
 
 pmd.Structure.write_foyer = write_foyer

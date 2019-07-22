@@ -13,7 +13,7 @@ import pytest
 from foyer import Forcefield
 from foyer.forcefield import generate_topology
 from foyer.forcefield import _check_independent_residues
-from foyer.exceptions import FoyerError
+from foyer.exceptions import FoyerError, ValidationWarning
 from foyer.tests.utils import get_fn
 from foyer.utils.io import has_mbuild
 
@@ -180,10 +180,14 @@ def test_residue_map():
     ethane *= 2
     oplsaa = Forcefield(name='oplsaa')
     topo, NULL = generate_topology(ethane)
-    topo_with = oplsaa.run_atomtyping(topo, use_residue_map=True)
-    topo_without = oplsaa.run_atomtyping(topo, use_residue_map=False)
-    assert all([a.id for a in topo_with.atoms()][0])
-    assert all([a.id for a in topo_without.atoms()][0])
+    map_with = oplsaa.run_atomtyping(topo, use_residue_map=True)
+    map_without = oplsaa.run_atomtyping(topo, use_residue_map=False)
+    assert all([a['atomtype'] for a in map_with.values()][0])
+    assert all([a['atomtype'] for a in map_without.values()][0])
+    topo_with = topo
+    topo_without = topo
+    oplsaa._apply_typemap(topo_with, map_with)
+    oplsaa._apply_typemap(topo_without, map_without)
     struct_with = pmd.openmm.load_topology(topo_with, oplsaa.createSystem(topo_with))
     struct_without = pmd.openmm.load_topology(topo_without, oplsaa.createSystem(topo_without))
     for atom_with, atom_without in zip(struct_with.atoms, struct_without.atoms):
@@ -261,6 +265,12 @@ def test_overrides_space():
     ff = Forcefield(forcefield_files=get_fn('overrides-space.xml'))
     typed_ethane = ff.apply(ethane)
     assert typed_ethane.atoms[0].type == 'CT3'
+
+def test_allow_empty_def():
+    ethane = mb.load(get_fn('ethane.mol2'))
+    with pytest.warns(ValidationWarning):
+        ff = Forcefield(forcefield_files=get_fn('empty_def.xml'))
+    ff.apply(ethane)
 
 def test_assert_bonds():
     ff = Forcefield(name='trappe-ua')

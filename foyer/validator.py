@@ -1,4 +1,5 @@
 from collections import Counter
+import os
 from os.path import join, split, abspath
 from warnings import warn
 
@@ -14,20 +15,24 @@ from foyer.smarts_graph import SMARTSGraph
 class Validator(object):
     def __init__(self, ff_file_name, debug=False):
         from foyer.forcefield import preprocess_forcefield_files
-        preprocessed_ff_file_name = preprocess_forcefield_files([ff_file_name])
+        try:
+            preprocessed_ff_file_name = preprocess_forcefield_files([ff_file_name])
 
-        ff_tree = etree.parse(preprocessed_ff_file_name[0])
-        self.validate_xsd(ff_tree)
+            ff_tree = etree.parse(preprocessed_ff_file_name[0])
+            self.validate_xsd(ff_tree)
 
-        self.atom_type_names = ff_tree.xpath('/ForceField/AtomTypes/Type/@name')
-        self.atom_types = ff_tree.xpath('/ForceField/AtomTypes/Type')
+            self.atom_type_names = ff_tree.xpath('/ForceField/AtomTypes/Type/@name')
+            self.atom_types = ff_tree.xpath('/ForceField/AtomTypes/Type')
 
-        self.validate_class_type_exclusivity(ff_tree)
+            self.validate_class_type_exclusivity(ff_tree)
 
-        # Loading forcefield should succeed, because XML can be parsed and
-        # basics have been validated.
-        from foyer.forcefield import Forcefield
-        self.smarts_parser = Forcefield(preprocessed_ff_file_name, validation=False).parser
+            # Loading forcefield should succeed, because XML can be parsed and
+            # basics have been validated.
+            from foyer.forcefield import Forcefield
+            self.smarts_parser = Forcefield(preprocessed_ff_file_name, validation=False).parser
+        finally:
+            for ff_file_name in preprocessed_ff_file_name:
+                os.remove(ff_file_name)
 
         self.validate_smarts(debug=debug)
         self.validate_overrides()
@@ -119,6 +124,9 @@ class Validator(object):
         errors = []
         for entry in self.atom_types:
             smarts_string = entry.attrib.get('def')
+            if not smarts_string:
+                warn("You have empty smart definition(s)", ValidationWarning)
+                continue
             name = entry.attrib['name']
             if smarts_string is None:
                 missing_smarts.append(name)
