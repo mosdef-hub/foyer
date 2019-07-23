@@ -82,7 +82,6 @@ def _iterate_rules(rules, topology, typemap, max_iter):
         The maximum number of iterations.
 
     """
-    atoms = list(topology.sites)
     for _ in range(max_iter):
         max_iter -= 1
         found_something = False
