@@ -110,22 +110,28 @@ class SMARTSGraph(nx.Graph):
 
     @staticmethod
     def _atom_id_matches(atom_id, atom, typemap):
-        atomic_num = atom.element.atomic_number
-        if atom_id.data == 'atomic_num':
-            return atomic_num == int(atom_id.children[0])
-        elif atom_id.data == 'atom_symbol':
+        #atomic_num = atom.element.atomic_number
+        #if atom_id.data == 'atomic_num':
+            #return atomic_num == int(atom_id.children[0])
+        #elif atom_id.data == 'atom_symbol':
+        if atom_id.data == 'atom_symbol':
             if str(atom_id.children[0]) == '*':
                 return True
             elif str(atom_id.children[0]).startswith('_'):
-                return atom.element.name == str(atom_id.children[0])
+                #return atom.element.name == str(atom_id.children[0])
+                return atom.name == str(atom_id.children[0])
             else:
-                return atomic_num == pt.AtomicNum[str(atom_id.children[0])]
+                #return atomic_num == pt.AtomicNum[str(atom_id.children[0])]
+                return atom.name == str(atom_id.children[0])
         elif atom_id.data == 'has_label':
             label = atom_id.children[0][1:]  # Strip the % sign from the beginning.
             return label in typemap[atom.index]['whitelist']
             #return label in atom.whitelist
         elif atom_id.data == 'neighbor_count':
-            return len(atom.bond_partners) == int(atom_id.children[0])
+            #return len(atom.bond_partners) == int(atom_id.children[0])
+            bond_partners = [c for c in atom.connections 
+                    if len(c.connection_members)==2]
+            return len(bond_partners) == int(atom_id.children[0])
         elif atom_id.data == 'ring_size':
             cycle_len = int(atom_id.children[0])
             #for cycle in atom.cycles:
@@ -163,10 +169,16 @@ class SMARTSGraph(nx.Graph):
         _prepare_atoms(topology, typemap, compute_cycles=has_ring_rules)
 
         top_graph = nx.Graph()
-        top_graph.add_nodes_from(((a.index, {'atom': a})
-                                  for a in topology.atoms()))
-        top_graph.add_edges_from(((b[0].index, b[1].index)
-                                  for b in topology.bonds()))
+        #top_graph.add_nodes_from(((a.index, {'atom': a})
+                                  #for a in topology.atoms()))
+        top_graph.add_nodes_from(((a, {'atom': a})
+                                  for a in topology.sites))
+
+        #top_graph.add_edges_from(((b[0].index, b[1].index)
+                                  #for b in topology.bonds()))
+        top_graph.add_edges_from(((b.connection_members[0], 
+                                    b.connection_members[1])
+                                  for b in topology.bonds))
 
         if self._graph_matcher is None:
             atom = nx.get_node_attributes(self, name='atom')[0]
@@ -188,15 +200,20 @@ class SMARTSGraph(nx.Graph):
 
         matched_atoms = set()
         for mapping in self._graph_matcher.subgraph_isomorphisms_iter():
-            mapping = {node_id: atom_id for atom_id, node_id in mapping.items()}
+            #mapping = {node_id: atom_id for atom_id, node_id in mapping.items()}
+            mapping = {node_id: atom for atom, node_id in mapping.items()}
             # The first node in the smarts graph always corresponds to the atom
             # that we are trying to match.
-            atom_index = mapping[0]
+            #atom_index = mapping[0]
+            atom = mapping[0]
             # Don't yield duplicate matches found via matching the pattern in a
             # different order.
-            if atom_index not in matched_atoms:
-                matched_atoms.add(atom_index)
-                yield atom_index
+            #if atom_index not in matched_atoms:
+            if atom not in matched_atoms:
+                #matched_atoms.add(atom_index)
+                matched_atoms.add(atom)
+                #yield atom_index
+                yield atom
 
 
 class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
@@ -205,7 +222,8 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
         self.element = element
         if element not in [None, '*']:
             self.valid_nodes = [n for n, atom in nx.get_node_attributes(G1, name='atom').items()
-                                if atom.element.symbol == element]
+                                #if atom.element.symbol == element]
+                                if atom.name == element]
         else:
             self.valid_nodes = G1.nodes()
 
@@ -299,30 +317,42 @@ def _find_chordless_cycles(bond_graph, max_cycle_size):
 
 def _prepare_atoms(topology, typemap, compute_cycles=False):
     """Compute cycles and add white-/blacklists to atoms."""
-    atom1 = next(topology.atoms())
+    #atom1 = next(topology.atoms())
+    atom1 = topology.sites[0]
     #has_whitelists = hasattr(atom1, 'whitelist')
     #has_cycles = hasattr(atom1, 'cycles')
-    has_whitelists = 'whitelist' in typemap[atom1.index]
-    has_cycles = 'cycles' in typemap[atom1.index]
+    #has_whitelists = 'whitelist' in typemap[atom1.index]
+    has_whitelists = 'whitelist' in typemap[atom1]
+    #has_cycles = 'cycles' in typemap[atom1.index]
+    has_cycles = 'cycles' in typemap[atom1]
     compute_cycles = compute_cycles and not has_cycles
 
     if compute_cycles or not has_whitelists:
-        for atom in topology.atoms():
+        #for atom in topology.atoms():
+        for site in topology.sites:
             if compute_cycles:
                 #atom.cycles = set()
-                typemap[atom.index]['cycles'] = set()
+                #typemap[atom.index]['cycles'] = set()
+                typemap[site]['cycles'] = set()
             if not has_whitelists:
                 #atom.whitelist = set()
                 #atom.blacklist = set()
-                typemap[atom.index]['whitelist'] = set()
-                typemap[atom.index]['blacklist'] = set()
+                #typemap[atom.index]['whitelist'] = set()
+                #typemap[atom.index]['blacklist'] = set()
+                typemap[site]['whitelist'] = set()
+                typemap[site]['blacklist'] = set()
 
     if compute_cycles:
         bond_graph = nx.Graph()
-        bond_graph.add_nodes_from(topology.atoms())
-        bond_graph.add_edges_from(topology.bonds())
+        #bond_graph.add_nodes_from(topology.atoms())
+        #bond_graph.add_edges_from(topology.bonds())
+        bond_graph.add_nodes_from(topology.sites)
+        bond_graph.add_edges_from(topology.bonds)
+
         all_cycles = _find_chordless_cycles(bond_graph, max_cycle_size=8)
-        for atom, cycles in zip(bond_graph.nodes, all_cycles):
+        #for atom, cycles in zip(bond_graph.nodes, all_cycles):
+        for site, cycles in zip(bond_graph.nodes, all_cycles):
             for cycle in cycles:
                 #atom.cycles.add(tuple(cycle))
-                typemap[atom.index]['cycles'].add(tuple(cycle))
+                #typemap[atom.index]['cycles'].add(tuple(cycle))
+                typemap[site]['cycles'].add(tuple(cycle))

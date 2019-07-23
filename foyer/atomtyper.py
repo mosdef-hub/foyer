@@ -9,21 +9,24 @@ def find_atomtypes(topology, forcefield, max_iter=10):
 
     Parameters
     ----------
-    topology : simtk.openmm.app.Topology
+    topology : topology.Topology
         The topology that we are trying to atomtype.
-    forcefield : foyer.Forcefield
+    forcefield : topology.Forcefield
         The forcefield object.
     max_iter : int, optional, default=10
         The maximum number of iterations.
 
     """
-    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} for atom in topology.atoms()}
+    #typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} for atom in topology.atoms()}
+    typemap = {site: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} 
+                for site in topology.sites}
 
     rules = _load_rules(forcefield, typemap)
 
     # Only consider rules for elements found in topology
     subrules = dict()
-    system_elements = {a.element.symbol for a in topology.atoms()}
+    #system_elements = {a.element.symbol for a in topology.atoms()}
+    system_elements = {a.name for a in topology.sites}
     for key,val in rules.items():
         atom = val.node[0]['atom']
         if len(list(atom.find_data('atom_symbol'))) == 1 and not list(atom.find_data('not_expression')):
@@ -73,19 +76,21 @@ def _iterate_rules(rules, topology, typemap, max_iter):
     rules : dict
         A dictionary mapping rule names (typically atomtype names) to
         SMARTSGraphs that evaluate those rules.
-    topology : simtk.openmm.app.Topology
+    topology : topology.Topology
         The topology that we are trying to atomtype.
     max_iter : int
         The maximum number of iterations.
 
     """
-
+    atoms = list(topology.sites)
     for _ in range(max_iter):
         max_iter -= 1
         found_something = False
         for rule in rules.values():
-            for match_index in rule.find_matches(topology, typemap):
-                atom = typemap[match_index]
+            #for match_index in rule.find_matches(topology, typemap):
+            for match in rule.find_matches(topology, typemap):
+                #atom = typemap[match_index]
+                atom = typemap[match]
                 if rule.name not in atom['whitelist']:
                     atom['whitelist'].add(rule.name)
                     atom['blacklist'] |= rule.overrides
@@ -99,14 +104,21 @@ def _iterate_rules(rules, topology, typemap, max_iter):
 
 def _resolve_atomtypes(topology, typemap):
     """Determine the final atomtypes from the white- and blacklists. """
-    atoms = list(topology.atoms())
-    for atom_id, atom in typemap.items():
-        atomtype = [rule_name for rule_name in atom['whitelist'] - atom['blacklist']]
+    #atoms = list(topology.atoms())
+    #for atom_id, atom in typemap.items():
+    for site, props in typemap.items():
+        #atomtype = [rule_name for rule_name in atom['whitelist'] - atom['blacklist']]
+        atomtype = [rule_name for rule_name in props['whitelist'] - props['blacklist']]
         if len(atomtype) == 1:
-            atom['atomtype'] = atomtype[0]
+            #atom['atomtype'] = atomtype[0]
+            props['atomtype'] = atomtype[0]
         elif len(atomtype) > 1:
-            raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
-                atom_id, atoms[atom_id].element.name, atomtype))
+            #raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
+            raise FoyerError("Found multiple types for atom {}: {}.".format(
+                #atom_id, atoms[atom_id].element.name, atomtype))
+                site,  atomtype))
         else:
-            raise FoyerError("Found no types for atom {} ({}).".format(
-                atom_id, atoms[atom_id].element.name))
+            #raise FoyerError("Found no types for atom {} ({}).".format(
+            raise FoyerError("Found no types for atom {}.".format(
+                #atom_id, atoms[atom_id].element.name))
+                site))
