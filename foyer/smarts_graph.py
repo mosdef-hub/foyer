@@ -110,22 +110,31 @@ class SMARTSGraph(nx.Graph):
 
     @staticmethod
     def _atom_id_matches(atom_id, atom, typemap):
-        #atomic_num = atom.element.atomic_number
-        #if atom_id.data == 'atomic_num':
-            #return atomic_num == int(atom_id.children[0])
+        #atomic_num = '' if atom.element is None else atom.element.atomic_number
+        atomic_num = getattr(atom.element, 'atomic_number', '')
+        #atomic_symbol = atom.name if atom.element is None else atom.element.symbol
+        atomic_symbol = getattr(getattr(atom, 'element'), 'symbol', atom.name)
+        if atom_id.data == 'atomic_num':
+            return atomic_num == int(atom_id.children[0])
         #elif atom_id.data == 'atom_symbol':
         if atom_id.data == 'atom_symbol':
             if str(atom_id.children[0]) == '*':
                 return True
-            elif str(atom_id.children[0]).startswith('_'):
-                #return atom.element.name == str(atom_id.children[0])
-                return atom.name == str(atom_id.children[0])
+            #elif str(atom_id.children[0]).startswith('_'):
+            #    #return atom.element.name == str(atom_id.children[0])
+            #    return atom.name == str(atom_id.children[0])
             else:
                 #return atomic_num == pt.AtomicNum[str(atom_id.children[0])]
-                return atom.name == str(atom_id.children[0])
+                # [ahy] Originally, this would actually take an atomic symbol,
+                # but do comparisons based on the associated atomic number
+                # I don't think we necessarily need to go
+                # symbol -> number when we can just directly compare symbols
+                # Especially if there is not an atomic number tied to the symbol
+                #return atom.name == str(atom_id.children[0])
+                return atomic_symbol == str(atom_id.children[0])
         elif atom_id.data == 'has_label':
             label = atom_id.children[0][1:]  # Strip the % sign from the beginning.
-            return label in typemap[atom.index]['whitelist']
+            return label in typemap[atom]['whitelist']
             #return label in atom.whitelist
         elif atom_id.data == 'neighbor_count':
             #return len(atom.bond_partners) == int(atom_id.children[0])
@@ -135,13 +144,13 @@ class SMARTSGraph(nx.Graph):
         elif atom_id.data == 'ring_size':
             cycle_len = int(atom_id.children[0])
             #for cycle in atom.cycles:
-            for cycle in typemap[atom.index]['cycles']:
+            for cycle in typemap[atom]['cycles']:
                 if len(cycle) == cycle_len:
                     return True
             return False
         elif atom_id.data == 'ring_count':
             #n_cycles = len(atom.cycles)
-            n_cycles = len(typemap[atom.index]['cycles'])
+            n_cycles = len(typemap[atom]['cycles'])
             if n_cycles == int(atom_id.children[0]):
                 return True
             return False
@@ -188,6 +197,7 @@ class SMARTSGraph(nx.Graph):
                 except IndexError:
                     try:
                         atomic_num = next(atom.find_data('atomic_num')).children[0]
+                        # TODO: Implement our own periodic table
                         element = pt.Element[int(atomic_num)]
                     except IndexError:
                         element = None
@@ -223,7 +233,13 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
         if element not in [None, '*']:
             self.valid_nodes = [n for n, atom in nx.get_node_attributes(G1, name='atom').items()
                                 #if atom.element.symbol == element]
-                                if atom.name == element]
+                                # Check element versus the atom name
+                                # but also the atom.element.symbol
+                                # use getattr for safely accessing properties
+                                # and catching AttributeErrors
+                                if (atom.name == element 
+                                or getattr(getattr(
+                                    atom, 'element'), 'symbol','')==element)]
         else:
             self.valid_nodes = G1.nodes()
 
