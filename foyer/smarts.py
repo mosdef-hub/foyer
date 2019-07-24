@@ -52,7 +52,7 @@ class SMARTS(object):
     recognize.
 
     """
-    def __init__(self, optional_names=''):
+    def __init__(self, optional_names=[]):
         if optional_names:
             #for n in optional_names:
                 #if not n.startswith('_'):
