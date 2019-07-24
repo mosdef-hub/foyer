@@ -54,9 +54,9 @@ class SMARTS(object):
     """
     def __init__(self, optional_names=''):
         if optional_names:
-            for n in optional_names:
-                if not n.startswith('_'):
-                    raise FoyerError('Non-element types must start with an underscore, you passed {}'.format(', '.join(optional_names)))
+            #for n in optional_names:
+                #if not n.startswith('_'):
+                    #raise FoyerError('Non-element types must start with an underscore, you passed {}'.format(', '.join(optional_names)))
 
             optional_names = sorted(optional_names, reverse=True)
             self.grammar = GRAMMAR.format(optional='{}|'.format(
