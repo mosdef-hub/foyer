@@ -27,6 +27,8 @@ def find_atomtypes(topology, forcefield, max_iter=10):
     subrules = dict()
     #system_elements = {a.element.symbol for a in topology.atoms()}
     system_elements = {a.name for a in topology.sites}
+    system_elements = system_elements.union({
+        a.element.symbol for a in topology.sites if a.element is not None})
     for key,val in rules.items():
         atom = val.node[0]['atom']
         if len(list(atom.find_data('atom_symbol'))) == 1 and not list(atom.find_data('not_expression')):
