@@ -30,7 +30,8 @@ class SMARTSGraph(nx.Graph):
 
     Attributes
     ----------
-    graph_matcher : implementation of VF2 that handles subgraph matching
+    graph_matcher : smarts_graph.SMARTSMatcher
+        implementation of VF2 that handles subgraph matching
     """
     # Because the first atom in a SMARTS string is always the one we want to
     # type, the graph's nodes needs to be ordered.
@@ -177,7 +178,7 @@ class SMARTSGraph(nx.Graph):
 
         if self._graph_matcher is None:
             atom = nx.get_node_attributes(self, name='atom')[0]
-            if len(list(atom.find_data('atom_symbol'))) == 1 and 
+            if len(list(atom.find_data('atom_symbol'))) == 1 and \
                         not list(atom.find_data('not_expression')):
                 try:
                     element = next(atom.find_data('atom_symbol')).children[0]
