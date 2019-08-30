@@ -5,10 +5,6 @@ import os
 from tempfile import NamedTemporaryFile
 import xml.etree.ElementTree as ET
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from io import StringIO
 from pkg_resources import resource_filename
 import requests
 import warnings
