@@ -7,7 +7,10 @@ class Element(elem.Element):
     such as element.hydrogen or element.carbon.  You can also call the static method Element.getBySymbol() to
     look up the Element with a particular chemical symbol.
 
-    Element objects should be considered immutable
+    Element objects should be considered immutable.
+
+    Canonical, periodic table elements will utilize openmm.element,
+    but custom elements will utilize this subclass foyer.element
     """
     def __init__(self, number, name, symbol, mass):
         """Create a new element
