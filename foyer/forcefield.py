@@ -806,7 +806,7 @@ class Forcefield(app.ForceField):
             atom.id = typemap[atom.index]['atomtype']
 
     def _prepare_topology(self, topology, **kwargs):
-        """Separate positions and other topologicaly information"""
+        """Separate positions and other topological information"""
         if not isinstance(topology, app.Topology):
             residues = kwargs.get('residues')
             topology, positions = generate_topology(topology,
