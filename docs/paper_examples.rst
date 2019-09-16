@@ -74,10 +74,12 @@ combined into a single ``ParmEd`` ``Structure`` and saved to disk.
     from mbuild.examples import Ethane
     from mbuild.lib.atoms import H
     from mbuild.lib.bulk_materials import AmorphousSilica
+    from mbuild.lib.recipes import SilicaInterface
+    from mbuild.lib.recipes import Monolayer
 
     # Create a silica substrate, capping surface oxygens with hydrogen
-    silica=mb.recipes.SilicaInterface(bulk_silica=AmorphousSilica())
-    silica_substrate=mb.recipes.Monolayer(surface=silica,chains=H(),guest_port_name="up")
+    silica=SilicaInterface(bulk_silica=AmorphousSilica())
+    silica_substrate=Monolayer(surface=silica,chains=H(),guest_port_name="up")
     # Determine the box dimensions dictated by the silica substrate
     box=mb.Box(mins=[0, 0,max(silica.xyz[:,2])],maxs=silica.periodicity+ [0, 0, 4])
     # Fill the box with ethane

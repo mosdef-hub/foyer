@@ -69,9 +69,11 @@ operator and can be saved to Gromacs files.
     from mbuild.examples import Ethane
     from mbuild.lib.atoms import H
     from mbuild.lib.bulk_materials import AmorphousSilica
+    from mbuild.lib.recipes import SilicaInterface
+    from mbuild.lib.recipes import Monolayer
 
-    interface = mb.SilicaInterface(bulk_silica=AmorphousSilica())
-    interface = mb.Monolayer(surface=interface, chains=H(), guest_port_name='up')
+    interface = SilicaInterface(bulk_silica=AmorphousSilica())
+    interface = Monolayer(surface=interface, chains=H(), guest_port_name='up')
 
     box = mb.Box(mins=[0, 0, max(interface.xyz[:,2])],
                  maxs=interface.periodicity + [0, 0, 4]) 
