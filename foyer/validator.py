@@ -1,12 +1,12 @@
 from collections import Counter
+import os
 from os.path import join, split, abspath
 from warnings import warn
 
 from lxml import etree
 from lxml.etree import DocumentInvalid
 import networkx as nx
-from plyplus.common import ParseError
-
+import lark
 from foyer.exceptions import (ValidationError, ValidationWarning,
                               raise_collected)
 from foyer.smarts_graph import SMARTSGraph
@@ -15,20 +15,24 @@ from foyer.smarts_graph import SMARTSGraph
 class Validator(object):
     def __init__(self, ff_file_name, debug=False):
         from foyer.forcefield import preprocess_forcefield_files
-        preprocessed_ff_file_name = preprocess_forcefield_files([ff_file_name])
+        try:
+            preprocessed_ff_file_name = preprocess_forcefield_files([ff_file_name])
 
-        ff_tree = etree.parse(preprocessed_ff_file_name[0])
-        self.validate_xsd(ff_tree)
+            ff_tree = etree.parse(preprocessed_ff_file_name[0])
+            self.validate_xsd(ff_tree)
 
-        self.atom_type_names = ff_tree.xpath('/ForceField/AtomTypes/Type/@name')
-        self.atom_types = ff_tree.xpath('/ForceField/AtomTypes/Type')
+            self.atom_type_names = ff_tree.xpath('/ForceField/AtomTypes/Type/@name')
+            self.atom_types = ff_tree.xpath('/ForceField/AtomTypes/Type')
 
-        self.validate_class_type_exclusivity(ff_tree)
+            self.validate_class_type_exclusivity(ff_tree)
 
-        # Loading forcefield should succeed, because XML can be parsed and
-        # basics have been validated.
-        from foyer.forcefield import Forcefield
-        self.smarts_parser = Forcefield(preprocessed_ff_file_name, validation=False).parser
+            # Loading forcefield should succeed, because XML can be parsed and
+            # basics have been validated.
+            from foyer.forcefield import Forcefield
+            self.smarts_parser = Forcefield(preprocessed_ff_file_name, validation=False).parser
+        finally:
+            for ff_file_name in preprocessed_ff_file_name:
+                os.remove(ff_file_name)
 
         self.validate_smarts(debug=debug)
         self.validate_overrides()
@@ -120,6 +124,9 @@ class Validator(object):
         errors = []
         for entry in self.atom_types:
             smarts_string = entry.attrib.get('def')
+            if not smarts_string:
+                warn("You have empty smart definition(s)", ValidationWarning)
+                continue
             name = entry.attrib['name']
             if smarts_string is None:
                 missing_smarts.append(name)
@@ -127,7 +134,7 @@ class Validator(object):
             # make sure smarts string can be parsed
             try:
                 self.smarts_parser.parse(smarts_string)
-            except ParseError as ex:
+            except lark.ParseError as ex:
                 if " col " in ex.args[0]:
                     column = ex.args[0][ex.args[0].find(" col ") + 5:].strip()
                     column = " at character {} of {}".format(column, smarts_string)
@@ -144,9 +151,9 @@ class Validator(object):
             smarts_graph = SMARTSGraph(smarts_string, parser=self.smarts_parser,
                                        name=name, overrides=entry.attrib.get('overrides'))
             for atom_expr in nx.get_node_attributes(smarts_graph, name='atom').values():
-                labels = atom_expr.select('has_label')
+                labels = atom_expr.find_data('has_label')
                 for label in labels:
-                    atom_type = label.tail[0][1:]
+                    atom_type = label.children[0][1:]
                     if atom_type not in self.atom_type_names:
                         undefined = ValidationError(
                             "Reference to undefined atomtype '{}' in SMARTS "

@@ -1,0 +1,33 @@
+<ForceField>
+  <!-- Not a valid FF, just one that has periodic diehdrals for testing -->
+  <AtomTypes>
+    <Type name="opls_135" class="CT" element="C" mass="12.01078" def="[C;X4](C)(H)(H)H" desc="" doi="10.1021/ja9621760"/>
+    <Type name="opls_140" class="HC" element="H" mass="1.007947" def="H[C;X4]" desc="" doi="10.1021/ja9621760"/>
+    <Type name="opls_145" class="CA" element="C" mass="12.01078" def="[C;X3;r6]1[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" desc="" doi="10.1021/ja9621760"/>
+    <Type name="opls_146" class="HA" element="H" mass="1.007947" def="[H][C;%opls_145]" desc="" doi="10.1021/ja9621760"/>
+  </AtomTypes>
+  <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
+    <Atom type="opls_135" charge="-0.18" sigma="3.5" epsilon="0.276144"/>
+    <Atom type="opls_140" charge="0.06" sigma="2.5" epsilon="0.12552"/>
+    <Atom type="opls_145" charge="-0.115" sigma="3.55" epsilon="0.29288"/>
+    <Atom type="opls_146" charge="0.115" sigma="2.42" epsilon="0.12552"/>
+  </NonbondedForce>
+  <HarmonicBondForce>
+    <Bond type1="opls_135" type2="opls_135" length="0.1529" k="224262.4"/>
+    <Bond type1="opls_135" type2="opls_140" length="0.109" k="284512.0"/>
+    <Bond type1="opls_145" type2="opls_145" length="0.14" k="392459.2"/>
+    <Bond type1="opls_145" type2="opls_146" length="0.108" k="307105.6"/>
+  </HarmonicBondForce>
+  <HarmonicAngleForce>
+    <Angle type1="opls_135" type2="opls_135" type3="opls_140" angle="1.932079482" k="313.8"/>
+    <Angle type1="opls_140" type2="opls_135" type3="opls_140" angle="1.8814649337" k="276.144"/>
+    <Angle type1="opls_145" type2="opls_145" type3="opls_145" angle="2.0943951024" k="527.184"/>
+    <Angle type1="opls_145" type2="opls_145" type3="opls_146" angle="2.0943951024" k="292.88"/>
+  </HarmonicAngleForce>
+  <PeriodicTorsionForce>
+    <Proper type1="opls_140" type2="opls_135" type3="opls_135" type4="opls_140" periodicity1="1" phase1="3.14" k1="3.1"/>
+    <Proper type1="opls_145" type2="opls_145" type3="opls_145" type4="opls_145" periodicity1="1" phase1="3.14" k1="3.1"/>
+    <Proper type1="opls_145" type2="opls_145" type3="opls_145" type4="opls_146" periodicity1="1" phase1="3.14" k1="3.1"/>
+    <Proper type1="opls_146" type2="opls_145" type3="opls_145" type4="opls_146" periodicity1="1" phase1="3.14" k1="3.1"/>
+  </PeriodicTorsionForce>
+</ForceField>
