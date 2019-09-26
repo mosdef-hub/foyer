@@ -27,3 +27,8 @@ def test_apply_nbfix():
                 atom.atom_type.nbfix['opls_140'][:2],
                 [0.44898481932374923, 50.0]
             )
+        elif atom.atom_type.name == 'opls_140':
+            assert np.allclose(
+                atom.atom_type.nbfix['opls_135'][:2],
+                [0.44898481932374923, 50.0]
+            )
