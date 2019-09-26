@@ -69,7 +69,7 @@ combined into a single ``ParmEd`` ``Structure`` and saved to disk.
 .. code:: python
 
     from foyer import Forcefield
-    from foyer.examples.utils import get_example_file
+    from foyer.examples.utils import example_file_path
     import mbuild as mb
     from mbuild.examples import Ethane
     from mbuild.lib.atoms import H
@@ -83,10 +83,11 @@ combined into a single ``ParmEd`` ``Structure`` and saved to disk.
     # Determine the box dimensions dictated by the silica substrate
     box=mb.Box(mins=[0, 0,max(silica.xyz[:,2])],maxs=silica.periodicity+ [0, 0, 4])
     # Fill the box with ethane
-    ethane_fluid=mb.fill_box(compound=Eth   ane(),n_compounds=200,box=box)
+    ethane_fluid=mb.fill_box(compound=Ethane(),n_compounds=200,box=box)
     # Load the forcefields
-    opls_silica=Forcefield(forcefield_files=get_example_file("oplsaa_with_silica.xml"))
-    opls_alkane=Forcefield(forcefield_files=get_example_file("oplsaa_alkane.xml"))
+    #opls_silica=Forcefield(forcefield_files=get_example_file("oplsaa_with_silica.xml"))
+    opls_silica=Forcefield(forcefield_files=example_file_path("output.xml"))
+    opls_alkane=Forcefield(forcefield_files=example_file_path("oplsaa_alkane.xml"))
     # Apply the forcefields
     silica_substrate=opls_silica.apply(silica_substrate)
     ethane_fluid=opls_alkane.apply(ethane_fluid)
