@@ -25,6 +25,12 @@ def apply_nbfix(struct, atom_type1, atom_type2, sigma, epsilon):
             a1 = atom_type
         if atom_type.name == atom_type2:
             a2 = atom_type
+    try:
+        a1
+        a2
+    except:
+        raise ValueError('Atom types {} and {} not found '
+                'in structure.'.format(atom_type1, atom_type2))
     rmin = sigma * 2 ** (1 / 6)
     a1.add_nbfix(a2.name, rmin, epsilon)
     a2.add_nbfix(a1.name, rmin, epsilon)

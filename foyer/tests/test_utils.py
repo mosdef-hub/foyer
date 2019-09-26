@@ -1,5 +1,6 @@
 import numpy as np
 import parmed as pmd
+import pytest
 
 from foyer import Forcefield
 from foyer.tests.utils import get_fn
@@ -32,3 +33,24 @@ def test_apply_nbfix():
                 atom.atom_type.nbfix['opls_135'][:2],
                 [0.44898481932374923, 50.0]
             )
+
+def test_apply_nbfix_bad_atom_type():
+    opls = Forcefield(name='oplsaa')
+    ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+    ethane = opls.apply(ethane)
+    with pytest.raises(ValueError):
+        apply_nbfix(
+            struct=ethane,
+            atom_type1='opls__typo_135',
+            atom_type2='opls_140',
+            sigma=0.4,
+            epsilon=50.0,
+        )
+    with pytest.raises(ValueError):
+        apply_nbfix(
+            struct=ethane,
+            atom_type1='opls_135',
+            atom_type2='opls_141',
+            sigma=0.4,
+            epsilon=50.0,
+        )
