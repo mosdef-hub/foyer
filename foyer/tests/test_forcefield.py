@@ -367,3 +367,21 @@ def test_load_xml(filename):
     typed.write_foyer(filename='opls-snippet.xml', forcefield=oplsaa, unique=True)
 
     generated_ff = Forcefield('opls-snippet.xml')
+    
+def test_write_xml_overrides():
+    #Test xml_writer new overrides and comments features
+    mol = pmd.load_file(get_fn('styrene.mol2'), structure=True)
+    oplsaa = Forcefield(name='oplsaa')
+    typed = oplsaa.apply(mol, assert_dihedral_params=False)
+    typed.write_foyer(filename='opls-styrene.xml', forcefield=oplsaa, unique=True)
+    styrene = ET.parse('opls-styrene.xml')
+    atom_types = styrene.getroot().find('AtomTypes').findall('Type')
+    for item in atom_types:
+        attributes = item.attrib
+        if attributes['name'] == 'opls_145':
+            assert attributes['overrides'] == 'opls_142'
+            assert str(item.xpath('comment()')) in {'[<!--Note: original overrides="opls_141,opls_142"-->]',
+                                                    '[<!--Note: original overrides="opls_142,opls_141"-->]'}
+        elif attributes['name'] == 'opls_146':
+            assert attributes['overrides'] == 'opls_144'
+            assert str(item.xpath('comment()')) == '[<!--Note: original overrides="opls_144"-->]'
