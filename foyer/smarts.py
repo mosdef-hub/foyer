@@ -51,6 +51,14 @@ class SMARTS(object):
     denoted by an underscore-prefix as additional tokens that the parser can
     recognize.
 
+    Parameters
+    ----------
+    optional_names: iterable, optional, default ''
+        A list of optional names that expand the grammar's symbols beyond
+        the canonical periodic table elements (the non-element types).
+        The optional_names are relevant for creating grammar that includes
+        custom elements that will belong in SMARTS definitions
+
     """
     def __init__(self, optional_names=''):
         if optional_names:

@@ -13,6 +13,7 @@ from foyer.smarts_graph import SMARTSGraph
 
 
 class Validator(object):
+    """ Verifies formatting of force field XML """
     def __init__(self, ff_file_name, debug=False):
         from foyer.forcefield import preprocess_forcefield_files
         try:
@@ -39,6 +40,7 @@ class Validator(object):
 
     @staticmethod
     def validate_xsd(ff_tree, xsd_file=None):
+        """ Check consistency with forcefields/ff.xsd """
         if xsd_file is None:
             xsd_file = join(split(abspath(__file__))[0], 'forcefields', 'ff.xsd')
 
@@ -75,6 +77,7 @@ class Validator(object):
             raise
 
     def validate_class_type_exclusivity(self, ff_tree):
+        """ Assert unique bond/angle/dihedral definitions and class lengths"""
         sections = {'HarmonicBondForce/Bond': 2,
                     'HarmonicAngleForce/Angle': 3,
                     'RBTorsionForce/Proper': 4}
@@ -120,6 +123,7 @@ class Validator(object):
         raise_collected(errors)
 
     def validate_smarts(self, debug):
+        """ Check SMARTS definitions for missing or non-parseable """
         missing_smarts = []
         errors = []
         for entry in self.atom_types:
@@ -170,6 +174,7 @@ class Validator(object):
                      "applying the forcefield.".format(len(missing_smarts)), ValidationWarning)
 
     def validate_overrides(self):
+        """ Assert all overrides are defined elsewhere in force field """
         errors = []
         for entry in self.atom_types:
             overrides = entry.attrib.get('overrides')
