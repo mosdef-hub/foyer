@@ -358,14 +358,17 @@ def test_write_xml_multiple_periodictorsions(filename):
     assert 'k2' in periodic_element[0].attrib
     assert 'phase2' in periodic_element[0].attrib
 
-@pytest.mark.parametrize("filename", ['ethane.mol2', 'benzene.mol2', 'bmim.mol2'])
+@pytest.mark.parametrize("filename", ['ethane.mol2', 'benzene.mol2', 'pf6.mol2'])
 def test_load_xml(filename):
     mol = pmd.load_file(get_fn(filename), structure=True)
-    if filename == 'bmim.mol2':
-        ff = Forcefield(get_fn('bmim.xml'))
+    #if filename == 'bmim.mol2':
+    #    ff = Forcefield(get_fn('bmim.xml'))
+    if filename == 'pf6.mol2':
+        ff = Forcefield(get_fn('pf6.xml'))
     else:
         ff = Forcefield(name='oplsaa')
     typed = ff.apply(mol)
+    #if filename == 'pf6.mol2':
 
     typed.write_foyer(filename='snippet.xml', forcefield=ff, unique=True)
 
