@@ -64,7 +64,7 @@ operator and can be saved to Gromacs files.
 .. code:: python
 
     from foyer import Forcefield
-    from foyer.tests.utils import get_fn
+    from foyer.tests.utils import example_file_path
     import mbuild as mb
     from mbuild.examples import Ethane
     from mbuild.lib.atoms import H
@@ -81,7 +81,7 @@ operator and can be saved to Gromacs files.
     ethane_box = mb.fill_box(compound=Ethane(), n_compounds=200, box=box)
 
     opls = Forcefield(name='oplsaa')
-    opls_silica = Forcefield(forcefield_files=get_fn('opls-silica.xml'))
+    opls_silica = Forcefield(forcefield_files=example_file_path('opls-silica.xml'))
     ethane_box = opls.apply(ethane_box)
     interface = opls_silica.apply(interface)
 
