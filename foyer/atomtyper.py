@@ -17,7 +17,8 @@ def find_atomtypes(topology, forcefield, max_iter=10):
         The maximum number of iterations.
 
     """
-    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} for atom in topology.atoms()}
+    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+        'atomtype': None} for atom in topology.atoms()}
 
     rules = _load_rules(forcefield, typemap)
 
@@ -26,7 +27,8 @@ def find_atomtypes(topology, forcefield, max_iter=10):
     system_elements = {a.element.symbol for a in topology.atoms()}
     for key,val in rules.items():
         atom = val.node[0]['atom']
-        if len(list(atom.find_data('atom_symbol'))) == 1 and not list(atom.find_data('not_expression')):
+        if len(list(atom.find_data('atom_symbol'))) == 1 and \
+                    not list(atom.find_data('not_expression')):
             try:
                 element = next(atom.find_data('atom_symbol')).children[0]
             except IndexError:
@@ -49,6 +51,8 @@ def find_atomtypes(topology, forcefield, max_iter=10):
 def _load_rules(forcefield, typemap):
     """Load atomtyping rules from a forcefield into SMARTSGraphs. """
     rules = dict()
+    # For every SMARTS string in the force field,
+    # create a SMARTSGraph object
     for rule_name, smarts in forcefield.atomTypeDefinitions.items():
         if not smarts:  # We want to skip over empty smarts definitions
             continue
@@ -66,7 +70,7 @@ def _load_rules(forcefield, typemap):
 
 
 def _iterate_rules(rules, topology, typemap, max_iter):
-    """Iteratively run all the rules until the white- and backlists converge.
+    """Iteratively run all the rules until the white- and blacklists converge.
 
     Parameters
     ----------
@@ -103,7 +107,8 @@ def _resolve_atomtypes(topology, typemap):
     """Determine the final atomtypes from the white- and blacklists. """
     atoms = list(topology.atoms())
     for atom_id, atom in typemap.items():
-        atomtype = [rule_name for rule_name in atom['whitelist'] - atom['blacklist']]
+        atomtype = [rule_name for rule_name in 
+                    atom['whitelist'] - atom['blacklist']]
         if len(atomtype) == 1:
             atom['atomtype'] = atomtype[0]
         elif len(atomtype) > 1:
