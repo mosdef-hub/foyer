@@ -90,6 +90,8 @@ def _iterate_rules(rules, topology, typemap, max_iter):
         for rule in rules.values():
             for match_index in rule.find_matches(topology, typemap):
                 atom = typemap[match_index]
+                # This conditional is not strictly necessary, but it prevents
+                # redundant set addition on later iterations
                 if rule.name not in atom['whitelist']:
                     atom['whitelist'].add(rule.name)
                     atom['blacklist'] |= rule.overrides
