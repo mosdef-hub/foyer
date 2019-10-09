@@ -211,9 +211,9 @@ def _write_periodic_torsions(root, dihedrals, unique):
                                         dihedral_force.attrib['type2'],
                                         dihedral_force.attrib['type3'],
                                         dihedral_force.attrib['type4'])
-            if last_dihedral_tuple == current_dihedral_tuple and \
-                    _unique_periodictorsion_parameters(last_dihedral_force,
-                            dihedral_force):
+            if (last_dihedral_tuple == current_dihedral_tuple and 
+                _unique_periodictorsion_parameters(last_dihedral_force,
+                    dihedral_force)):
                 # Merge the last and current dihedral forces
                 # Find the nth periodicity we can set
                 n = 1
