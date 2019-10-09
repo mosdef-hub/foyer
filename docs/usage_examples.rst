@@ -64,7 +64,7 @@ operator and can be saved to Gromacs files.
 .. code:: python
 
     from foyer import Forcefield
-    from foyer.tests.utils import example_file_path
+    from foyer.examples.utils import example_file_path
     import mbuild as mb
     from mbuild.examples import Ethane
     from mbuild.lib.atoms import H
