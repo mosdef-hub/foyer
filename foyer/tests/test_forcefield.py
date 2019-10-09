@@ -204,6 +204,8 @@ def test_residue_map():
         assert [a0.type for a0 in b_with] == [a1.type for a1 in b_without]
         assert [a0.idx for a0 in b_with] == [a1.idx for a1 in b_without]
 
+
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_independent_residues_molecules():
     """Test to see that _check_independent_residues works for molecules."""
     from mbuild.examples import Alkane
