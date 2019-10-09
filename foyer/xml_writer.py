@@ -4,6 +4,7 @@ import collections
 from lxml import etree as ET
 from foyer.smarts_graph import SMARTSGraph
 import networkx as nx
+import warnings
 
 import numpy as np
 
@@ -147,6 +148,9 @@ def _update_defs(atomtypes, nonbonded, forcefield):
     for extra in extra_types:
         for i, definition in enumerate(def_list):
             if extra in definition:
+                warnings.warn('Removing undefined atom type `{}`'
+                        ' from SMARTS string `{}`'.format(
+                            extra, definition))
                 extra_edit = '%' + extra
                 extra_index = definition.find(extra_edit)
                 if definition[extra_index-1] == ';':
