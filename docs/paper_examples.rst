@@ -34,21 +34,21 @@ Example 1
     
     import mbuild as mb
     from mbuild.examples import Ethane
-    from foyer.tests.utils import get_fn
+    from foyer.examples.utils import example_file_path
     from foyer import Forcefield
 
     """ Applying a force field while saving from mBuild """
     # Create the chemical topology
     ethane_fluid = mb.fill_box(compound=Ethane(), n_compounds=100, box=[2, 2, 2])
     # Apply and save the topology
-    ethane_fluid.save("ethane-box.top", forcefield_files=get_fn("oplsaa_alkane.xml"))
+    ethane_fluid.save("ethane-box.top", forcefield_files=example_file_path("oplsaa_alkane.xml"))
     ethane_fluid.save("ethane-box.gro")
 
     """ Applying a force field directly with foyer """
     # Create the chemical topology
     ethane_fluid = mb.fill_box(compound=Ethane(), n_compounds=100, box=[2, 2, 2])
     # Load the forcefield
-    opls_alkane = Forcefield(forcefield_files=get_fn("oplsaa_alkane.xml"))
+    opls_alkane = Forcefield(forcefield_files=example_file_path("oplsaa_alkane.xml"))
     # Apply the forcefield to atom-type
     ethane_fluid = opls_alkane.apply(ethane_fluid)
     # Save the atom-typed system
@@ -69,22 +69,25 @@ combined into a single ``ParmEd`` ``Structure`` and saved to disk.
 .. code:: python
 
     from foyer import Forcefield
-    from foyer.tests.utils import get_fn
+    from foyer.examples.utils import example_file_path
     import mbuild as mb
     from mbuild.examples import Ethane
     from mbuild.lib.atoms import H
     from mbuild.lib.bulk_materials import AmorphousSilica
+    from mbuild.lib.recipes import SilicaInterface
+    from mbuild.lib.recipes import Monolayer
 
     # Create a silica substrate, capping surface oxygens with hydrogen
-    silica=mb.recipes.SilicaInterface(bulk_silica=AmorphousSilica())
-    silica_substrate=mb.recipes.Monolayer(surface=silica,chains=H(),guest_port_name="up")
+    silica=SilicaInterface(bulk_silica=AmorphousSilica())
+    silica_substrate=Monolayer(surface=silica,chains=H(),guest_port_name="up")
     # Determine the box dimensions dictated by the silica substrate
     box=mb.Box(mins=[0, 0,max(silica.xyz[:,2])],maxs=silica.periodicity+ [0, 0, 4])
     # Fill the box with ethane
     ethane_fluid=mb.fill_box(compound=Ethane(),n_compounds=200,box=box)
     # Load the forcefields
-    opls_silica=Forcefield(forcefield_files=get_fn("oplsaa_with_silica.xml"))
-    opls_alkane=Forcefield(forcefield_files=get_fn("oplsaa_alkane.xml"))
+    #opls_silica=Forcefield(forcefield_files=get_example_file("oplsaa_with_silica.xml"))
+    opls_silica=Forcefield(forcefield_files=example_file_path("output.xml"))
+    opls_alkane=Forcefield(forcefield_files=example_file_path("oplsaa_alkane.xml"))
     # Apply the forcefields
     silica_substrate=opls_silica.apply(silica_substrate)
     ethane_fluid=opls_alkane.apply(ethane_fluid)
