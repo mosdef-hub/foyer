@@ -77,7 +77,7 @@ views of the National Science Foundation.
 .. toctree::
     :hidden:
 
-    forcefields
+    parameter_definitions
 
 .. toctree::
     :hidden:
