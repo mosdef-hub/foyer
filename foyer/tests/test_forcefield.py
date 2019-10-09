@@ -137,6 +137,7 @@ def test_improper_dihedral():
     assert len([dih for dih in benzene.dihedrals if dih.improper]) == 6
     assert len([dih for dih in benzene.dihedrals if not dih.improper]) == 12
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_urey_bradley():
     system = mb.Compound()
     first = mb.Particle(name='_CTL2',pos=[-1,0,0])
@@ -156,6 +157,7 @@ def test_urey_bradley():
     assert len(struc.angles) == 3
     assert len(struc.urey_bradleys) ==2
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_charmm_improper():
     system = mb.Compound()
     first = mb.Particle(name='_CTL2',pos=[-1,0,0])
@@ -266,12 +268,14 @@ def test_overrides_space():
     typed_ethane = ff.apply(ethane)
     assert typed_ethane.atoms[0].type == 'CT3'
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_allow_empty_def():
     ethane = mb.load(get_fn('ethane.mol2'))
     with pytest.warns(ValidationWarning):
         ff = Forcefield(forcefield_files=get_fn('empty_def.xml'))
     ff.apply(ethane)
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_assert_bonds():
     ff = Forcefield(name='trappe-ua')
 
