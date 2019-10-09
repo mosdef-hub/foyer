@@ -5,8 +5,6 @@ from pkg_resources import resource_filename
 
 from lxml import etree as ET
 
-import mbuild as mb
-from mbuild.examples import Alkane
 import parmed as pmd
 import pytest
 
@@ -65,6 +63,7 @@ def test_from_parmed():
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_from_mbuild():
+    import mbuild as mb
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2)
@@ -80,6 +79,7 @@ def test_from_mbuild():
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_write_refs():
+    import mbuild as mb
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
@@ -87,6 +87,7 @@ def test_write_refs():
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_write_refs_multiple():
+    import mbuild as mb
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(forcefield_files=get_fn('refs-multi.xml'))
     ethane = oplsaa.apply(mol2, references_file='ethane-multi.bib')
@@ -108,6 +109,7 @@ def test_preserve_resname():
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_apply_residues():
+    import mbuild as mb
     from mbuild.examples import Ethane
     ethane = Ethane()
     opls = Forcefield(name='oplsaa')
@@ -116,6 +118,7 @@ def test_apply_residues():
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_from_mbuild_customtype():
+    import mbuild as mb
     mol2 = mb.load(get_fn('ethane_customtype.pdb'))
     customtype_ff = Forcefield(forcefield_files=get_fn('validate_customtypes.xml'))
     ethane = customtype_ff.apply(mol2)
@@ -139,6 +142,7 @@ def test_improper_dihedral():
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_urey_bradley():
+    import mbuild as mb
     system = mb.Compound()
     first = mb.Particle(name='_CTL2',pos=[-1,0,0])
     second = mb.Particle(name='_CL', pos=[0,0,0])
@@ -159,6 +163,7 @@ def test_urey_bradley():
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_charmm_improper():
+    import mbuild as mb
     system = mb.Compound()
     first = mb.Particle(name='_CTL2',pos=[-1,0,0])
     second = mb.Particle(name='_CL', pos=[0,0,0])
@@ -201,6 +206,7 @@ def test_residue_map():
 
 def test_independent_residues_molecules():
     """Test to see that _check_independent_residues works for molecules."""
+    from mbuild.examples import Alkane
     butane = Alkane(4)
     structure = butane.to_parmed()
     topo, NULL = generate_topology(structure)
@@ -212,6 +218,7 @@ def test_independent_residues_molecules():
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_independent_residues_atoms():
     """Test to see that _check_independent_residues works for single aotms."""
+    import mbuild as mb
     argon = mb.Compound()
     argon.name = 'Ar'
     structure = argon.to_parmed()
@@ -232,6 +239,7 @@ def test_topology_precedence():
            whereby the definitions that occurs earliest in the XML is
            assigned.
     """
+    import mbuild as mb
     ethane = mb.load(get_fn('ethane.mol2'))
     ff = Forcefield(forcefield_files=get_fn('ethane-topo-precedence.xml'))
     typed_ethane = ff.apply(ethane)
@@ -254,6 +262,7 @@ def test_topology_precedence():
 ])
 def test_missing_topo_params(ff_filename, kwargs):
     """Test that the user is notified if not all topology parameters are found."""
+    import mbuild as mb
     ethane = mb.load(get_fn('ethane.mol2'))
     oplsaa_with_typo = Forcefield(forcefield_files=get_fn(ff_filename))
     with pytest.raises(Exception):
@@ -263,6 +272,7 @@ def test_missing_topo_params(ff_filename, kwargs):
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_overrides_space():
+    import mbuild as mb
     ethane = mb.load(get_fn('ethane.mol2'))
     ff = Forcefield(forcefield_files=get_fn('overrides-space.xml'))
     typed_ethane = ff.apply(ethane)
@@ -270,6 +280,7 @@ def test_overrides_space():
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_allow_empty_def():
+    import mbuild as mb
     ethane = mb.load(get_fn('ethane.mol2'))
     with pytest.warns(ValidationWarning):
         ff = Forcefield(forcefield_files=get_fn('empty_def.xml'))
@@ -277,6 +288,7 @@ def test_allow_empty_def():
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_assert_bonds():
+    import mbuild as mb
     ff = Forcefield(name='trappe-ua')
 
     derponium = mb.Compound()
