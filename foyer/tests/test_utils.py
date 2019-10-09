@@ -19,9 +19,10 @@ def test_apply_nbfix():
         epsilon=50.0,
     )
 
-    assert ethane.has_NBFIX()
+    assert not ethane.has_NBFIX()
     assert ethane_tweaked.has_NBFIX()
 
+    # 0.44898.... is rmin, which parmed uses internally in place of sigma
     for atom in ethane_tweaked:
         if atom.atom_type.name == 'opls_135':
             assert np.allclose(

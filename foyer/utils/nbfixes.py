@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 def apply_nbfix(struct, atom_type1, atom_type2, sigma, epsilon):
     """Apply a single nbfix to a particular interaction.
 
@@ -19,7 +22,9 @@ def apply_nbfix(struct, atom_type1, atom_type2, sigma, epsilon):
     struct : parmed.structure.Structure
         The input structure with the nbfix applied.
     """
-    atom_types = list({a.atom_type for a in struct.atoms})
+    struct_copy = deepcopy(struct)
+
+    atom_types = list({a.atom_type for a in struct_copy.atoms})
     for atom_type in sorted(atom_types, key=lambda a: a.name):
         if atom_type.name == atom_type1:
             a1 = atom_type
@@ -31,8 +36,10 @@ def apply_nbfix(struct, atom_type1, atom_type2, sigma, epsilon):
     except:
         raise ValueError('Atom types {} and {} not found '
                 'in structure.'.format(atom_type1, atom_type2))
+
+    # Calculate rmin from sigma because parmed uses it internally
     rmin = sigma * 2 ** (1 / 6)
     a1.add_nbfix(a2.name, rmin, epsilon)
     a2.add_nbfix(a1.name, rmin, epsilon)
 
-    return struct
+    return struct_copy
