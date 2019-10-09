@@ -5,10 +5,6 @@ import os
 from tempfile import NamedTemporaryFile
 import xml.etree.ElementTree as ET
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from io import StringIO
 from pkg_resources import resource_filename
 import requests
 import warnings
@@ -34,18 +30,19 @@ from foyer.utils.io import import_, has_mbuild
 
 
 def preprocess_forcefield_files(forcefield_files=None):
+    """Pre-process foyer Forcefield XML files"""
     if forcefield_files is None:
         return None
 
     preprocessed_files = []
 
     for xml_file in forcefield_files:
-        if not hasattr(xml_file,'read'):
+        if not hasattr(xml_file, 'read'):
             f = open(xml_file)
-            _,suffix = os.path.split(xml_file)
+            _, suffix = os.path.split(xml_file)
         else:
             f = xml_file
-            suffix=""
+            suffix = ""
 
         # read and preprocess
         xml_contents = f.read()
@@ -86,8 +83,7 @@ def preprocess_forcefield_files(forcefield_files=None):
     return preprocessed_files
 
 
-def generate_topology(non_omm_topology, non_element_types=None,
-        residues=None):
+def generate_topology(non_omm_topology, non_element_types=None, residues=None):
     """Create an OpenMM Topology from another supported topology structure."""
     if non_element_types is None:
         non_element_types = set()
@@ -97,8 +93,8 @@ def generate_topology(non_omm_topology, non_element_types=None,
     elif has_mbuild:
         mb = import_('mbuild')
         if (non_omm_topology, mb.Compound):
-            pmdCompoundStructure = non_omm_topology.to_parmed(residues=residues)
-            return _topology_from_parmed(pmdCompoundStructure, non_element_types)
+            pmd_comp_struct = non_omm_topology.to_parmed(residues=residues)
+            return _topology_from_parmed(pmd_comp_struct, non_element_types)
     else:
         raise FoyerError('Unknown topology format: {}\n'
                          'Supported formats are: '
@@ -606,7 +602,7 @@ class Forcefield(app.ForceField):
 
         data = self._SystemData
         data.atoms = list(topology.atoms())
-        for atom in data.atoms:
+        for _ in data.atoms:
             data.excludeAtomWith.append([])
 
         # Make a list of all bonds
@@ -810,6 +806,7 @@ class Forcefield(app.ForceField):
             atom.id = typemap[atom.index]['atomtype']
 
     def _prepare_topology(self, topology, **kwargs):
+        """Separate positions and other topological information"""
         if not isinstance(topology, app.Topology):
             residues = kwargs.get('residues')
             topology, positions = generate_topology(topology,

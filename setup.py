@@ -95,6 +95,7 @@ setup(
                             'opls_validation/*/*.gro',
                             'opls_validation/*/*.mol2',
                             'opls_validation/oplsaa.ff/*',
+                            'examples/files/*'
                             ]},
     package_dir={'foyer': 'foyer'},
     include_package_data=True,

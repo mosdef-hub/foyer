@@ -174,6 +174,7 @@ def _write_bonds(root, bonds, unique):
         bond_force.set('length', str(round(bond.type.req / 10, 4)))
         bond_force.set('k', str(round(bond.type.k * 4.184 * 200, 1)))
 
+
 def _write_angles(root, angles, unique):
     angle_forces = ET.SubElement(root, 'HarmonicAngleForce')
     for angle in angles:
@@ -192,6 +193,7 @@ def _write_angles(root, angles, unique):
             angle_force.set('type{}'.format(id+1), atypes[id])
         angle_force.set('angle', str(round(angle.type.theteq * (np.pi / 180), 10)))
         angle_force.set('k', str(round(angle.type.k * 4.184 * 2, 3)))
+
 
 def _write_periodic_torsions(root, dihedrals, unique):
     periodic_torsion_forces = ET.SubElement(root, 'PeriodicTorsionForce')
@@ -243,9 +245,9 @@ def _write_periodic_torsions(root, dihedrals, unique):
                                         dihedral_force.attrib['type2'],
                                         dihedral_force.attrib['type3'],
                                         dihedral_force.attrib['type4'])
-            if last_dihedral_tuple == current_dihedral_tuple and \
-                    _unique_periodictorsion_parameters(last_dihedral_force, 
-                            dihedral_force):
+            if (last_dihedral_tuple == current_dihedral_tuple and 
+                _unique_periodictorsion_parameters(last_dihedral_force,
+                    dihedral_force)):
                 # Merge the last and current dihedral forces
                 # Find the nth periodicity we can set
                 n = 1
@@ -264,9 +266,10 @@ def _write_periodic_torsions(root, dihedrals, unique):
         else:
             last_dihedral_force = dihedral_force
 
+
 def _unique_periodictorsion_parameters(dihedral1, dihedral2):
     """ Return true if dihedral1 contains the parameters of dihedral2
-    
+
     Parameters
     ---------
     dihedral1: ET.subelement
@@ -286,6 +289,7 @@ def _unique_periodictorsion_parameters(dihedral1, dihedral2):
         return False
     else:
         return True
+
 
 def _write_rb_torsions(root, rb_torsions, unique):
     rb_torsion_forces = ET.SubElement(root, 'RBTorsionForce')
@@ -310,6 +314,7 @@ def _write_rb_torsions(root, rb_torsions, unique):
                 str(round(getattr(rb_torsion.type, 'c{}'.format(c_id)) * 4.184,
                           4)))
 
+
 def _remove_duplicate_elements(root, unique):
     sortby = {'AtomTypes': ['name'],
               'HarmonicBondForce': ['type1', 'type2'],
@@ -332,18 +337,20 @@ def _remove_duplicate_elements(root, unique):
         for elem_to_remove in elems_to_remove:
             child.remove(elem_to_remove)
 
+
 def _elements_equal(e1, e2):
     """
     Note: This was grabbed, basically verbatim, from:
     https://stackoverflow.com/questions/7905380/testing-equivalence-of-xml-etree-elementtree
     """
     if type(e1) != type(e2): return False
-    if e1.tag != e1.tag: return False
+    if e1.tag != e2.tag: return False
     if e1.text != e2.text: return False
     if e1.tail != e2.tail: return False
     if e1.attrib != e2.attrib: return False
     if len(e1) != len(e2): return False
     return all([_elements_equal(c1, c2) for c1, c2 in zip(e1, e2)])
+
 
 def _infer_coulomb14scale(struct):
     """Attempt to infer the coulombic 1-4 scaling factor by parsing the
@@ -358,6 +365,7 @@ def _infer_coulomb14scale(struct):
             'Structure has inconsistent 1-4 coulomb scaling factors. This is '
             'currently not supported'
         )
+
 
 def _infer_lj14scale(struct):
     """Attempt to infer the Lennard-Jones 1-4 scaling factor by parsing the
