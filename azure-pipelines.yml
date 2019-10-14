@@ -1,0 +1,58 @@
+trigger:
+  - master
+  - ci/azp-test
+
+pr:
+  - master
+
+schedules:
+- cron: "0 0 * * *"
+  displayName: Daily midnight build for master
+  branches:
+    include:
+    - master
+
+jobs:
+  - job: NoBleeding
+    strategy:
+      matrix:
+        Python36Ubuntu:
+          imageName: 'ubuntu-latest'
+          python.version: 3.6
+        Python37Ubuntu:
+          imageName: 'ubuntu-latest'
+          python.version: 3.7
+        Python36macOS:
+          imageName: 'macOS-latest'
+          python.version: 3.6
+        Python37macOS:
+          imageName: 'macOS-latest'
+          python.version: 3.7
+
+    pool:
+      vmImage: $(imageName)
+
+    steps:
+      - bash: echo "##vso[task.prependpath]$CONDA/bin"
+        displayName: Add Conda to path
+
+      - bash: sudo chown -R $USER $CONDA
+        condition: eq( variables['Agent.OS'], 'Darwin' )
+        displayName: Take ownership of conda installation
+
+      - bash: |
+          conda config --set always_yes yes --set changeps1 no
+          conda config --add channels omnia
+          conda config --add channels janschulz
+          conda config --add channels conda-forge
+          conda config --add channels mosdef
+        displayName: Add relavent Channels
+      - bash: |
+          conda create -n test-environment python=$(python.version) --file requirements-dev.txt
+          source activate test-environment
+          pip install -e .
+        displayName: Create Conda env, Activate, Install dependencies, Install Branch
+      - bash: |
+          source activate test-environment
+          python -m pytest -v --nbval --nbval-lax --cov=mbuild --cov-report= --pyargs foyer
+        displayName: Run Tests
