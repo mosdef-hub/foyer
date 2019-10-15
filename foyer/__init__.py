@@ -1,2 +1,2 @@
 from foyer.forcefield import Forcefield
-from foyer.version import *
+from foyer.version import version

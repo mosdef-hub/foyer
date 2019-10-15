@@ -193,5 +193,5 @@ class Validator(object):
 
 if __name__ == '__main__':
     from foyer.tests.utils import get_fn
-    v = Validator(get_fn('validate_types.xml'))
-    v = Validator(get_fn('validationerror_validate_types.xml'))
+    Validator(get_fn('validate_types.xml'))
+    Validator(get_fn('validationerror_validate_types.xml'))
