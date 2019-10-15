@@ -82,13 +82,11 @@ jobs:
       - powershell: |
           conda create -n test-environment python=$(python.version) --file requirements-dev.txt
           conda run -n test-environment pip install -e .
-          echo $?
-          if(!$?) {exit 1;}
-        failOnStderr: true
         displayName: Create conda env, Install dependencies and Install Branch
 
       - powershell: |
           conda run -n test-environment python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
+        failOnStderr: true
         displayName: Run Tests
 
   - job: LinuxBleedingMbuild
