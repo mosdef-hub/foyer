@@ -85,9 +85,42 @@ jobs:
         displayName: Create conda env, Install dependencies and Install Branch
 
       - powershell: |
-          conda run -n test-environment py.test -v --cov=foyer --cov-report= --pyargs foyer
+          conda run -n test-environment python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
         displayName: Run Tests
 
+  - job: LinuxBleedingMbuild
+
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - bash: echo "##vso[task.prependpath]$CONDA/bin"
+        displayName: Add Conda to path
+
+      - bash: |
+          conda config --set always_yes yes --set changeps1 no
+          conda config --add channels omnia
+          conda config --add channels conda-forge
+          conda config --add channels mosdef
+          conda create -n  bleeding-test-environment python=3.7 --file requirements-dev.txt
+          source activate bleeding-test-environment
+        displayName: Create a new bleeding test environment
+
+      - bash: |
+          source activate bleeding-test-environment
+          git clone https://github.com/mosdef-hub/mbuild.git
+          cd mbuild
+          conda install --yes --file requirements-dev.txt
+          pip install -e .
+          pip uninstall foyer -y
+          cd ..
+          pip install -e .
+        displayName: Clone mbuild, install mbuild, install foyer
+
+      - bash: |
+          source activate bleeding-test-environment
+          python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
+        displayName: Run Tests
 
 
 
