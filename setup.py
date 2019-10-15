@@ -7,7 +7,7 @@ import subprocess
 from setuptools import setup, find_packages
 
 #####################################
-VERSION = "0.5.2"
+VERSION = "0.7.0"
 ISRELEASED = True
 if ISRELEASED:
     __version__ = VERSION
@@ -95,6 +95,7 @@ setup(
                             'opls_validation/*/*.gro',
                             'opls_validation/*/*.mol2',
                             'opls_validation/oplsaa.ff/*',
+                            'examples/files/*'
                             ]},
     package_dir={'foyer': 'foyer'},
     include_package_data=True,

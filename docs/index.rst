@@ -77,7 +77,12 @@ views of the National Science Foundation.
 .. toctree::
     :hidden:
 
-    forcefields
+    parameter_definitions
+
+.. toctree::
+    :hidden:
+
+    atom-typing_options
 
 .. toctree::
     :hidden:
@@ -87,5 +92,14 @@ views of the National Science Foundation.
 .. toctree::
     :hidden:
 
+    paper_examples
+
+.. toctree::
+    :hidden:
+
     validation
 
+.. toctree::
+   :hidden:
+
+   citing_foyer

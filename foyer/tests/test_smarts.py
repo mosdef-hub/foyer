@@ -1,5 +1,5 @@
 import parmed as pmd
-import plyplus
+import lark
 import pytest
 
 from foyer.exceptions import FoyerError
@@ -12,23 +12,24 @@ from foyer.tests.utils import get_fn
 PARSER = SMARTS()
 
 
-def _rule_match(top, smart, result):
-    rule = SMARTSGraph(name='test', parser=PARSER, smarts_string=smart)
-    assert bool(list(rule.find_matches(top))) is result
+def _rule_match(top, typemap, smart, result):
+    rule = SMARTSGraph(name='test', parser=PARSER, smarts_string=smart, 
+                    typemap=typemap)
+    assert bool(list(rule.find_matches(top, typemap))) is result
 
 
-def _rule_match_count(top, smart, count):
-    rule = SMARTSGraph(name='test', parser=PARSER, smarts_string=smart)
-    assert len(list(rule.find_matches(top))) is count
+def _rule_match_count(top, typemap, smart, count):
+    rule = SMARTSGraph(name='test', parser=PARSER, smarts_string=smart, 
+            typemap=typemap)
+    assert len(list(rule.find_matches(top, typemap))) is count
 
 
 def test_ast():
     ast = PARSER.parse('O([H&X1])(H)')
-    assert ast.head == "start"
-    assert ast.tail[0].head == "atom"
-    assert ast.tail[0].tail[0].head == "atom_symbol"
-    assert ast.tail[0].tail[0].head == "atom_symbol"
-    assert str(ast.tail[0].tail[0].tail[0]) == "O"
+    assert ast.data == "start"
+    assert ast.children[0].data == "atom"
+    assert ast.children[0].children[0].data == "atom_symbol"
+    assert str(ast.children[0].children[0].children[0]) == "O"
 
 
 def test_parse():
@@ -41,29 +42,46 @@ def test_parse():
 def test_uniqueness():
     mol2 = pmd.load_file(get_fn('uniqueness_test.mol2'), structure=True)
     top, _ = generate_topology(mol2)
+    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+                            'atomtype': None}     
+                            for atom in top.atoms()}
 
-    _rule_match(top, '[#6]1[#6][#6][#6][#6][#6]1', False)
-    _rule_match(top, '[#6]1[#6][#6][#6][#6]1', False)
-    _rule_match(top, '[#6]1[#6][#6][#6]1', True)
+
+    _rule_match(top, typemap, '[#6]1[#6][#6][#6][#6][#6]1', False)
+    _rule_match(top, typemap, '[#6]1[#6][#6][#6][#6]1', False)
+    _rule_match(top, typemap, '[#6]1[#6][#6][#6]1', True)
 
 
 def test_ringness():
     ring = pmd.load_file(get_fn('ring.mol2'), structure=True)
     top, _ = generate_topology(ring)
-    _rule_match(top, '[#6]1[#6][#6][#6][#6][#6]1', True)
+    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+                            'atomtype': None}     
+                            for atom in top.atoms()}
+
+    _rule_match(top, typemap, '[#6]1[#6][#6][#6][#6][#6]1', True)
 
     not_ring = pmd.load_file(get_fn('not_ring.mol2'), structure=True)
     top, _ = generate_topology(not_ring)
-    _rule_match(top, '[#6]1[#6][#6][#6][#6][#6]1', False)
+    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+                            'atomtype': None}     
+                            for atom in top.atoms()}
+
+    _rule_match(top, typemap, '[#6]1[#6][#6][#6][#6][#6]1', False)
 
 
 def test_fused_ring():
     fused = pmd.load_file(get_fn('fused.mol2'), structure=True)
     top, _ = generate_topology(fused)
-    rule = SMARTSGraph(name='test', parser=PARSER,
-                       smarts_string='[#6]12[#6][#6][#6][#6][#6]1[#6][#6][#6][#6]2')
+    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+                            'atomtype': None}     
+                            for atom in top.atoms()}
 
-    match_indices = list(rule.find_matches(top))
+    rule = SMARTSGraph(name='test', parser=PARSER,
+                       smarts_string='[#6]12[#6][#6][#6][#6][#6]1[#6][#6][#6][#6]2',
+                       typemap=typemap)
+
+    match_indices = list(rule.find_matches(top, typemap))
     assert 3 in match_indices
     assert 4 in match_indices
     assert len(match_indices) == 2
@@ -73,17 +91,20 @@ def test_ring_count():
     # Two rings
     fused = pmd.load_file(get_fn('fused.mol2'), structure=True)
     top, _ = generate_topology(fused)
+    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+                            'atomtype': None}     
+                            for atom in top.atoms()}
     rule = SMARTSGraph(name='test', parser=PARSER,
-                       smarts_string='[#6;R2]')
+                       smarts_string='[#6;R2]', typemap=typemap)
 
-    match_indices = list(rule.find_matches(top))
+    match_indices = list(rule.find_matches(top, typemap))
     for atom_idx in (3, 4):
         assert atom_idx in match_indices
     assert len(match_indices) == 2
 
     rule = SMARTSGraph(name='test', parser=PARSER,
-                       smarts_string='[#6;R1]')
-    match_indices = list(rule.find_matches(top))
+                       smarts_string='[#6;R1]', typemap=typemap)
+    match_indices = list(rule.find_matches(top, typemap))
     for atom_idx in (0, 1, 2, 5, 6, 7, 8, 9):
         assert atom_idx in match_indices
     assert len(match_indices) == 8
@@ -91,10 +112,14 @@ def test_ring_count():
     # One ring
     ring = pmd.load_file(get_fn('ring.mol2'), structure=True)
     top, _ = generate_topology(ring)
+    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+                            'atomtype': None}     
+                            for atom in top.atoms()}
+
 
     rule = SMARTSGraph(name='test', parser=PARSER,
-                       smarts_string='[#6;R1]')
-    match_indices = list(rule.find_matches(top))
+                       smarts_string='[#6;R1]', typemap=typemap)
+    match_indices = list(rule.find_matches(top, typemap))
     for atom_idx in range(6):
         assert atom_idx in match_indices
     assert len(match_indices) == 6
@@ -103,24 +128,27 @@ def test_ring_count():
 def test_precedence_ast():
     ast1 = PARSER.parse('[C,H;O]')
     ast2 = PARSER.parse('[O;H,C]')
-    assert ast1.tail[0].tail[0].head == 'weak_and_expression'
-    assert ast2.tail[0].tail[0].head == 'weak_and_expression'
+    assert ast1.children[0].children[0].data == 'weak_and_expression'
+    assert ast2.children[0].children[0].data == 'weak_and_expression'
 
-    assert ast1.tail[0].tail[0].tail[0].head == 'or_expression'
-    assert ast2.tail[0].tail[0].tail[1].head == 'or_expression'
+    assert ast1.children[0].children[0].children[0].data == 'or_expression'
+    assert ast2.children[0].children[0].children[1].data == 'or_expression'
 
     ast1 = PARSER.parse('[C,H&O]')
     ast2 = PARSER.parse('[O&H,C]')
-    assert ast1.tail[0].tail[0].head == 'or_expression'
-    assert ast2.tail[0].tail[0].head == 'or_expression'
+    assert ast1.children[0].children[0].data == 'or_expression'
+    assert ast2.children[0].children[0].data == 'or_expression'
 
-    assert ast1.tail[0].tail[0].tail[1].head == 'and_expression'
-    assert ast2.tail[0].tail[0].tail[0].head == 'and_expression'
+    assert ast1.children[0].children[0].children[1].data == 'and_expression'
+    assert ast2.children[0].children[0].children[0].data == 'and_expression'
 
 
 def test_precedence():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     top, _ = generate_topology(mol2)
+    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+                            'atomtype': None}     
+                            for atom in top.atoms()}
 
     checks = {'[C,O;C]': 2,
               '[C&O;C]': 0,
@@ -129,7 +157,7 @@ def test_precedence():
               }
 
     for smart, result in checks.items():
-        _rule_match_count(top, smart, result)
+        _rule_match_count(top, typemap, smart, result)
 
 
 def test_not_ast():
@@ -138,19 +166,22 @@ def test_not_ast():
               '[!C;H]': 'weak_and_expression',
               '[!C]': 'not_expression'}
 
-    for smart, tail2head in checks.items():
+    for smart, grandchild in checks.items():
         ast = PARSER.parse(smart)
-        assert ast.tail[0].tail[0].head == tail2head
+        assert ast.children[0].children[0].data == grandchild
 
     illegal_nots = ['[!CH]', '[!C!H]']
     for smart in illegal_nots:
-        with pytest.raises(plyplus.ParseError):
+        with pytest.raises(lark.UnexpectedInput):
             PARSER.parse(smart)
 
 
 def test_not():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     top, _ = generate_topology(mol2)
+    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+                            'atomtype': None}     
+                            for atom in top.atoms()}
 
     checks = {'[!O]': 8,
               '[!#5]': 8,
@@ -160,7 +191,7 @@ def test_not():
               '[!C;!H]': 0,
               }
     for smart, result in checks.items():
-        _rule_match_count(top, smart, result)
+        _rule_match_count(top, typemap, smart, result)
 
 
 def test_hexa_coordinated():
@@ -197,6 +228,6 @@ def test_optional_name_parser():
     optional_names = ['_C', '_CH2', '_CH']
     S = SMARTS(optional_names=optional_names)
     ast = S.parse('_CH2_C_CH')
-    symbols = [a.tail[0] for a in ast.select('atom_symbol').strees]
+    symbols = [a.children[0] for a in ast.find_data('atom_symbol')]
     for name in optional_names:
         assert name in symbols

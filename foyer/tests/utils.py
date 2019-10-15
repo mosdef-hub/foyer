@@ -67,16 +67,15 @@ def get_fn(filename):
 
 
 def glob_fn(pattern):
-    """Gets the full path of the file name for a particular test file.
+    """Gets the full paths for test files adhering to the glob pattern.
 
     Parameters
     ----------
-    filename : str
-        Name of the file to get
+    pattern : str
+        the pattern for the files(expanded using globbing)
 
     Returns
     -------
-    path: str
-        Name of the test file with the full path location
+    list of file absolute paths matching the pattern.
     """
     return glob.glob(join(split(abspath(__file__))[0], 'files', pattern))
