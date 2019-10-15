@@ -2,6 +2,7 @@
 
 [![Gitter chat](https://badges.gitter.im/mosdef-hub/gitter.svg)](https://gitter.im/mosdef-hub/Lobby)
 [![Linux Build Status](https://travis-ci.org/mosdef-hub/foyer.svg?branch=master)](https://travis-ci.org/mosdef-hub/foyer)
+[![Build Status](https://dev.azure.com/mosdef/mosdef/_apis/build/status/mosdef-hub.foyer?branchName=master)](https://dev.azure.com/mosdef/mosdef/_build/latest?definitionId=2&branchName=master)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/r6b2ny2hjo1t1ulb/branch/master?svg=true)](https://ci.appveyor.com/project/ctk3b/foyer/branch/master)
 [![PyPI Version](https://badge.fury.io/py/foyer.svg)](https://pypi.python.org/pypi/foyer)
 [![Anaconda Badge](https://anaconda.org/mosdef/foyer/badges/version.svg)](https://anaconda.org/mosdef/foyer)
