@@ -82,7 +82,9 @@ jobs:
       - powershell: |
           conda create -n test-environment python=$(python.version) --file requirements-dev.txt
           conda run -n test-environment pip install -e .
+          echo $?
           if(!$?) {exit 1;}
+        failOnStderr: true
         displayName: Create conda env, Install dependencies and Install Branch
 
       - powershell: |
