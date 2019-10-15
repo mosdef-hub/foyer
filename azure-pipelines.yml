@@ -72,20 +72,22 @@ jobs:
       - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
         displayName: Add Conda to path
 
-      - powershell: |
+      - script: |
           conda config --set always_yes yes --set changeps1 no
           conda config --add channels omnia
           conda config --add channels conda-forge
           conda config --add channels mosdef
         displayName: Add Relevent Channels
 
-      - powershell: |
+      - script: |
           conda create -n test-environment python=$(python.version) --file requirements-dev.txt
-          conda run -n test-environment pip install -e .
+          call activate test-environment
+          pip install -e .
         displayName: Create conda env, Install dependencies and Install Branch
 
-      - powershell: |
-          conda run -n test-environment python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
+      - script: |
+          call activate test-environment
+          python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
         failOnStderr: true
         displayName: Run Tests
 
