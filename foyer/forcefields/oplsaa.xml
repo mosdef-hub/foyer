@@ -236,15 +236,15 @@
   <Type name="opls_234" class="opls_234" element="C" mass="12.011"/>
   <Type name="opls_235" class="C" element="C" mass="12.011" def="[C;X3]([O;X1])[N;X3]" desc="C=O in amide, dmf, peptide bond" overrides="opls_277" doi="10.1021/ja9621760"/>
   <Type name="opls_236" class="O" element="O" mass="15.9994" def="O[C;%opls_235]" desc="O: C=O in amide.   Acyl R on C in amide is neutral -" overrides="opls_278" doi="10.1021/ja9621760"/>
-  <Type name="opls_237" class="opls_237" element="N" mass="14.0067"/>
-  <Type name="opls_238" class="opls_238" element="N" mass="14.0067"/>
-  <Type name="opls_239" class="N" element="N" mass="14.0067" def="[N;X3]([!H])([!H])([!H])" desc="N: tertiary amide" doi="10.1021/ja9621760"/>
+  <Type name="opls_237" class="N" element="N" mass="14.0067" def="[N;X3](H)(H)([C;X3]([0;X1]))" desc="primary amide N, ex. carboxamide" doi="10.1021/ja9621760"/>
+  <Type name="opls_238" class="N" element="N" mass="14.0067" def="[N;X3](H)([C;X3]([O;X1])(C)" desc="secondary amide N, ex. NML" doi="10.1021/ja9621760"/>
+  <Type name="opls_239" class="N" element="N" mass="14.0067" def="[N;X3]([!H])([!H])([!H])" desc="tertiary amide N" doi="10.1021/ja9621760"/>
   <Type name="opls_240" class="opls_240" element="H" mass="1.008"/>
   <Type name="opls_241" class="opls_241" element="H" mass="1.008"/>
   <Type name="opls_242" class="opls_242" element="C" mass="12.011"/>
-  <Type name="opls_243" class="CT" element="C" mass="12.011" def="[C;X4](H)(H)(H)[N;X3](C)(C)" desc="C on N: tertiary  N-Me amide" doi="10.1021/ja9621760"/>
+  <Type name="opls_243" class="CT" element="C" mass="12.011" def="[C;X4](H)(H)(H)[N;X3](C)(C)" desc="C on N: tertiary N-Me amide, primary carbon." doi="10.1021/ja9621760"/>
   <Type name="opls_244" class="opls_244" element="C" mass="12.011"/>
-  <Type name="opls_245" class="opls_245" element="C" mass="12.011"/>
+  <Type name="opls_245" class="CT" element="C" mass="12.011" def="[C;X4](C)(H)(H)[N;X3](C)(C)" desc="C on N: tertiary N-Me amide, secondary carbon. ex. NMP." doi="10.1021/ja9621760"/>
   <Type name="opls_246" class="opls_246" element="C" mass="12.011"/>
   <Type name="opls_247" class="opls_247" element="C" mass="12.011"/>
   <Type name="opls_248" class="opls_248" element="O" mass="15.9994"/>
