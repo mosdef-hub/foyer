@@ -2,7 +2,6 @@ import difflib
 import glob
 import os
 from pkg_resources import resource_filename
-from unittest.mock import Mock, patch
 
 from lxml import etree as ET
 
@@ -15,7 +14,7 @@ from foyer.forcefield import _check_independent_residues
 from foyer.exceptions import FoyerError, ValidationWarning
 from foyer.tests.utils import get_fn
 from foyer.utils.io import has_mbuild
-from foyer.utils.external import get_ref
+
 
 FF_DIR = resource_filename('foyer', 'forcefields')
 FORCEFIELDS = glob.glob(os.path.join(FF_DIR, '*.xml'))
@@ -78,71 +77,19 @@ def test_from_mbuild():
     assert len(ethane.rb_torsions) == 9
     assert all(x.type for x in ethane.dihedrals)
 
-@patch('foyer.utils.external.requests.get')
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-def test_write_refs(mock_get):
+def test_write_refs():
     import mbuild as mb
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
-    ethane_ref = str(
-        '@article{Jorgensen_1996,\n'
-        '\tdoi = {10.1021/ja9621760},\n'
-        '\turl = {https://doi.org/10.1021%2Fja9621760},\n'
-        '\tyear = 1996,\n'
-        '\tmonth = {jan},\n'
-        '\tpublisher = {American Chemical Society ({ACS})},\n'
-        '\tvolume = {118},\n'
-        '\tnumber = {45},\n'
-        '\tpages = {11225--11236},\n'
-        '\tauthor = {William L. Jorgensen and David S. Maxwell and Julian Tirado-Rives},\n'
-        '\ttitle = {Development and Testing of the {OPLS} All-Atom Force Field '
-        'on Conformational Energetics and Properties of Organic Liquids},\n'
-        '\tjournal = {Journal of the American Chemical Society}\n}')
-    mock_get.return_value.ok = True
-    mock_get.return_value.text = ethane_ref
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
     assert os.path.isfile('ethane.bib')
-    fi = open('ethane.bib', mode='r')
-    written_bib = fi .read()
-    fi.close()
-    print(ethane_ref)
-    assert written_bib == ethane_ref[:-2] + ',\n\tnote = {Parameters for atom types: opls_135, opls_140}\n}\n'
 
-@patch('foyer.utils.external.requests.get')
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-def test_write_refs_multiple(mock_get):
+def test_write_refs_multiple():
     import mbuild as mb
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(forcefield_files=get_fn('refs-multi.xml'))
-    ethane_ref1 = str(
-        '@article{Jorgensen_1996,\n'
-        '\tdoi = {10.1021/ja9621760},\n'
-        '\turl = {https://doi.org/10.1021%2Fja9621760},\n'
-        '\tyear = 1996,\n'
-        '\tmonth = {jan},\n'
-        '\tpublisher = {American Chemical Society ({ACS})},\n'
-        '\tvolume = {118},\n'
-        '\tnumber = {45},\n'
-        '\tpages = {11225--11236},\n'
-        '\tauthor = {William L. Jorgensen and David S. Maxwell and Julian Tirado-Rives},\n'
-        '\ttitle = {Development and Testing of the {OPLS} All-Atom Force Field '
-        'on Conformational Energetics and Properties of Organic Liquids},\n'
-        '\tjournal = {Journal of the American Chemical Society},\n}')
-    ethane_ref2 = str(
-        '@article{Jorgensen_2004,\n'
-        '\tdoi = {10.1021/jp0484579},\n'
-        '\turl = {https://doi.org/10.1021%2Fjp0484579},\n'
-        '\tyear = 2004,\n'
-        '\tmonth = {oct},\n'
-        '\tpublisher = {American Chemical Society ({ACS})},\n'
-        '\tvolume = {108},\n'
-        '\tnumber = {41},\n'
-        '\tpages = {16264--16270},\n'
-        '\tauthor = {William L. Jorgensen and Jakob P. Ulmschneider and Julian Tirado-Rives},\n'
-        '\ttitle = {Free Energies of Hydration from a Generalized Born Model and an All-Atom Force Field},\n'
-        '\tjournal = {The Journal of Physical Chemistry B},\n')
-    mock_get.return_value.ok = True
-    mock_get.return_value.text = ethane_ref1 + '\n' + ethane_ref2
     ethane = oplsaa.apply(mol2, references_file='ethane-multi.bib')
     assert os.path.isfile('ethane-multi.bib')
     with open(get_fn('ethane-multi.bib')) as file1:
@@ -151,6 +98,14 @@ def test_write_refs_multiple(mock_get):
                                              file2.readlines(),
                                              n=0))
     assert not diff
+
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+def test_write_bad_ref():
+    import mbuild as mb
+    mol2 = mb.load(get_fn('ethane.mol2'))
+    oplsaa = Forcefield(forcefield_files=get_fn('refs-bad.xml'))
+    with pytest.warns(UserWarning):
+        ethane = oplsaa.apply(mol2, references_file='ethane.bib')
 
 def test_preserve_resname():
     untyped_ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)

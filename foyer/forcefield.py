@@ -835,11 +835,16 @@ class Forcefield(app.ForceField):
             for doi, atomtypes in unique_references.items():
                 url = "http://dx.doi.org/" + doi
                 headers = {"accept": "application/x-bibtex"}
-                bibtex_ref = get_ref(url, headers=headers).text
+                bibtex_ref = get_ref(url, headers=headers)
+                if bibtex_ref is None:
+                    warnings.warn('Could not get ref for doi'.format(doi))
+                    continue
+                else:
+                    bibtex_text = bibtex_ref.text
                 note = (',\n\tnote = {Parameters for atom types: ' +
                         ', '.join(sorted(atomtypes)) + '}')
-                bibtex_ref = bibtex_ref[:-2] + note + bibtex_ref[-2:]
-                f.write('{}\n'.format(bibtex_ref))
+                bibtex_text = bibtex_text[:-2] + note + bibtex_text[-2:]
+                f.write('{}\n'.format(bibtex_text))
 
 
 pmd.Structure.write_foyer = write_foyer
