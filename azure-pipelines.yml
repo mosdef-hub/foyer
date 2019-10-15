@@ -1,6 +1,5 @@
 trigger:
   - master
-  - ci/azp-test
 
 pr:
   - master
@@ -88,7 +87,6 @@ jobs:
       - script: |
           call activate test-environment
           python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
-        failOnStderr: true
         displayName: Run Tests
 
   - job: LinuxBleedingMbuild
