@@ -833,7 +833,7 @@ class Forcefield(app.ForceField):
         unique_references = collections.OrderedDict(sorted(unique_references.items()))
         with open(references_file, 'w') as f:
             for doi, atomtypes in unique_references.items():
-                url = "http://dx.doi.org/" + doi
+                url = "http://api.crossref.org/works/{}/transform/application/x-bibtex".format(doi)
                 headers = {"accept": "application/x-bibtex"}
                 bibtex_ref = get_ref(url, headers=headers)
                 if bibtex_ref is None:

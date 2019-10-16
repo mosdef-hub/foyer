@@ -84,6 +84,12 @@ def test_write_refs():
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
     assert os.path.isfile('ethane.bib')
+    with open(get_fn('ethane.bib')) as file1:
+        with open('ethane.bib') as file2:
+            diff = list(difflib.unified_diff(file1.readlines(),
+                                             file2.readlines(),
+                                             n=0))
+    assert not diff
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_write_refs_multiple():
