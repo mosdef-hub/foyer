@@ -1,0 +1,27 @@
+# Ryan DeFever
+# University of Notre Dame
+# 2019 Oct 16
+
+gen_gaff_types.sh was used to generate the mol2 files with
+atomtypes from antechamber (v 17.3). MiniDrugBank was cloned 
+from github (https://github.com/openforcefield/MiniDrugBank) 
+and the single mol2 file was split into 371 molecules.
+
+
+Antechamber exited with fatal error for the following compounds.
+See antechamber_log.txt for more details.
+
+mdb_72
+mdb_114
+mdb_168
+mdb_193
+mdb_220
+mdb_258
+mdb_273
+mdb_275
+
+Compounds with bromine and chlorine have been temporarily
+placed under removed/ due to issue with parmed reading 
+bromine as boron and chlorine as carbon.
+
+
