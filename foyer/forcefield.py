@@ -6,7 +6,6 @@ from tempfile import NamedTemporaryFile
 import xml.etree.ElementTree as ET
 
 from pkg_resources import resource_filename
-import requests
 import warnings
 import re
 
