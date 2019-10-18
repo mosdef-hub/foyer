@@ -84,6 +84,12 @@ def test_write_refs():
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
     assert os.path.isfile('ethane.bib')
+    with open(get_fn('ethane.bib')) as file1:
+        with open('ethane.bib') as file2:
+            diff = list(difflib.unified_diff(file1.readlines(),
+                                             file2.readlines(),
+                                             n=0))
+    assert not diff
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_write_refs_multiple():
@@ -98,6 +104,14 @@ def test_write_refs_multiple():
                                              file2.readlines(),
                                              n=0))
     assert not diff
+
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+def test_write_bad_ref():
+    import mbuild as mb
+    mol2 = mb.load(get_fn('ethane.mol2'))
+    oplsaa = Forcefield(forcefield_files=get_fn('refs-bad.xml'))
+    with pytest.warns(UserWarning):
+        ethane = oplsaa.apply(mol2, references_file='ethane.bib')
 
 def test_preserve_resname():
     untyped_ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
