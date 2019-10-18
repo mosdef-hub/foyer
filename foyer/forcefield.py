@@ -6,7 +6,6 @@ from tempfile import NamedTemporaryFile
 import xml.etree.ElementTree as ET
 
 from pkg_resources import resource_filename
-import requests
 import warnings
 import re
 
@@ -27,6 +26,7 @@ from foyer import smarts
 from foyer.validator import Validator
 from foyer.xml_writer import write_foyer
 from foyer.utils.io import import_, has_mbuild
+from foyer.utils.external import get_ref
 
 
 def preprocess_forcefield_files(forcefield_files=None):
@@ -832,13 +832,18 @@ class Forcefield(app.ForceField):
         unique_references = collections.OrderedDict(sorted(unique_references.items()))
         with open(references_file, 'w') as f:
             for doi, atomtypes in unique_references.items():
-                url = "http://dx.doi.org/" + doi
+                url = "http://api.crossref.org/works/{}/transform/application/x-bibtex".format(doi)
                 headers = {"accept": "application/x-bibtex"}
-                bibtex_ref = requests.get(url, headers=headers).text
+                bibtex_ref = get_ref(url, headers=headers)
+                if bibtex_ref is None:
+                    warnings.warn('Could not get ref for doi'.format(doi))
+                    continue
+                else:
+                    bibtex_text = bibtex_ref.text
                 note = (',\n\tnote = {Parameters for atom types: ' +
                         ', '.join(sorted(atomtypes)) + '}')
-                bibtex_ref = bibtex_ref[:-2] + note + bibtex_ref[-2:]
-                f.write('{}\n'.format(bibtex_ref))
+                bibtex_text = bibtex_text[:-2] + note + bibtex_text[-2:]
+                f.write('{}\n'.format(bibtex_text))
 
 
 pmd.Structure.write_foyer = write_foyer
