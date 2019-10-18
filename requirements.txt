@@ -1,7 +1,1 @@
 openmm
-parmed
-networkx >=2.0
-six
-lark-parser
-requests
-lxml
