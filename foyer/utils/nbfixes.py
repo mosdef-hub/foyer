@@ -33,12 +33,12 @@ def apply_nbfix(struct, atom_type1, atom_type2, sigma, epsilon):
     try:
         a1
         a2
-    except:
+    except NameError:
         raise ValueError('Atom types {} and {} not found '
                 'in structure.'.format(atom_type1, atom_type2))
 
     # Calculate rmin from sigma because parmed uses it internally
-    rmin = sigma * 2 ** (1 / 6)
+    rmin = sigma * 2 ** (1.0 / 6.0)
     a1.add_nbfix(a2.name, rmin, epsilon)
     a2.add_nbfix(a1.name, rmin, epsilon)
 

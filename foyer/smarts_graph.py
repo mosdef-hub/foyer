@@ -1,6 +1,5 @@
 from collections import OrderedDict, defaultdict
 import itertools
-import sys
 
 import networkx as nx
 from networkx.algorithms import isomorphism

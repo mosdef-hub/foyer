@@ -1,5 +1,6 @@
 from lxml import etree
-import pdb
+
+
 root = etree.fromstring(open('oplsaa_with_silica.xml', 'r').read())
 atomtypes = root[0]
 bondforce = root[1]
