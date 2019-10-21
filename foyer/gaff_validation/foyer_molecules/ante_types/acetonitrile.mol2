@@ -1,0 +1,22 @@
+@<TRIPOS>MOLECULE
+*****
+    6     5     1     0     0
+SMALL
+No Charge or Current Charge
+
+
+@<TRIPOS>ATOM
+      1 C           49.9040    50.2100    50.5120 c3         1 LIG       0.023200
+      2 C1          50.1150    49.5990    49.2010 c1         1 LIG       0.059100
+      3 N           50.2830    49.1140    48.1600 n1         1 LIG      -0.196900
+      4 H           49.0710    50.9190    50.4810 hc         1 LIG       0.038200
+      5 H1          50.7980    50.7500    50.8380 hc         1 LIG       0.038200
+      6 H2          49.6740    49.4480    51.2630 hc         1 LIG       0.038200
+@<TRIPOS>BOND
+     1     1     2 1   
+     2     1     4 1   
+     3     1     5 1   
+     4     1     6 1   
+     5     2     3 3   
+@<TRIPOS>SUBSTRUCTURE
+     1 LIG         1 TEMP              0 ****  ****    0 ROOT

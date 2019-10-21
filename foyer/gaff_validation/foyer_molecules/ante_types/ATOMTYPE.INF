@@ -1,0 +1,65 @@
+====================================================================================
+-------------------------------ring property (I)------------------------------------
+
+====================================================================================
+-------------------------------ring property (II)------------------------------------
+
+====================================================================================
+-------------------------------ring property (III)-----------------------------------
+atom[ 1] (C   ) is not in any ring (nr[1]=1)
+atom[ 2] (H   ) is not in any ring (nr[2]=1)
+atom[ 3] (H1  ) is not in any ring (nr[3]=1)
+atom[ 4] (H2  ) is not in any ring (nr[4]=1)
+atom[ 5] (C1  ) is not in any ring (nr[5]=1)
+atom[ 6] (O   ) is not in any ring (nr[6]=1)
+atom[ 7] (O1  ) is not in any ring (nr[7]=1)
+atom[ 8] (C2  ) is not in any ring (nr[8]=1)
+atom[ 9] (H3  ) is not in any ring (nr[9]=1)
+atom[10] (C3  ) is not in any ring (nr[10]=1)
+atom[11] (H4  ) is not in any ring (nr[11]=1)
+atom[12] (H5  ) is not in any ring (nr[12]=1)
+
+====================================================================================
+-------------------------------aromatic property------------------------------------
+
+====================================================================================
+-------------------------------electronic property----------------------------------
+atom [ 1] (C   ) is not an electron-withdrew atom
+atom [ 2] (H   ) is not an electron-withdrew atom
+atom [ 3] (H1  ) is not an electron-withdrew atom
+atom [ 4] (H2  ) is not an electron-withdrew atom
+atom [ 5] (C1  ) is not an electron-withdrew atom
+atom [ 6] (O   ) is an electron-withdrew atom
+atom [ 7] (O1  ) is an electron-withdrew atom
+atom [ 8] (C2  ) is not an electron-withdrew atom
+atom [ 9] (H3  ) is not an electron-withdrew atom
+atom [10] (C3  ) is not an electron-withdrew atom
+atom [11] (H4  ) is not an electron-withdrew atom
+atom [12] (H5  ) is not an electron-withdrew atom
+
+====================================================================================
+--------------------------------connectivity property-------------------------------
+atom[ 1] (C   )     4    H2
+atom[ 1] (C   )     2     H
+atom[ 1] (C   )     3    H1
+atom[ 1] (C   )     5    C1
+atom[ 2] (H   )     1     C
+atom[ 3] (H1  )     1     C
+atom[ 4] (H2  )     1     C
+atom[ 5] (C1  )     1     C
+atom[ 5] (C1  )     6     O
+atom[ 5] (C1  )     7    O1
+atom[ 6] (O   )     5    C1
+atom[ 7] (O1  )     5    C1
+atom[ 7] (O1  )     8    C2
+atom[ 8] (C2  )     7    O1
+atom[ 8] (C2  )     9    H3
+atom[ 8] (C2  )    10    C3
+atom[ 9] (H3  )     8    C2
+atom[10] (C3  )     8    C2
+atom[10] (C3  )    12    H5
+atom[10] (C3  )    11    H4
+atom[11] (H4  )    10    C3
+atom[12] (H5  )    10    C3
+----------------------------------------END-----------------------------------------
+

@@ -1,0 +1,4160 @@
+STARTING COMPOUND: 111-trifluoropropane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/111-trifluoropropane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1122-tetrachloroethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1122-tetrachloroethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 1, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 4, Name: Cl1) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 7, Name: Cl2) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 8, Name: Cl3) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 112-trichloroethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/112-trichloroethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 1, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 4, Name: Cl1) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 8, Name: Cl2) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 11-dichloroethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/11-dichloroethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 7, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 8, Name: Cl1) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 11-dichloroethene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/11-dichloroethene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 5, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 6, Name: Cl1) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1234-tetrafluorobenzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1234-tetrafluorobenzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1235-tetrafluorobenzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1235-tetrafluorobenzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 123-propanetriol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/123-propanetriol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 124-trimethylbenzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/124-trimethylbenzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 12-dibromoethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/12-dibromoethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 12-dibromopropane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/12-dibromopropane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 12-dichloroethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/12-dichloroethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 1, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 8, Name: Cl1) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 12-difluorobenzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/12-difluorobenzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 12-dimethoxybenzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/12-dimethoxybenzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 12-ethanediamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/12-ethanediamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 12-ethanedithiol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/12-ethanedithiol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 13-dichloropropane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/13-dichloropropane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 1, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 11, Name: Cl1) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 13-difluorobenzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/13-difluorobenzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 13-dioxolane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/13-dioxolane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 14-butanediol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/14-butanediol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 14-dichlorobutane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/14-dichlorobutane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 1, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 14, Name: Cl1) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 15-pentanediol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/15-pentanediol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1-bromobutane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1-bromobutane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1-bromopropane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1-bromopropane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1-butanethiol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1-butanethiol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1-butanol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1-butanol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1-chlorobutane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1-chlorobutane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 14, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1-chloronaphthalene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1-chloronaphthalene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 18, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1-cyclopropylpropane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1-cyclopropylpropane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1-ethylpropylamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1-ethylpropylamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1-nitropropane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1-nitropropane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1-octanol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1-octanol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 1-pentanol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/1-pentanol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 246-trimethylpyridine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/246-trimethylpyridine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 24-dimethyl-3-pentanone
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/24-dimethyl-3-pentanone.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 24-pentanedione
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/24-pentanedione.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 26-dimethyl-4-heptanone
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/26-dimethyl-4-heptanone.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-aminoethanol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-aminoethanol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-chloroaniline
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-chloroaniline.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 1, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-chloroethanol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-chloroethanol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 1, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-heptanone
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-heptanone.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-hexanone
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-hexanone.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-iodopropane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-iodopropane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-methyl-2-butanol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-methyl-2-butanol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-methyl-2-propanol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-methyl-2-propanol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-methylphenol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-methylphenol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-methylpyridine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-methylpyridine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-nitropropane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-nitropropane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-propenenitrile
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-propenenitrile.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 2-propylpyrrole
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/2-propylpyrrole.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (3) for atom (ID: 3, Name: N) does not match
+         the connectivity (2) for atom type (N.ar) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+Warning: atom type of    C1 (cc) and     C (cc) may be wrong.
+
+STARTING COMPOUND: 3-methylphenol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/3-methylphenol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 3-methylpyridine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/3-methylpyridine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 3-pentanol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/3-pentanol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 4-methylphenol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/4-methylphenol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: 4-methylpyridine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/4-methylpyridine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: acetamide
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/acetamide.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: acetic-anhydride
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/acetic-anhydride.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: acetone
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/acetone.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: acetonitrile
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/acetonitrile.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: acetophenone
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/acetophenone.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: anisole
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/anisole.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: benzaldehyde
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/benzaldehyde.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: benzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/benzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: benzenethiol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/benzenethiol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: benzonitrile
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/benzonitrile.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (3) for atom (ID: 11, Name: C5) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: benzyl-alcohol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/benzyl-alcohol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: biphenyl
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/biphenyl.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: bromoethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/bromoethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: bromomethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/bromomethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: chloroethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/chloroethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 8, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: cyclohexane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/cyclohexane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: cyclohexanone
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/cyclohexanone.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: cyclohexylamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/cyclohexylamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: cyclopentanone
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/cyclopentanone.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: cyclopropyl-methyl-ketone
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/cyclopropyl-methyl-ketone.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: dibromomethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/dibromomethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: dibutylamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/dibutylamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: dibutyl-ether
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/dibutyl-ether.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: dichlorofluoromethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/dichlorofluoromethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 1, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 4, Name: Cl1) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: dichloromethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/dichloromethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 1, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 5, Name: Cl1) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: diethanolamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/diethanolamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: diethylamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/diethylamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: diethyl-carbonate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/diethyl-carbonate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: diethylene-glycol-dimethyl-ether
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/diethylene-glycol-dimethyl-ether.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: diethylene-glycol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/diethylene-glycol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: diethyl-malonate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/diethyl-malonate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: diethyl-sulfide
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/diethyl-sulfide.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: diisopropylamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/diisopropylamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: diisopropyl-ether
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/diisopropyl-ether.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: dimethoxymethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/dimethoxymethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: dimethyl-disulfide
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/dimethyl-disulfide.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: dimethylether
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/dimethylether.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: dimethylformamide
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/dimethylformamide.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: dimethyl-sulfide
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/dimethyl-sulfide.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: dimethyl-sulfoxide
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/dimethyl-sulfoxide.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: diphenyl-ether
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/diphenyl-ether.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: E-hex-2-ene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/E-hex-2-ene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: ethanol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/ethanol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: ethyl-acetate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/ethyl-acetate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: ethylbenzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/ethylbenzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: ethylene-carbonate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/ethylene-carbonate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: ethyl-propanoate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/ethyl-propanoate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: ethyl-vinyl-ether
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/ethyl-vinyl-ether.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (2) for atom (ID: 8, Name: O) does not match
+         the connectivity (1) for atom type (O.2) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: fluorobenzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/fluorobenzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: formaldehyde
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/formaldehyde.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: formamide
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/formamide.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: formic-acid
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/formic-acid.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: furan
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/furan.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (2) for atom (ID: 9, Name: O) does not match
+         the connectivity (1) for atom type (O.2) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: gamma-butyrolactone
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/gamma-butyrolactone.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: isobutane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/isobutane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: isopropylamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/isopropylamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: isopropylbenzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/isopropylbenzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: isoquinoline
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/isoquinoline.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: methanol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/methanol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: methyl-acetate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/methyl-acetate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: methyl-benzoate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/methyl-benzoate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: methyl-formate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/methyl-formate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: methyl-methacrylate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/methyl-methacrylate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: methyloxirane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/methyloxirane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: methyl-salicylate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/methyl-salicylate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: morpholine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/morpholine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: n-butylamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/n-butylamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: nitrobenzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/nitrobenzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: nitroethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/nitroethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: nitromethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/nitromethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: N-methylacetamide
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/N-methylacetamide.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: N-methylformamide
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/N-methylformamide.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: NN-dimethylacetamide
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/NN-dimethylacetamide.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: NN-dimethylformamide
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/NN-dimethylformamide.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: o-xylene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/o-xylene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: paraldehyde
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/paraldehyde.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: pentachloroethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/pentachloroethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 1, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 3, Name: Cl1) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 4, Name: Cl2) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 7, Name: Cl3) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 8, Name: Cl4) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: pentanenitrile
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/pentanenitrile.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: phenol
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/phenol.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: propanenitrile
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/propanenitrile.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: propionic-acid
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/propionic-acid.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: propylamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/propylamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: propylene-carbonate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/propylene-carbonate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: propyne
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/propyne.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: pyridine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/pyridine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: pyrimidine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/pyrimidine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: pyrrole
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/pyrrole.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (3) for atom (ID: 9, Name: N) does not match
+         the connectivity (2) for atom type (N.ar) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+Warning: atom type of    C1 (cc) and     C (cc) may be wrong.
+
+STARTING COMPOUND: pyrrolidine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/pyrrolidine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: quinoline
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/quinoline.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: styrene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/styrene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: sulfolane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/sulfolane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: tert-butylamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/tert-butylamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: tetrahydrofuran
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/tetrahydrofuran.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: tetrahydrothiophene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/tetrahydrothiophene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: thiophene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/thiophene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (2) for atom (ID: 9, Name: S) does not match
+         the connectivity (1) for atom type (S.2) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: toluene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/toluene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: trichloromethane
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/trichloromethane.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+Warning: The number of bonds (1) for atom (ID: 1, Name: CL) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 4, Name: Cl1) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+Warning: The number of bonds (1) for atom (ID: 5, Name: Cl2) does not match
+         the connectivity (4) for atom type (C.3) defined in CORR_NAME_TYPE.DAT.
+But, you may safely ignore the warnings if your molecule
+         uses atom names or element names as atom types.
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: triethylamine
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/triethylamine.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: triethyl-phosphate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/triethyl-phosphate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: trifluoromethyl-benzene
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/trifluoromethyl-benzene.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+
+STARTING COMPOUND: vinyl-acetate
+
+Welcome to antechamber 17.3: molecular input file processor.
+
+acdoctor mode is on: check and diagnosis problems in the input file.
+-- Check Format for mol2 File --
+   Status: pass
+Info: Finished reading file (../mol2/vinyl-acetate.mol2).
+-- Check Unusual Elements --
+   Status: pass
+-- Check Open Valences --
+   Status: pass
+-- Check Geometry --
+      for those bonded   
+      for those not bonded   
+   Status: pass
+-- Check Weird Bonds --
+   Status: pass
+-- Check Number of Units --
+   Status: pass
+acdoctor mode has completed checking the input file.
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/bondtype -j full -i ANTECHAMBER_BOND_TYPE.AC0 -o ANTECHAMBER_BOND_TYPE.AC -f ac
+
+Running: /afs/crc.nd.edu/x86_64_linux/a/amber/18.0/amber18/bin/atomtype -i ANTECHAMBER_AC.AC0 -o ANTECHAMBER_AC.AC -p gaff
+

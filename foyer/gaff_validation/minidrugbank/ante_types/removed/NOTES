@@ -1,55 +1,8 @@
 
-Foyer can't recognize 'os' type in 3 membered ring:
+# Removed because Foyer can't recognize 
+# 'os' type in 3 membered ring:
+
 mdb_112.mol2
 mdb_137.mol2
 mdb_230.mol2
 mdb_362.mol2
-
-Removed because contains chlorine:
-mdb_119.mol2
-mdb_127.mol2
-mdb_129.mol2
-mdb_154.mol2
-mdb_158.mol2
-mdb_166.mol2
-mdb_173.mol2
-mdb_181.mol2
-mdb_183.mol2
-mdb_209.mol2
-mdb_233.mol2
-mdb_237.mol2
-mdb_238.mol2
-mdb_245.mol2
-mdb_249.mol2
-mdb_260.mol2
-mdb_319.mol2
-mdb_31.mol2
-mdb_322.mol2
-mdb_339.mol2
-mdb_352.mol2
-mdb_37.mol2
-mdb_48.mol2
-mdb_51.mol2
-mdb_71.mol2
-mdb_81.mol2
-mdb_89.mol2
-
-Removed becuase contains bromine
-mdb_124.mol2
-mdb_14.mol2
-mdb_153.mol2
-mdb_154.mol2
-mdb_156.mol2
-mdb_158.mol2
-mdb_178.mol2
-mdb_186.mol2
-mdb_241.mol2
-mdb_257.mol2
-mdb_266.mol2
-mdb_294.mol2
-mdb_29.mol2
-mdb_318.mol2
-mdb_367.mol2
-mdb_75.mol2
-mdb_94.mol2
-
