@@ -1,0 +1,16 @@
+@<TRIPOS>MOLECULE
+RES
+3 2 1 0 1
+SMALL
+USER_CHARGES
+@<TRIPOS>CRYSIN
+    5.0000     5.0000     5.0000    90.0000    90.0000    90.0000  1  1
+@<TRIPOS>ATOM
+       1 _CH3         0.0000     0.0000     0.0000 CH3_sp3-Cald      1 RES       -0.043000
+       2 _HC          0.0000     0.0000     0.0000 CH_ald        1 RES        0.525000
+       3 O            0.0000     0.0000     0.0000 O_ald         1 RES       -0.482000
+@<TRIPOS>BOND
+       1        1        2 1
+       2        3        2 1
+@<TRIPOS>SUBSTRUCTURE
+       1 RES             1 RESIDUE    0 1    ROOT      0

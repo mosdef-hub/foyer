@@ -8,3 +8,9 @@ methane
 methanol
 neopentane
 propane
+dimethylether
+aldehyde_1
+aldehyde_2
+aldehyde_3
+aldehyde_4
+methyl_acrylate

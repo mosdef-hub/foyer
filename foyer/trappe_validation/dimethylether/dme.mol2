@@ -1,0 +1,14 @@
+@<TRIPOS>MOLECULE
+DME
+3 2 1 0 1
+SMALL
+USER_CHARGES
+@<TRIPOS>ATOM
+       1 _CH3        12.5360     1.0140    22.0490 CH3_eth       1 DME        0.265000
+       2 O           13.5570     1.3980    22.8620 O_eth         1 DME        0.000000
+       3 _CH3        13.5710     2.7160    23.1980 CH3_eth       1 DME        0.265000
+@<TRIPOS>BOND
+       1        1        2 1
+       2        2        3 1
+@<TRIPOS>SUBSTRUCTURE
+       1 DME             1 RESIDUE    0 1    ROOT      0
