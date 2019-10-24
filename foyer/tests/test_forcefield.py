@@ -12,12 +12,26 @@ from foyer import Forcefield
 from foyer.forcefield import generate_topology
 from foyer.forcefield import _check_independent_residues
 from foyer.exceptions import FoyerError, ValidationWarning
-from foyer.tests.utils import get_fn
+from foyer.tests.utils import get_fn, register_mock_request
 from foyer.utils.io import has_mbuild
 
 
 FF_DIR = resource_filename('foyer', 'forcefields')
 FORCEFIELDS = glob.glob(os.path.join(FF_DIR, '*.xml'))
+
+RESPONSE_BIB_ETHANE_SINGLE = """@article{Jorgensen_1996,
+	doi = {10.1021/ja9621760},
+	url = {https://doi.org/10.1021%2Fja9621760},
+	year = 1996,
+	month = {jan},
+	publisher = {American Chemical Society ({ACS})},
+	volume = {118},
+	number = {45},
+	pages = {11225--11236},
+	author = {William L. Jorgensen and David S. Maxwell and Julian Tirado-Rives},
+	title = {Development and Testing of the {OPLS} All-Atom Force Field on Conformational Energetics and Properties of Organic Liquids},
+	journal = {Journal of the American Chemical Society}
+}"""
 
 
 def test_load_files():
@@ -77,9 +91,15 @@ def test_from_mbuild():
     assert len(ethane.rb_torsions) == 9
     assert all(x.type for x in ethane.dihedrals)
 
+
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-def test_write_refs():
+def test_write_refs(requests_mock):
     import mbuild as mb
+    register_mock_request(mocker=requests_mock,
+                          url='http://api.crossref.org/',
+                          path='works/10.1021/ja9621760/transform/application/x-bibtex',
+                          headers={'accept': 'application/x-bibtex'},
+                          text=RESPONSE_BIB_ETHANE_SINGLE)
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
