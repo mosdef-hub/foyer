@@ -19,7 +19,7 @@ from foyer.utils.io import has_mbuild
 FF_DIR = resource_filename('foyer', 'forcefields')
 FORCEFIELDS = glob.glob(os.path.join(FF_DIR, '*.xml'))
 
-RESPONSE_BIB_ETHANE_SINGLE = """@article{Jorgensen_1996,
+RESPONSE_BIB_ETHANE_JA962170 = """@article{Jorgensen_1996,
 	doi = {10.1021/ja9621760},
 	url = {https://doi.org/10.1021%2Fja9621760},
 	year = 1996,
@@ -31,6 +31,20 @@ RESPONSE_BIB_ETHANE_SINGLE = """@article{Jorgensen_1996,
 	author = {William L. Jorgensen and David S. Maxwell and Julian Tirado-Rives},
 	title = {Development and Testing of the {OPLS} All-Atom Force Field on Conformational Energetics and Properties of Organic Liquids},
 	journal = {Journal of the American Chemical Society}
+}"""
+
+RESPONSE_BIB_ETHANE_JP0484579="""@article{Jorgensen_2004,
+	doi = {10.1021/jp0484579},
+	url = {https://doi.org/10.1021%2Fjp0484579},
+	year = 2004,
+	month = {oct},
+	publisher = {American Chemical Society ({ACS})},
+	volume = {108},
+	number = {41},
+	pages = {16264--16270},
+	author = {William L. Jorgensen and Jakob P. Ulmschneider and Julian Tirado-Rives},
+	title = {Free Energies of Hydration from a Generalized Born Model and an All-Atom Force Field},
+	journal = {The Journal of Physical Chemistry B}
 }"""
 
 
@@ -99,7 +113,7 @@ def test_write_refs(requests_mock):
                           url='http://api.crossref.org/',
                           path='works/10.1021/ja9621760/transform/application/x-bibtex',
                           headers={'accept': 'application/x-bibtex'},
-                          text=RESPONSE_BIB_ETHANE_SINGLE)
+                          text=RESPONSE_BIB_ETHANE_JA962170)
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
@@ -112,8 +126,18 @@ def test_write_refs(requests_mock):
     assert not diff
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-def test_write_refs_multiple():
+def test_write_refs_multiple(requests_mock):
     import mbuild as mb
+    register_mock_request(mocker=requests_mock,
+                          url='http://api.crossref.org/',
+                          path='works/10.1021/ja9621760/transform/application/x-bibtex',
+                          headers={'accept': 'application/x-bibtex'},
+                          text=RESPONSE_BIB_ETHANE_JA962170)
+    register_mock_request(mocker=requests_mock,
+                          url='http://api.crossref.org/',
+                          path='works/10.1021/jp0484579/transform/application/x-bibtex',
+                          headers={'accept': 'application/x-bibtex'},
+                          text=RESPONSE_BIB_ETHANE_JP0484579)
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(forcefield_files=get_fn('refs-multi.xml'))
     ethane = oplsaa.apply(mol2, references_file='ethane-multi.bib')
@@ -124,14 +148,6 @@ def test_write_refs_multiple():
                                              file2.readlines(),
                                              n=0))
     assert not diff
-
-@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-def test_write_bad_ref():
-    import mbuild as mb
-    mol2 = mb.load(get_fn('ethane.mol2'))
-    oplsaa = Forcefield(forcefield_files=get_fn('refs-bad.xml'))
-    with pytest.warns(UserWarning):
-        ethane = oplsaa.apply(mol2, references_file='ethane.bib')
 
 def test_preserve_resname():
     untyped_ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
