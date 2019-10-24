@@ -29,6 +29,7 @@ test:
     - mbuild
     - pytest >=3.0
     - pytest-timeout
+    - requests-mock
 
   source_files:
     - foyer/forcefields/*
