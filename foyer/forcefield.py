@@ -512,6 +512,11 @@ class Forcefield(app.ForceField):
             atom_types = set(atom.type for atom in structure.atoms)
             self._write_references_to_file(atom_types, references_file)
 
+        # TODO: Check against the name of the force field and/or store
+        # combining rule directly in XML, i.e.
+        # if self.name == 'oplsaa':
+        structure.combining_rule = 'geometric'
+
         return structure
 
     def run_atomtyping(self, topology, use_residue_map=True):
