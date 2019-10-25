@@ -1,6 +1,6 @@
 import glob
 from os.path import join, split, abspath
-
+import urllib.parse as parseurl
 import numpy as np
 
 
@@ -79,3 +79,30 @@ def glob_fn(pattern):
     list of file absolute paths matching the pattern.
     """
     return glob.glob(join(split(abspath(__file__))[0], 'files', pattern))
+
+
+def register_mock_request(mocker,
+                          url='http://api.crossref.org/',
+                          http_verb='GET',
+                          text='',
+                          path=None,
+                          headers=None,
+                          status_code=200):
+    """Registers the mocker for the given uri.
+
+    Parameters
+    ----------
+    mocker : request_mock's mocker object
+    url: url to register the mocker for
+    http_verb: One of the many http verbs, default GET
+    text: the fake text response, default ''
+    path: (str) path of the resource that forms the uri, default None
+    headers: (dict) the http headers to match (optional), default None
+    status_code: (int), the status code of the response, default 200
+    """
+    uri = url
+    if headers is None:
+        headers = {}
+    if path is not None:
+        uri = parseurl.urljoin(url, path, allow_fragments=False)
+    mocker.register_uri(http_verb, uri, headers=headers, text=text, status_code=status_code)
