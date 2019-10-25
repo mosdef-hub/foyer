@@ -77,6 +77,15 @@ def test_from_mbuild():
     assert len(ethane.rb_torsions) == 9
     assert all(x.type for x in ethane.dihedrals)
 
+@pytest.mark.parametrize("mixing_rule", ['lorentz', 'geometric'])
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+def test_comb_rule(mixing_rule):
+    import mbuild as mb
+    mol2 = mb.load(get_fn('ethane.mol2'))
+    oplsaa = Forcefield(name='oplsaa')
+    ethane = oplsaa.apply(mol2, combining_rule=mixing_rule)
+    assert ethane.combining_rule == mixing_rule
+
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_write_refs():
     import mbuild as mb
