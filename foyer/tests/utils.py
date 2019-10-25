@@ -86,7 +86,8 @@ def register_mock_request(mocker,
                           http_verb='GET',
                           text='',
                           path=None,
-                          headers=None):
+                          headers=None,
+                          status_code=200):
     """Registers the mocker for the given uri.
 
     Parameters
@@ -97,8 +98,11 @@ def register_mock_request(mocker,
     text: the fake text response, default ''
     path: (str) path of the resource that forms the uri, default None
     headers: (dict) the http headers to match (optional), default None
+    status_code: (int), the status code of the response, default 200
     """
     uri = url
+    if headers is None:
+        headers = {}
     if path is not None:
         uri = parseurl.urljoin(url, path, allow_fragments=False)
-    mocker.register_uri(http_verb, uri, headers=headers, text=text)
+    mocker.register_uri(http_verb, uri, headers=headers, text=text, status_code=status_code)

@@ -149,6 +149,19 @@ def test_write_refs_multiple(requests_mock):
                                              n=0))
     assert not diff
 
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+def test_write_bad_ref(requests_mock):
+    import mbuild as mb
+    register_mock_request(mocker=requests_mock,
+                          url='http://api.crossref.org/',
+                          path='works/10.1021/garbage_bad_44444444jjjj/transform/application/x-bibtex',
+                          headers={'accept': 'application/x-bibtex'},
+                          status_code=404)
+    mol2 = mb.load(get_fn('ethane.mol2'))
+    oplsaa = Forcefield(forcefield_files=get_fn('refs-bad.xml'))
+    with pytest.warns(UserWarning):
+        ethane = oplsaa.apply(mol2, references_file='ethane.bib')
+
 def test_preserve_resname():
     untyped_ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     untyped_resname = untyped_ethane.residues[0].name
