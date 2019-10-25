@@ -445,7 +445,7 @@ class Forcefield(app.ForceField):
     def apply(self, topology, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
               assert_dihedral_params=True, assert_improper_params=False,
-              verbose=False, *args, **kwargs):
+              combining_rule='geometric', verbose=False, *args, **kwargs):
         """Apply the force field to a molecular structure
 
         Parameters
@@ -476,6 +476,9 @@ class Forcefield(app.ForceField):
         assert_improper_params : bool, optional, default=False
             If True, Foyer will exit if parameters are not found for all system
             improper dihedrals.
+        combining_rule : str, optional, default='geometric'
+            The combining rule of the system, stored as an attribute of the
+            ParmEd structure. Accepted arguments are `geometric` and `lorentz`.
         verbose : bool, optional, default=False
             If True, Foyer will print debug-level information about notable or
             potentially problematic details it encounters.
@@ -511,6 +514,11 @@ class Forcefield(app.ForceField):
         if references_file:
             atom_types = set(atom.type for atom in structure.atoms)
             self._write_references_to_file(atom_types, references_file)
+
+        # TODO: Check against the name of the force field and/or store
+        # combining rule directly in XML, i.e.
+        # if self.name == 'oplsaa':
+        structure.combining_rule = combining_rule
 
         return structure
 

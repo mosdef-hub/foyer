@@ -74,7 +74,7 @@ class TestOPLS(object):
         assert all(x.type for x in parametrized.angles)
         assert len(parametrized.rb_torsions) == 24
         assert all(x.type for x in parametrized.dihedrals)
-
+        assert parametrized.combining_rule == 'geometric'
 
 
 if __name__ == '__main__':
