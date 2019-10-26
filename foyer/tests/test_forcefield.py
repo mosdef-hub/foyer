@@ -17,7 +17,7 @@ from foyer.utils.io import has_mbuild
 
 
 FF_DIR = resource_filename('foyer', 'forcefields')
-FORCEFIELDS = glob.glob(os.path.join(FF_DIR, '*.xml'))
+FORCEFIELDS = glob.glob(os.path.join(FF_DIR, 'xml/*.xml'))
 
 
 def test_load_files():
