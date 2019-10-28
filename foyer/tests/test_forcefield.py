@@ -17,7 +17,7 @@ from foyer.utils.io import has_mbuild
 
 
 FF_DIR = resource_filename('foyer', 'forcefields')
-FORCEFIELDS = glob.glob(os.path.join(FF_DIR, '*.xml'))
+FORCEFIELDS = glob.glob(os.path.join(FF_DIR, 'xml/*.xml'))
 
 RESPONSE_BIB_ETHANE_JA962170 = """@article{Jorgensen_1996,
 	doi = {10.1021/ja9621760},

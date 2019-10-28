@@ -97,6 +97,12 @@ setup(
                             'opls_validation/oplsaa.ff/*',
                             'examples/files/*'
                             ]},
+    entry_points={
+        'foyer.forcefields':[
+            "OPLSAA = foyer.forcefields.forcefields:OPLSAA",
+            "TRAPPE_UA = foyer.forcefields.forcefields:TRAPPE_UA",
+        ]
+    },
     package_dir={'foyer': 'foyer'},
     include_package_data=True,
     license="MIT",
