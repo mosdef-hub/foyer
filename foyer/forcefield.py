@@ -445,7 +445,8 @@ class Forcefield(app.ForceField):
     def apply(self, topology, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
               assert_dihedral_params=True, assert_improper_params=False,
-              combining_rule='geometric', verbose=False, *args, **kwargs):
+              combining_rule='geometric', run_atomtyping = True,
+              verbose=False, *args, **kwargs):
         """Apply the force field to a molecular structure
 
         Parameters
@@ -479,20 +480,29 @@ class Forcefield(app.ForceField):
         combining_rule : str, optional, default='geometric'
             The combining rule of the system, stored as an attribute of the
             ParmEd structure. Accepted arguments are `geometric` and `lorentz`.
+        run_atomtyping : bool, optional, default=True
+            If true run atomtyping from SMARTS definitions. If false, assume
+            topology already contains correct atomtypes and apply the forcefield
         verbose : bool, optional, default=False
             If True, Foyer will print debug-level information about notable or
             potentially problematic details it encounters.
         """
-        if self.atomTypeDefinitions == {}:
+
+        if run_atomtyping == False:
+            assert isinstance(topology, pmd.Structure), ('Must supply a parmed '
+                'structure with atom type information if using the '
+                'run_atomtyping = False option')
+            typemap = { atom.idx : { 'atomtype' : atom.type } for atom in topology.atoms }
+        elif self.atomTypeDefinitions == {}:
             raise FoyerError('Attempting to atom-type using a force field '
                     'with no atom type defitions.')
 
         topology, positions = self._prepare_topology(topology, **kwargs)
 
-        typemap = self.run_atomtyping(topology, use_residue_map=use_residue_map)
+        if run_atomtyping == True:
+            typemap = self.run_atomtyping(topology, use_residue_map=use_residue_map)
 
         self._apply_typemap(topology, typemap)
-
         system = self.createSystem(topology, *args, **kwargs)
 
         _separate_urey_bradleys(system, topology)
