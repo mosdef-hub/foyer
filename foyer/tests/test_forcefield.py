@@ -476,3 +476,54 @@ def test_write_xml_overrides():
         elif attributes['name'] == 'opls_146':
             assert attributes['overrides'] == 'opls_144'
             assert str(item.xpath('comment()')) == '[<!--Note: original overrides="opls_144"-->]'
+
+def test_user_atomtypes():
+    mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+    
+    # User manually atomtypes
+    # This could come from antechamber or another source
+    mol2.atoms[0].type = 'opls_135'
+    mol2.atoms[1].type = 'opls_135'
+    for i in range(2,8):
+        mol2.atoms[i].type = 'opls_140'
+
+    # This FF has the SMARTS strings removed. 
+    oplsaa = Forcefield(get_fn('ethane-nodefs.xml'))
+    ethane = oplsaa.apply(mol2,run_atomtyping=False)
+
+    # Check the resulting structure.
+    assert sum((1 for at in ethane.atoms if at.type == 'opls_135')) == 2
+    assert sum((1 for at in ethane.atoms if at.type == 'opls_140')) == 6
+    assert len(ethane.bonds) == 7
+    assert all(x.type for x in ethane.bonds)
+    assert len(ethane.angles) == 12
+    assert all(x.type for x in ethane.angles)
+    assert len(ethane.rb_torsions) == 9
+    assert all(x.type for x in ethane.dihedrals)
+
+    # Check bonded parameters
+    for bond in ethane.bonds:
+        if bond.atom1.type == 'opls_135' and bond.atom2.type == 'opls_135':
+            assert round(bond.type.k,5) == 268.0
+            assert round(bond.type.req,5) == 1.529
+        else:
+            assert round(bond.type.k,5) == 340.0
+            assert round(bond.type.req,5) == 1.090
+
+    # Check a couple angle parameters
+    for angle in ethane.angles:
+        if ( angle.atom1.type == 'opls_140' and
+             angle.atom2.type == 'opls_135' and
+             angle.atom3.type == 'opls_135' ):
+
+            assert round(angle.type.k,5) == 37.50
+            assert round(angle.type.theteq,5) == 110.70
+
+        elif ( angle.atom1.type == 'opls_140' and
+               angle.atom2.type == 'opls_135' and
+               angle.atom3.type == 'opls_140' ):
+
+            assert round(angle.type.k,5) == 33.0
+            assert round(angle.type.theteq,5) == 107.8
+
+
