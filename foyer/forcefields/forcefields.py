@@ -34,7 +34,3 @@ def load_OPLSAA():
 
 def load_TRAPPE_UA():
     return get_forcefield(name='trappe-ua')
-
-
-load_OPLSAA = load_OPLSAA
-load_TRAPPE_UA = load_TRAPPE_UA
