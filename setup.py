@@ -99,8 +99,8 @@ setup(
                             ]},
     entry_points={
         'foyer.forcefields':[
-            "OPLSAA = foyer.forcefields.forcefields:OPLSAA",
-            "TRAPPE_UA = foyer.forcefields.forcefields:TRAPPE_UA",
+            "load_OPLSAA = foyer.forcefields.forcefields:load_OPLSAA",
+            "load_TRAPPE_UA = foyer.forcefields.forcefields:load_TRAPPE_UA",
         ]
     },
     package_dir={'foyer': 'foyer'},

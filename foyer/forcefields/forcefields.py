@@ -27,5 +27,5 @@ def get_forcefield(name=None):
                 ' in path {}'.format(name, get_ff_path()))
     return Forcefield(ff_path)
 
-OPLSAA = get_forcefield(name='oplsaa')
-TRAPPE_UA = get_forcefield(name='trappe-ua')
+load_OPLSAA = get_forcefield(name='oplsaa')
+load_TRAPPE_UA = get_forcefield(name='trappe-ua')
