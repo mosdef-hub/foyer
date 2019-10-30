@@ -6,9 +6,9 @@ def test_basic_import():
     assert 'forcefields' in dir(foyer)
 
 
-@pytest.mark.parametrize('ff_name', ['OPLSAA', 'TRAPPE_UA'])
-def test_forcefields_exist(ff_name):
-    ff_name in dir(foyer.forcefields)
+@pytest.mark.parametrize('ff_loader', ['load_OPLSAA', 'load_TRAPPE_UA'])
+def test_forcefields_exist(ff_loader):
+    assert ff_loader in dir(foyer.forcefields)
 
 
 def test_load_forcefield():
