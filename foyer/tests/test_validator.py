@@ -17,7 +17,7 @@ ERRORS = {'validationerror': (ValidationError, MultipleValidationError),
 }
 
 FF_DIR = resource_filename('foyer', 'forcefields')
-FORCEFIELDS = glob.glob(os.path.join(FF_DIR, '*.xml'))
+FORCEFIELDS = glob.glob(os.path.join(FF_DIR, 'xml/*.xml'))
 
 
 @pytest.mark.parametrize('ff_file', XMLS)
