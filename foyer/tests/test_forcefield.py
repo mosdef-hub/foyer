@@ -378,6 +378,34 @@ def test_assert_bonds():
     thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False)
     assert any(b.type is None for b in thing.bonds)
 
+def test_apply_subfuncs():
+    mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+    oplsaa = Forcefield(name='oplsaa')
+
+    ethane = oplsaa.apply(mol2)
+
+    top, pos = oplsaa._prepare_topology(mol2)
+    typemap = oplsaa.run_atomtyping(top)
+    oplsaa._apply_typemap(top, typemap)
+    ethane2 = oplsaa.parametrize_system(top, pos)
+
+    # Note: Check ParmEd issue #1067 to see if __eq__ is implemented
+    # assert ethane == ethane2
+    assert ethane.box == ethane2.box
+    assert ethane.positions == ethane2.positions
+    for a1, a2 in zip(ethane.atoms, ethane2.atoms):
+        assert a1.name == a2.name
+        assert a1.idx == a2.idx
+        assert a1.atom_type == a2.atom_type
+
+    for b1, b2 in zip(ethane.bonds, ethane2.bonds):
+        assert b1.atom1.atom_type == b2.atom1.atom_type
+        assert b1.atom2.atom_type == b2.atom2.atom_type
+        assert b1.type == b2.type
+
+    for ang1, ang2 in zip(ethane.angles, ethane2.angles):
+        assert ang1.type == ang2.type
+
 @pytest.mark.parametrize("filename", ['ethane.mol2', 'benzene.mol2'])
 def test_write_xml(filename):
     mol = pmd.load_file(get_fn(filename), structure=True)

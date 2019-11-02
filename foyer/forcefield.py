@@ -493,7 +493,10 @@ class Forcefield(app.ForceField):
 
         self._apply_typemap(topology, typemap)
 
-        return self.parametrize_system(topology, positions, *args, **kwargs)
+        return self.parametrize_system(topology=topology, positions=positions,
+            references_file=references_file, assert_bond_params=assert_bond_params,
+            assert_angle_params=assert_angle_params, assert_dihedral_params=assert_dihedral_params,
+            combining_rule=combining_rule, verbose=verbose, *args, **kwargs)
 
     def run_atomtyping(self, topology, use_residue_map=True):
         """Atomtype the topology
@@ -537,7 +540,14 @@ class Forcefield(app.ForceField):
 
         return typemap
 
-    def parametrize_system(self, topology, positions, *args, **kwargs):
+    def parametrize_system(self, topology=None, positions=None,
+                           references_file=None, assert_bond_params=True,
+                           assert_angle_params=True,
+                           assert_dihedral_params=True,
+                           assert_improper_params=False,
+                           combining_rule='geometric', verbose=False,
+                           *args, **kwargs):
+
         system = self.createSystem(topology, *args, **kwargs)
 
         _separate_urey_bradleys(system, topology)
