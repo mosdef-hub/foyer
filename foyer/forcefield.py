@@ -263,12 +263,6 @@ def _check_bonds(data, structure, assert_bond_params):
 
 def _check_angles(data, structure, verbose, assert_angle_params):
     """Check if all angles were found and parametrized."""
-    if data.angles and (len(data.angles) != len(structure.angles)):
-        msg = ("Parameters have not been assigned to all angles. Total "
-               "system angles: {}, Parameterized angles: {}"
-               "".format(len(data.angles), len(structure.angles)))
-        _error_or_warn(assert_angle_params, msg)
-
     if verbose:
         for omm_ids in data.angles:
             missing_angle = True
@@ -279,6 +273,13 @@ def _check_angles(data, structure, verbose, assert_angle_params):
             if missing_angle:
                 print("Missing angle with ids {} and types {}.".format(
                     omm_ids, [structure.atoms[idx].type for idx in omm_ids]))
+
+    if data.angles and (len(data.angles) != len(structure.angles)):
+        msg = ("Parameters have not been assigned to all angles. Total "
+               "system angles: {}, Parameterized angles: {}"
+               "".format(len(data.angles), len(structure.angles)))
+        _error_or_warn(assert_angle_params, msg)
+
 
 
 def _check_dihedrals(data, structure, verbose,
