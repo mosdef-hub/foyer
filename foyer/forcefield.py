@@ -125,6 +125,7 @@ def _topology_from_parmed(structure, non_element_types):
                 element = elem.Element.getBySymbol(pmd_atom.name)
 
         omm_atom = topology.addAtom(name, element, residues[pmd_atom.residue])
+        omm_atom.id = pmd_atom.id
         atoms[pmd_atom] = omm_atom
         omm_atom.bond_partners = []
 
@@ -178,11 +179,11 @@ def _topology_from_residue(res):
     return topology
 
 
-def _check_independent_residues(topology):
+def _check_independent_residues(structure):
     """Check to see if residues will constitute independent graphs."""
-    for res in topology.residues():
-        atoms_in_residue = set([atom for atom in res.atoms()])
-        bond_partners_in_residue = [item for sublist in [atom.bond_partners for atom in res.atoms()] for item in sublist]
+    for res in structure.residues:
+        atoms_in_residue = set([*res.atoms])
+        bond_partners_in_residue = [item for sublist in [atom.bond_partners for atom in res.atoms] for item in sublist]
         # Handle the case of a 'residue' with no neighbors
         if not bond_partners_in_residue:
             continue
@@ -191,13 +192,13 @@ def _check_independent_residues(topology):
     return True
 
 
-def _unwrap_typemap(topology, residue_map):
-    master_typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} for atom in topology.atoms()}
-    for res in topology.residues():
-        for res_name, val in residue_map.items():
-            if res.name == res_name:
-                for i, atom in enumerate(res.atoms()):
-                    master_typemap[int(atom.index)]['atomtype'] = val[i]['atomtype']
+def _unwrap_typemap(structure, residue_map):
+    master_typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} for atom in structure.atoms}
+    for res in structure.residues:
+        for res_ref, val in residue_map.items():
+            if id(res) == id(res_ref):
+                for i, atom in enumerate(res.atoms):
+                    master_typemap[int(atom.idx)]['atomtype'] = val[i]['atomtype']
     return master_typemap
 
 
@@ -442,7 +443,7 @@ class Forcefield(app.ForceField):
         if 'class' in parameters:
             self.atomTypeClasses[name] = parameters['class']
 
-    def apply(self, topology, references_file=None, use_residue_map=True,
+    def apply(self, structure, references_file=None, use_residue_map=False,
               assert_bond_params=True, assert_angle_params=True,
               assert_dihedral_params=True, assert_improper_params=False,
               combining_rule='geometric', verbose=False, *args, **kwargs):
@@ -450,7 +451,7 @@ class Forcefield(app.ForceField):
 
         Parameters
         ----------
-        topology : openmm.app.Topology or parmed.Structure or mbuild.Compound
+        structure : parmed.Structure or mbuild.Compound
             Molecular structure to apply the force field to
         references_file : str, optional, default=None
             Name of file where force field references will be written (in Bibtex
@@ -487,23 +488,29 @@ class Forcefield(app.ForceField):
             raise FoyerError('Attempting to atom-type using a force field '
                     'with no atom type defitions.')
 
-        topology, positions = self._prepare_topology(topology, **kwargs)
+        # topology, positions = self._prepare_topology(topology, **kwargs)
+        #structure = self._prepare_structure(structure, **kwargs)
 
-        typemap = self.run_atomtyping(topology, use_residue_map=use_residue_map)
+        if not isinstance(structure, pmd.Structure):
+            mb = import_('mbuild')
+            if isinstance(structure, mb.Compound):
+                structure = structure.to_parmed()#**kwargs)
 
-        self._apply_typemap(topology, typemap)
+        typemap = self.run_atomtyping(structure, use_residue_map=use_residue_map, **kwargs)
 
-        return self.parametrize_system(topology=topology, positions=positions,
+        self._apply_typemap(structure, typemap)
+
+        return self.parametrize_system(structure=structure,
             references_file=references_file, assert_bond_params=assert_bond_params,
             assert_angle_params=assert_angle_params, assert_dihedral_params=assert_dihedral_params,
             combining_rule=combining_rule, verbose=verbose, *args, **kwargs)
 
-    def run_atomtyping(self, topology, use_residue_map=True):
+    def run_atomtyping(self, structure, use_residue_map=True, **kwargs):
         """Atomtype the topology
 
         Parameters
         ----------
-        topology : openmm.app.Topology
+        structure : parmed.structure.Structure
             Molecular structure to find atom types of
         use_residue_map : boolean, optional, default=True
             Store atomtyped topologies of residues to a dictionary that maps
@@ -515,38 +522,41 @@ class Forcefield(app.ForceField):
             independent molecules, they must each be saved as different
             residues in the topology.
         """
+
         if use_residue_map:
-            independent_residues = _check_independent_residues(topology)
+            independent_residues = _check_independent_residues(structure)
 
             if independent_residues:
                 residue_map = dict()
 
-                for res in topology.residues():
-                    if res.name not in residue_map.keys():
-                        residue = _topology_from_residue(res)
-                        typemap = find_atomtypes(residue, forcefield=self)
-                        residue_map[res.name] = typemap
+                for res, res_id in structure.split():
+                    if True: #structure.residues[res_id].name not in residue_map.keys():
+                        #residue = res#_topology_from_residue(res)
+                        typemap = find_atomtypes(res, forcefield=self)
+                        residue_map[res] = typemap
 
-                typemap = _unwrap_typemap(topology, residue_map)
+                typemap = _unwrap_typemap(structure, residue_map)
 
             else:
-                typemap = find_atomtypes(topology, forcefield=self)
+                typemap = find_atomtypes(structure, forcefield=self)
 
         else:
-            typemap = find_atomtypes(topology, forcefield=self)
+            typemap = find_atomtypes(structure, forcefield=self)
 
-        if not all([a.id for a in topology.atoms()][0]):
-            raise ValueError('Not all atoms in topology have atom types')
+        #if not all([a.id for a in structure.atoms][0]):
+        #    raise ValueError('Not all atoms in topology have atom types')
 
         return typemap
 
-    def parametrize_system(self, topology=None, positions=None,
+    def parametrize_system(self, structure=None,
                            references_file=None, assert_bond_params=True,
                            assert_angle_params=True,
                            assert_dihedral_params=True,
                            assert_improper_params=False,
                            combining_rule='geometric', verbose=False,
                            *args, **kwargs):
+
+        topology, positions = _topology_from_parmed(structure, self.non_element_types)
 
         system = self.createSystem(topology, *args, **kwargs)
 
@@ -821,12 +831,12 @@ class Forcefield(app.ForceField):
 
         return sys
 
-    def _apply_typemap(self, topology, typemap):
+    def _apply_typemap(self, structure, typemap):
         """Add atomtypes to the topology according to the typemap"""
-        for atom in topology.atoms():
-            atom.id = typemap[atom.index]['atomtype']
+        for atom in structure.atoms:
+            atom.id = typemap[atom.idx]['atomtype']
 
-    def _prepare_topology(self, topology, **kwargs):
+    def _prepare_structure(self, topology, **kwargs):
         """Separate positions and other topological information"""
         if not isinstance(topology, app.Topology):
             residues = kwargs.get('residues')
