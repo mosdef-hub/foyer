@@ -494,34 +494,10 @@ class Forcefield(app.ForceField):
 
         self._apply_typemap(topology, typemap)
 
-        system = self.createSystem(topology, *args, **kwargs)
-
-        _separate_urey_bradleys(system, topology)
-
-        data = self._SystemData
-
-        structure = pmd.openmm.load_topology(topology=topology, system=system)
-        structure.bonds.sort(key=lambda x: x.atom1.idx)
-        structure.positions = positions
-        box_vectors = topology.getPeriodicBoxVectors()
-        if box_vectors is not None:
-            structure.box_vectors = box_vectors
-
-        _check_bonds(data, structure, assert_bond_params)
-        _check_angles(data, structure, verbose, assert_angle_params)
-        _check_dihedrals(data, structure, verbose,
-                              assert_dihedral_params, assert_improper_params)
-
-        if references_file:
-            atom_types = set(atom.type for atom in structure.atoms)
-            self._write_references_to_file(atom_types, references_file)
-
-        # TODO: Check against the name of the force field and/or store
-        # combining rule directly in XML, i.e.
-        # if self.name == 'oplsaa':
-        structure.combining_rule = combining_rule
-
-        return structure
+        return self.parametrize_system(topology=topology, positions=positions,
+            references_file=references_file, assert_bond_params=assert_bond_params,
+            assert_angle_params=assert_angle_params, assert_dihedral_params=assert_dihedral_params,
+            combining_rule=combining_rule, verbose=verbose, *args, **kwargs)
 
     def run_atomtyping(self, topology, use_residue_map=True):
         """Atomtype the topology
@@ -564,6 +540,43 @@ class Forcefield(app.ForceField):
             raise ValueError('Not all atoms in topology have atom types')
 
         return typemap
+
+    def parametrize_system(self, topology=None, positions=None,
+                           references_file=None, assert_bond_params=True,
+                           assert_angle_params=True,
+                           assert_dihedral_params=True,
+                           assert_improper_params=False,
+                           combining_rule='geometric', verbose=False,
+                           *args, **kwargs):
+
+        system = self.createSystem(topology, *args, **kwargs)
+
+        _separate_urey_bradleys(system, topology)
+
+        data = self._SystemData
+
+        structure = pmd.openmm.load_topology(topology=topology, system=system)
+        structure.bonds.sort(key=lambda x: x.atom1.idx)
+        structure.positions = positions
+        box_vectors = topology.getPeriodicBoxVectors()
+        if box_vectors is not None:
+            structure.box_vectors = box_vectors
+
+        _check_bonds(data, structure, assert_bond_params)
+        _check_angles(data, structure, verbose, assert_angle_params)
+        _check_dihedrals(data, structure, verbose,
+                              assert_dihedral_params, assert_improper_params)
+
+        if references_file:
+            atom_types = set(atom.type for atom in structure.atoms)
+            self._write_references_to_file(atom_types, references_file)
+
+        # TODO: Check against the name of the force field and/or store
+        # combining rule directly in XML, i.e.
+        # if self.name == 'oplsaa':
+        structure.combining_rule = combining_rule
+
+        return structure
 
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
