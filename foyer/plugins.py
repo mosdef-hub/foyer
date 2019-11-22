@@ -1,5 +1,6 @@
 import foyer
 import glob
+import os
 
 def collect_plugins(plugin_names=None):
     """
@@ -25,6 +26,7 @@ def collect_plugins(plugin_names=None):
         plugin_name = "_".join(plugin_func.split("_")[1:])
         # TODO: plugin_version = get_version_info
         plugin_dir = eval("foyer.forcefields.{}.__globals__['__file__']".format(plugin_func))
+        plugin_dir = os.path.dirname(plugin_dir)
         # TODO: plugin_xml_path = get_xml_path
         # This assumes that plugin directory tree is consistent.
         # Does not consider versioned FFs.
