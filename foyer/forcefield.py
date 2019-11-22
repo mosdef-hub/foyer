@@ -370,19 +370,12 @@ class Forcefield(app.ForceField):
             for ff_file_name in preprocessed_files:
                 os.remove(ff_file_name)
         self._version = 'foobar'
-        if len(forcefield_files) == 1:
-            with open(forcefield_files[0], 'r') as f:
+        if isinstance(forcefield_files, str):
+            with open(forcefield_files, 'r') as f:
                 tree = ET.parse(f)
                 root = tree.getroot()
                 if root.attrib['version']:
-                    print('foooo')
                     self._version = root.attrib['version']
-                    print('version is' + self._version)
-                f.close()
-                print('version is' + self._version)
-
-            print('version is' + self._version)
-        print('version is' + self._version)
         self.parser = smarts.SMARTS(self.non_element_types)
         self._SystemData = self._SystemData()
 
