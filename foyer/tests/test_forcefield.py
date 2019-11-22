@@ -504,3 +504,7 @@ def test_write_xml_overrides():
         elif attributes['name'] == 'opls_146':
             assert attributes['overrides'] == 'opls_144'
             assert str(item.xpath('comment()')) == '[<!--Note: original overrides="opls_144"-->]'
+
+def test_load_version_number():
+    lj_ff = Forcefield(get_fn('lj.xml'))
+    assert lj_ff.version == '0.4.1'
