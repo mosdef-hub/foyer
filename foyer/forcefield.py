@@ -374,8 +374,10 @@ class Forcefield(app.ForceField):
             with open(forcefield_files, 'r') as f:
                 tree = ET.parse(f)
                 root = tree.getroot()
-                if root.attrib['version']:
+                try: 
                     self._version = root.attrib['version']
+                except KeyError:
+                    pass
         self.parser = smarts.SMARTS(self.non_element_types)
         self._SystemData = self._SystemData()
 
