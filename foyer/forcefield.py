@@ -342,6 +342,7 @@ class Forcefield(app.ForceField):
         self.atomTypeElements = dict()
         self._included_forcefields = dict()
         self.non_element_types = dict()
+        self._version = None
 
         all_files_to_load = []
         if forcefield_files is not None:
@@ -368,8 +369,26 @@ class Forcefield(app.ForceField):
         finally:
             for ff_file_name in preprocessed_files:
                 os.remove(ff_file_name)
+        self._version = 'foobar'
+        if len(forcefield_files) == 1:
+            with open(forcefield_files[0], 'r') as f:
+                tree = ET.parse(f)
+                root = tree.getroot()
+                if root.attrib['version']:
+                    print('foooo')
+                    self._version = root.attrib['version']
+                    print('version is' + self._version)
+                f.close()
+                print('version is' + self._version)
+
+            print('version is' + self._version)
+        print('version is' + self._version)
         self.parser = smarts.SMARTS(self.non_element_types)
         self._SystemData = self._SystemData()
+
+    @property
+    def version(self):
+        return self._version
 
     @property
     def included_forcefields(self):
