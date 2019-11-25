@@ -497,7 +497,8 @@ class Forcefield(app.ForceField):
         return self.parametrize_system(topology=topology, positions=positions,
             references_file=references_file, assert_bond_params=assert_bond_params,
             assert_angle_params=assert_angle_params, assert_dihedral_params=assert_dihedral_params,
-            combining_rule=combining_rule, verbose=verbose, *args, **kwargs)
+            assert_improper_params=assert_improper_params, combining_rule=combining_rule,
+            verbose=verbose, *args, **kwargs)
 
     def run_atomtyping(self, topology, use_residue_map=True):
         """Atomtype the topology
