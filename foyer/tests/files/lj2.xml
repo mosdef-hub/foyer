@@ -1,0 +1,8 @@
+<ForceField version="4.8.2">
+ <AtomTypes>
+   <Type name="JL" class="" element="_JL" mass="1.0" def="[_JL]" desc="Generic JL particle"/>
+ </AtomTypes>
+ <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
+  <Atom type="JL" charge="0" sigma="1.0" epsilon="1.0"/>
+ </NonbondedForce>
+</ForceField>

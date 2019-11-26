@@ -369,15 +369,12 @@ class Forcefield(app.ForceField):
         finally:
             for ff_file_name in preprocessed_files:
                 os.remove(ff_file_name)
-        self._version = 'foobar'
+
         if isinstance(forcefield_files, str):
-            with open(forcefield_files, 'r') as f:
-                tree = ET.parse(f)
-                root = tree.getroot()
-                try: 
-                    self._version = root.attrib['version']
-                except KeyError:
-                    pass
+            self._version = self._parse_version_number(forcefield_files)
+        elif isinstance(forcefield_files, list):
+            self._version = [self._parse_version_number(f) for f in forcefield_files]
+
         self.parser = smarts.SMARTS(self.non_element_types)
         self._SystemData = self._SystemData()
 
@@ -398,6 +395,15 @@ class Forcefield(app.ForceField):
             basename, _ = os.path.splitext(ff_file)
             self._included_forcefields[basename] = ff_filepath
         return self._included_forcefields
+
+    def _parse_version_number(self, forcefield_file):
+        with open(forcefield_file, 'r') as f:
+            tree = ET.parse(f)
+            root = tree.getroot()
+            try:
+                return root.attrib['version']
+            except KeyError:
+                return None
 
     def _create_element(self, element, mass):
         if not isinstance(element, elem.Element):
