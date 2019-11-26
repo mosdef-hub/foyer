@@ -343,6 +343,7 @@ class Forcefield(app.ForceField):
         self._included_forcefields = dict()
         self.non_element_types = dict()
         self._version = None
+        self._name = None
 
         all_files_to_load = []
         if forcefield_files is not None:
@@ -372,8 +373,10 @@ class Forcefield(app.ForceField):
 
         if isinstance(forcefield_files, str):
             self._version = self._parse_version_number(forcefield_files)
+            self._name = self._parse_name(forcefield_files)
         elif isinstance(forcefield_files, list):
             self._version = [self._parse_version_number(f) for f in forcefield_files]
+            self._name = [self._parse_name(f) for f in forcefield_files]
 
         self.parser = smarts.SMARTS(self.non_element_types)
         self._SystemData = self._SystemData()
@@ -381,6 +384,10 @@ class Forcefield(app.ForceField):
     @property
     def version(self):
         return self._version
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def included_forcefields(self):
@@ -402,6 +409,15 @@ class Forcefield(app.ForceField):
             root = tree.getroot()
             try:
                 return root.attrib['version']
+            except KeyError:
+                return None
+
+    def _parse_name(self, forcefield_file):
+        with open(forcefield_file, 'r') as f:
+            tree = ET.parse(f)
+            root = tree.getroot()
+            try:
+                return root.attrib['name']
             except KeyError:
                 return None
 

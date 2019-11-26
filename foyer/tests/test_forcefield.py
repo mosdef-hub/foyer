@@ -508,6 +508,8 @@ def test_write_xml_overrides():
 def test_load_version_number():
     lj_ff = Forcefield(get_fn('lj.xml'))
     assert lj_ff.version == '0.4.1'
+    assert lj_ff.name == 'LJ'
 
     lj_ff = Forcefield(forcefield_files=[get_fn('lj.xml'), get_fn('lj2.xml')])
     assert lj_ff.version == ['0.4.1', '4.8.2']
+    assert lj_ff.name == ['LJ', 'JL']

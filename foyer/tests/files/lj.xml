@@ -1,4 +1,4 @@
-<ForceField version="0.4.1">
+<ForceField version="0.4.1" name="LJ">
  <AtomTypes>
    <Type name="LJ" class="" element="_LJ" mass="1.0" def="[_LJ]" desc="Generic LJ particle"/>
  </AtomTypes>
