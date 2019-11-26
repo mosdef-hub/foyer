@@ -125,7 +125,7 @@ def _topology_from_parmed(structure, non_element_types):
                 element = elem.Element.getBySymbol(pmd_atom.name)
 
         omm_atom = topology.addAtom(name, element, residues[pmd_atom.residue])
-        omm_atom.id = pmd_atom.id
+        omm_atom.id = pmd_atom.idx
         atoms[pmd_atom] = omm_atom
         omm_atom.bond_partners = []
 
