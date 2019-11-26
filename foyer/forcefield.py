@@ -192,9 +192,10 @@ def _check_independent_residues(structure):
     return True
 
 
-def _unwrap_typemap(structure, residue_map):
+def _unwrap_typemap(structure, residue_map, split_residues):
+    import pdb; pdb.set_trace()
     master_typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} for atom in structure.atoms}
-    for res in structure.residues:
+    for res, NULL in split_residues:
         for res_ref, val in residue_map.items():
             if id(res) == id(res_ref):
                 for i, atom in enumerate(res.atoms):
@@ -531,13 +532,15 @@ class Forcefield(app.ForceField):
             if independent_residues:
                 residue_map = dict()
 
-                for res, res_id in structure.split():
+                # Need to call this only once and store results for later id() comparisons
+                split_residues = structure.split()
+                for res, res_id in split_residues:
                     if True: #structure.residues[res_id].name not in residue_map.keys():
                         #residue = res#_topology_from_residue(res)
                         typemap = find_atomtypes(res, forcefield=self)
                         residue_map[res] = typemap
 
-                typemap = _unwrap_typemap(structure, residue_map)
+                typemap = _unwrap_typemap(structure, residue_map, split_residues)
 
             else:
                 typemap = find_atomtypes(structure, forcefield=self)
