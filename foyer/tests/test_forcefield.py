@@ -258,10 +258,10 @@ def test_residue_map():
     ethane *= 2
     oplsaa = Forcefield(name='oplsaa')
     topo, NULL = generate_topology(ethane)
-    map_with = oplsaa.run_atomtyping(topo, use_residue_map=True)
-    map_without = oplsaa.run_atomtyping(topo, use_residue_map=False)
-    assert all([a['atomtype'] for a in map_with.values()][0])
-    assert all([a['atomtype'] for a in map_without.values()][0])
+    map_with = oplsaa.run_atomtyping(ethane, use_residue_map=True)
+    map_without = oplsaa.run_atomtyping(ethane, use_residue_map=False)
+    assert all([a['atomtype'] for a in map_with.values()])
+    assert all([a['atomtype'] for a in map_without.values()])
     topo_with = topo
     topo_without = topo
     oplsaa._apply_typemap(topo_with, map_with)
