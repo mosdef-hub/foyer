@@ -410,6 +410,9 @@ class Forcefield(app.ForceField):
             try:
                 return root.attrib['version']
             except KeyError:
+                warnings.warn(
+                    'No force field version number found in force field XML file.'
+                )
                 return None
 
     def _parse_name(self, forcefield_file):
@@ -419,6 +422,9 @@ class Forcefield(app.ForceField):
             try:
                 return root.attrib['name']
             except KeyError:
+                warnings.warn(
+                    'No force field name found in force field XML file.'
+                )
                 return None
 
     def _create_element(self, element, mass):
