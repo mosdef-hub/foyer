@@ -6,7 +6,6 @@ from tempfile import NamedTemporaryFile
 import xml.etree.ElementTree as ET
 
 from pkg_resources import resource_filename
-import requests
 import warnings
 import re
 
@@ -27,6 +26,7 @@ from foyer import smarts
 from foyer.validator import Validator
 from foyer.xml_writer import write_foyer
 from foyer.utils.io import import_, has_mbuild
+from foyer.utils.external import get_ref
 
 
 def preprocess_forcefield_files(forcefield_files=None):
@@ -263,12 +263,6 @@ def _check_bonds(data, structure, assert_bond_params):
 
 def _check_angles(data, structure, verbose, assert_angle_params):
     """Check if all angles were found and parametrized."""
-    if data.angles and (len(data.angles) != len(structure.angles)):
-        msg = ("Parameters have not been assigned to all angles. Total "
-               "system angles: {}, Parameterized angles: {}"
-               "".format(len(data.angles), len(structure.angles)))
-        _error_or_warn(assert_angle_params, msg)
-
     if verbose:
         for omm_ids in data.angles:
             missing_angle = True
@@ -279,6 +273,13 @@ def _check_angles(data, structure, verbose, assert_angle_params):
             if missing_angle:
                 print("Missing angle with ids {} and types {}.".format(
                     omm_ids, [structure.atoms[idx].type for idx in omm_ids]))
+
+    if data.angles and (len(data.angles) != len(structure.angles)):
+        msg = ("Parameters have not been assigned to all angles. Total "
+               "system angles: {}, Parameterized angles: {}"
+               "".format(len(data.angles), len(structure.angles)))
+        _error_or_warn(assert_angle_params, msg)
+
 
 
 def _check_dihedrals(data, structure, verbose,
@@ -341,6 +342,8 @@ class Forcefield(app.ForceField):
         self.atomTypeElements = dict()
         self._included_forcefields = dict()
         self.non_element_types = dict()
+        self._version = None
+        self._name = None
 
         all_files_to_load = []
         if forcefield_files is not None:
@@ -367,8 +370,24 @@ class Forcefield(app.ForceField):
         finally:
             for ff_file_name in preprocessed_files:
                 os.remove(ff_file_name)
+
+        if isinstance(forcefield_files, str):
+            self._version = self._parse_version_number(forcefield_files)
+            self._name = self._parse_name(forcefield_files)
+        elif isinstance(forcefield_files, list):
+            self._version = [self._parse_version_number(f) for f in forcefield_files]
+            self._name = [self._parse_name(f) for f in forcefield_files]
+
         self.parser = smarts.SMARTS(self.non_element_types)
         self._SystemData = self._SystemData()
+
+    @property
+    def version(self):
+        return self._version
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def included_forcefields(self):
@@ -376,13 +395,37 @@ class Forcefield(app.ForceField):
             return self._included_forcefields
 
         ff_dir = resource_filename('foyer', 'forcefields')
-        ff_filepaths = set(glob.glob(os.path.join(ff_dir, '*.xml')))
+        ff_filepaths = set(glob.glob(os.path.join(ff_dir, 'xml/*.xml')))
 
         for ff_filepath in ff_filepaths:
             _, ff_file = os.path.split(ff_filepath)
             basename, _ = os.path.splitext(ff_file)
             self._included_forcefields[basename] = ff_filepath
         return self._included_forcefields
+
+    def _parse_version_number(self, forcefield_file):
+        with open(forcefield_file, 'r') as f:
+            tree = ET.parse(f)
+            root = tree.getroot()
+            try:
+                return root.attrib['version']
+            except KeyError:
+                warnings.warn(
+                    'No force field version number found in force field XML file.'
+                )
+                return None
+
+    def _parse_name(self, forcefield_file):
+        with open(forcefield_file, 'r') as f:
+            tree = ET.parse(f)
+            root = tree.getroot()
+            try:
+                return root.attrib['name']
+            except KeyError:
+                warnings.warn(
+                    'No force field name found in force field XML file.'
+                )
+                return None
 
     def _create_element(self, element, mass):
         if not isinstance(element, elem.Element):
@@ -445,7 +488,7 @@ class Forcefield(app.ForceField):
     def apply(self, topology, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
               assert_dihedral_params=True, assert_improper_params=False,
-              verbose=False, *args, **kwargs):
+              combining_rule='geometric', verbose=False, *args, **kwargs):
         """Apply the force field to a molecular structure
 
         Parameters
@@ -476,6 +519,9 @@ class Forcefield(app.ForceField):
         assert_improper_params : bool, optional, default=False
             If True, Foyer will exit if parameters are not found for all system
             improper dihedrals.
+        combining_rule : str, optional, default='geometric'
+            The combining rule of the system, stored as an attribute of the
+            ParmEd structure. Accepted arguments are `geometric` and `lorentz`.
         verbose : bool, optional, default=False
             If True, Foyer will print debug-level information about notable or
             potentially problematic details it encounters.
@@ -490,29 +536,11 @@ class Forcefield(app.ForceField):
 
         self._apply_typemap(topology, typemap)
 
-        system = self.createSystem(topology, *args, **kwargs)
-
-        _separate_urey_bradleys(system, topology)
-
-        data = self._SystemData
-
-        structure = pmd.openmm.load_topology(topology=topology, system=system)
-        structure.bonds.sort(key=lambda x: x.atom1.idx)
-        structure.positions = positions
-        box_vectors = topology.getPeriodicBoxVectors()
-        if box_vectors is not None:
-            structure.box_vectors = box_vectors
-
-        _check_bonds(data, structure, assert_bond_params)
-        _check_angles(data, structure, verbose, assert_angle_params)
-        _check_dihedrals(data, structure, verbose,
-                              assert_dihedral_params, assert_improper_params)
-
-        if references_file:
-            atom_types = set(atom.type for atom in structure.atoms)
-            self._write_references_to_file(atom_types, references_file)
-
-        return structure
+        return self.parametrize_system(topology=topology, positions=positions,
+            references_file=references_file, assert_bond_params=assert_bond_params,
+            assert_angle_params=assert_angle_params, assert_dihedral_params=assert_dihedral_params,
+            assert_improper_params=assert_improper_params, combining_rule=combining_rule,
+            verbose=verbose, *args, **kwargs)
 
     def run_atomtyping(self, topology, use_residue_map=True):
         """Atomtype the topology
@@ -555,6 +583,43 @@ class Forcefield(app.ForceField):
             raise ValueError('Not all atoms in topology have atom types')
 
         return typemap
+
+    def parametrize_system(self, topology=None, positions=None,
+                           references_file=None, assert_bond_params=True,
+                           assert_angle_params=True,
+                           assert_dihedral_params=True,
+                           assert_improper_params=False,
+                           combining_rule='geometric', verbose=False,
+                           *args, **kwargs):
+
+        system = self.createSystem(topology, *args, **kwargs)
+
+        _separate_urey_bradleys(system, topology)
+
+        data = self._SystemData
+
+        structure = pmd.openmm.load_topology(topology=topology, system=system)
+        structure.bonds.sort(key=lambda x: x.atom1.idx)
+        structure.positions = positions
+        box_vectors = topology.getPeriodicBoxVectors()
+        if box_vectors is not None:
+            structure.box_vectors = box_vectors
+
+        _check_bonds(data, structure, assert_bond_params)
+        _check_angles(data, structure, verbose, assert_angle_params)
+        _check_dihedrals(data, structure, verbose,
+                              assert_dihedral_params, assert_improper_params)
+
+        if references_file:
+            atom_types = set(atom.type for atom in structure.atoms)
+            self._write_references_to_file(atom_types, references_file)
+
+        # TODO: Check against the name of the force field and/or store
+        # combining rule directly in XML, i.e.
+        # if self.name == 'oplsaa':
+        structure.combining_rule = combining_rule
+
+        return structure
 
     def createSystem(self, topology, nonbondedMethod=NoCutoff,
                      nonbondedCutoff=1.0 * u.nanometer, constraints=None,
@@ -832,13 +897,18 @@ class Forcefield(app.ForceField):
         unique_references = collections.OrderedDict(sorted(unique_references.items()))
         with open(references_file, 'w') as f:
             for doi, atomtypes in unique_references.items():
-                url = "http://dx.doi.org/" + doi
+                url = "http://api.crossref.org/works/{}/transform/application/x-bibtex".format(doi)
                 headers = {"accept": "application/x-bibtex"}
-                bibtex_ref = requests.get(url, headers=headers).text
+                bibtex_ref = get_ref(url, headers=headers)
+                if bibtex_ref is None:
+                    warnings.warn('Could not get ref for doi'.format(doi))
+                    continue
+                else:
+                    bibtex_text = bibtex_ref.text
                 note = (',\n\tnote = {Parameters for atom types: ' +
                         ', '.join(sorted(atomtypes)) + '}')
-                bibtex_ref = bibtex_ref[:-2] + note + bibtex_ref[-2:]
-                f.write('{}\n'.format(bibtex_ref))
+                bibtex_text = bibtex_text[:-2] + note + bibtex_text[-2:]
+                f.write('{}\n'.format(bibtex_text))
 
 
 pmd.Structure.write_foyer = write_foyer

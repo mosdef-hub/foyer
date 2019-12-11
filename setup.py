@@ -7,7 +7,7 @@ import subprocess
 from setuptools import setup, find_packages
 
 #####################################
-VERSION = "0.7.0"
+VERSION = "0.7.3"
 ISRELEASED = True
 if ISRELEASED:
     __version__ = VERSION
@@ -97,6 +97,12 @@ setup(
                             'opls_validation/oplsaa.ff/*',
                             'examples/files/*'
                             ]},
+    entry_points={
+        'foyer.forcefields':[
+            "load_OPLSAA = foyer.forcefields.forcefields:load_OPLSAA",
+            "load_TRAPPE_UA = foyer.forcefields.forcefields:load_TRAPPE_UA",
+        ]
+    },
     package_dir={'foyer': 'foyer'},
     include_package_data=True,
     license="MIT",

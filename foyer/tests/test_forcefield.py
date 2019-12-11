@@ -12,12 +12,40 @@ from foyer import Forcefield
 from foyer.forcefield import generate_topology
 from foyer.forcefield import _check_independent_residues
 from foyer.exceptions import FoyerError, ValidationWarning
-from foyer.tests.utils import get_fn
+from foyer.tests.utils import get_fn, register_mock_request
 from foyer.utils.io import has_mbuild
 
 
 FF_DIR = resource_filename('foyer', 'forcefields')
-FORCEFIELDS = glob.glob(os.path.join(FF_DIR, '*.xml'))
+FORCEFIELDS = glob.glob(os.path.join(FF_DIR, 'xml/*.xml'))
+
+RESPONSE_BIB_ETHANE_JA962170 = """@article{Jorgensen_1996,
+	doi = {10.1021/ja9621760},
+	url = {https://doi.org/10.1021%2Fja9621760},
+	year = 1996,
+	month = {jan},
+	publisher = {American Chemical Society ({ACS})},
+	volume = {118},
+	number = {45},
+	pages = {11225--11236},
+	author = {William L. Jorgensen and David S. Maxwell and Julian Tirado-Rives},
+	title = {Development and Testing of the {OPLS} All-Atom Force Field on Conformational Energetics and Properties of Organic Liquids},
+	journal = {Journal of the American Chemical Society}
+}"""
+
+RESPONSE_BIB_ETHANE_JP0484579="""@article{Jorgensen_2004,
+	doi = {10.1021/jp0484579},
+	url = {https://doi.org/10.1021%2Fjp0484579},
+	year = 2004,
+	month = {oct},
+	publisher = {American Chemical Society ({ACS})},
+	volume = {108},
+	number = {41},
+	pages = {16264--16270},
+	author = {William L. Jorgensen and Jakob P. Ulmschneider and Julian Tirado-Rives},
+	title = {Free Energies of Hydration from a Generalized Born Model and an All-Atom Force Field},
+	journal = {The Journal of Physical Chemistry B}
+}"""
 
 
 def test_load_files():
@@ -77,17 +105,47 @@ def test_from_mbuild():
     assert len(ethane.rb_torsions) == 9
     assert all(x.type for x in ethane.dihedrals)
 
+@pytest.mark.parametrize("mixing_rule", ['lorentz', 'geometric'])
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-def test_write_refs():
+def test_comb_rule(mixing_rule):
     import mbuild as mb
+    mol2 = mb.load(get_fn('ethane.mol2'))
+    oplsaa = Forcefield(name='oplsaa')
+    ethane = oplsaa.apply(mol2, combining_rule=mixing_rule)
+    assert ethane.combining_rule == mixing_rule
+
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+def test_write_refs(requests_mock):
+    import mbuild as mb
+    register_mock_request(mocker=requests_mock,
+                          url='http://api.crossref.org/',
+                          path='works/10.1021/ja9621760/transform/application/x-bibtex',
+                          headers={'accept': 'application/x-bibtex'},
+                          text=RESPONSE_BIB_ETHANE_JA962170)
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2, references_file='ethane.bib')
     assert os.path.isfile('ethane.bib')
+    with open(get_fn('ethane.bib')) as file1:
+        with open('ethane.bib') as file2:
+            diff = list(difflib.unified_diff(file1.readlines(),
+                                             file2.readlines(),
+                                             n=0))
+    assert not diff
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-def test_write_refs_multiple():
+def test_write_refs_multiple(requests_mock):
     import mbuild as mb
+    register_mock_request(mocker=requests_mock,
+                          url='http://api.crossref.org/',
+                          path='works/10.1021/ja9621760/transform/application/x-bibtex',
+                          headers={'accept': 'application/x-bibtex'},
+                          text=RESPONSE_BIB_ETHANE_JA962170)
+    register_mock_request(mocker=requests_mock,
+                          url='http://api.crossref.org/',
+                          path='works/10.1021/jp0484579/transform/application/x-bibtex',
+                          headers={'accept': 'application/x-bibtex'},
+                          text=RESPONSE_BIB_ETHANE_JP0484579)
     mol2 = mb.load(get_fn('ethane.mol2'))
     oplsaa = Forcefield(forcefield_files=get_fn('refs-multi.xml'))
     ethane = oplsaa.apply(mol2, references_file='ethane-multi.bib')
@@ -98,6 +156,19 @@ def test_write_refs_multiple():
                                              file2.readlines(),
                                              n=0))
     assert not diff
+
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+def test_write_bad_ref(requests_mock):
+    import mbuild as mb
+    register_mock_request(mocker=requests_mock,
+                          url='http://api.crossref.org/',
+                          path='works/10.1021/garbage_bad_44444444jjjj/transform/application/x-bibtex',
+                          headers={'accept': 'application/x-bibtex'},
+                          status_code=404)
+    mol2 = mb.load(get_fn('ethane.mol2'))
+    oplsaa = Forcefield(forcefield_files=get_fn('refs-bad.xml'))
+    with pytest.warns(UserWarning):
+        ethane = oplsaa.apply(mol2, references_file='ethane.bib')
 
 def test_preserve_resname():
     untyped_ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
@@ -307,6 +378,34 @@ def test_assert_bonds():
     thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False)
     assert any(b.type is None for b in thing.bonds)
 
+def test_apply_subfuncs():
+    mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
+    oplsaa = Forcefield(name='oplsaa')
+
+    ethane = oplsaa.apply(mol2)
+
+    top, pos = oplsaa._prepare_topology(mol2)
+    typemap = oplsaa.run_atomtyping(top)
+    oplsaa._apply_typemap(top, typemap)
+    ethane2 = oplsaa.parametrize_system(top, pos)
+
+    # Note: Check ParmEd issue #1067 to see if __eq__ is implemented
+    # assert ethane == ethane2
+    assert ethane.box == ethane2.box
+    assert ethane.positions == ethane2.positions
+    for a1, a2 in zip(ethane.atoms, ethane2.atoms):
+        assert a1.name == a2.name
+        assert a1.idx == a2.idx
+        assert a1.atom_type == a2.atom_type
+
+    for b1, b2 in zip(ethane.bonds, ethane2.bonds):
+        assert b1.atom1.atom_type == b2.atom1.atom_type
+        assert b1.atom2.atom_type == b2.atom2.atom_type
+        assert b1.type == b2.type
+
+    for ang1, ang2 in zip(ethane.angles, ethane2.angles):
+        assert ang1.type == ang2.type
+
 @pytest.mark.parametrize("filename", ['ethane.mol2', 'benzene.mol2'])
 def test_write_xml(filename):
     mol = pmd.load_file(get_fn(filename), structure=True)
@@ -405,3 +504,12 @@ def test_write_xml_overrides():
         elif attributes['name'] == 'opls_146':
             assert attributes['overrides'] == 'opls_144'
             assert str(item.xpath('comment()')) == '[<!--Note: original overrides="opls_144"-->]'
+
+def test_load_metadata():
+    lj_ff = Forcefield(get_fn('lj.xml'))
+    assert lj_ff.version == '0.4.1'
+    assert lj_ff.name == 'LJ'
+
+    lj_ff = Forcefield(forcefield_files=[get_fn('lj.xml'), get_fn('lj2.xml')])
+    assert lj_ff.version == ['0.4.1', '4.8.2']
+    assert lj_ff.name == ['LJ', 'JL']
