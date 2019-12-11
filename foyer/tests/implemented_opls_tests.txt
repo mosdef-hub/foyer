@@ -46,11 +46,11 @@ methane
 methanol
 n-butylamine
 N-methylacetamide
+N-methylpyrrolidone
 neopentane
 nitrobenzene
 nitroethane
 nitromethane
-nmp
 NN-dimethylacetamide
 NN-dimethylformamide
 o-xylene
