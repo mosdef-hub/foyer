@@ -180,11 +180,11 @@ def test_preserve_resname():
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_apply_residues():
-    import mbuild as mb
-    from mbuild.examples import Ethane
-    ethane = Ethane()
+    import mbuild.recipes
+    propane = mbuild.recipes.Alkane(n=3)
+
     opls = Forcefield(name='oplsaa')
-    typed = opls.apply(ethane, residues='CH3')
+    typed = opls.apply(propane, residues='CH3')
     assert len([res for res in typed.residues if res.name == 'CH3']) == 2
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
@@ -279,8 +279,8 @@ def test_residue_map():
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_independent_residues_molecules():
     """Test to see that _check_independent_residues works for molecules."""
-    from mbuild.examples import Alkane
-    butane = Alkane(4)
+    import mbuild.recipes
+    butane = mbuild.recipes.Alkane(4)
     structure = butane.to_parmed()
     topo, NULL = generate_topology(structure)
     assert _check_independent_residues(topo)
