@@ -23,6 +23,7 @@
 26-dimethyl-4-heptanone
 3-methylphenol
 4-methylphenol
+acetamide
 acetone
 benzene
 chloroethane
@@ -35,13 +36,18 @@ diethylene-glycol
 diethylene-glycol-dimethyl-ether
 dimethylether
 dimethylformamide
+ethane
 ethanol
 ethylbenzene
 fluorobenzene
 formic-acid
 isobutane
+methane
 methanol
 n-butylamine
+N-methylacetamide
+N-methylpyrrolidone
+neopentane
 nitrobenzene
 nitroethane
 nitromethane
@@ -50,7 +56,9 @@ NN-dimethylformamide
 o-xylene
 pentachloroethane
 phenol
+propane
 propanenitrile
+propene
 propionic-acid
 propylamine
 propyne
@@ -60,8 +68,3 @@ pyrrole
 tetrahydrofuran
 toluene
 trichloromethane
-ethane
-methane
-neopentane
-propane
-propene

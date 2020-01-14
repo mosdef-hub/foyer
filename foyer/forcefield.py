@@ -344,6 +344,8 @@ class Forcefield(app.ForceField):
         self.atomTypeElements = dict()
         self._included_forcefields = dict()
         self.non_element_types = dict()
+        self._version = None
+        self._name = None
 
         all_files_to_load = []
         if forcefield_files is not None:
@@ -370,8 +372,24 @@ class Forcefield(app.ForceField):
         finally:
             for ff_file_name in preprocessed_files:
                 os.remove(ff_file_name)
+
+        if isinstance(forcefield_files, str):
+            self._version = self._parse_version_number(forcefield_files)
+            self._name = self._parse_name(forcefield_files)
+        elif isinstance(forcefield_files, list):
+            self._version = [self._parse_version_number(f) for f in forcefield_files]
+            self._name = [self._parse_name(f) for f in forcefield_files]
+
         self.parser = smarts.SMARTS(self.non_element_types)
         self._SystemData = self._SystemData()
+
+    @property
+    def version(self):
+        return self._version
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def included_forcefields(self):
@@ -386,6 +404,30 @@ class Forcefield(app.ForceField):
             basename, _ = os.path.splitext(ff_file)
             self._included_forcefields[basename] = ff_filepath
         return self._included_forcefields
+
+    def _parse_version_number(self, forcefield_file):
+        with open(forcefield_file, 'r') as f:
+            tree = ET.parse(f)
+            root = tree.getroot()
+            try:
+                return root.attrib['version']
+            except KeyError:
+                warnings.warn(
+                    'No force field version number found in force field XML file.'
+                )
+                return None
+
+    def _parse_name(self, forcefield_file):
+        with open(forcefield_file, 'r') as f:
+            tree = ET.parse(f)
+            root = tree.getroot()
+            try:
+                return root.attrib['name']
+            except KeyError:
+                warnings.warn(
+                    'No force field name found in force field XML file.'
+                )
+                return None
 
     def _create_element(self, element, mass):
         if not isinstance(element, elem.Element):
