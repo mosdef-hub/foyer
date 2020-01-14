@@ -3,7 +3,7 @@ from warnings import warn
 from foyer.exceptions import FoyerError
 from foyer.smarts_graph import SMARTSGraph
 
-import mdtraj as md
+from mdtraj.core.element import Element
 
 
 def find_atomtypes(structure, forcefield, max_iter=10):
@@ -27,12 +27,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     # Only consider rules for elements found in topology
     subrules = dict()
 
-    system_elements = set()
-    for a in structure.atoms:
-        if a.atomic_number > 0:
-            system_elements.add(md.core.element.Element.getByAtomicNumber(a.atomic_number).symbol)
-        else:
-            system_elements.add(a.name)
+    system_elements = set([Element.getByAtomicNumber(a.atomic_number).symbol for a in struct.atoms if a.atomic_number > 0])
 
     for key, val in rules.items():
         atom = val.nodes[0]['atom']
@@ -43,12 +38,12 @@ def find_atomtypes(structure, forcefield, max_iter=10):
             except IndexError:
                 try:
                     atomic_num = next(atom.find_data('atomic_num')).children[0]
-                    element = pt.Element[int(atomic_num)]
+                    element = Element.getByAtomicNumber([int(atomic_num)])
                 except IndexError:
                     element = None
         else:
             element = None
-        if True:#element is None or element in system_elements:
+        if element is None or element in system_elements:
             subrules[key] = val
     rules = subrules
 
