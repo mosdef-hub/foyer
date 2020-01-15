@@ -125,7 +125,7 @@ def _topology_from_parmed(structure, non_element_types):
                 element = elem.Element.getBySymbol(pmd_atom.name)
 
         omm_atom = topology.addAtom(name, element, residues[pmd_atom.residue])
-        omm_atom.id = pmd_atom.idx
+        omm_atom.id = pmd_atom.id
         atoms[pmd_atom] = omm_atom
         omm_atom.bond_partners = []
 
@@ -532,13 +532,10 @@ class Forcefield(app.ForceField):
             raise FoyerError('Attempting to atom-type using a force field '
                     'with no atom type defitions.')
 
-        # topology, positions = self._prepare_topology(topology, **kwargs)
-        #structure = self._prepare_structure(structure, **kwargs)
-
         if not isinstance(structure, pmd.Structure):
             mb = import_('mbuild')
             if isinstance(structure, mb.Compound):
-                structure = structure.to_parmed()#**kwargs)
+                structure = structure.to_parmed()
 
         typemap = self.run_atomtyping(structure, use_residue_map=use_residue_map, **kwargs)
 
@@ -575,10 +572,10 @@ class Forcefield(app.ForceField):
                 residue_map = dict()
 
                 # Need to call this only once and store results for later id() comparisons
-                split_residues = structure.split()
-                for res, res_id in split_residues:
-                    if True: #structure.residues[res_id].name not in residue_map.keys():
-                        #residue = res#_topology_from_residue(res)
+                for res_id, res in enumerate(structure.residues):
+                    if structure.residues[res_id].name not in residue_map.keys():
+                        # TODO: generate "structure" from a residue
+                        # residue = _topology_from_residue(res)
                         typemap = find_atomtypes(res, forcefield=self)
                         residue_map[res] = typemap
 
