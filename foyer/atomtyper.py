@@ -27,7 +27,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     # Only consider rules for elements found in topology
     subrules = dict()
 
-    system_elements = set([Element.getByAtomicNumber(a.atomic_number).symbol for a in struct.atoms if a.atomic_number > 0])
+    system_elements = set([Element.getByAtomicNumber(a.atomic_number).symbol for a in structure.atoms if a.atomic_number > 0])
 
     for key, val in rules.items():
         atom = val.nodes[0]['atom']
