@@ -128,7 +128,8 @@ class SMARTSGraph(nx.Graph):
             if str(atom_id.children[0]) == '*':
                 return True
             elif str(atom_id.children[0]).startswith('_'):
-                return atom.element.name == str(atom_id.children[0])
+                # Store non-element elements in .name
+                return atom.name == str(atom_id.children[0])
             else:
                 return atomic_num == pt.AtomicNum[str(atom_id.children[0])]
         elif atom_id.data == 'has_label':

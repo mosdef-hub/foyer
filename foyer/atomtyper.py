@@ -27,7 +27,13 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     # Only consider rules for elements found in topology
     subrules = dict()
 
-    system_elements = set([Element.getByAtomicNumber(a.atomic_number).symbol for a in structure.atoms if a.atomic_number > 0])
+    system_elements = set()
+    for a in structure.atoms:
+        if a.atomic_number > 0:
+            system_elements.add(Element.getByAtomicNumber(a.atomic_number).symbol)
+        elif a.atomic_number == 0:
+            if a.name in forcefield.non_element_types:
+                system_elements.add(a.name)
 
     for key, val in rules.items():
         atom = val.nodes[0]['atom']
@@ -38,7 +44,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
             except IndexError:
                 try:
                     atomic_num = next(atom.find_data('atomic_num')).children[0]
-                    element = Element.getByAtomicNumber([int(atomic_num)])
+                    element = Element.getByAtomicNumber([int(atomic_num)]).symbol
                 except IndexError:
                     element = None
         else:
