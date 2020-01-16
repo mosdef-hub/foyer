@@ -504,7 +504,7 @@ class Forcefield(app.ForceField):
         if 'class' in parameters:
             self.atomTypeClasses[name] = parameters['class']
 
-    def apply(self, structure, references_file=None, use_residue_map=False,
+    def apply(self, structure, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
               assert_dihedral_params=True, assert_improper_params=False,
               combining_rule='geometric', verbose=False, *args, **kwargs):
@@ -552,7 +552,7 @@ class Forcefield(app.ForceField):
         if not isinstance(structure, pmd.Structure):
             mb = import_('mbuild')
             if isinstance(structure, mb.Compound):
-                structure = structure.to_parmed()
+                structure = structure.to_parmed(**kwargs)
 
         typemap = self.run_atomtyping(structure, use_residue_map=use_residue_map, **kwargs)
 
@@ -602,9 +602,6 @@ class Forcefield(app.ForceField):
 
         else:
             typemap = find_atomtypes(structure, forcefield=self)
-
-        #if not all([a.id for a in structure.atoms][0]):
-        #    raise ValueError('Not all atoms in topology have atom types')
 
         return typemap
 
@@ -895,6 +892,9 @@ class Forcefield(app.ForceField):
         """Add atomtypes to the topology according to the typemap"""
         for atom in structure.atoms:
             atom.id = typemap[atom.idx]['atomtype']
+
+        if not all([a.id for a in structure.atoms][0]):
+            raise ValueError('Not all atoms in topology have atom types')
 
     def _prepare_structure(self, topology, **kwargs):
         """Separate positions and other topological information"""
