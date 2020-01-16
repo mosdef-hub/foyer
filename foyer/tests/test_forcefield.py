@@ -227,7 +227,7 @@ def test_urey_bradley():
     system.add_bond((second, fourth))
 
     ff = Forcefield(forcefield_files=[get_fn('charmm36_cooh.xml')])
-    struc = ff.apply(system, assert_angle_params=False, asset_dihedral_params=False,
+    struc = ff.apply(system, assert_angle_params=False, assert_dihedral_params=False,
             assert_improper_params=False)
     assert len(struc.angles) == 3
     assert len(struc.urey_bradleys) ==2
@@ -248,7 +248,7 @@ def test_charmm_improper():
     system.add_bond((second, fourth))
 
     ff = Forcefield(forcefield_files=[get_fn('charmm36_cooh.xml')])
-    struc = ff.apply(system, assert_angle_params=False, asset_dihedral_params=False,
+    struc = ff.apply(system, assert_angle_params=False, assert_dihedral_params=False,
             assert_improper_params=False)
     assert len(struc.impropers) == 1
     assert len(struc.dihedrals) == 0

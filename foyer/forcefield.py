@@ -128,7 +128,7 @@ def _topology_from_parmed(structure, non_element_types):
         chain = topology.addChain()
         omm_residue = topology.addResidue(pmd_residue.name, chain)
         # Index ParmEd residues on name & number, no other info i.e. chain
-        residues[(pmd_residue.name, pmd_residue.number)] = omm_residue
+        residues[(pmd_residue.name, pmd_residue.idx)] = omm_residue
     atoms = dict()  # pmd.Atom: omm.Atom
 
     for pmd_atom in structure.atoms:
@@ -142,7 +142,7 @@ def _topology_from_parmed(structure, non_element_types):
             else:
                 element = elem.Element.getBySymbol(pmd_atom.name)
 
-        omm_atom = topology.addAtom(name, element, residues[(pmd_atom.residue.name, pmd_atom.residue.number)])
+        omm_atom = topology.addAtom(name, element, residues[(pmd_atom.residue.name, pmd_atom.residue.idx)])
         omm_atom.id = pmd_atom.id
         atoms[pmd_atom] = omm_atom
         omm_atom.bond_partners = []
