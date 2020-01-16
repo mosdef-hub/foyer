@@ -103,6 +103,23 @@ def generate_topology(non_omm_topology, non_element_types=None, residues=None):
                          '"openmm.app.Topology"'.format(non_omm_topology))
 
 
+def _structure_from_residue(residue, parent_structure):
+    """Convert a ParmEd Residue to an equivalent Structure."""
+    structure = pmd.Structure()
+    for atom in residue.atoms:
+        structure.add_atom(atom, resname=residue.name, resnum=residue.number)
+
+    for bond in parent_structure.bonds:
+        if bond.atom1 in residue.atoms and bond.atom2 in residue.atoms:
+            structure.bonds.append(bond)
+
+    idx_offset = min([a.idx for a in structure])
+    for atom in structure.atoms:
+        atom._idx -= idx_offset
+
+    return structure
+
+
 def _topology_from_parmed(structure, non_element_types):
     """Convert a ParmEd Structure to an OpenMM Topology."""
     topology = app.Topology()
@@ -110,7 +127,8 @@ def _topology_from_parmed(structure, non_element_types):
     for pmd_residue in structure.residues:
         chain = topology.addChain()
         omm_residue = topology.addResidue(pmd_residue.name, chain)
-        residues[pmd_residue] = omm_residue
+        # Index ParmEd residues on name & number, no other info i.e. chain
+        residues[(pmd_residue.name, pmd_residue.number)] = omm_residue
     atoms = dict()  # pmd.Atom: omm.Atom
 
     for pmd_atom in structure.atoms:
@@ -124,7 +142,7 @@ def _topology_from_parmed(structure, non_element_types):
             else:
                 element = elem.Element.getBySymbol(pmd_atom.name)
 
-        omm_atom = topology.addAtom(name, element, residues[pmd_atom.residue])
+        omm_atom = topology.addAtom(name, element, residues[(pmd_atom.residue.name, pmd_atom.residue.number)])
         omm_atom.id = pmd_atom.id
         atoms[pmd_atom] = omm_atom
         omm_atom.bond_partners = []
@@ -192,10 +210,9 @@ def _check_independent_residues(structure):
     return True
 
 
-def _unwrap_typemap(structure, residue_map, split_residues):
-    import pdb; pdb.set_trace()
+def _unwrap_typemap(structure, residue_map):
     master_typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} for atom in structure.atoms}
-    for res, NULL in split_residues:
+    for res in structure.residues:
         for res_ref, val in residue_map.items():
             if id(res) == id(res_ref):
                 for i, atom in enumerate(res.atoms):
@@ -574,12 +591,11 @@ class Forcefield(app.ForceField):
                 # Need to call this only once and store results for later id() comparisons
                 for res_id, res in enumerate(structure.residues):
                     if structure.residues[res_id].name not in residue_map.keys():
-                        # TODO: generate "structure" from a residue
-                        # residue = _topology_from_residue(res)
-                        typemap = find_atomtypes(res, forcefield=self)
+                        tmp_res = _structure_from_residue(res, structure)
+                        typemap = find_atomtypes(tmp_res, forcefield=self)
                         residue_map[res] = typemap
 
-                typemap = _unwrap_typemap(structure, residue_map, split_residues)
+                typemap = _unwrap_typemap(structure, residue_map)
 
             else:
                 typemap = find_atomtypes(structure, forcefield=self)
