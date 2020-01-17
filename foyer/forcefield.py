@@ -214,7 +214,7 @@ def _unwrap_typemap(structure, residue_map):
     master_typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 'atomtype': None} for atom in structure.atoms}
     for res in structure.residues:
         for res_ref, val in residue_map.items():
-            if id(res) == id(res_ref):
+            if id(res.name) == id(res_ref):
                 for i, atom in enumerate(res.atoms):
                     master_typemap[int(atom.idx)]['atomtype'] = val[i]['atomtype']
     return master_typemap
@@ -593,7 +593,7 @@ class Forcefield(app.ForceField):
                     if structure.residues[res_id].name not in residue_map.keys():
                         tmp_res = _structure_from_residue(res, structure)
                         typemap = find_atomtypes(tmp_res, forcefield=self)
-                        residue_map[res] = typemap
+                        residue_map[res.name] = typemap
 
                 typemap = _unwrap_typemap(structure, residue_map)
 
