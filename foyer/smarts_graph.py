@@ -4,7 +4,6 @@ import itertools
 import networkx as nx
 from networkx.algorithms import isomorphism
 import parmed.periodic_table as pt
-import mdtraj as md
 
 from foyer.smarts import SMARTS
 

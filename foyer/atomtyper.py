@@ -1,9 +1,9 @@
 from warnings import warn
 
+import parmed.periodic_table as pt
+
 from foyer.exceptions import FoyerError
 from foyer.smarts_graph import SMARTSGraph
-
-from mdtraj.core.element import Element
 
 
 def find_atomtypes(structure, forcefield, max_iter=10):
@@ -33,10 +33,11 @@ def find_atomtypes(structure, forcefield, max_iter=10):
         if a.name.startswith('_'):
             if a.name in forcefield.non_element_types:
                 system_elements.add(a.name)
-        elif isinstance(a.atomic_number, int):
-            if a.atomic_number > 0:
-                system_elements.add(Element.getByAtomicNumber(a.atomic_number).symbol)
-            elif a.atomic_number == 0:
+        else:
+            if 0 < a.atomic_number <= pt.KNOWN_ELEMENTS:
+                element = pt.Element[a.atomic_number]
+                system_elements.add(element)
+            else:
                 raise FoyerError(
                     'Parsed atom {} as having neither an element '
                     'nor non-element type.'.format(a)
