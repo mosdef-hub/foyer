@@ -214,12 +214,8 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
     def __init__(self, G1, G2, node_match, element, typemap):
         super(SMARTSMatcher, self).__init__(G1, G2, node_match)
         self.element = element
-        if element not in [None, '*']:
-            self.valid_nodes = [n for n, atom in
-                                nx.get_node_attributes(G1, name='atom').items()
-                                if atom.element == element]
-        else:
-            self.valid_nodes = G1.nodes()
+        # TODO: Parse out nodes containing other elements (see git history)
+        self.valid_nodes = G1.nodes()
 
     def candidate_pairs_iter(self):
         """Iterator over candidate pairs of nodes in G1 and G2."""
