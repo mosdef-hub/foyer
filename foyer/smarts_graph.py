@@ -215,9 +215,9 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
         super(SMARTSMatcher, self).__init__(G1, G2, node_match)
         self.element = element
         if element not in [None, '*']:
-            self.valid_nodes = [n for n, atom in 
+            self.valid_nodes = [n for n, atom in
                                 nx.get_node_attributes(G1, name='atom').items()
-                                if atom.element == md.element.get_by_symbol(element).atomic_number]
+                                if atom.element == element]
         else:
             self.valid_nodes = G1.nodes()
 

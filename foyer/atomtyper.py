@@ -29,11 +29,18 @@ def find_atomtypes(structure, forcefield, max_iter=10):
 
     system_elements = set()
     for a in structure.atoms:
-        if a.atomic_number > 0:
-            system_elements.add(Element.getByAtomicNumber(a.atomic_number).symbol)
-        elif a.atomic_number == 0:
+        # First add non-element types, which are strings, then elements
+        if a.name.startswith('_'):
             if a.name in forcefield.non_element_types:
                 system_elements.add(a.name)
+        elif isinstance(a.atomic_number, int):
+            if a.atomic_number > 0:
+                system_elements.add(Element.getByAtomicNumber(a.atomic_number).symbol)
+            elif a.atomic_number == 0:
+                raise FoyerError(
+                    'Parsed atom {} as having neither an element '
+                    'nor non-element type.'.format(a)
+                )
 
     for key, val in rules.items():
         atom = val.nodes[0]['atom']
