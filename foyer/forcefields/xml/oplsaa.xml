@@ -259,8 +259,8 @@
   <Type name="opls_257" class="opls_257" element="C" mass="12.011"/>
   <Type name="opls_258" class="opls_258" element="C" mass="12.011"/>
   <Type name="opls_259" class="opls_259" element="C" mass="12.011"/>
-  <Type name="opls_260" class="CA" element="C" mass="12.011" def="[C;X3;r6]1([C;%opls_261])[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" overrides = "opls_145" desc="Benzonitrile C(CN)" doi="10.1021/ja9621760"/>
-  <Type name="opls_261" class="CZ" element="C" mass="12.011" def="[C;X2](C)(N)" overrides = "opls_754" desc="Benzonitrile (benzene)C(N)" doi="10.1021/ja9621760"/>
+  <Type name="opls_260" class="CA" element="C" mass="12.011" def="[C;X3;r6]([C;X2;%opls_261])" overrides = "opls_145" desc="Benzonitrile C(CN)" doi="10.1021/ja9621760"/>
+  <Type name="opls_261" class="CZ" element="C" mass="12.011" def="[C;X2]([C;X3;r6])" overrides = "opls_754" desc="Benzonitrile (benzene)C(N)" doi="10.1021/ja9621760"/>
   <Type name="opls_262" class="NZ" element="N" mass="14.0067" def="[N;X1][C;%opls_261]" overrides = "opls_753" desc="Benzonitrile Nitrogen(benzene-C)N" doi="10.1021/ja9621760"/>
   <Type name="opls_263" class="CA" element="C" mass="12.011" def="[C;X3;r6]1(Cl)[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" overrides="opls_145" desc="Chlorobenzene C(Cl)" doi="10.1021/ja9621760"/>
   <Type name="opls_264" class="Cl" element="Cl" mass="35.453" def="[Cl;X1]([C;%opls_263])" desc="Chlorobenzene (C)Cl" doi="10.1021/ja9621760"/>
