@@ -22,12 +22,18 @@ jobs:
         Python37Ubuntu:
           imageName: 'ubuntu-latest'
           python.version: 3.7
+        Python38Ubuntu:
+          imageName: 'ubuntu-latest'
+          python.version: 3.8
         Python36macOS:
           imageName: 'macOS-latest'
           python.version: 3.6
         Python37macOS:
           imageName: 'macOS-latest'
           python.version: 3.7
+        Python38macOS:
+          imageName: 'macOS-latest'
+          python.version: 3.8
 
     pool:
       vmImage: $(imageName)
@@ -43,6 +49,7 @@ jobs:
       - bash: |
           conda config --set always_yes yes --set changeps1 no
           conda config --add channels omnia
+          conda config --add channels conda-forge/label/testing
           conda config --add channels janschulz
           conda config --add channels conda-forge
           conda config --add channels mosdef
@@ -66,6 +73,8 @@ jobs:
           python.version: 3.6
         Python37:
           python.version: 3.7
+        Python38:
+          python.version: 3.8
 
     steps:
       - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
@@ -74,6 +83,7 @@ jobs:
       - script: |
           conda config --set always_yes yes --set changeps1 no
           conda config --add channels omnia
+          conda config --add channels conda-forge/label/testing
           conda config --add channels conda-forge
           conda config --add channels mosdef
         displayName: Add Relevent Channels
@@ -101,6 +111,7 @@ jobs:
       - bash: |
           conda config --set always_yes yes --set changeps1 no
           conda config --add channels omnia
+          conda config --add channels conda-forge/label/testing
           conda config --add channels conda-forge
           conda config --add channels mosdef
           conda create -n  bleeding-test-environment python=3.7 --file requirements-dev.txt
