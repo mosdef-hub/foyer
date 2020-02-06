@@ -179,8 +179,8 @@
   <Type name="opls_180" class="OS" element="O" mass="15.9994"  def="[O;X2](C)C" desc="O, dialkyl ether" doi="10.1021/ja9621760"/>
   <Type name="opls_181" class="CT" element="C" mass="12.01100" def="[C;X4]([O;%opls_180])(H)(H)H" desc="C(H3OR), methyl ether" overrides="opls_182" doi="10.1021/ja9621760"/>
   <Type name="opls_182" class="CT" element="C" mass="12.01100" def="[C;X4]([O;%opls_180])(H)(H)" desc="C(H2OR), methyl ether" doi="10.1021/ja9621760"/>
-  <Type name="opls_183" class="opls_183" element="C" mass="12.011"/>
-  <Type name="opls_184" class="opls_184" element="C" mass="12.011"/>
+  <Type name="opls_183" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_180])(C)(C)H" desc = "Carbon attached to Oxygen in Isopropy ether" doi="10.1021/ja9621760"/>
+  <Type name="opls_184" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_180])(C)(C)(C)" desc = "Carbon attached to Oxygen in t-butyl ether" doi="10.1021/ja9621760"/>
   <Type name="opls_185" class="HC" element="C" mass="1.00800"   def="HC[O;%opls_180]" desc="H(COR), alpha H ether" overrides="opls_140" doi="10.1021/ja9621760"/>
   <Type name="opls_186" class="OS" element="O" mass="15.9994" def="[O;X2][C;%opls_193](O)(C)H" desc="O: acetal ether" overrides="opls_180" doi="10.1021/ja9621760"/>
   <Type name="opls_187" class="opls_187" element="O" mass="15.9994"/>
