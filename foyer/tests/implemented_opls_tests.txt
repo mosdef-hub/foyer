@@ -68,3 +68,5 @@ pyrrole
 tetrahydrofuran
 toluene
 trichloromethane
+2-methoxypropane
+methyltert-butylether
