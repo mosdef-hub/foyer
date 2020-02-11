@@ -1,17 +1,17 @@
 ;
-;   File init.top  was generated
-;   By user: arjunbansal (508)
-;   On host: Admins-iMac.local
-;   At date: Thu. January  4 11:31:47 2020
+;   File chlorobenzene.top  was generated
+;   By user: raymatsumoto (501)
+;   On host: Rays-MacBook-Pro.local
+;   At date: Tue. February  2 12:03:06 2020
 ;
 ;   This is a standalone topology file
 ;
 ;   Created by:
-;   ParmEd:       chloro.py, VERSION 3.2.0
-;   Executable:   chloro.py
-;   Library dir:  /usr/local/gromacs/share/gromacs/top
+;   ParmEd:       benzo.py, VERSION 3.2.0
+;   Executable:   benzo.py
+;   Library dir:  /Users/raymatsumoto/installs/gromacs-5.1.2/installs/share/gromacs/top
 ;   Command line:
-;     chloro.py
+;     benzo.py
 ;
 
 [ defaults ]
@@ -49,17 +49,17 @@ chlorobenzene          3
 [ bonds ]
 ;    ai     aj funct         c0         c1         c2         c3
       1      8     1   0.10800 307105.600000
+      1      2     1   0.14000 392459.200000
       1      6     1   0.14000 392459.200000
-      2      3     1   0.14000 392459.200000
-      2      1     1   0.14000 392459.200000
       2      7     1   0.10800 307105.600000
+      3      4     1   0.14000 392459.200000
       3     10     1   0.10800 307105.600000
+      3      2     1   0.14000 392459.200000
+      4      5     1   0.14000 392459.200000
       4     12     1   0.17250 251040.000000
-      4      3     1   0.14000 392459.200000
+      5      6     1   0.14000 392459.200000
       5      9     1   0.10800 307105.600000
-      5      4     1   0.14000 392459.200000
       6     11     1   0.10800 307105.600000
-      6      5     1   0.14000 392459.200000
 
 [ pairs ]
 ;    ai     aj funct         c0         c1         c2         c3
@@ -139,4 +139,4 @@ Generic title
 
 [ molecules ]
 ; Compound       #mols
-chlorobenzene      200
+chlorobenzene        1
