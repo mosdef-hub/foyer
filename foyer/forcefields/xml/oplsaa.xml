@@ -179,8 +179,8 @@
   <Type name="opls_180" class="OS" element="O" mass="15.9994"  def="[O;X2](C)C" desc="O, dialkyl ether" doi="10.1021/ja9621760"/>
   <Type name="opls_181" class="CT" element="C" mass="12.01100" def="[C;X4]([O;%opls_180])(H)(H)H" desc="C(H3OR), methyl ether" overrides="opls_182" doi="10.1021/ja9621760"/>
   <Type name="opls_182" class="CT" element="C" mass="12.01100" def="[C;X4]([O;%opls_180])(H)(H)" desc="C(H2OR), methyl ether" doi="10.1021/ja9621760"/>
-  <Type name="opls_183" class="opls_183" element="C" mass="12.011"/>
-  <Type name="opls_184" class="opls_184" element="C" mass="12.011"/>
+  <Type name="opls_183" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_180])(C)(C)H" desc = "Central Carbon in Isopropyl group attached to Oxygen in ether" doi="10.1021/ja9621760"/>
+  <Type name="opls_184" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_180])(C)(C)(C)" desc = "Central Carbon in t-butyl group attached to Oxygen in ether" doi="10.1021/ja9621760"/>
   <Type name="opls_185" class="HC" element="C" mass="1.00800"   def="HC[O;%opls_180]" desc="H(COR), alpha H ether" overrides="opls_140" doi="10.1021/ja9621760"/>
   <Type name="opls_186" class="OS" element="O" mass="15.9994" def="[O;X2][C;%opls_193](O)(C)H" desc="O: acetal ether" overrides="opls_180" doi="10.1021/ja9621760"/>
   <Type name="opls_187" class="opls_187" element="O" mass="15.9994"/>
@@ -259,11 +259,11 @@
   <Type name="opls_257" class="opls_257" element="C" mass="12.011"/>
   <Type name="opls_258" class="opls_258" element="C" mass="12.011"/>
   <Type name="opls_259" class="opls_259" element="C" mass="12.011"/>
-  <Type name="opls_260" class="opls_260" element="C" mass="12.011"/>
-  <Type name="opls_261" class="opls_261" element="C" mass="12.011"/>
-  <Type name="opls_262" class="opls_262" element="N" mass="14.0067"/>
-  <Type name="opls_263" class="opls_263" element="C" mass="12.011"/>
-  <Type name="opls_264" class="opls_264" element="Cl" mass="35.453"/>
+  <Type name="opls_260" class="CA" element="C" mass="12.011" def="[C;X3;r6]([C;X2;%opls_261])" overrides = "opls_145" desc="Benzonitrile: Carbon on aromatic ring attached to CN" doi="10.1021/ja9621760"/>
+  <Type name="opls_261" class="CZ" element="C" mass="12.011" def="[C;X2]([C;X3;r6])" overrides = "opls_754" desc="Benzonitrile: carbon in nitrile group (CN) " doi="10.1021/ja9621760"/>
+  <Type name="opls_262" class="NZ" element="N" mass="14.0067" def="[N;X1][C;%opls_261]" overrides = "opls_753" desc="Benzonitrile Nitrogen(benzene-C)N" doi="10.1021/ja9621760"/>
+  <Type name="opls_263" class="CA" element="C" mass="12.011" def="[C;X3;r6]1(Cl)[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" overrides="opls_145" desc="Chlorobenzene C(Cl)" doi="10.1021/ja9621760"/>
+  <Type name="opls_264" class="Cl" element="Cl" mass="35.453" def="[Cl;X1]([C;%opls_263])" desc="Chlorobenzene (C)Cl" doi="10.1021/ja9621760"/>
   <Type name="opls_265" class="opls_265" element="N" mass="14.0067"/>
   <Type name="opls_266" class="opls_266" element="C" mass="12.011"/>
   <Type name="opls_267" class="C" element="C" mass="12.01100"   def="[C;X3]([O;X1])OH" desc="Co in CCOOH" overrides="opls_277" doi="10.1021/ja9621760"/>
@@ -2672,6 +2672,7 @@
   <Proper class1="CT" class2="CT" class3="CK" class4="" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="CA" class2="CA" class3="CT" class4="" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="NZ" class2="CZ" class3="CT" class4="" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="NZ" class2="CZ" class3="CA" class4="" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="O" class2="C" class3="CT" class4="" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="CT" class2="CT" class3="C*" class4="" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="CT" class2="CT" class3="CQ" class4="" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>

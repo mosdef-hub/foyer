@@ -3,7 +3,7 @@ import lark
 import pytest
 
 from foyer.exceptions import FoyerError
-from foyer.forcefield import generate_topology, Forcefield
+from foyer.forcefield import Forcefield
 from foyer.smarts_graph import SMARTSGraph
 from foyer.smarts import SMARTS
 from foyer.tests.utils import get_fn
@@ -41,47 +41,43 @@ def test_parse():
 
 def test_uniqueness():
     mol2 = pmd.load_file(get_fn('uniqueness_test.mol2'), structure=True)
-    top, _ = generate_topology(mol2)
-    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+    typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 
                             'atomtype': None}     
-                            for atom in top.atoms()}
+                            for atom in mol2.atoms}
 
 
-    _rule_match(top, typemap, '[#6]1[#6][#6][#6][#6][#6]1', False)
-    _rule_match(top, typemap, '[#6]1[#6][#6][#6][#6]1', False)
-    _rule_match(top, typemap, '[#6]1[#6][#6][#6]1', True)
+    _rule_match(mol2, typemap, '[#6]1[#6][#6][#6][#6][#6]1', False)
+    _rule_match(mol2, typemap, '[#6]1[#6][#6][#6][#6]1', False)
+    _rule_match(mol2, typemap, '[#6]1[#6][#6][#6]1', True)
 
 
 def test_ringness():
-    ring = pmd.load_file(get_fn('ring.mol2'), structure=True)
-    top, _ = generate_topology(ring)
-    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+    ring_mol2 = pmd.load_file(get_fn('ring.mol2'), structure=True)
+    typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 
                             'atomtype': None}     
-                            for atom in top.atoms()}
+                            for atom in ring_mol2.atoms}
 
-    _rule_match(top, typemap, '[#6]1[#6][#6][#6][#6][#6]1', True)
+    _rule_match(ring_mol2, typemap, '[#6]1[#6][#6][#6][#6][#6]1', True)
 
-    not_ring = pmd.load_file(get_fn('not_ring.mol2'), structure=True)
-    top, _ = generate_topology(not_ring)
-    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+    not_ring_mol2 = pmd.load_file(get_fn('not_ring.mol2'), structure=True)
+    typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 
                             'atomtype': None}     
-                            for atom in top.atoms()}
+                            for atom in not_ring_mol2.atoms}
 
-    _rule_match(top, typemap, '[#6]1[#6][#6][#6][#6][#6]1', False)
+    _rule_match(not_ring_mol2, typemap, '[#6]1[#6][#6][#6][#6][#6]1', False)
 
 
 def test_fused_ring():
-    fused = pmd.load_file(get_fn('fused.mol2'), structure=True)
-    top, _ = generate_topology(fused)
-    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+    mol2 = pmd.load_file(get_fn('fused.mol2'), structure=True)
+    typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 
                             'atomtype': None}     
-                            for atom in top.atoms()}
+                            for atom in mol2.atoms}
 
     rule = SMARTSGraph(name='test', parser=PARSER,
                        smarts_string='[#6]12[#6][#6][#6][#6][#6]1[#6][#6][#6][#6]2',
                        typemap=typemap)
 
-    match_indices = list(rule.find_matches(top, typemap))
+    match_indices = list(rule.find_matches(mol2, typemap))
     assert 3 in match_indices
     assert 4 in match_indices
     assert len(match_indices) == 2
@@ -90,36 +86,34 @@ def test_fused_ring():
 def test_ring_count():
     # Two rings
     fused = pmd.load_file(get_fn('fused.mol2'), structure=True)
-    top, _ = generate_topology(fused)
-    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+    typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 
                             'atomtype': None}     
-                            for atom in top.atoms()}
+                            for atom in fused.atoms}
     rule = SMARTSGraph(name='test', parser=PARSER,
                        smarts_string='[#6;R2]', typemap=typemap)
 
-    match_indices = list(rule.find_matches(top, typemap))
+    match_indices = list(rule.find_matches(fused, typemap))
     for atom_idx in (3, 4):
         assert atom_idx in match_indices
     assert len(match_indices) == 2
 
     rule = SMARTSGraph(name='test', parser=PARSER,
                        smarts_string='[#6;R1]', typemap=typemap)
-    match_indices = list(rule.find_matches(top, typemap))
+    match_indices = list(rule.find_matches(fused, typemap))
     for atom_idx in (0, 1, 2, 5, 6, 7, 8, 9):
         assert atom_idx in match_indices
     assert len(match_indices) == 8
 
     # One ring
     ring = pmd.load_file(get_fn('ring.mol2'), structure=True)
-    top, _ = generate_topology(ring)
-    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+    typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 
                             'atomtype': None}     
-                            for atom in top.atoms()}
+                            for atom in ring.atoms}
 
 
     rule = SMARTSGraph(name='test', parser=PARSER,
                        smarts_string='[#6;R1]', typemap=typemap)
-    match_indices = list(rule.find_matches(top, typemap))
+    match_indices = list(rule.find_matches(ring, typemap))
     for atom_idx in range(6):
         assert atom_idx in match_indices
     assert len(match_indices) == 6
@@ -145,10 +139,9 @@ def test_precedence_ast():
 
 def test_precedence():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
-    top, _ = generate_topology(mol2)
-    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+    typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 
                             'atomtype': None}     
-                            for atom in top.atoms()}
+                            for atom in mol2.atoms}
 
     checks = {'[C,O;C]': 2,
               '[C&O;C]': 0,
@@ -157,7 +150,7 @@ def test_precedence():
               }
 
     for smart, result in checks.items():
-        _rule_match_count(top, typemap, smart, result)
+        _rule_match_count(mol2, typemap, smart, result)
 
 
 def test_not_ast():
@@ -178,10 +171,9 @@ def test_not_ast():
 
 def test_not():
     mol2 = pmd.load_file(get_fn('ethane.mol2'), structure=True)
-    top, _ = generate_topology(mol2)
-    typemap = {atom.index: {'whitelist': set(), 'blacklist': set(), 
+    typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 
                             'atomtype': None}     
-                            for atom in top.atoms()}
+                            for atom in mol2.atoms}
 
     checks = {'[!O]': 8,
               '[!#5]': 8,
@@ -191,7 +183,7 @@ def test_not():
               '[!C;!H]': 0,
               }
     for smart, result in checks.items():
-        _rule_match_count(top, typemap, smart, result)
+        _rule_match_count(mol2, typemap, smart, result)
 
 
 def test_hexa_coordinated():
