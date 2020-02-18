@@ -8,7 +8,6 @@ dependencies:
   - openmm
   - parmed
   - pip:
-    - numpydoc
     - sphinx
     - sphinx_rtd_theme
     - sphinxcontrib-svg2pdfconverter

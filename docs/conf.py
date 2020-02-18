@@ -16,9 +16,15 @@
 
 import os
 import sys
+import pathlib
 
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('sphinxext'))
+
+base_path = pathlib.Path(__file__).parent
+os.system('python {} --name'.format((base_path / '../setup.py').resolve()))
+
+
 import foyer
 
 
