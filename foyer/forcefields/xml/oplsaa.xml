@@ -203,7 +203,7 @@
   <Type name="opls_204" class="HS" element="H" mass="1.008" def="[H;X1]([S;%opls_200])" desc="H in any Thiol" doi="10.1021/ja9621760"/>
   <Type name="opls_205" class="HS" element="H" mass="1.008" def="[H;X1]([S;%opls_201])" desc="H in H2S" overrides="opls_204" doi="10.1021/ja9621760"/>
   <Type name="opls_206" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_200])(H)(H)" desc="C in R-CH2-S-H"  overrides="opls_207, opls_208, opls_210" doi="10.1021/ja9621760"/>
-  <Type name="opls_207" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_200])(H)" desc="C in 2R-CH-S-H" overrides="opls_208, opls_211" doi="10.1021/ja9621760"/>
+  <Type name="opls_207" class="CT" element="C" mass="12.011"/>
   <Type name="opls_208" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_200])" desc="C in 3R-C-S-H" overrides="opls_212" doi="10.1021/ja9621760"/>
   <Type name="opls_209" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_202])(H)(H)(H)" desc="C in CH3-S-*"  overrides="opls_210, opls_211, opls_212" doi="10.1021/ja9621760"/>
   <Type name="opls_210" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_202])(H)(H)" desc="C in R-CH2-S-*"  overrides="opls_211, opls_212" doi="10.1021/ja9621760"/>
@@ -213,7 +213,7 @@
   <Type name="opls_214" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_203])(H)(H)" desc="C in R-CH2-S-S-*"  overrides="opls_215, opls_216, opls_210" doi="10.1021/ja9621760"/>
   <Type name="opls_215" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_203])(H)" desc="C in 2R-CH-S-S-*"  overrides="opls_216, opls_211" doi="10.1021/ja9621760"/>
   <Type name="opls_216" class="CT" element="C" mass="12.011" def="[C;X4][S;%opls_203]" desc="C in 3R-C-S-S-*" overrides="opls_212" doi="10.1021/ja9621760"/>
-  <Type name="opls_217" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_200])(H)(H)(H)" desc="C in CH3-S-H (methanethiol)" overrides="opls_211, opls_207" doi="10.1021/ja9621760"/>
+  <Type name="opls_217" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_200])(H)(H)(H)" desc="C in CH3-S-H (methanethiol)" overrides="opls_211, opls_207, opls_209, opls_206" doi="10.1021/ja9621760"/>
   <Type name="opls_218" class="opls_218" element="C" mass="12.011"/>
   <Type name="opls_219" class="opls_219" element="C" mass="12.011"/>
   <Type name="opls_220" class="opls_220" element="C" mass="12.011"/>
