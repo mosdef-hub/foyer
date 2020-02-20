@@ -2,7 +2,7 @@
 ;   File dimethylsulfide.top  was generated
 ;   By user: arjunbansal (508)
 ;   On host: Admins-iMac.local
-;   At date: Thu. February  4 10:26:58 2020
+;   At date: Thu. February  4 11:43:47 2020
 ;
 ;   This is a standalone topology file
 ;
@@ -44,14 +44,14 @@ thiol          3
 
 [ bonds ]
 ;    ai     aj funct         c0         c1         c2         c3
-      1      4     1   0.10900 284512.000000
       1      5     1   0.10900 284512.000000
       1      2     1   0.18100 185769.600000
       1      6     1   0.10900 284512.000000
-      3      7     1   0.10900 284512.000000
-      3      2     1   0.18100 185769.600000
+      1      4     1   0.10900 284512.000000
       3      9     1   0.10900 284512.000000
+      3      7     1   0.10900 284512.000000
       3      8     1   0.10900 284512.000000
+      3      2     1   0.18100 185769.600000
 
 [ pairs ]
 ;    ai     aj funct         c0         c1         c2         c3
@@ -93,4 +93,4 @@ Generic title
 
 [ molecules ]
 ; Compound       #mols
-thiol               10
+thiol                1
