@@ -122,6 +122,3 @@ jobs:
           source activate bleeding-test-environment
           python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
         displayName: Run Tests
-
-
-
