@@ -72,3 +72,5 @@ dimethyldisulfide
 ethylmethylsulfide
 dimethylsulfide
 propanethiol
+ethanethiol
+methanethiol
