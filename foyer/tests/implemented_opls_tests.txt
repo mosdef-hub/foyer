@@ -68,3 +68,7 @@ pyrrole
 tetrahydrofuran
 toluene
 trichloromethane
+dimethyldisulfide
+ethylmethylsulfide
+dimethylsulfide
+propanethiol
