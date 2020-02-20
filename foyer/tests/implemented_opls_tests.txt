@@ -26,7 +26,9 @@
 acetamide
 acetone
 benzene
+benzonitrile
 chloroethane
+chlorobenzene
 cyclohexane
 cyclohexanone
 cyclopentanone
@@ -68,6 +70,8 @@ pyrrole
 tetrahydrofuran
 toluene
 trichloromethane
+2-methoxypropane
+methyltert-butylether
 dimethyldisulfide
 ethylmethylsulfide
 dimethylsulfide

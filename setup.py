@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import os
 import subprocess
+from pathlib import Path
 from setuptools import setup, find_packages
 
 #####################################
@@ -52,6 +53,8 @@ full_version = '{full_version}'
 git_revision = '{git_revision}'
 release = {release}
 """
+    base_path = Path(__file__).parent
+    file_path = (base_path / filename)
     # git_revision
     if os.path.exists('.git'):
         git_revision = git_version()
@@ -67,12 +70,13 @@ release = {release}
                         .format(version=version, git_revision=git_revision))
         short_version = version
 
-    with open(filename, 'w') as f:
+    with file_path.open('w') as f:
         f.write(cnt.format(version=version,
                            short_version=short_version,
                            full_version=full_version,
                            git_revision=git_revision,
                            release=isreleased))
+
 
 write_version_py(VERSION, ISRELEASED, 'foyer/version.py')
 

@@ -227,7 +227,7 @@ def test_urey_bradley():
     system.add_bond((second, fourth))
 
     ff = Forcefield(forcefield_files=[get_fn('charmm36_cooh.xml')])
-    struc = ff.apply(system, assert_angle_params=False, asset_dihedral_params=False,
+    struc = ff.apply(system, assert_angle_params=False, assert_dihedral_params=False,
             assert_improper_params=False)
     assert len(struc.angles) == 3
     assert len(struc.urey_bradleys) ==2
@@ -248,7 +248,7 @@ def test_charmm_improper():
     system.add_bond((second, fourth))
 
     ff = Forcefield(forcefield_files=[get_fn('charmm36_cooh.xml')])
-    struc = ff.apply(system, assert_angle_params=False, asset_dihedral_params=False,
+    struc = ff.apply(system, assert_angle_params=False, assert_dihedral_params=False,
             assert_improper_params=False)
     assert len(struc.impropers) == 1
     assert len(struc.dihedrals) == 0
@@ -257,17 +257,14 @@ def test_residue_map():
     ethane = pmd.load_file(get_fn('ethane.mol2'), structure=True)
     ethane *= 2
     oplsaa = Forcefield(name='oplsaa')
-    topo, NULL = generate_topology(ethane)
-    map_with = oplsaa.run_atomtyping(topo, use_residue_map=True)
-    map_without = oplsaa.run_atomtyping(topo, use_residue_map=False)
-    assert all([a['atomtype'] for a in map_with.values()][0])
-    assert all([a['atomtype'] for a in map_without.values()][0])
-    topo_with = topo
-    topo_without = topo
-    oplsaa._apply_typemap(topo_with, map_with)
-    oplsaa._apply_typemap(topo_without, map_without)
-    struct_with = pmd.openmm.load_topology(topo_with, oplsaa.createSystem(topo_with))
-    struct_without = pmd.openmm.load_topology(topo_without, oplsaa.createSystem(topo_without))
+    map_with = oplsaa.run_atomtyping(ethane, use_residue_map=True)
+    map_without = oplsaa.run_atomtyping(ethane, use_residue_map=False)
+    assert all([a['atomtype'] for a in map_with.values()])
+    assert all([a['atomtype'] for a in map_without.values()])
+    struct_with = ethane
+    struct_without = ethane
+    oplsaa._apply_typemap(struct_with, map_with)
+    oplsaa._apply_typemap(struct_without, map_without)
     for atom_with, atom_without in zip(struct_with.atoms, struct_without.atoms):
         assert atom_with.type == atom_without.type
         b_with = atom_with.bond_partners
@@ -282,11 +279,9 @@ def test_independent_residues_molecules():
     import mbuild.recipes
     butane = mbuild.recipes.Alkane(4)
     structure = butane.to_parmed()
-    topo, NULL = generate_topology(structure)
-    assert _check_independent_residues(topo)
+    assert _check_independent_residues(structure)
     structure = butane.to_parmed(residues=['RES', 'CH3'])
-    topo, NULL = generate_topology(structure)
-    assert not _check_independent_residues(topo)
+    assert not _check_independent_residues(structure)
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_independent_residues_atoms():
@@ -295,8 +290,7 @@ def test_independent_residues_atoms():
     argon = mb.Compound()
     argon.name = 'Ar'
     structure = argon.to_parmed()
-    topo, NULL = generate_topology(structure)
-    assert _check_independent_residues(topo)
+    assert _check_independent_residues(structure)
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
 def test_topology_precedence():
@@ -384,10 +378,9 @@ def test_apply_subfuncs():
 
     ethane = oplsaa.apply(mol2)
 
-    top, pos = oplsaa._prepare_topology(mol2)
-    typemap = oplsaa.run_atomtyping(top)
-    oplsaa._apply_typemap(top, typemap)
-    ethane2 = oplsaa.parametrize_system(top, pos)
+    typemap = oplsaa.run_atomtyping(mol2, use_residue_map=False)
+    oplsaa._apply_typemap(mol2, typemap)
+    ethane2 = oplsaa.parametrize_system(mol2)
 
     # Note: Check ParmEd issue #1067 to see if __eq__ is implemented
     # assert ethane == ethane2
