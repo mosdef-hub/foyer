@@ -72,5 +72,5 @@ toluene
 trichloromethane
 2-methoxypropane
 methyltert-butylether
-tbutanol
+t-butanol
 isopropanol
