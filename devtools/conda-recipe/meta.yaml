@@ -18,7 +18,6 @@ requirements:
     - python
     - parmed
     - networkx >=2.0
-    - six
     - openmm
     - lark-parser
     - requests
