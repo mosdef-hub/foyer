@@ -15,27 +15,16 @@
 
 
 import os
-import pip
 import sys
-import mock
-
-MOCK_MODULES = ['numpy',
-                'mdtraj',
-                'mdtraj.core.element',
-                'mbuild'
-                'networkx',
-                'oset',
-                'parmed',
-                'parmed.periodic_table',
-                'scipy',
-                'scipy.spatial',
-                'numpy.linalg']
-for mod_name in MOCK_MODULES:
-    sys.modules[mod_name] = mock.Mock()
-
+import pathlib
 
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('sphinxext'))
+
+base_path = pathlib.Path(__file__).parent
+os.system('python {} --name'.format((base_path / '../setup.py').resolve()))
+
+
 import foyer
 
 
@@ -60,28 +49,63 @@ release = foyer.version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    # 'nbsphinx',
+    'nbsphinx',
     'sphinx.ext.mathjax',
+    'sphinx.ext.napoleon',
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.autosummary',
-    'notebook_sphinxext',
-    'numpydoc'
+    'sphinx.ext.autosummary'
 ]
 
-nbsphinx_execute = 'always'
+# nbsphinx specific configuration
+nbsphinx_execute = 'never'
+nbsphinx_input_prompt = '%s'
+nbsphinx_prompt_width = 1.1
+html_scaled_image_link = False
+nbsphinx_allow_errors = False
+
+
+
+# Prolog: Displayed on top of the notebook
+
+nbsphinx_prolog = r"""
+{% set docname = 'docs/' + env.doc2path(env.docname, base=None) %}
+.. raw:: html
+  <div class="admonition note">
+      <p>This page was generated from
+        <a class="reference external" href="https://github.com/mosdef-hub/foyer/blob/{{ env.config.release|e }}/{{ docname|e }}">{{ docname|e }}</a>.
+        <br>Interactive online version:
+        <a href="https://mybinder.org/v2/gh/mosdef-hub/foyer_tutorials/master?filepath={{ docname|e }}"><img alt="Binder badge" src="https://mybinder.org/badge_logo.svg" style="vertical-align:text-bottom"></a>.
+      </p>
+    </div>
+.. raw:: latex
+    \nbsphinxstartnotebook{\scriptsize\noindent\strut
+    \textcolor{gray}{The following section was generated from
+    \sphinxcode{\sphinxupquote{\strut {{ docname | escape_latex }}}} \dotfill}}
+"""
+
+# Displayed on bottom on notebook
+nbsphinx_epilog = r"""
+{% set docname = 'docs/' + env.doc2path(env.docname, base=None) %}
+.. raw:: latex
+
+\nbsphinxstopnotebook{\scriptsize\noindent\strut
+    \textcolor{gray}{\dotfill\ \sphinxcode{\sphinxupquote{\strut
+    {{ docname | escape_latex }}}} ends here.}}
+"""
+
 
 autosummary_generate = True
 autodoc_default_flags = ['members', 'inherited-members']
 numpydoc_class_members_toctree = False
 
-# stackoverflow.com/questions/12206334
-numpydoc_show_class_members = False
-numpydoc_show_inherited_class_members = False
+napoleon_numpy_docstring = True
+napoleon_use_admonition_for_notes = True
+napoleon_use_param = False
 
 
-_python_doc_base = 'http://docs.python.org/3.4'
+_python_doc_base = 'http://docs.python.org/3.7'
 
 
 intersphinx_mapping = {
