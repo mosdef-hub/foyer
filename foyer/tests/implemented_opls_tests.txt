@@ -72,4 +72,6 @@ toluene
 trichloromethane
 2-methoxypropane
 methyltert-butylether
+t-butanol
+isopropanol
 methylnitroaniline

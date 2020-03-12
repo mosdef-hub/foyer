@@ -154,9 +154,9 @@
   <Type name="opls_154" class="OH" element="O" mass="15.9994"   def="[O;X2]H" desc="all-atom O: mono alcohols" doi="10.1021/ja9621760"/>
   <Type name="opls_155" class="HO" element="H" mass="1.00800"   def="H[O;%opls_154]" desc="all-atom H(O): mono alcohols, OP(=O)2" doi="10.1021/ja9621760"/>
   <Type name="opls_156" class="HC" element="H" mass="1.008" def="HC(H)(H)OH" desc="all-atom H(C): methanol" overrides="opls_140" doi="10.1021/ja9621760"/>
-  <Type name="opls_157" class="CT" element="C" mass="12.01100"   def="[C;X4]([H])([H])([*])[O;%opls_154]" desc="all-atom C: CH3 and CH2, alcohols" overrides="opls_136" doi="10.1021/ja9621760"/>
-  <Type name="opls_158" class="opls_158" element="C" mass="12.011"/>
-  <Type name="opls_159" class="opls_159" element="C" mass="12.011"/>
+  <Type name="opls_157" class="CT" element="C" mass="12.01100"   def="[C;X4]([H])([H])([*])[O;%opls_154]" desc="all-atom C: CH3 and CH2, alcohols" overrides="opls_136, opls_159, opls_158" doi="10.1021/ja9621760"/>
+  <Type name="opls_158" class="CT" element="C" mass="12.011" def="[C;X4]([H])[O;%opls_154]" desc="Carbon in 2R-C(H)-OH" overrides="opls_136, opls_159" doi="10.1021/ja9621760"/>
+  <Type name="opls_159" class="CT" element="C" mass="12.011" def="[C;X4][O;%opls_154]" desc="Carbon in 3R-C-OH" overrides="opls_136" doi="10.1021/ja9621760"/>
   <Type name="opls_160" class="opls_160" element="C" mass="12.011"/>
   <Type name="opls_161" class="opls_161" element="C" mass="12.011"/>
   <Type name="opls_162" class="opls_162" element="O" mass="15.9994"/>
