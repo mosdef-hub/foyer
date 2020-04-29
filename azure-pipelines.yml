@@ -128,7 +128,7 @@ stages:
 
   - stage: Docker
     dependsOn: Test
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/pull/334/merge'), ne(variables['Build.Reason'], 'Schedule'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'Schedule'))
     pool:
       vmImage: 'ubuntu-latest'
     jobs:
@@ -145,7 +145,7 @@ stages:
             inputs:
               command: buildAndPush
               repository: mosdef/foyer
-              tags: latest-demo
+              tags: latest
 
           - task: Docker@2
             displayName: Logout
