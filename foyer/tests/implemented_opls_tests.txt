@@ -78,4 +78,6 @@ dimethylsulfide
 propanethiol
 ethanethiol
 methanethiol
+t-butanol
+isopropanol
 methylnitroaniline

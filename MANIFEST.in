@@ -1,7 +1,8 @@
-graft foyer/opls_validation
 graft foyer/forcefields
-graft examples
-include foyer/tests/implemented_opls_tests.txt
+graft foyer/opls_validation
 graft foyer/trappe_validation
+include foyer/tests/implemented_opls_tests.txt
 include foyer/tests/implemented_trappe_tests.txt
+graft examples
+include LICENSE.rst
 global-include *.xml *.mol2 *.top *.gro *.pdb *.bib
