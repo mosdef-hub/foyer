@@ -199,7 +199,7 @@
   <Type name="opls_200" class="SH" element="S" mass="32.06" def="[S;X2]H" desc="S in any Thiol" overrides="opls_202" doi="10.1021/ja9621760"/>
   <Type name="opls_201" class="SH" element="S" mass="32.06" def="[S;X2](H)(H)" desc="S in H2S" overrides="opls_200, opls_202" doi="10.1021/ja9621760"/>
   <Type name="opls_202" class="S" element="S" mass="32.06" def="[S;X2]" desc="S in any sulfide" doi="10.1021/ja9621760" />
-  <Type name="opls_203" class="S" element="S" mass="32.06" def="[S;X2](S)(*)" desc="S in Disulfide" overrides="opls_200, opls_202" doi="10.1021/ja9621760"/>
+  <Type name="opls_203" class="S" element="S" mass="32.06" def="[S;X2](S)" desc="S in Disulfide" overrides="opls_200, opls_202" doi="10.1021/ja9621760"/>
   <Type name="opls_204" class="HS" element="H" mass="1.008" def="[H;X1]([S;%opls_200])" desc="H in any Thiol" doi="10.1021/ja9621760"/>
   <Type name="opls_205" class="HS" element="H" mass="1.008" def="[H;X1]([S;%opls_201])" desc="H in H2S" overrides="opls_204" doi="10.1021/ja9621760"/>
   <Type name="opls_206" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_200])(H)(H)" desc="C in R-CH2-S-H"  overrides="opls_207, opls_208, opls_210" doi="10.1021/ja9621760"/>
