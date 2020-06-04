@@ -310,12 +310,17 @@ def _check_dihedrals(data, structure, verbose,
     if verbose:
         for omm_ids in data.propers:
             missing_dihedral = True
+            for pmd_proper in proper_dihedrals:
+                pmd_ids = (pmd_proper.atom1.idx, pmd_proper.atom2.idx, pmd_proper.atom3.idx, pmd_proper.atom4.idx)
+                if pmd_ids == omm_ids:
+                    missing_dihedral = False
             for pmd_proper in structure.rb_torsions:
                 pmd_ids = (pmd_proper.atom1.idx, pmd_proper.atom2.idx, pmd_proper.atom3.idx, pmd_proper.atom4.idx)
                 if pmd_ids == omm_ids:
                     missing_dihedral = False
             if missing_dihedral:
-                print('missing improper with ids {}'.format(pmd_ids))
+                print("Missing dihedral with ids {} and types {}.".format(
+                        omm_ids, [structure.atoms[idx].type for idx in omm_ids]))
 
     if data.propers and len(data.propers) != \
             len(proper_dihedrals) + len(structure.rb_torsions):
