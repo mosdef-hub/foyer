@@ -53,6 +53,23 @@ ethane.save('ethane.gro')
 
 ## Getting started
 
+#### Quick Start with Docker
+To use `foyer` in a jupyter-notebook that runs from a docker container with all the dependencies installed use the following command:
+
+```sh
+$ docker pull mosdef/foyer:latest
+$ docker run -it --name foyer -p 8888:8888 mosdef/foyer:latest\
+  /opt/conda/envs/foyer-docker/bin/jupyter notebook --ip="*"
+```
+
+Alternatively, you can also start a Bourne shell directly:
+```sh
+$ docker run -it --name foyer mosdef/foyer:latest
+```
+
+To learn more about using `foyer` with docker, please refer to the documentation `<here https://foyer.mosdef.org/en/latest/docker.html>_` .
+
+
 #### Getting started with SMARTS-based atom-typing
 * [SMARTS-based atomtyping](docs/smarts.rst)
 * [Supported SMARTS Grammar](https://github.com/mosdef-hub/foyer/issues/63)

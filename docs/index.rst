@@ -72,6 +72,11 @@ views of the National Science Foundation.
 .. toctree::
     :hidden:
 
+    docker
+
+.. toctree::
+    :hidden:
+
     smarts
 
 .. toctree::
