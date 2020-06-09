@@ -29,8 +29,7 @@ Alternatively, you can also start a Bourne shell to use python from the containe
 
 .. important::
 
-    The instructions above will start a docker container but containers by nature are ephemeral, so any filesyJune 14th. I toured the two bedrooms this Saturday. I was wondering what provisions are there if I were to renew my lease and transfer it to a new two bedroom apartment/town home. Also, are there any specials if I sign a lease for a year.
-stem changes (like adding a new notebook) you make will only persist till the end of the container's lifecycle. If the container is removed, any changes or code additions will not persist.
+    The instructions above will start a docker container but containers by nature are ephemeral, so any filesystem changes (like adding a new notebook) you make will only persist till the end of the container's lifecycle. If the container is removed, any changes or code additions will not persist.
 
 Persisting User Volumes
 -----------------------
@@ -58,7 +57,7 @@ If you will be using `foyer` from a docker container, a recommended way is to mo
 
 .. code-block:: bash
 
-    $ docker run -it --name foyer -p 8888:8888 --entrypoint /home/anaconda/foyer-notebooks/dir_entrypoint.sh -v /home/umesh/foyer-notebooks:/home/anaconda/foyer-notebooks mosdef/foyer:latest
+    $ docker run -it --name foyer -p 8888:8888 --entrypoint /home/anaconda/foyer-notebooks/dir_entrypoint.sh -v $HOME/foyer-notebooks:/home/anaconda/foyer-notebooks mosdef/foyer:latest
 
 
 Cleaning Up
