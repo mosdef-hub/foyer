@@ -2,7 +2,7 @@ openmm
 mbuild
 parmed
 networkx >=2.0
-lark-parser
+lark-parser <=0.8.5
 requests
 lxml
 pytest >=3.0
