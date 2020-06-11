@@ -19,7 +19,7 @@ requirements:
     - parmed
     - networkx >=2.0
     - openmm
-    - lark-parser
+    - lark-parser <= 0.8.5
     - requests
     - lxml
 
