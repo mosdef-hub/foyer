@@ -323,14 +323,25 @@ def _check_dihedrals(data, structure, verbose,
                         omm_ids, [structure.atoms[idx].type for idx in omm_ids]))
 
     if data.propers and len(data.propers) != \
-            len(proper_dihedrals) + len(structure.rb_torsions):
-        msg = ("Parameters have not been assigned to all proper dihedrals. "
-               "Total system dihedrals: {}, Parameterized dihedrals: {}. "
-               "Note that if your system contains torsions of Ryckaert-"
-               "Bellemans functional form, all of these torsions are "
-               "processed as propers.".format(len(data.propers),
-                                              len(proper_dihedrals) + len(structure.rb_torsions)))
-        _error_or_warn(assert_dihedral_params, msg)
+                len(proper_dihedrals) + len(structure.rb_torsions):
+            if data.propers and len(data.propers) < \
+                    len(proper_dihedrals) + len(structure.rb_torsions):
+                msg = ("Parameters have been assigned to all proper dihedrals.  "
+                       "However, there are more parameterized dihedrals ({}) "
+                       "than total system dihedrals ({}).  "
+                       "This may be due to having multiple periodic dihedrals "
+                       "for a single system dihedral.".format(len(proper_dihedrals) +
+                                                      len(structure.rb_torsions),
+                                                      len(data.propers)))
+                warnings.warn(msg)
+            else:
+                msg = ("Parameters have not been assigned to all proper dihedrals. "
+                       "Total system dihedrals: {}, Parameterized dihedrals: {}. "
+                       "Note that if your system contains torsions of Ryckaert-"
+                       "Bellemans functional form, all of these torsions are "
+                       "processed as propers.".format(len(data.propers),
+                                                      len(proper_dihedrals) + len(structure.rb_torsions)))
+                _error_or_warn(assert_dihedral_params, msg)
 
     improper_dihedrals = [dihedral for dihedral in structure.dihedrals
                           if dihedral.improper]
