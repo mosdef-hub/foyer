@@ -399,6 +399,13 @@ def test_apply_subfuncs():
     for ang1, ang2 in zip(ethane.angles, ethane2.angles):
         assert ang1.type == ang2.type
 
+def test_non_zero_charge():
+    import mbuild as mb
+    compound = mb.load('C1=CC=C2C(=C1)C(C3=CC=CC=C3O2)C(=O)O', smiles=True)
+    oplsaa = Forcefield(name='oplsaa')
+    with pytest.warns(UserWarning):
+        oplsaa.apply(compound, assert_dihedral_params=False)
+
 @pytest.mark.parametrize("filename", ['ethane.mol2', 'benzene.mol2'])
 def test_write_xml(filename):
     mol = pmd.load_file(get_fn(filename), structure=True)
