@@ -1,6 +1,6 @@
 openmm
 parmed
 networkx >=2.0
-lark-parser <=0.8.5
+lark-parser 
 requests
 lxml
