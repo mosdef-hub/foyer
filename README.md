@@ -1,9 +1,8 @@
 ### Foyer: A package for atom-typing as well as applying and disseminating forcefields
 
 [![Gitter chat](https://badges.gitter.im/mosdef-hub/gitter.svg)](https://gitter.im/mosdef-hub/Lobby)
-[![Linux Build Status](https://travis-ci.org/mosdef-hub/foyer.svg?branch=master)](https://travis-ci.org/mosdef-hub/foyer)
-[![Build Status](https://dev.azure.com/mosdef/mosdef/_apis/build/status/mosdef-hub.foyer?branchName=master)](https://dev.azure.com/mosdef/mosdef/_build/latest?definitionId=2&branchName=master)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/r6b2ny2hjo1t1ulb/branch/master?svg=true)](https://ci.appveyor.com/project/ctk3b/foyer/branch/master)
+[![Travis Build Status](https://travis-ci.org/mosdef-hub/foyer.svg?branch=master)](https://travis-ci.org/mosdef-hub/foyer)
+[![AZP Build Status](https://dev.azure.com/mosdef/mosdef/_apis/build/status/mosdef-hub.foyer?branchName=master)](https://dev.azure.com/mosdef/mosdef/_build/latest?definitionId=2&branchName=master)
 [![PyPI Version](https://badge.fury.io/py/foyer.svg)](https://pypi.python.org/pypi/foyer)
 [![Anaconda Badge](https://anaconda.org/mosdef/foyer/badges/version.svg)](https://anaconda.org/mosdef/foyer)
 [![codecov](https://codecov.io/gh/mosdef-hub/foyer/branch/master/graph/badge.svg)](https://codecov.io/gh/mosdef-hub/foyer)
@@ -53,6 +52,23 @@ ethane.save('ethane.gro')
 ```
 
 ## Getting started
+
+#### Quick Start with Docker
+To use `foyer` in a jupyter-notebook that runs from a docker container with all the dependencies installed use the following command:
+
+```sh
+$ docker pull mosdef/foyer:latest
+$ docker run -it --name foyer -p 8888:8888 mosdef/foyer:latest\
+  /opt/conda/envs/foyer-docker/bin/jupyter notebook --ip="*"
+```
+
+Alternatively, you can also start a Bourne shell directly:
+```sh
+$ docker run -it --name foyer mosdef/foyer:latest
+```
+
+To learn more about using `foyer` with docker, please refer to the documentation `<here https://foyer.mosdef.org/en/latest/docker.html>_` .
+
 
 #### Getting started with SMARTS-based atom-typing
 * [SMARTS-based atomtyping](docs/smarts.rst)

@@ -310,22 +310,38 @@ def _check_dihedrals(data, structure, verbose,
     if verbose:
         for omm_ids in data.propers:
             missing_dihedral = True
+            for pmd_proper in proper_dihedrals:
+                pmd_ids = (pmd_proper.atom1.idx, pmd_proper.atom2.idx, pmd_proper.atom3.idx, pmd_proper.atom4.idx)
+                if pmd_ids == omm_ids:
+                    missing_dihedral = False
             for pmd_proper in structure.rb_torsions:
                 pmd_ids = (pmd_proper.atom1.idx, pmd_proper.atom2.idx, pmd_proper.atom3.idx, pmd_proper.atom4.idx)
                 if pmd_ids == omm_ids:
                     missing_dihedral = False
             if missing_dihedral:
-                print('missing improper with ids {}'.format(pmd_ids))
+                print("Missing dihedral with ids {} and types {}.".format(
+                        omm_ids, [structure.atoms[idx].type for idx in omm_ids]))
 
     if data.propers and len(data.propers) != \
-            len(proper_dihedrals) + len(structure.rb_torsions):
-        msg = ("Parameters have not been assigned to all proper dihedrals. "
-               "Total system dihedrals: {}, Parameterized dihedrals: {}. "
-               "Note that if your system contains torsions of Ryckaert-"
-               "Bellemans functional form, all of these torsions are "
-               "processed as propers.".format(len(data.propers),
-                                              len(proper_dihedrals) + len(structure.rb_torsions)))
-        _error_or_warn(assert_dihedral_params, msg)
+                len(proper_dihedrals) + len(structure.rb_torsions):
+            if data.propers and len(data.propers) < \
+                    len(proper_dihedrals) + len(structure.rb_torsions):
+                msg = ("Parameters have been assigned to all proper dihedrals.  "
+                       "However, there are more parameterized dihedrals ({}) "
+                       "than total system dihedrals ({}).  "
+                       "This may be due to having multiple periodic dihedrals "
+                       "for a single system dihedral.".format(len(proper_dihedrals) +
+                                                      len(structure.rb_torsions),
+                                                      len(data.propers)))
+                warnings.warn(msg)
+            else:
+                msg = ("Parameters have not been assigned to all proper dihedrals. "
+                       "Total system dihedrals: {}, Parameterized dihedrals: {}. "
+                       "Note that if your system contains torsions of Ryckaert-"
+                       "Bellemans functional form, all of these torsions are "
+                       "processed as propers.".format(len(data.propers),
+                                                      len(proper_dihedrals) + len(structure.rb_torsions)))
+                _error_or_warn(assert_dihedral_params, msg)
 
     improper_dihedrals = [dihedral for dihedral in structure.dihedrals
                           if dihedral.improper]
@@ -641,6 +657,11 @@ class Forcefield(app.ForceField):
         # combining rule directly in XML, i.e.
         # if self.name == 'oplsaa':
         structure.combining_rule = combining_rule
+
+        total_charge = sum([atom.charge for atom in structure.atoms])
+        if not np.allclose(total_charge, 0):
+            warnings.warn("Parametrized structure has non-zero charge."
+                "Structure's total charge: {}".format(total_charge))
 
         return structure
 

@@ -58,7 +58,7 @@ class SMARTSGraph(nx.Graph):
 
     def _add_nodes(self):
         """Add all atoms in the SMARTS string as nodes in the graph."""
-        for n, atom in enumerate(self.ast.find_data('atom')):
+        for n, atom in enumerate([x for x in self.ast.iter_subtrees_topdown() if x.data == 'atom']):
             self.add_node(n, atom=atom)
             self._atom_indices[id(atom)] = n
 
