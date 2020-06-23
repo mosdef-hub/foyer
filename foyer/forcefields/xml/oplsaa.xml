@@ -466,7 +466,7 @@
   <Type name="opls_463" class="opls_463" element="C" mass="12.011"/>
   <Type name="opls_465" class="C_2" element="C" mass="12.011" def="[C;X3](O)(O)" desc="C in C=O in ester" doi="10.1021/ja9539195"/>
   <Type name="opls_466" class="O_2" element="O" mass="15.9994" def="[O;X1]([C;%opls_465])" desc="O in C=O in ester" doi="10.1021/ja9539195"/>
-  <Type name="opls_467" class="OS" element="O" mass="15.9994" def="[O;X2](C([O;%opls_466]))" overrides='opls_180' desc="O connected to R of O=C-O-R in esters" doi="10.1021/ja9539195"/>
+  <Type name="opls_467" class="OS" element="O" mass="15.9994" def="[O;X2](C([O;%opls_466]))([!H])" overrides='opls_180' desc="O connected to R of O=C-O-R in esters" doi="10.1021/ja9539195"/>
   <Type name="opls_468" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467]([C;%opls_465]))" overrides='opls_181' desc="methoxy C in esters" doi="10.1021/ja9539195"/>
   <Type name="opls_469" class="HC" element="H" mass="1.008" def="H[C;%opls_468]" overrides='opls_185' desc="methoxy Hs in esters" doi="10.1021/ja9539195"/>
   <Type name="opls_470" class="opls_470" element="C" mass="12.011"/>
