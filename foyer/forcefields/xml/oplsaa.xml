@@ -464,11 +464,11 @@
   <Type name="opls_461" class="opls_461" element="C" mass="12.011"/>
   <Type name="opls_462" class="opls_462" element="H" mass="1.008"/>
   <Type name="opls_463" class="opls_463" element="C" mass="12.011"/>
-  <Type name="opls_465" class="opls_465" element="C" mass="12.011"/>
-  <Type name="opls_466" class="opls_466" element="O" mass="15.9994"/>
-  <Type name="opls_467" class="opls_467" element="O" mass="15.9994"/>
-  <Type name="opls_468" class="opls_468" element="C" mass="12.011"/>
-  <Type name="opls_469" class="opls_469" element="H" mass="1.008"/>
+  <Type name="opls_465" class="C_2" element="C" mass="12.011" def="[C;X3](O)(O)" desc="C in C=O in ester" doi="10.1021/ja9539195"/>
+  <Type name="opls_466" class="O_2" element="O" mass="15.9994" def="[O;X1]([C;%opls_465])" desc="O in C=O in ester" doi="10.1021/ja9539195"/>
+  <Type name="opls_467" class="OS" element="O" mass="15.9994" def="[O;X2](C([O;%opls_466]))" overrides='opls_180' desc="O connected to R of O=C-O-R in esters" doi="10.1021/ja9539195"/>
+  <Type name="opls_468" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467]([C;%opls_465]))" overrides='opls_181' desc="methoxy C in esters" doi="10.1021/ja9539195"/>
+  <Type name="opls_469" class="HC" element="H" mass="1.008" def="H[C;%opls_468]" overrides='opls_185' desc="methoxy Hs in esters" doi="10.1021/ja9539195"/>
   <Type name="opls_470" class="opls_470" element="C" mass="12.011"/>
   <Type name="opls_471" class="opls_471" element="C" mass="12.011"/>
   <Type name="opls_472" class="opls_472" element="C" mass="12.011"/>
@@ -1868,6 +1868,7 @@
   <Angle class1="C_2" class2="OS" class3="C3" angle="2.04028989558" k="694.544"/>
   <Angle class1="O" class2="C" class3="OS" angle="2.15373629696" k="694.544"/>
   <Angle class1="O" class2="C_2" class3="OS" angle="2.15373629696" k="694.544"/>
+  <Angle class1="OS" class2="C_2" class3="OS" angle="2.062630" k="584.923200"/>
   <Angle class1="O_2" class2="C_2" class3="OS" angle="2.15373629696" k="694.544"/>
   <Angle class1="C" class2="OS" class3="CT" angle="2.04028989558" k="694.544"/>
   <Angle class1="C_2" class2="OS" class3="CT" angle="2.04028989558" k="694.544"/>
@@ -3003,6 +3004,7 @@
   <Proper class1="C_3" class2="CT" class3="CT_2" class4="N" c0="-0.76567" c1="2.70705" c2="4.02501" c3="-5.96639" c4="0.0" c5="0.0"/>
   <Proper class1="C" class2="CT" class3="CT_2" class4="N3" c0="-0.76567" c1="2.70705" c2="4.02501" c3="-5.96639" c4="0.0" c5="0.0"/>
   <Proper class1="C_2" class2="CT" class3="CT_2" class4="N3" c0="-0.76567" c1="2.70705" c2="4.02501" c3="-5.96639" c4="0.0" c5="0.0"/>
+  <Proper class1="CT" class2="OS" class3="C_2" class4="OS" c0="31.206364" c1="-9.767548" c2="-21.438816" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="C_3" class2="CT" class3="CT_2" class4="N3" c0="-0.76567" c1="2.70705" c2="4.02501" c3="-5.96639" c4="0.0" c5="0.0"/>
   <Proper class1="CM" class2="N*" class3="CT" class4="OS" c0="-3.138" c1="-3.138" c2="6.276" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="C" class2="N*" class3="CT" class4="OS" c0="-3.138" c1="-3.138" c2="6.276" c3="0.0" c4="0.0" c5="0.0"/>
