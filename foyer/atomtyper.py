@@ -71,7 +71,7 @@ def find_atomtypes(topology, forcefield, max_iter=10):
 
     # Handle GMSO Topology
     elif isinstance(topology, gmso.Topology):
-        typemap = {topology.get_index(site): {'whitelist': set(), 'blacklist': set(),
+        typemap = {site: {'whitelist': set(), 'blacklist': set(),
             'atomtype': None} for site in topology.sites}
 
         rules = _load_rules(forcefield, typemap)
@@ -212,7 +212,7 @@ def _resolve_atomtypes(structure, typemap):
                 atom['atomtype'] = atomtype[0]
             elif len(atomtype) > 1:
                 raise FoyerError("Found multiple types for Site {}: {}.".format(
-                    atom_id, atoms[atom_id].element, atomtype))
+                    atom_id, atom_id.element, atomtype))
             else:
                 raise FoyerError("Found no types for Site {}.".format(
-                    atom_id, atoms[atom_id]))
+                    atom_id.name))
