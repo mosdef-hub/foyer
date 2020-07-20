@@ -9,7 +9,6 @@ import parmed.periodic_table as pt
 import gmso
 from foyer.smarts import SMARTS
 
-import pdb
 class SMARTSGraph(nx.Graph):
     """A graph representation of a SMARTS pattern.
 
@@ -95,14 +94,12 @@ class SMARTSGraph(nx.Graph):
             self.add_edge(atom1_idx, atom2_idx)
 
     def _node_match(self, host, pattern):
-        pdb.set_trace()
         """ Determine if two graph nodes are equal """
         atom_expr = pattern['atom'].children[0]
         atom = host['atom']
         return self._atom_expr_matches(atom_expr, atom)
 
     def _atom_expr_matches(self, atom_expr, atom):
-        pdb.set_trace()
         """ Helper function for evaluating SMARTS string expressions """
         if atom_expr.data == 'not_expression':
             return not self._atom_expr_matches(atom_expr.children[0], atom)
@@ -123,7 +120,6 @@ class SMARTSGraph(nx.Graph):
 
     @staticmethod
     def _atom_id_matches(atom_id, atom, typemap):
-        pdb.set_trace()
         """ Helper func for comparing atomic indices, symbols, neighbors, rings """
         if isinstance(atom, pmd.Atom):
             atomic_num = atom.element
@@ -157,6 +153,7 @@ class SMARTSGraph(nx.Graph):
                 raise NotImplementedError('matches_string is not yet implemented')
 
         elif isinstance(atom, gmso.abc.abstract_site.Site):
+            topology = typemap['topology']
             if atom.element:
                 atomic_num = atom.element.atomic_number
                 atomic_symbol = atom.element.symbol
@@ -177,13 +174,18 @@ class SMARTSGraph(nx.Graph):
                     return atomic_symbol == str(atom_id.children[0])
             elif atom_id.data == 'has_label':
                 label = atom_id.children[0][1:] # Strip the % sign from the beginning
-                return label in typemap[site]['whitelist']
+                return label in typemap[topology.get_index(atom)]['whitelist']
             elif atom_id.data == 'neighbor_count':
             # Site.neighbors have not been implemented yet
-                return len(atom.neighbors) == int(atom_id.children[0])
+                topology = typemap['topology']
+                neighbors = set()
+                for bond in topology.bonds:
+                    if atom in bond.connection_members:
+                        neighbors.add(bond)
+                return len(neighbors) == int(atom_id.children[0])
             elif atom_id.data == 'ring_size':
                 cycle_len = int(atom_id.children[0])
-                for cycle in typemap[atom]['cycles']:
+                for cycle in typemap[topology.get_index(atom)]['cycles']:
                     if len(cycle) == cycle_len:
                         return True
                 return False
@@ -216,7 +218,6 @@ class SMARTSGraph(nx.Graph):
         `test_smarts.py`).
 
         """
-        pdb.set_trace()
         # Note: Needs to be updated in sync with the grammar in `smarts.py`.
         if isinstance(topology, pmd.Structure):
             ring_tokens = ['ring_size', 'ring_count']
@@ -431,17 +432,17 @@ def _prepare_atoms(topology, typemap, compute_cycles=False):
 
     if isinstance(topology, gmso.Topology):
         site1 = topology.sites[0]#next(topology.atoms())
-        has_whitelists = 'whitelist' in typemap[site1]
-        has_cycles = 'cycles' in typemap[site1]
+        has_whitelists = 'whitelist' in typemap[topology.get_index(site1)]
+        has_cycles = 'cycles' in typemap[topology.get_index(site1)]
         compute_cycles = compute_cycles and not has_cycles
 
         if compute_cycles or not has_whitelists:
             for site in topology.sites:
                 if compute_cycles:
-                    typemap[site]['cycles'] = set()
+                    typemap[topology.get_index(site)]['cycles'] = set()
                 if not has_whitelists:
-                    typemap[site]['whitelist'] = set()
-                    typemap[site]['blacklist'] = set()
+                    typemap[topology.get_index(site)]['whitelist'] = set()
+                    typemap[topology.get_index(site)]['blacklist'] = set()
 
         if compute_cycles:
             bond_graph = nx.Graph()

@@ -6,7 +6,6 @@ import parmed.periodic_table as pt
 from foyer.exceptions import FoyerError
 from foyer.smarts_graph import SMARTSGraph
 
-
 def find_atomtypes(topology, forcefield, max_iter=10):
     """Determine atomtypes for all atoms.
 
@@ -24,7 +23,7 @@ def find_atomtypes(topology, forcefield, max_iter=10):
     if isinstance(topology, parmed.Structure):
         typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(),
             'atomtype': None} for atom in topology.atoms}
-
+        typemap['topology'] = topology
         rules = _load_rules(forcefield, typemap)
 
         # Only consider rules for elements found in topology
@@ -65,15 +64,16 @@ def find_atomtypes(topology, forcefield, max_iter=10):
         rules = subrules
 
         _iterate_rules(rules, topology, typemap, max_iter=max_iter)
+        del typemap['topology']
         _resolve_atomtypes(topology, typemap)
 
         return typemap
 
     # Handle GMSO Topology
     elif isinstance(topology, gmso.Topology):
-        typemap = {site: {'whitelist': set(), 'blacklist': set(),
+        typemap = {topology.get_index(site): {'whitelist': set(), 'blacklist': set(),
             'atomtype': None} for site in topology.sites}
-
+        typemap['topology'] = topology
         rules = _load_rules(forcefield, typemap)
 
         # Only consider rules for elements found in topology
@@ -112,6 +112,8 @@ def find_atomtypes(topology, forcefield, max_iter=10):
         rules = subrules
 
         _iterate_rules(rules, topology, typemap, max_iter=max_iter)
+        # Get rid of 'topology' from typemap
+        del typemap['topology']
         _resolve_atomtypes(topology, typemap)
 
         return typemap
