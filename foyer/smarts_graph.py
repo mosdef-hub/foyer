@@ -95,8 +95,6 @@ class SMARTSGraph(nx.Graph):
     def _node_match(self, host, pattern):
         """ Determine if two graph nodes are equal """
         atom_expr = pattern['atom'].children[0]
-        #atom = host['atom']
-        #return self._atom_expr_matches(atom_expr, atom)
         return self._atom_expr_matches(atom_expr, host)
 
     def _atom_expr_matches(self, atom_expr, atom):
