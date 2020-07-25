@@ -23,11 +23,6 @@ def find_atomtypes(topology, forcefield, max_iter=10):
     if isinstance(topology, parmed.Structure):
         typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(),
             'atomtype': None} for atom in topology.atoms}
-        typemap['topology'] = topology
-        rules = _load_rules(forcefield, typemap)
-
-        # Only consider rules for elements found in topology
-        subrules = dict()
 
         system_elements = set()
         for a in topology.atoms:
@@ -45,39 +40,10 @@ def find_atomtypes(topology, forcefield, max_iter=10):
                         'nor non-element type.'.format(a)
                     )
 
-        for key, val in rules.items():
-            atom = val.nodes[0]['atom']
-            if len(list(atom.find_data('atom_symbol'))) == 1 and \
-                        not list(atom.find_data('not_expression')):
-                try:
-                    element = next(atom.find_data('atom_symbol')).children[0]
-                except IndexError:
-                    try:
-                        atomic_num = next(atom.find_data('atomic_num')).children[0]
-                        element = Element[atomic_num]
-                    except IndexError:
-                        element = None
-            else:
-                element = None
-            if element is None or element in system_elements:
-                subrules[key] = val
-        rules = subrules
-
-        _iterate_rules(rules, topology, typemap, max_iter=max_iter)
-        del typemap['topology']
-        _resolve_atomtypes(topology, typemap)
-
-        return typemap
-
     # Handle GMSO Topology
     elif isinstance(topology, gmso.Topology):
         typemap = {topology.get_index(site): {'whitelist': set(), 'blacklist': set(),
             'atomtype': None} for site in topology.sites}
-        typemap['topology'] = topology
-        rules = _load_rules(forcefield, typemap)
-
-        # Only consider rules for elements found in topology
-        subrules = dict()
 
         system_elements = set()
         for site in topology.sites:
@@ -93,30 +59,38 @@ def find_atomtypes(topology, forcefield, max_iter=10):
                         'Parsed atom {} as having neither an element '
                         'nor non-element type.'.format(a)
                     )
-        for key, val in rules.items():
-            atom = val.nodes[0]['atom']
-            if len(list(atom.find_data('atom_symbol'))) == 1 and \
-                        not list(atom.find_data('not_expression')):
+    else:
+        raise TypeError("Passed {}, acceptable objects are parmed structure and gmso topologies".format(
+            type(topology)
+            )
+        )
+
+    rules = _load_rules(forcefield, typemap)
+
+    # Only consider rules for elements found in topology
+    subrules = dict()
+    for key, val in rules.items():
+        atom = val.nodes[0]['atom']
+        if len(list(atom.find_data('atom_symbol'))) == 1 and \
+                    not list(atom.find_data('not_expression')):
+            try:
+                element = next(atom.find_data('atom_symbol')).children[0]
+            except IndexError:
                 try:
-                    element = next(atom.find_data('atom_symbol')).children[0]
+                    atomic_num = next(atom.find_data('atomic_num')).children[0]
+                    element = Element[atomic_num]
                 except IndexError:
-                    try:
-                        atomic_num = next(atom.find_data('atomic_num')).children[0]
-                        element = Element[atomic_num]
-                    except IndexError:
-                        element = None
-            else:
-                element = None
-            if element is None or element in system_elements:
-                subrules[key] = val
-        rules = subrules
+                    element = None
+        else:
+            element = None
+        if element is None or element in system_elements:
+            subrules[key] = val
+    rules = subrules
 
-        _iterate_rules(rules, topology, typemap, max_iter=max_iter)
-        # Get rid of 'topology' from typemap
-        del typemap['topology']
-        _resolve_atomtypes(topology, typemap)
+    typemap = _iterate_rules(rules, topology, typemap, max_iter=max_iter)
+    typemap = _resolve_atomtypes(topology, typemap)
 
-        return typemap
+    return typemap
 
 def _load_rules(forcefield, typemap):
     """Load atomtyping rules from a forcefield into SMARTSGraphs. """
@@ -174,29 +148,24 @@ def _iterate_rules(rules, topology, typemap, max_iter):
 
 def _resolve_atomtypes(structure, typemap):
     """Determine the final atomtypes from the white- and blacklists. """
-    if isinstance(structure, parmed.Structure):
-        atoms = structure.atoms
-        for atom_id, atom in typemap.items():
-            atomtype = [rule_name for rule_name in
-                        atom['whitelist'] - atom['blacklist']]
-            if len(atomtype) == 1:
-                atom['atomtype'] = atomtype[0]
-            elif len(atomtype) > 1:
+    for atom_id, atom in typemap.items():
+        atomtype = [rule_name for rule_name in
+                    atom['whitelist'] - atom['blacklist']]
+        if len(atomtype) == 1:
+            atom['atomtype'] = atomtype[0]
+        elif isinstance(structure, gmso.Topology):
+            if len(atomtype) > 1:
+                raise FoyerError("Found multiple types for Site {} ({}): {}.".format(
+                    atom_id, structure.sites[atom_id].element, atomtype))
+            else:
+                raise FoyerError("Found no types for Site {} ({}).".format(
+                    atom_id, structure.sites[atom_id]))
+        elif isinstance(structure, parmed.Structure):
+            if len(atomtype) > 1:
                 raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
-                    atom_id, atoms[atom_id].atomic_number, atomtype))
+                    atom_id, structure.atoms[atom_id].atomic_number, atomtype))
             else:
                 raise FoyerError("Found no types for atom {} ({}).".format(
-                    atom_id, atoms[atom_id].atomic_number))
-    elif isinstance(structure, gmso.Topology):
-        atoms = structure.sites
-        for atom_id, atom in typemap.items():
-            atomtype = [rule_name for rule_name in
-                        atom['whitelist'] - atom['blacklist']]
-            if len(atomtype) == 1:
-                atom['atomtype'] = atomtype[0]
-            elif len(atomtype) > 1:
-                raise FoyerError("Found multiple types for Site {}: {}.".format(
-                    atom_id, atom_id.element, atomtype))
-            else:
-                raise FoyerError("Found no types for Site {}.".format(
-                    atom_id.name))
+                    atom_id, structure.atoms[atom_id].atomic_number))
+
+    return typemap
