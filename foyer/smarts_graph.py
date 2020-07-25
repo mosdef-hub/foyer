@@ -57,6 +57,7 @@ class SMARTSGraph(nx.Graph):
         self._add_label_edges()
         self._graph_matcher = None
 
+
     def _add_nodes(self):
         """Add all atoms in the SMARTS string as nodes in the graph."""
         for n, atom in enumerate([x for x in self.ast.iter_subtrees_topdown() if x.data == 'atom']):
@@ -179,32 +180,11 @@ class SMARTSGraph(nx.Graph):
         ring_tokens = ['ring_size', 'ring_count']
         has_ring_rules = any(list(self.ast.find_data(token))
                              for token in ring_tokens)
-        _prepare_atoms(topology, typemap, compute_cycles=has_ring_rules)
 
-        top_graph = nx.Graph()
-        if isinstance(topology, pmd.Structure):
-            top_graph.add_nodes_from(((
-                a.idx, {'idx': a.idx,
-                        'n_bond_partners': len(a.bond_partners),
-                        'atomic_number': a.element,
-                        'name': a.name})
-                for a in topology.atoms)
-            )
-            top_graph.add_edges_from(((b.atom1.idx, b.atom2.idx)
-                                    for b in topology.bonds))
+        top_graph = _construct_topological_graph(topology)
 
-        elif isinstance(topology, gmso.Topology):
-            top_graph.add_nodes_from(((
-                topology.get_index(a), {'idx': topology.get_index(a),
-                                        'n_bond_partners': len([b for b in a.connections 
-                                                                if isinstance(b, gmso.Bond)]),
-                                        'atomic_number': a.element.atomic_number if a.element else None,
-                                        'name': a.element.symbol if a.element else None})
-                for a in topology.sites))
-            top_graph.add_edges_from((
-                        (topology.get_index(b.connection_members[0]),
-                        topology.get_index(b.connection_members[1]))
-                                        for b in topology.bonds))
+        if has_ring_rules:
+            typemap = _prepare_atoms(top_graph, typemap)
 
         if self._graph_matcher is None:
             atom = nx.get_node_attributes(self, name='atom')[0]
@@ -335,53 +315,45 @@ def _find_chordless_cycles(bond_graph, max_cycle_size):
 
     return cycles
 
+def _construct_topological_graph(topology):
+    top_graph = nx.Graph()
 
-def _prepare_atoms(topology, typemap, compute_cycles=False):
-    """Compute cycles and add white-/blacklists to atoms."""
     if isinstance(topology, pmd.Structure):
-        atom1 = topology.atoms[0]#next(topology.atoms())
-        has_whitelists = 'whitelist' in typemap[atom1.idx]
-        has_cycles = 'cycles' in typemap[atom1.idx]
-        compute_cycles = compute_cycles and not has_cycles
+        top_graph.add_nodes_from(((
+            a.idx, {'idx': a.idx,
+                    'n_bond_partners': len(a.bond_partners),
+                    'atomic_number': a.element,
+                    'name': a.name})
+            for a in topology.atoms)
+        )
+        top_graph.add_edges_from(((b.atom1.idx, b.atom2.idx)
+                                for b in topology.bonds))
 
-        if compute_cycles or not has_whitelists:
-            for atom in topology.atoms:
-                if compute_cycles:
-                    typemap[atom.idx]['cycles'] = set()
-                if not has_whitelists:
-                    typemap[atom.idx]['whitelist'] = set()
-                    typemap[atom.idx]['blacklist'] = set()
+    elif isinstance(topology, gmso.Topology):
+        top_graph.add_nodes_from(((
+            topology.get_index(a), {'idx': topology.get_index(a),
+                                    'n_bond_partners': len([b for b in a.connections 
+                                                            if isinstance(b, gmso.Bond)]),
+                                    'atomic_number': a.element.atomic_number if a.element else None,
+                                    'name': a.element.symbol if a.element else None})
+            for a in topology.sites))
+        top_graph.add_edges_from((
+                    (topology.get_index(b.connection_members[0]),
+                    topology.get_index(b.connection_members[1]))
+                                    for b in topology.bonds))
 
-        if compute_cycles:
-            bond_graph = nx.Graph()
-            bond_graph.add_nodes_from(topology.atoms)
-            bond_graph.add_edges_from([(b.atom1, b.atom2) for b in topology.bonds])
-            all_cycles = _find_chordless_cycles(bond_graph, max_cycle_size=8)
-            for atom, cycles in zip(bond_graph.nodes, all_cycles):
-                for cycle in cycles:
-                    typemap[atom.idx]['cycles'].add(tuple(cycle))
+    return top_graph
 
-    if isinstance(topology, gmso.Topology):
-        site1 = topology.sites[0]#next(topology.atoms())
-        has_whitelists = 'whitelist' in typemap[topology.get_index(site1)]
-        has_cycles = 'cycles' in typemap[topology.get_index(site1)]
-        compute_cycles = compute_cycles and not has_cycles
 
-        if compute_cycles or not has_whitelists:
-            for site in topology.sites:
-                if compute_cycles:
-                    typemap[topology.get_index(site)]['cycles'] = set()
-                if not has_whitelists:
-                    typemap[topology.get_index(site)]['whitelist'] = set()
-                    typemap[topology.get_index(site)]['blacklist'] = set()
+def _prepare_atoms(top_graph, typemap):
+    """ Identify rings from topological graph """
+    all_cycles = _find_chordless_cycles(top_graph, max_cycle_size=8)
+    for atom_idx, cycles in zip(top_graph.nodes, all_cycles):
+        typemap[atom_idx]['cycles'] = set()
+        for cycle in cycles:
+            typemap[atom_idx]['cycles'].add(tuple(cycle))
 
-        if compute_cycles:
-            bond_graph = nx.Graph()
-            bond_graph.add_nodes_from(topology.sites)
-            bond_graph.add_edges_from([(b.connection_members[0],
-                                        b.connection_members[1])
-                                        for b in topology.bonds])
-            all_cycles = _find_chordless_cycles(bond_graph, max_cycle_size=8)
-            for site, cycles in zip(bond_graph.nodes, all_cycles):
-                for cycle in cycles:
-                    typemap[site]['cycles'].add(tuple(cycle))
+    return typemap
+
+
+
