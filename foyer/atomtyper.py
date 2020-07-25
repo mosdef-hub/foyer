@@ -1,48 +1,74 @@
 from warnings import warn
 
+import gmso
+import parmed
 import parmed.periodic_table as pt
-
 from foyer.exceptions import FoyerError
 from foyer.smarts_graph import SMARTSGraph
 
-
-def find_atomtypes(structure, forcefield, max_iter=10):
+def find_atomtypes(topology, forcefield, max_iter=10):
     """Determine atomtypes for all atoms.
 
     Parameters
     ----------
-    topology : simtk.openmm.app.Topology
-        The topology that we are trying to atomtype.
+    topology : parmed.Structure, or gmso.Topology
+        The topology that we are trying to atomtype, must matched with backend.
     forcefield : foyer.Forcefield
         The forcefield object.
     max_iter : int, optional, default=10
         The maximum number of iterations.
 
     """
-    typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 
-        'atomtype': None} for atom in structure.atoms}
+    # Handle Parmed Structure
+    if isinstance(topology, parmed.Structure):
+        typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(),
+            'atomtype': None} for atom in topology.atoms}
+
+        system_elements = set()
+        for a in topology.atoms:
+            # First add non-element types, which are strings, then elements
+            if a.name.startswith('_'):
+                if a.name in forcefield.non_element_types:
+                    system_elements.add(a.name)
+            else:
+                if 0 < a.atomic_number <= pt.KNOWN_ELEMENTS:
+                    element = pt.Element[a.atomic_number]
+                    system_elements.add(element)
+                else:
+                    raise FoyerError(
+                        'Parsed atom {} as having neither an element '
+                        'nor non-element type.'.format(a)
+                    )
+
+    # Handle GMSO Topology
+    elif isinstance(topology, gmso.Topology):
+        typemap = {topology.get_index(site): {'whitelist': set(), 'blacklist': set(),
+            'atomtype': None} for site in topology.sites}
+
+        system_elements = set()
+        for site in topology.sites:
+            # First add non-element types, which are strings, then elements
+            if site.element:
+                element = site.element.symbol
+                system_elements.add(element)
+            else:
+                if site.name in forcefield.non_element_types:
+                    system_elements.add(site.name)
+                else:
+                    raise FoyerError(
+                        'Parsed atom {} as having neither an element '
+                        'nor non-element type.'.format(a)
+                    )
+    else:
+        raise TypeError("Passed {}, acceptable objects are parmed structure and gmso topologies".format(
+            type(topology)
+            )
+        )
 
     rules = _load_rules(forcefield, typemap)
 
     # Only consider rules for elements found in topology
     subrules = dict()
-
-    system_elements = set()
-    for a in structure.atoms:
-        # First add non-element types, which are strings, then elements
-        if a.name.startswith('_'):
-            if a.name in forcefield.non_element_types:
-                system_elements.add(a.name)
-        else:
-            if 0 < a.atomic_number <= pt.KNOWN_ELEMENTS:
-                element = pt.Element[a.atomic_number]
-                system_elements.add(element)
-            else:
-                raise FoyerError(
-                    'Parsed atom {} as having neither an element '
-                    'nor non-element type.'.format(a)
-                )
-
     for key, val in rules.items():
         atom = val.nodes[0]['atom']
         if len(list(atom.find_data('atom_symbol'))) == 1 and \
@@ -61,8 +87,8 @@ def find_atomtypes(structure, forcefield, max_iter=10):
             subrules[key] = val
     rules = subrules
 
-    _iterate_rules(rules, structure, typemap, max_iter=max_iter)
-    _resolve_atomtypes(structure, typemap)
+    typemap = _iterate_rules(rules, topology, typemap, max_iter=max_iter)
+    typemap = _resolve_atomtypes(topology, typemap)
 
     return typemap
 
@@ -87,7 +113,7 @@ def _load_rules(forcefield, typemap):
     return rules
 
 
-def _iterate_rules(rules, structure, typemap, max_iter):
+def _iterate_rules(rules, topology, typemap, max_iter):
     """Iteratively run all the rules until the white- and blacklists converge.
 
     Parameters
@@ -95,7 +121,7 @@ def _iterate_rules(rules, structure, typemap, max_iter):
     rules : dict
         A dictionary mapping rule names (typically atomtype names) to
         SMARTSGraphs that evaluate those rules.
-    topology : simtk.openmm.app.Topology
+    topology : parmed.Structure or gmso.Topology
         The topology that we are trying to atomtype.
     max_iter : int
         The maximum number of iterations.
@@ -106,7 +132,7 @@ def _iterate_rules(rules, structure, typemap, max_iter):
         max_iter -= 1
         found_something = False
         for rule in rules.values():
-            for match_index in rule.find_matches(structure, typemap):
+            for match_index in rule.find_matches(topology, typemap):
                 atom = typemap[match_index]
                 # This conditional is not strictly necessary, but it prevents
                 # redundant set addition on later iterations
@@ -122,15 +148,24 @@ def _iterate_rules(rules, structure, typemap, max_iter):
 
 def _resolve_atomtypes(structure, typemap):
     """Determine the final atomtypes from the white- and blacklists. """
-    atoms = structure.atoms
     for atom_id, atom in typemap.items():
-        atomtype = [rule_name for rule_name in 
+        atomtype = [rule_name for rule_name in
                     atom['whitelist'] - atom['blacklist']]
         if len(atomtype) == 1:
             atom['atomtype'] = atomtype[0]
-        elif len(atomtype) > 1:
-            raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
-                atom_id, atoms[atom_id].atomic_number, atomtype))
-        else:
-            raise FoyerError("Found no types for atom {} ({}).".format(
-                atom_id, atoms[atom_id].atomic_number))
+        elif isinstance(structure, gmso.Topology):
+            if len(atomtype) > 1:
+                raise FoyerError("Found multiple types for Site {} ({}): {}.".format(
+                    atom_id, structure.sites[atom_id].element, atomtype))
+            else:
+                raise FoyerError("Found no types for Site {} ({}).".format(
+                    atom_id, structure.sites[atom_id]))
+        elif isinstance(structure, parmed.Structure):
+            if len(atomtype) > 1:
+                raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
+                    atom_id, structure.atoms[atom_id].atomic_number, atomtype))
+            else:
+                raise FoyerError("Found no types for atom {} ({}).".format(
+                    atom_id, structure.atoms[atom_id].atomic_number))
+
+    return typemap
