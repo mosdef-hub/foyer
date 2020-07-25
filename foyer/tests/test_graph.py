@@ -1,6 +1,6 @@
 import parmed as pmd
 
-from foyer.smarts_graph import SMARTSGraph, _prepare_atoms
+from foyer.smarts_graph import SMARTSGraph, _prepare_atoms, _construct_topological_graph
 from foyer.tests.utils import get_fn
 
 
@@ -47,7 +47,8 @@ def test_cycle_finding_multiple():
                             'atomtype': None}     
                             for atom in mol2.atoms}
 
-    _prepare_atoms(mol2, typemap, compute_cycles=True)
+    top_graph = _construct_topological_graph(mol2)
+    typemap = _prepare_atoms(top_graph, typemap)
     cycle_lengths = [list(map(len, typemap[atom.idx]['cycles'])) 
                         for atom in mol2.atoms]
     expected = [5, 6, 6]
