@@ -6,7 +6,7 @@
     if($contentInfoDiv){
       const $paragraph = $contentInfoDiv.find('p');
       if($paragraph) {
-        $paragraph.remove('.commit');
+        $paragraph.find('.commit').remove();
         $paragraph.append(
             `|<a href="https://github.com/mosdef-hub/foyer" target="_blank">
                 <i class="fa fa-github-square"></i>
