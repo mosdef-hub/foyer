@@ -71,8 +71,8 @@ stages:
 
           - bash: |
               bash ./devtools/release-pypi.sh pypi
-          condition: and( eq( variables['Agent.OS'], 'Linux' ), eq( variables['python.version'], '3.7' ), startsWith( variables['Build.SourceBranch'], 'refs/tags/0' ) )
-          displayName: Publish foyer to PyPI
+            condition: and( eq( variables['Agent.OS'], 'Linux' ), eq( variables['python.version'], '3.7' ), startsWith( variables['Build.SourceBranch'], 'refs/tags/0' ) )
+            displayName: Publish foyer to PyPI
 
 
       - job: Windows_no_bleeding
