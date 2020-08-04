@@ -34,9 +34,9 @@ project = u'foyer'
 copyright = u'2014-2018, Vanderbilt University'
 
 # The short X.Y version
-version = foyer.version
+version = '0.7.6'
 # The full version, including alpha/beta/rc tags
-release = foyer.version
+release = version
 
 
 # -- General configuration ---------------------------------------------------
