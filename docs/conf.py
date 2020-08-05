@@ -31,7 +31,7 @@ import foyer
 # -- Project information -----------------------------------------------------
 
 project = u'foyer'
-copyright = u'2014-2018, Vanderbilt University'
+copyright = u'2014-2020, Vanderbilt University'
 
 # The short X.Y version
 version = foyer.version
@@ -243,7 +243,7 @@ texinfo_documents = [
 epub_title = u'foyer'
 epub_author = u'Author'
 epub_publisher = u'Author'
-epub_copyright = u'2018, Author'
+epub_copyright = u'2020, Author'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'foyer'
