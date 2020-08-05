@@ -332,10 +332,12 @@ def _construct_topological_graph(topology):
     elif isinstance(topology, gmso.Topology):
         top_graph.add_nodes_from(((
             topology.get_index(a), {'idx': topology.get_index(a),
-                                    'n_bond_partners': len([b for b in a.connections 
-                                                            if isinstance(b, gmso.Bond)]),
-                                    'atomic_number': a.element.atomic_number if a.element else None,
-                                    'name': a.element.symbol if a.element else None})
+                    'n_bond_partners': len({b for b in topology.bonds
+                                    if a in b.connection_members}),
+                    'atomic_number': a.element.atomic_number
+                                    if a.element else None,
+                    'name': a.element.symbol
+                                    if a.element else None})
             for a in topology.sites))
         top_graph.add_edges_from((
                     (topology.get_index(b.connection_members[0]),
