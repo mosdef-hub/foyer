@@ -10,3 +10,4 @@ pytest-cov
 pytest-timeout
 codecov
 requests-mock
+bump2version
