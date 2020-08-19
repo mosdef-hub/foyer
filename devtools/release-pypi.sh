@@ -13,8 +13,8 @@ username: ${PYPI_USERNAME}
 password: ${PYPI_PASSWORD}
 [testpypi]
 repository: https://test.pypi.org/legacy/
-username: ${PYPI_USERNAME}
-password: ${PYPI_PASSWORD}
+username: ${TEST_PYPI_USERNAME}
+password: ${TEST_PYPI_PASSWORD}
 EOF
 
 source activate test-environment
