@@ -4,7 +4,7 @@ import itertools
 import os
 from tempfile import NamedTemporaryFile
 import xml.etree.ElementTree as ET
-
+from lxml import etree
 from pkg_resources import resource_filename
 import warnings
 import re
@@ -13,7 +13,10 @@ import numpy as np
 import foyer.element as custom_elem
 
 import gmso
-from gmso import ForceField
+#from gmso.external.convert_foyer import from_foyer
+from gmso.external import from_mbuild
+
+from simtk import openmm as mm
 
 from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
@@ -23,76 +26,37 @@ from foyer.xml_writer import write_foyer
 from foyer.utils.io import import_, has_mbuild
 from foyer.utils.external import get_ref
 
-# Copy from original forcefield.py
-def preprocess_forcefield_files(forcefield_files=None):
-    """Pre-process foyer Forcefield XML files"""
-    if forcefield_files is None:
-        return None
+def preprocessed_forcefield_files(forcefield_files=None):
+    """Preprocess foyer Forcefield XML files
 
-    preprocessed_files = []
+    Make sure the provided forcefield XML files have the correct
+    format and convert them to GMSO forcefield XML format.
+    """
+    # Validation can be copied from the old code
+    # Converting will rely on Ray's XML conversion PR
+    return forcefield_files
 
-    for xml_file in forcefield_files:
-        if not hasattr(xml_file, 'read'):
-            f = open(xml_file)
-            _, suffix = os.path.split(xml_file)
-        else:
-            f = xml_file
-            suffix = ""
-
-        # read and preprocess
-        xml_contents = f.read()
-        f.close()
-        xml_contents = re.sub(r"(def\w*=\w*[\"\'])(.*)([\"\'])", lambda m: m.group(1) + re.sub(r"&(?!amp;)", r"&amp;", m.group(2)) + m.group(3),
-                              xml_contents)
-
-        try:
-            '''
-            Sort topology objects by precedence, defined by the number of
-            `type` attributes specified, where a `type` attribute indicates
-            increased specificity as opposed to use of `class`
-            '''
-            root = ET.fromstring(xml_contents)
-            for element in root:
-                if 'Force' in element.tag:
-                    element[:] = sorted(element, key=lambda child: (
-                        -1 * len([attr_name for attr_name in child.keys()
-                                    if 'type' in attr_name])))
-            xml_contents = ET.tostring(root, method='xml').decode()
-        except ET.ParseError:
-            '''
-            Provide the user with a warning if sorting could not be performed.
-            This indicates a bad XML file, which will be passed on to the
-            Validator to yield a more descriptive error message.
-            '''
-            warnings.warn('Invalid XML detected. Could not auto-sort topology '
-                          'objects by precedence.')
-
-        # write to temp file
-        temp_file = NamedTemporaryFile(suffix=suffix, delete=False)
-        with open(temp_file.name, 'w') as temp_f:
-            temp_f.write(xml_contents)
-
-        # append temp file name to list
-        preprocessed_files.append(temp_file.name)
-
-    return preprocessed_files
 
 class Forcefield(gmso.ForceField):
-    """General Forcefield object that can be created by either GMSO Forcefield or OpenMM Forcefield
+    """Specialization of GMSO ForceField allowing SMARTS based atomtyping.
 
     Parameters
     ----------
     forcefield_files : list of str, optional, default=None
-        List of forcefield files to load
-    name : str, optional, None
-        Name of a forcefield to load that is packaged within foyer
-    backend : str, optional, default='openmm'
-        Name of the backend used to store all the Types' information.
-        Can choose between 'openmm' and 'gmso'
-
+        List of forcefield files to load.
+    name : str, optional, default=None
+        Name of a forcefield to load that is packaged within foyer.
+    validation : bool, optional, default=True
+        Validate the given forcefield files
+    backend : bool, optional, default='gmso'
+        Backend used to store ForceField types information.
+        Can be picked from either 'gmso' or 'openmm'.
+    debug : bool, optional, default=False
+        Prompt to print our extra messages for debugging purpose.
     """
-    def __init__(self, forcefield_files=None,
-                 name=None, validation=True, debug=False):
+    def __init__(self, forcefield_files=None, name=None,
+                       validation=True, backend='gmso',
+                       debug=False):
         self.atomTypeDefinitions = dict()
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
@@ -102,53 +66,234 @@ class Forcefield(gmso.ForceField):
         self._included_forcefields = dict()
         self.non_element_types = dict()
 
-        all_files_to_load = []
         if forcefield_files is not None:
             if isinstance(forcefield_files, (list, tuple, set)):
-                for file in forcefield_files:
-                    all_files_to_load.append(file)
+                all_files_to_load = list(forcefield_files)
             else:
-                all_files_to_load.append(forcefield_files)
+                all_files_to_load = [forcefield_files]
 
         if name is not None:
             try:
                 file = self.included_forcefields[name]
             except KeyError:
-                raise IOError('Forcefield {} cannot be found'.format(name))
+                raise IOError('Forcefild {} cannot be found.'.format(name))
             else:
-                all_files_to_load.append(file)
+                all_files_to_load = [file]
 
-        preprocessed_files = preprocess_forcefield_files(all_files_to_load)
+        # Preprocessed the input files
+        preprocessed_files = preprocessed_forcefield_files(all_files_to_load)
         if validation:
             for ff_file_name in preprocessed_files:
                 Validator(ff_file_name, debug)
-        try:
-            super(Forcefield, self).__init__(*preprocessed_files)
+
+        # Load in an internal forcefield object depends on given backend
+        super(Forcefield, self).__init__(*preprocessed_files)
+        '''
+        if backend=='gmso':
+            self.ff = gmso.ForceField(*preprocessed_files)
+        elif backend=='openmm':
+            self.ff = mm.ForceField(*preprocessed_files)
+        else:
+            raise Exception("Unsupported backend")
+        '''
+        # Remove the file
+        """
+        Remove the converted files afterward
         finally:
             for ff_file_name in preprocessed_files:
                 os.remove(ff_file_name)
+        """
+        for name, atype in self.atom_types.items():
+            self.atomTypeDefinitions[name] = atype.definition
+            self.atomTypeOverrides[name] = atype.overrides
+            self.atomTypeDesc[name] = atype.description
+            self.atomTypeRefs[name] = atype.doi
+            self.atomTypeClasses[name] = atype.atomclass
+            #self.atomTypeElements[name] = atype.element
 
         self.parser = smarts.SMARTS(self.non_element_types)
-        # Need to find a way to update the foyer specific dicts
 
-    @classmethod
-    def from_xml(cls, xml_locs):
-        """Overwrite the original gmso.Forcefield.from_xml
 
-        This class method creates a Forcefield object from a foyer XML files,
-        overwritten the classmethod in GMSO Forcefield which createa the object
-        from the GMSO XML file format.
+    def apply(self, top, reference_file, use_residue_map,
+              assert_atom_params=True,
+              assert_bond_params=True,
+              assert_angle_params=True,
+              assert_dihedral_params=True,
+              assert_improper_params=True):
+        """Apply the forcefield to a molecular structure
 
-        Paramaters
+        Parameters
         ----------
-        xml_locs : str or iterable of str
-            string or iterable of strings containing the forcefield XML locations
+        top : mbuild.Compound or gmso.Topology
+            Molecular structure to apply the forcefield to.
+        reference_file : str, optional, default=None
+            Name of the file where forcefield refrences (doi)
+            will be written to (in Bibtex format).
+        use_residue_map :
+            Speed up measure for systems with a lot of repeated units.
+        assert_atom_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all atoms.
+        assert_bond_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all bonds.
+        assert_angle_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all angles.
+        assert_dihedral_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all proper dihedrals.
+        asser_improper_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all improper dihedrals.
+        debug : bool, optional, default=False
+            If True, Foyer will print out missing atoms, bonds, anlges, and dihedrals
+            that are missing types.
+        Return
+        ------
+        topology : gmso.Topology
+            Return typed gmso.Topology object
+        """
+        if self.atomTypeDefinitions == {}:
+            raise FoyerError('Attempting to atom-type usinga force field with no atom type definition')
+
+        if not isinstance(top, gmso.Topology):
+            mb = import_('mbuild')
+            top = from_mbuild(mb.load(top))
+
+        # Generate typemap
+        typemap = self.run_atomtyping(top)
+
+        # Apply typemap
+        self._apply_typemap(top, typemap)
+
+        # Parameterize
+        self.parameterize_system(top)
+        return top
+
+    def run_atomtyping(self, top):
+        """ Atomtype the topology
+
+        Parameteres
+        -----------
 
         Returns
         -------
-        forcefield : gmso.Forcefield
-            A gmso.Forcefield objection existed inside the foyer.Forcefield object
         """
+        # TO DO: speed up options (similar to use_residue_map)
+
+        typemap = find_atomtypes(top, forcefield=self)
+        return typemap
+
+    def parameterize_system(self, top, typemap,
+                            assert_atom_params=True,
+                            assert_bond_params=True,
+                            assert_angle_params=True,
+                            assert_dihedral_params=True,
+                            assert_improper_params=True,
+                            debug=True):
+
+        """ Parameterize systems
+
+        Assign AtomTypes, BondTypes to atoms, bonds. Create
+        angles and dihedral and assign corresponding AngleType
+        and DihedralTypes
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        """
+        # Generate missing angles, dihedrals, and improper
+        top.identify_connections()
+
+        # Assigns AtomTypes
+        for idx in typemap:
+            top.sites[idx].atom_type = self.atom_types.typemap[idx]['atomtype']
+
+        # Assigns BondTypes
+        for bond in top.bonds:
+            # Note: still need to deal with permutation
+            btype_name = '{}~{}'.format(
+                            bond.connection_members[0],
+                            bond.connection_members[1])
+            bond.bond_type = self.bond_types.get(btype_name)
+
+        # Assign angle type
+        for angle in top.angles:
+            # Note: still need to deal with permutation
+            agtype_name = '{}~{}~{}'.format(
+                            angle.connection_members[0],
+                            angle.connection_members[1],
+                            angle.connection_members[2])
+            angle.angle_type = self.angle_types.get(agtype_name)
+
+        # Assign proper dihedral type
+        for dihedral in top.dihedrals:
+            dtype_name = '{}~{}~{}~{}'.format(
+                            dihedral.connection_members[0],
+                            dihedral.connection_members[1],
+                            dihedral.connection_members[2],
+                            dihedral.connection_members[3])
+            dihedral.dihedral_type = self.dihedral_types.get(dtype_name)
+
+        # Assign improper type
+        for improper in top.impropers:
+            itype_name = '{}~{}~{}~{}'.format(
+                            improper.connection_members[0],
+                            improper.connection_members[1],
+                            improper.connection_members[2],
+                            improper.connection_members[3])
+            improper.dihedral_type = self.improper_types.get(itype_name)
+
+        _check_parameters(top,
+            assert_atom_params=assert_atom_params,
+            assert_bond_params=assert_bond_params,
+            assert_angle_params=assert_angle_params,
+            assert_dihedral_params=assert_dihedral_params,
+            assert_improper_params=assert_improper_params,
+            debug=debug)
+
+        return top
+
+    def _check_parameters(self, top,
+                            assert_atom_params=True,
+                            assert_bond_params=True,
+                            assert_angle_params=True,
+                            assert_dihedral_params=True,
+                            debug=True):
+        """Check if the params are fulling filled
+
+        Parameters
+        ----------
+
+        """
+        missing_types = dict()
+        missing_types['atom'] = [atom for atom in top.sites
+                                      if not atom.atom_type]
+        missing_types['bond'] = [bond for bond in top.bonds
+                                      if not bond.bond_type]
+        missing_types['angle'] = [angle for angle in top.angles
+                            if not angle.angle_type]
+        missing_types['dihedral'] = [dihedral for dihedral in top.dihedral
+                            if not dihedral.dihedral_type]
+        missing_types['improper'] = [improper for improper in top.improper
+                            if not improper.improper_type]
+        if debug:
+            for component in missing_types:
+                if len(missing_types[component]) > 0:
+                    print('Detect missing {0} with {0} type: '.format(component))
+                    print(missing_types[component])
+
+        # Need to figure out a way to raise a collective Error
+        # messages
+        if assert_atom_params and missing_types['atom']:
+            raise FoyerError
+        if assert_bond_params and missing_types['bond']:
+            raise FoyerError
+        if assert_angle_params and missing_types['angle']:
+            raise FoyerError
+        if assert_dihedral_params and missing_types['dihedral']:
+            raise FoyerError
+        if assert_improper_params and missing_types['improper']:
+            raise FoyerError
+
         return None
-        
+
 
