@@ -510,7 +510,7 @@ class Forcefield(app.ForceField):
                             in parameters['overrides'].split(","))
             if overrides:
                 self.atomTypeOverrides[name] = overrides
-        if 'des' in parameters:
+        if 'desc' in parameters:
             self.atomTypeDesc[name] = parameters['desc']
         if 'doi' in parameters:
             dois = set(doi.strip() for doi in parameters['doi'].split(','))
