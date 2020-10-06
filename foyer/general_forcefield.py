@@ -88,7 +88,7 @@ def preprocess_forcefield_files(forcefield_files=None, backend='gmso'):
         return preprocessed_files
     elif backend == 'gmso':
         # Run through the forcefield XML conversion
-        return preprocess_files
+        return forcefield_files
     else:
         raise FoyerError('Backend not supported')
 
@@ -98,12 +98,12 @@ class Forcefield(object):
     Parameters
     ----------
     forcefield_files : list of str, optional, default=None
-        List of forcefield files to load
+        List of forcefield files to load.
     name : str, optional, None
-        Name of a forcefield to load that is packaged within foyer
+        Name of a forcefield to load that is packaged within foyer.
     backend : str, optional, default='openmm'
         Name of the backend used to store all the Types' information.
-        Can choose between 'openmm' and 'gmso'
+        Can choose between 'openmm' and 'gmso'.
 
     """
     def __init__(self, forcefield_files=None, name=None,
@@ -166,7 +166,7 @@ class Forcefield(object):
 
     # Parse forcefield meta information
     def _parse_gmso(self, forcefield_files):
-        """ Parse meta fata information when using GMSO as backend
+        """Parse meta fata information when using GMSO as backend
         """
         self.ff = gmso.ForceField(forcefield_files)
         self._version = self.ff.version
@@ -180,7 +180,7 @@ class Forcefield(object):
             #self.atomTypeElements[name] = atype.element
 
     def _parse_mm(self, forcefield_files):
-        """ Parse meta data information when using OpenMM as backend
+        """Parse meta data information when using OpenMM as backend
         """
         self.ff = app.ForceField(forcefield_files)
         tree = ET.parse(forcefield_files)
@@ -212,7 +212,206 @@ class Forcefield(object):
         return None
 
     def _parse_ff(self, forcefield_files):
-        """ Parse meta data information when using OpenFF as backend
+        """Parse meta data information when using OpenFF as backend
         """
         self.ff = app.ForceField(forcefield.files)
         return None
+
+
+    def apply(self, top, references_file=None, use_residue_map=True,
+    assert_bond_params=True, assert_angle_params=True,
+    assert_dihedral_params=True, assert_improper_params=True,
+    verbose=False, *args, **kwargs):
+        """Apply the force field to a molecular topology
+
+        Parameters
+        ----------
+        top : gmso.Topology, or mb.Compound
+            Molecular Topology to apply the force field to
+        references_file : str, optional, defaut=None
+            Name of file where force field refrences will be written (in Bibtex format).
+        use_residue_map : bool, optional, default=True
+            Options to speed up if there are a lot of repeated
+            subtopology within the topology (assuming they all
+            have the same name).
+        assert_bond_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all system bonds.
+        assert_angle_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all system angles.
+        assert_dihedral_params : bool, optional, default=True
+            If True, Foyer will exit if parameters are not found for all system dihedrals.
+        assert_improper_params : bool, optional, default=True
+            If True, Foyer will exit if parametes are not found for all system impropers.
+        verbose : bool, optional, default=False
+            If True, Foyer will print debug-level information about notable or potential problematic details it encounters.
+        """
+        if self.atomTypeDefinitions == {}:
+            raise FoyerError('Attempting to atom-type using a forcefield '
+                'with no atom type definitions.')
+
+        typemap = self._run_atomtyping(top,
+                    use_residue_map=use_residue_map,
+                    **kwargs)
+
+        return self._parametrize(top=top, typemap=typemap,
+            references_file=references_file,
+            assert_bond_params=assert_bond_params,
+            assert_angle_params=assert_angle_params,
+            assert_dihedral_params=assert_dihedral_params,
+            assert_improper_params=assert_improper_params,
+            verbose=verbose,
+            *args, **kwargs)
+
+    def _run_atomtyping(self, top, use_residue_map=True, **kwargs):
+        """Atomtype the topology
+
+        Parameters
+        ----------
+        top : gmso.Topology
+            Molecular Topology to find atom types for.
+        use_residue_map : bool, optional, default=True
+            Spped up options for duplicates subtopology.
+        """
+
+        if use_residue_map:
+            # Detect duplicates subtopology/residues
+            # (do matching by name, assert same number
+            # of atoms)
+            typemap = find_atomtypes(top, forcefield=self)
+        else:
+            typemap = find_atomtypes(top, forcefield=self)
+
+        return typemap
+
+    def _parametrize(self, top=None,
+                        typemap=dict(),
+                        references_file=None,
+                        assert_bond_params=True,
+                        assert_angle_params=True,
+                        assert_dihedral_params=True,
+                        assert_improper_params=True,
+                        verbose=False,
+                        **kwargs):
+        """Parametrize the Topology from the typemap provided
+
+        Assign AtomTypes and BondTypes to Atoms and Bonds, respectively.
+        Creat Angles, Dihedrals, Impropers and assing corresponding
+        AngleType, DihedralTypes, and ImproperTypes.
+        Parameters
+        ----------
+
+        Returns
+        -------
+        """
+        # Generate missing angles a
+        top.identify_connections()
+
+        # Assign AtomTypes
+        for atom in top.sites:
+            atom.atom_type = self.ff.atom_types.get(typemap[top.get_index(atom)]['atomtype'])
+        if not all([a.atom_type for a in top.sites]):
+            raise ValueError('Not all atoms in topology have atom types')
+
+        # Assign BondTypes
+        for bond in top.bonds:
+            # Still need to deal with permutation
+            member_types = sorted([atom.atom_type.name for atom in bond.connection_members])
+            btype_name = '~'.join(member_types)
+            bond.bond_type = self.ff.bond_types.get(btype_name)
+
+        # Assign AngleTypes
+        for angle in top.angles:
+            # Still need to deal with permutation
+            member_types = [atom.atom_type.name for atom in angle.connection_members]
+            agtype_name = '~'.join(member_types)
+            angle.angle_type = self.ff.angle_types.get(agtype_name)
+
+        # Assign DihedralTypes
+        for dihedral in top.dihedrals:
+            # Still need to deal with permutation
+            member_types = [atom.atom_type.name for atom in dihedral.connection_members]
+            dtype_name = '~'.join(member_types)
+            dihedral.dihedral_type = self.ff.dihedral_types.get(dtype_name)
+
+        # Assing ImproperTypes
+        for improper in top.impropers:
+            # Still need to deal with permutation
+            member_types = [atom.atom_type.name for atom in improper.connection_members]
+            itype_name = '~'.join(member_types)
+            improper.improper_type = self.ff.improper_types.get(itype_name)
+
+        #check_paramters(top, assert_bond_params,
+        #                     assert_angle_params,
+        #                     assert_dihedral_params,
+        #                     assert_improper_params,
+        #                     debug)
+
+    def _check_parameters(self, top,
+                            assert_bond_params=True,
+                            assert_angle_params=True,
+                            assert_dihedral_params=True,
+                            assert_improper_params=True,
+                            debug=False):
+        """Check if the parameters are fulling filled
+
+        Parameteres
+        -----------
+        assert_bond_params : bool, optional, default=True
+            Check if all bonds have params
+        assert_angle_params : bool, optional, default=True
+            Check if all angles have params
+        assert_dihedral_params : bool, optional, default=True
+            Check if all dihedrals have params
+        assert_improper_params : bool, optional, default=True
+            Check if all impropers have params
+        """
+        missing_bond_params = dict()
+        missing_angle_params = dict()
+        missing_dihedral_params = dict()
+        missing_improper_params = dict()
+
+        for bond in top.bonds:
+            if not bond.bond_type:
+                missing_bond_params[bond.name] = [a.atom_type.name
+                for a in bond.connection_members]
+        for angle in top.angles:
+            if not angle.angle_type:
+                missing_angle_params[angle.name] = [a.atom_type.name
+                for a in angle.connection_members]
+        for dihedral in top.dihedrals:
+            if not dihedral.dihedral_type:
+                missing_dihedral_params[dihedral.name] = [a.atom_type.name
+                for a in dihedral.connection_members]
+        for improper in top.impropers:
+            if not improper.improper_type:
+                missing_improper_params[improper.name] = [a.atom_type.name
+                for a in improper.connection_members]
+
+        if debug:
+            from pprint import pprint
+            if missing_bond_params:
+                print('Bonds with missing parameters: ')
+                pprint(missing_bond_params)
+            if missing_angle_params:
+                print('Angles with missing parameters: ')
+                pprint(missing_angle_params)
+            if missing_dihedral_params:
+                print('Dihedral with missing parameters: ')
+                pprint(missing_dihedral_params)
+            if missing_improper_params:
+                print('Improper with missing parameters: ')
+                pprint(missing_improper_params)
+
+        if assert_bond_params and missing_bond_params:
+            raise FoyerError('Some bonds are missing parameters. '
+                             'Change debug=True for more information')
+        if assert_angle_params and missing_angle_params:
+            raise FoyerError('Some angles are missing parameters. '
+                             'Change debug=True for more information')
+        if assert_dihedral_params and missing_dihedral_params:
+            raise FoyerError('Some dihedrals are missing parameters. '
+                             'Change debug=True for more information')
+        if assert_improper_params and missing_improper_params:
+            raise FoyerError('Some impropers are missing parameters. '
+                             'Change debug=True for more information')
+
