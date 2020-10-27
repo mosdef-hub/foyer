@@ -16,13 +16,6 @@ import gmso
 #from gmso.external.convert_foyer import from_foyer
 from gmso.external import from_mbuild
 
-import simtk.unit as u
-from simtk import openmm as mm
-from simtk.openmm import app
-from simtk.openmm.app.forcefield import (NoCutoff, CutoffNonPeriodic, HBonds,
-                                         AllBonds, HAngles, NonbondedGenerator,
-                                         _convertParameterToNumber)
-
 from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
@@ -84,16 +77,15 @@ def preprocess_forcefield_files(forcefield_files=None, backend='gmso'):
         # append temp file name to list
         preprocessed_files.append(temp_file.name)
 
-    if backend == 'openmm':
-        return preprocessed_files
-    elif backend == 'gmso':
+    if backend == 'gmso':
         # Run through the forcefield XML conversion
         return forcefield_files
     else:
         raise FoyerError('Backend not supported')
 
 class Forcefield(object):
-    """General Forcefield object that can be created by either GMSO Forcefield or OpenMM Forcefield
+    """General Forcefield object that can be created by either a GMSO XML
+    forcefield file of Foyer XML forcefield file
 
     Parameters
     ----------
@@ -101,10 +93,10 @@ class Forcefield(object):
         List of forcefield files to load.
     name : str, optional, None
         Name of a forcefield to load that is packaged within foyer.
-    backend : str, optional, default='openmm'
+    backend : str, optional, default='gmso'
         Name of the backend used to store all the Types' information.
-        Can choose between 'openmm' and 'gmso'.
-
+        At this point, 'gmso' is the only valid backend, but this set up
+        allow future backend to be implemented easier.
     """
     def __init__(self, forcefield_files=None, name=None,
                        validation=True, backend='gmso',
@@ -130,12 +122,14 @@ class Forcefield(object):
             try:
                 file = self.included_forcefields[name]
             except KeyError:
-                raise IOError('Forcefild {} cannot be found.'.format(name))
+                raise IOError('Forcefield {} cannot be found.'.format(name))
             else:
                 all_files_to_load = [file]
 
         # Preprocessed the input files
-        preprocessed_files = preprocess_forcefield_files(all_files_to_load, backend=backend)
+        preprocessed_files = preprocess_forcefield_files(
+                                all_files_to_load,
+                                backend=backend)
         if validation:
             for ff_file_name in preprocessed_files:
                 Validator(ff_file_name, debug)
@@ -143,8 +137,6 @@ class Forcefield(object):
         # Load in an internal forcefield object depends on given backend
         if backend == 'gmso':
             self._parse_gmso(*preprocessed_files)
-        elif backend == 'openmm':
-            self._parse_mm(*preprocessed_files)
         else:
             raise FoyerError("Unsupported backend")
 
@@ -176,43 +168,12 @@ class Forcefield(object):
             self.atomTypeRefs[name] = atype.doi
             self.atomTypeClasses[name] = atype.atomclass
             #self.atomTypeElements[name] = atype.element
-
-    def _parse_mm(self, forcefield_files):
-        """Parse meta data information when using OpenMM as backend
-        """
-        self.ff = app.ForceField(forcefield_files)
-        tree = ET.parse(forcefield_files)
-        root = tree.getroot()
-        self._version = root.attrib.get('version')
-        self._name = root.attrib.get('name')
-        
-        for atypes_group in root.findall('AtomTypes'):
-            for atype in atypes_group:
-                name = atype.attrib['name']
-                if 'def' in atype.attrib:
-                    self.atomTypeDefinitions[name] = atype.attrib['def']
-                if 'overrides' in atype.attrib:
-                    overrides = set(atype_name.strip() for atype_name in
-                                    atype.attrib['overrides'].split(','))
-                    if overrides:
-                        self.atomTypeOverrides[name] = overrides
-                if 'desc' in atype.attrib:
-                    self.atomTypeDesc[name] = atype.attrib['desc']
-                if 'doi' in atype.attrib:
-                    dois = set(doi.strip() for doi in
-                               atype.attrib['doi'].split(','))
-                    self.atomTypeRefs[name] = dois
-                if 'element' in atype.attrib:
-                    # Could potentially use ele here instead of just a string
-                    self.atomTypeElements[name] = atype.attrib['element']
-                if 'class' in atype.attrib:
-                    self.atomTypeClasses[name] = atype.attrib['class']
         return None
 
     def apply(self, top, references_file=None, use_residue_map=True,
-    assert_bond_params=True, assert_angle_params=True,
-    assert_dihedral_params=True, assert_improper_params=True,
-    verbose=False, *args, **kwargs):
+              assert_bond_params=True, assert_angle_params=True,
+              assert_dihedral_params=True, assert_improper_params=True,
+              verbose=False, backend='gmso', *args, **kwargs):
         """Apply the force field to a molecular topology
 
         Parameters
@@ -220,21 +181,31 @@ class Forcefield(object):
         top : gmso.Topology, or mb.Compound
             Molecular Topology to apply the force field to
         references_file : str, optional, defaut=None
-            Name of file where force field refrences will be written (in Bibtex format).
+            Name of file where force field refrences will be written
+            (in Bibtex format).
         use_residue_map : bool, optional, default=True
             Options to speed up if there are a lot of repeated
             subtopology within the topology (assuming they all
             have the same name).
         assert_bond_params : bool, optional, default=True
-            If True, Foyer will exit if parameters are not found for all system bonds.
+            If True, Foyer will exit if parameters are not found for all
+            system bonds.
         assert_angle_params : bool, optional, default=True
-            If True, Foyer will exit if parameters are not found for all system angles.
+            If True, Foyer will exit if parameters are not found for all
+            system angles.
         assert_dihedral_params : bool, optional, default=True
-            If True, Foyer will exit if parameters are not found for all system dihedrals.
+            If True, Foyer will exit if parameters are not found for all
+            system dihedrals.
         assert_improper_params : bool, optional, default=True
-            If True, Foyer will exit if parametes are not found for all system impropers.
+            If True, Foyer will exit if parametes are not found for all
+            system impropers.
         verbose : bool, optional, default=False
-            If True, Foyer will print debug-level information about notable or potential problematic details it encounters.
+            If True, Foyer will print debug-level information about notable or
+            potential problematic details it encounters.
+        backend : str, optional, default='gmso'
+            Name of the backend used to store all the Types' information.
+            At this point, 'gmso' is the only valid backend, but this set up
+            allow future backend to be implemented easier.
         """
         if self.atomTypeDefinitions == {}:
             raise FoyerError('Attempting to atom-type using a forcefield '
@@ -251,6 +222,7 @@ class Forcefield(object):
             assert_dihedral_params=assert_dihedral_params,
             assert_improper_params=assert_improper_params,
             verbose=verbose,
+            backend=backend
             *args, **kwargs)
 
     def _run_atomtyping(self, top, use_residue_map=True, **kwargs):
@@ -268,6 +240,7 @@ class Forcefield(object):
             # Detect duplicates subtopology/residues
             # (do matching by name, assert same number
             # of atoms)
+            # Not implemented yet
             typemap = find_atomtypes(top, forcefield=self)
         else:
             typemap = find_atomtypes(top, forcefield=self)
@@ -297,96 +270,108 @@ class Forcefield(object):
         typemap : dict
             typemap generated by the atomtyper
         references_file : str, optional, defaut=None
-            Name of file where force field refrences will be written (in Bibtex format).
+            Name of file where force field refrences will be written
+            (in Bibtex format).
         assert_bond_params : bool, optional, default=True
-            If True, Foyer will exit if parameters are not found for all system bonds.
+            If True, Foyer will exit if parameters are not found for all
+            system bonds.
         assert_angle_params : bool, optional, default=True
-            If True, Foyer will exit if parameters are not found for all system angles.
+            If True, Foyer will exit if parameters are not found for all
+            system angles.
         assert_dihedral_params : bool, optional, default=True
-            If True, Foyer will exit if parameters are not found for all system dihedrals.
+            If True, Foyer will exit if parameters are not found for all
+            system dihedrals.
         assert_improper_params : bool, optional, default=True
-            If True, Foyer will exit if parametes are not found for all system impropers.
+            If True, Foyer will exit if parametes are not found for all
+            system impropers.
         verbose : bool, optional, default=False
-            If True, Foyer will print debug-level information about notable or potential problematic details it encounters.
+            If True, Foyer will print debug-level information about notable or
+            potential problematic details it encounters.
         Returns
         -------
         """
-        # Generate missing angles a
+        # Generate missing connections (angles, dihedrals, and impropers)
         top.identify_connections()
 
-        # May also use (if backend == 'gmso':)
-        if isinstance(self.ff, gmso.ForceField):
+        if backend=='gmso':
             self._parametrize_gmsoFF(top=top,
                                 typemap=typemap)
-        elif isinstance(self.ff, mm.ForceField):
-            self._parametrize_ommFF(top=top,
-                               typemap=typemap)
+        else:
+            raise FoyerError('Backend not supported')
 
-        #check_paramters(top, assert_bond_params,
-        #                     assert_angle_params,
-        #                     assert_dihedral_params,
-        #                     assert_improper_params,
-        #                     debug)
+        check_paramters(top, assert_bond_params,
+                             assert_angle_params,
+                             assert_dihedral_params,
+                             assert_improper_params,
+                             debug)
         return top
 
     def _parametrize_gmsoFF(self, top, typemap):
         """Parametrize a Topology with gmso.ForceField"""
         # Assign AtomTypes
         for atom in top.sites:
-            atom.atom_type = self.ff.atom_types.get(typemap[top.get_index(atom)]['atomtype'])
+            atom.atom_type = self.ff.atom_types.get(
+                                typemap[top.get_index(atom)]['atomtype'])
         if not all([a.atom_type for a in top.sites]):
             raise ValueError('Not all atoms in topology have atom types')
 
-        # Make use of the get_equivalence
         # Assign BondTypes
         for bond in top.bonds:
-            equiv_bmembers = bond.get_equivalence()
-            btype_names = ['{}~{}'.format(bmem[0], bmem[0])
-                           for bmem in equiv_bmembers]
+            equiv_bmembers = bond.equivalent_members()
+            btype_names = ['{}~{}'.format(
+                                    bmem[0].atom_type.name,
+                                    bmem[1].atom_type.name)
+                                    for bmem in equiv_bmembers]
             for btype_name in btype_names:
                 bond.bond_type = self.ff.bond_types.get(btype_name)
                 if bond.bond_type:
-                    # For now, only try to grab the first one
+                    # Grab the first match and then break
                     break
 
         # Assign AngleTypes
         for angle in top.angles:
-            equiv_agmembers = angle.get_equivalence()
-            agtype_names = ['{}~{}~{}'.format(agmem[0], agmem[1], agmem[2])
-                             for agmem in equiv_agmembers]
+            equiv_agmembers = angle.equivalent_members()
+            agtype_names = ['{}~{}~{}'.format(
+                                agmem[0].atom_type.name,
+                                agmem[1].atom_type.name,
+                                agmem[2].atom_type.name)
+                                for agmem in equiv_agmembers]
             for agtype_name in agtype_names:
                 angle.angle_type = self.ff.angle_types.get(agtype_name)
                 if angle.angle_type:
-                    # For now, only try to grab the first one
+                    # Grab the first match and then break
                     break
 
         # Assign DihedralTypes
         for dihedral in top.dihedrals:
-            equiv_dmembers = dihedral.get_equivalence()
-            dtype_names = ['{}~{}~{}~{}'.format(dmem[0], dmem[1], dmem[2], dmem[3])
-                           for dmem in equiv_dmembers]
+            equiv_dmembers = dihedral.equivalent_members()
+            dtype_names = ['{}~{}~{}~{}'.format(
+                                dmem[0].atom_type.name,
+                                dmem[1].atom_type.name,
+                                dmem[2].atom_type.name,
+                                dmem[3].atom_type.name)
+                                for dmem in equiv_dmembers]
             for dtype_name in dtype_names:
                 dihedral.dihedral_type = self.ff.dihedral_types.get(dtype_name)
                 if dihedral.dihedral_type:
-                    # For now, only try to grab the first one
+                    # Grab the first match and then break
                     break
 
         # Assing ImproperTypes
         for improper in top.impropers:
-            equiv_imembers = improper.get_equivalence()
-            itype_names = ['{}~{}~{}~{}'.format(imem[0], imem[1], imem[2], imem[3])
+            equiv_imembers = improper.equivalent_members()
+            itype_names = ['{}~{}~{}~{}'.format(
+                                imem[0].atom_type.name,
+                                imem[1].atom_type.name,
+                                imem[2].atom_type.name,
+                                imem[3].atom_type.name)
                            for imem in equiv_imembers]
             for itype_name in itype_names:
                 improper.improper_type = self.ff.improper_types.get(itype_name)
                 if improper.improper_type:
-                    # For now, only try to grab the first one
+                    # Grab the first match and then break
                     break
 
-        return top
-
-    def _parametrize_ommFF(self, top, typemap):
-        """Parametrize a Topology with openmm.ForceField"""
-        for atom
         return top
 
     def _check_parameters(self, top,
