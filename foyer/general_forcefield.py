@@ -8,6 +8,7 @@ from lxml import etree
 from pkg_resources import resource_filename
 import warnings
 import re
+from pathlib import Path
 
 import numpy as np
 import foyer.element as custom_elem
@@ -75,13 +76,23 @@ def preprocess_forcefield_files(forcefield_files=None, backend='gmso'):
             temp_f.write(xml_contents)
 
         # append temp file name to list
-        preprocessed_files.append(temp_file.name)
+        preprocessed_files.append(Path(temp_file.name))
 
     if backend == 'gmso':
         # Run through the forcefield XML conversion
-        return forcefield_files
+        from gmso.external.convert_foyer import convert_foyer
+        for idx, file in enumerate(preprocessed_files):
+            tmp_gmso = f'tmp_gmso_{idx}.xml'
+            convert_foyer(foyer_xml=file,
+                          gmso_xml=tmp_gmso)
+            os.remove(file)
+            tmp_processed_files.append(tmp_gmso)
+
     else:
         raise FoyerError('Backend not supported')
+
+    return tmp_processed_files
+
 
 class Forcefield(object):
     """General Forcefield object that can be created by either a GMSO XML
@@ -130,19 +141,16 @@ class Forcefield(object):
         preprocessed_files = preprocess_forcefield_files(
                                 all_files_to_load,
                                 backend=backend)
-        if validation:
-            for ff_file_name in preprocessed_files:
-                Validator(ff_file_name, debug)
 
         # Load in an internal forcefield object depends on given backend
         if backend == 'gmso':
             self._parse_gmso(*preprocessed_files)
         else:
-            raise FoyerError("Unsupported backend")
+            raise FoyerError('Backend not supported')
 
         #Remove the temporary files afterward
-            for ff_file_name in preprocessed_files:
-                os.remove(ff_file_name)
+        for ff_file_name in preprocessed_files:
+            os.remove(ff_file_name)
 
         self.parser = smarts.SMARTS(self.non_element_types)
 
@@ -236,6 +244,7 @@ class Forcefield(object):
             Spped up options for duplicates subtopology.
         """
 
+        # TO DO in another PR
         if use_residue_map:
             # Detect duplicates subtopology/residues
             # (do matching by name, assert same number
