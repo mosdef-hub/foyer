@@ -66,7 +66,7 @@ Alternatively, you can also start a Bourne shell directly:
 $ docker run -it --name foyer mosdef/foyer:latest
 ```
 
-To learn more about using `foyer` with docker, please refer to the documentation `<here https://foyer.mosdef.org/en/latest/docker.html>_` .
+To learn more about using `foyer` with docker, please refer to the documentation [here](https://foyer.mosdef.org/en/latest/docker.html) .
 
 
 #### Getting started with SMARTS-based atom-typing
