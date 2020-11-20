@@ -914,7 +914,7 @@ class Forcefield(app.ForceField):
         for atom in structure.atoms:
             atom.id = typemap[atom.idx]['atomtype']
 
-        if not all([a.id for a in structure.atoms][0]):
+        if not all([a.id for a in structure.atoms]):
             raise ValueError('Not all atoms in topology have atom types')
 
     def _prepare_structure(self, topology, **kwargs):
