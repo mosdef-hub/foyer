@@ -138,13 +138,14 @@ class Forcefield(object):
                 all_files_to_load = [file]
 
         # Preprocessed the input files
+
         preprocessed_files = preprocess_forcefield_files(
                                 all_files_to_load,
                                 backend=backend)
 
         # Load in an internal forcefield object depends on given backend
         if backend == 'gmso':
-            self._parse_gmso(*preprocessed_files)
+            self._parse_gmso(preprocessed_files)
         else:
             raise FoyerError('Backend not supported')
 
@@ -230,7 +231,7 @@ class Forcefield(object):
             assert_dihedral_params=assert_dihedral_params,
             assert_improper_params=assert_improper_params,
             verbose=verbose,
-            backend=backend
+            backend=backend,
             *args, **kwargs)
 
     def _run_atomtyping(self, top, use_residue_map=True, **kwargs):
@@ -265,6 +266,7 @@ class Forcefield(object):
                         assert_improper_params=True,
                         verbose=False,
                         backend='gmso',
+                        debug=False,
                         **kwargs):
         """Parametrize the Topology from the typemap provided
 
@@ -308,7 +310,7 @@ class Forcefield(object):
         else:
             raise FoyerError('Backend not supported')
 
-        check_paramters(top, assert_bond_params,
+        self._check_parameters(top, assert_bond_params,
                              assert_angle_params,
                              assert_dihedral_params,
                              assert_improper_params,
