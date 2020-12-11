@@ -414,6 +414,7 @@ class Forcefield(app.ForceField):
             self._name = [self._parse_name(f) for f in forcefield_files]
 
         self.parser = smarts.SMARTS(self.non_element_types)
+        self._system_data = None
 
     @property
     def version(self):
@@ -634,7 +635,7 @@ class Forcefield(app.ForceField):
 
         _separate_urey_bradleys(system, topology)
 
-        data = self._SystemData(topology)
+        data = self._system_data
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
         structure.bonds.sort(key=lambda x: x.atom1.idx)
@@ -707,6 +708,7 @@ class Forcefield(app.ForceField):
         args['switchDistance'] = switchDistance
         # Overwrite previous _SystemData object
         data = app.ForceField._SystemData(topology)
+        self._system_data = data
 
         # TODO: Better way to lookup nonbonded parameters...?
         nonbonded_params = None
