@@ -1,4 +1,5 @@
 import collections
+from copy import copy
 import glob
 import itertools
 import os
