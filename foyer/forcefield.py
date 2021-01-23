@@ -414,7 +414,7 @@ class Forcefield(app.ForceField):
             self._name = [self._parse_name(f) for f in forcefield_files]
 
         self.parser = smarts.SMARTS(self.non_element_types)
-        self._SystemData = self._SystemData()
+        self._system_data = None
 
     @property
     def version(self):
@@ -635,7 +635,7 @@ class Forcefield(app.ForceField):
 
         _separate_urey_bradleys(system, topology)
 
-        data = self._SystemData
+        data = self._system_data
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
         structure.bonds.sort(key=lambda x: x.atom1.idx)
@@ -707,28 +707,8 @@ class Forcefield(app.ForceField):
         """
         args['switchDistance'] = switchDistance
         # Overwrite previous _SystemData object
-        self._SystemData = app.ForceField._SystemData()
-
-        data = self._SystemData
-        data.atoms = list(topology.atoms())
-        for _ in data.atoms:
-            data.excludeAtomWith.append([])
-
-        # Make a list of all bonds
-        for bond in topology.bonds():
-            data.bonds.append(app.ForceField._BondData(bond[0].index, bond[1].index))
-
-        # Record which atoms are bonded to each other atom
-        bonded_to_atom = []
-        for i in range(len(data.atoms)):
-            bonded_to_atom.append(set())
-            data.atomBonds.append([])
-        for i in range(len(data.bonds)):
-            bond = data.bonds[i]
-            bonded_to_atom[bond.atom1].add(bond.atom2)
-            bonded_to_atom[bond.atom2].add(bond.atom1)
-            data.atomBonds[bond.atom1].append(i)
-            data.atomBonds[bond.atom2].append(i)
+        data = app.ForceField._SystemData(topology)
+        self._system_data = data
 
         # TODO: Better way to lookup nonbonded parameters...?
         nonbonded_params = None
@@ -790,13 +770,13 @@ class Forcefield(app.ForceField):
         # Make a list of all unique angles
         unique_angles = set()
         for bond in data.bonds:
-            for atom in bonded_to_atom[bond.atom1]:
+            for atom in data.bondedToAtom[bond.atom1]:
                 if atom != bond.atom2:
                     if atom < bond.atom2:
                         unique_angles.add((atom, bond.atom1, bond.atom2))
                     else:
                         unique_angles.add((bond.atom2, bond.atom1, atom))
-            for atom in bonded_to_atom[bond.atom2]:
+            for atom in data.bondedToAtom[bond.atom2]:
                 if atom != bond.atom1:
                     if atom > bond.atom1:
                         unique_angles.add((bond.atom1, bond.atom2, atom))
@@ -807,13 +787,13 @@ class Forcefield(app.ForceField):
         # Make a list of all unique proper torsions
         unique_propers = set()
         for angle in data.angles:
-            for atom in bonded_to_atom[angle[0]]:
+            for atom in data.bondedToAtom[angle[0]]:
                 if atom not in angle:
                     if atom < angle[2]:
                         unique_propers.add((atom, angle[0], angle[1], angle[2]))
                     else:
                         unique_propers.add((angle[2], angle[1], angle[0], atom))
-            for atom in bonded_to_atom[angle[2]]:
+            for atom in data.bondedToAtom[angle[2]]:
                 if atom not in angle:
                     if atom > angle[0]:
                         unique_propers.add((angle[0], angle[1], angle[2], atom))
@@ -822,8 +802,8 @@ class Forcefield(app.ForceField):
         data.propers = sorted(list(unique_propers))
 
         # Make a list of all unique improper torsions
-        for atom in range(len(bonded_to_atom)):
-            bonded_to = bonded_to_atom[atom]
+        for atom in range(len(data.bondedToAtom)):
+            bonded_to = data.bondedToAtom[atom]
             if len(bonded_to) > 2:
                 for subset in itertools.combinations(bonded_to, 3):
                     data.impropers.append((atom, subset[0], subset[1], subset[2]))
@@ -914,7 +894,7 @@ class Forcefield(app.ForceField):
         for atom in structure.atoms:
             atom.id = typemap[atom.idx]['atomtype']
 
-        if not all([a.id for a in structure.atoms][0]):
+        if not all([a.id for a in structure.atoms]):
             raise ValueError('Not all atoms in topology have atom types')
 
     def _prepare_structure(self, topology, **kwargs):
