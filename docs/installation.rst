@@ -1,25 +1,35 @@
 Installation
 ==============
 
-Install from conda:
+Install with `conda <https://repo.anaconda.com/miniconda/>`_
+-----------------------------------------------------
+::
 
-.. code:: bash
+    $ conda install -c conda-forge -c omnia foyer
 
-    conda install -c conda-forge -c omnia -c mosdef foyer
+Alternatively you can add all the required channels to your ``.condarc``
+after which you can simply install without specifying the channels::
 
-Install from pip:
+    $ conda config --add channels omnia
+    $ conda config --add channels conda-forge
+    $ conda install foyer
 
-.. code:: bash
+.. note::
+    The order in which channels are added matters: ``conda-forge`` should be the highest priority as a result of being added last. In your ``.condarc`` file, it should be listed first.
 
-    pip install foyer
+Install with `pip <https://pypi.org/project/pip/>`_
+---------------------------------------------------
+::
 
-Install an editable version from source:
+    $ pip install mbuild
 
-.. code:: bash
+Install an editable version from source
+---------------------------------------
+::
 
-    git clone https://github.com/mosdef-hub/foyer.git
-    cd foyer
-    pip install -e .
+    $ git clone https://github.com/mosdef-hub/mbuild
+    $ cd mbuild
+    $ pip install -e .
 
 Supported Python Versions
 -------------------------
