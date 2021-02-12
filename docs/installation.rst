@@ -5,18 +5,13 @@ Install with `conda <https://repo.anaconda.com/miniconda/>`_
 -----------------------------------------------------
 ::
 
-    $ conda install -c conda-forge -c omnia foyer
+    $ conda install -c conda-forge foyer
 
 Alternatively you can add all the required channels to your ``.condarc``
 after which you can simply install without specifying the channels::
 
-    $ conda config --add channels omnia
     $ conda config --add channels conda-forge
     $ conda install foyer
-
-.. note::
-    The order in which channels are added matters: ``conda-forge`` should be the highest priority as a result of being added last. In your ``.condarc`` file, it should be listed first.
-
 Install with `pip <https://pypi.org/project/pip/>`_
 ---------------------------------------------------
 ::

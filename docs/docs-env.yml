@@ -1,7 +1,6 @@
 name: foyer-docs
 channels:
   - conda-forge
-  - omnia
   - mosdef
 dependencies:
   - python=3.7

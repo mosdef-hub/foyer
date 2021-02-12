@@ -16,7 +16,6 @@ WORKDIR /foyer
 
 RUN conda update conda -yq && \
 	conda config --set always_yes yes --set changeps1 no && \
-	conda config --add channels omnia && \
 	conda config --add channels conda-forge && \
 	conda config --add channels mosdef && \
 	. /opt/conda/etc/profile.d/conda.sh && \
