@@ -21,14 +21,14 @@ Install with `pip <https://pypi.org/project/pip/>`_
 ---------------------------------------------------
 ::
 
-    $ pip install mbuild
+    $ pip install foyer
 
 Install an editable version from source
 ---------------------------------------
 ::
 
-    $ git clone https://github.com/mosdef-hub/mbuild
-    $ cd mbuild
+    $ git clone https://github.com/mosdef-hub/foyer
+    $ cd foyer
     $ pip install -e .
 
 Supported Python Versions
