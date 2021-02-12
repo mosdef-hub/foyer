@@ -335,9 +335,9 @@ def _construct_topological_graph(topology):
                     'n_bond_partners': len({b for b in topology.bonds
                                     if a in b.connection_members}),
                     'atomic_number': a.element.atomic_number
-                                    if a.element else None,
+                                    if a.element else 0,
                     'name': a.element.symbol
-                                    if a.element else None})
+                                    if a.element else a.name})
             for a in topology.sites))
         top_graph.add_edges_from((
                     (topology.get_index(b.connection_members[0]),

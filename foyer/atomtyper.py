@@ -52,19 +52,19 @@ def find_atomtypes(topology, forcefield, max_iter=10):
                 element = site.element.symbol
                 system_elements.add(element)
             else:
-                if site.name in forcefield.non_element_types:
+                #if site.name in forcefield.non_element_types:
+                if site.name:
                     system_elements.add(site.name)
                 else:
                     raise FoyerError(
-                        'Parsed atom {} as having neither an element '
-                        'nor non-element type.'.format(a)
+                        f'Parsed atom {site} as having neither an element '
+                        'nor non-element type.'
                     )
     else:
         raise TypeError("Passed {}, acceptable objects are parmed structure and gmso topologies".format(
             type(topology)
             )
         )
-
     rules = _load_rules(forcefield, typemap)
 
     # Only consider rules for elements found in topology
@@ -78,7 +78,7 @@ def find_atomtypes(topology, forcefield, max_iter=10):
             except IndexError:
                 try:
                     atomic_num = next(atom.find_data('atomic_num')).children[0]
-                    element = Element[atomic_num]
+                    element = pt.Element[atomic_num]
                 except IndexError:
                     element = None
         else:
@@ -86,7 +86,6 @@ def find_atomtypes(topology, forcefield, max_iter=10):
         if element is None or element in system_elements:
             subrules[key] = val
     rules = subrules
-
     typemap = _iterate_rules(rules, topology, typemap, max_iter=max_iter)
     typemap = _resolve_atomtypes(topology, typemap)
 
@@ -127,7 +126,6 @@ def _iterate_rules(rules, topology, typemap, max_iter):
         The maximum number of iterations.
 
     """
-
     for _ in range(max_iter):
         max_iter -= 1
         found_something = False

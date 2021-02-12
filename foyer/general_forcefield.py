@@ -14,8 +14,8 @@ import numpy as np
 import foyer.element as custom_elem
 
 import gmso
-#from gmso.external.convert_foyer import from_foyer
 from gmso.external import from_mbuild
+from gmso.core import element
 
 from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
@@ -34,6 +34,8 @@ def preprocess_forcefield_files(forcefield_files=None, backend='gmso'):
 
     preprocessed_files = []
 
+    # Attempt to preprocessed the the xml files provided and make sure
+    # that they are in compliance with the foyer format
     for xml_file in forcefield_files:
         if not hasattr(xml_file, 'read'):
             f = open(xml_file)
@@ -70,23 +72,17 @@ def preprocess_forcefield_files(forcefield_files=None, backend='gmso'):
             warnings.warn('Invalid XML detected. Could not auto-sort topology '
                           'objects by precedence.')
 
-        # write to temp file
-        temp_file = NamedTemporaryFile(suffix=suffix, delete=False)
-        with open(temp_file.name, 'w') as temp_f:
-            temp_f.write(xml_contents)
 
-        # append temp file name to list
-        preprocessed_files.append(Path(temp_file.name))
-
+    tmp_processed_files = list()
     if backend == 'gmso':
         # Run through the forcefield XML conversion
-        from gmso.external.convert_foyer import convert_foyer
-        for idx, file in enumerate(preprocessed_files):
-            tmp_gmso = f'tmp_gmso_{idx}.xml'
-            convert_foyer(foyer_xml=file,
-                          gmso_xml=tmp_gmso)
-            os.remove(file)
-            tmp_processed_files.append(tmp_gmso)
+        from gmso.external.convert_foyer_xml import from_foyer_xml
+        for idx, file in enumerate(forcefield_files):
+            _, suffix = os.path.split(file)
+            tempfile = NamedTemporaryFile(suffix=suffix, delete=False)
+            from_foyer_xml(foyer_xml=str(file),
+                          gmso_xml=str(tempfile.name), overwrite=True)
+            tmp_processed_files.append(tempfile.name)
 
     else:
         raise FoyerError('Backend not supported')
@@ -111,7 +107,7 @@ class Forcefield(object):
     """
     def __init__(self, forcefield_files=None, name=None,
                        validation=True, backend='gmso',
-                       debug=False):
+                       debug=False, **kwargs):
         self.atomTypeDefinitions = dict()
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
@@ -123,6 +119,7 @@ class Forcefield(object):
         self._version = None
         self._name = None
 
+        all_files_to_load = []
         if forcefield_files is not None:
             if isinstance(forcefield_files, (list, tuple, set)):
                 all_files_to_load = list(forcefield_files)
@@ -138,14 +135,13 @@ class Forcefield(object):
                 all_files_to_load = [file]
 
         # Preprocessed the input files
-
         preprocessed_files = preprocess_forcefield_files(
                                 all_files_to_load,
                                 backend=backend)
 
         # Load in an internal forcefield object depends on given backend
         if backend == 'gmso':
-            self._parse_gmso(preprocessed_files)
+            self._parse_gmso(preprocessed_files, **kwargs)
         else:
             raise FoyerError('Backend not supported')
 
@@ -163,26 +159,50 @@ class Forcefield(object):
     def name(self):
         return self._name
 
+    @property
+    def included_forcefields(self):
+        if any(self._included_forcefields):
+            return self._included_forcefields
+
+        ff_dir = resource_filename('foyer', 'forcefields')
+        ff_filepaths = set(glob.glob(os.path.join(ff_dir, 'xml/*.xml')))
+
+        for ff_filepath in ff_filepaths:
+            _, ff_file = os.path.split(ff_filepath)
+            basename, _ = os.path.splitext(ff_file)
+            self._included_forcefields[basename] = ff_filepath
+        return self._included_forcefields
+
     # Parse forcefield meta information
-    def _parse_gmso(self, forcefield_files):
+    def _parse_gmso(self, forcefield_files, **kwargs):
         """Parse meta fata information when using GMSO as backend
         """
-        self.ff = gmso.ForceField(forcefield_files)
-        self._version = self.ff.version
-        self._name = self.ff.name
-        for name, atype in self.ff.atom_types.items():
-            self.atomTypeDefinitions[name] = atype.definition
-            self.atomTypeOverrides[name] = atype.overrides
-            self.atomTypeDesc[name] = atype.description
-            self.atomTypeRefs[name] = atype.doi
-            self.atomTypeClasses[name] = atype.atomclass
-            #self.atomTypeElements[name] = atype.element
+        if forcefield_files:
+            self.ff = gmso.ForceField(forcefield_files, **kwargs)
+            self._version = self.ff.version
+            self._name = self.ff.name
+            for name, atype in self.ff.atom_types.items():
+                self.atomTypeDefinitions[name] = atype.definition
+                self.atomTypeOverrides[name] = atype.overrides
+                self.atomTypeDesc[name] = atype.description
+                self.atomTypeRefs[name] = {atype.doi}
+                self.atomTypeClasses[name] = atype.atomclass
+                if atype.element:
+                    if element.element_by_symbol(atype.element):
+                        self.atomTypeElements[atype.element] = atype.element
+                    else:
+                        self.non_element_types[atype.element] = atype.element
+                else:
+                    # Register atomtype with missing atomtype as atomistic
+                    # even though these are likely will not be touched
+                    self.atomTypeElements[name] = atype.element
         return None
 
     def apply(self, top, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
               assert_dihedral_params=True, assert_improper_params=True,
-              verbose=False, backend='gmso', *args, **kwargs):
+              combining_rule='geometric', verbose=False, backend='gmso',
+              *args, **kwargs):
         """Apply the force field to a molecular topology
 
         Parameters
@@ -208,6 +228,9 @@ class Forcefield(object):
         assert_improper_params : bool, optional, default=True
             If True, Foyer will exit if parametes are not found for all
             system impropers.
+        combining_rule : str, optional, default='geometric'
+            The combining rule of the system, stored as an attribute of the
+            GMSO topology.
         verbose : bool, optional, default=False
             If True, Foyer will print debug-level information about notable or
             potential problematic details it encounters.
@@ -220,7 +243,14 @@ class Forcefield(object):
             raise FoyerError('Attempting to atom-type using a forcefield '
                 'with no atom type definitions.')
 
-        typemap = self._run_atomtyping(top,
+        if backend == 'gmso':
+            if not isinstance(top, gmso.Topology):
+                mb = import_('mbuild')
+                tmp_top = mb.load(top)
+                top = gmso.external.from_mbuild(top)
+
+            assert isinstance(top, gmso.Topology)
+            typemap = self.run_atomtyping(top,
                     use_residue_map=use_residue_map,
                     **kwargs)
 
@@ -232,9 +262,10 @@ class Forcefield(object):
             assert_improper_params=assert_improper_params,
             verbose=verbose,
             backend=backend,
+            combining_rule=combining_rule,
             *args, **kwargs)
 
-    def _run_atomtyping(self, top, use_residue_map=True, **kwargs):
+    def run_atomtyping(self, top, use_residue_map=True, **kwargs):
         """Atomtype the topology
 
         Parameters
@@ -266,6 +297,7 @@ class Forcefield(object):
                         assert_improper_params=True,
                         verbose=False,
                         backend='gmso',
+                        combining_rule='geometric',
                         debug=False,
                         **kwargs):
         """Parametrize the Topology from the typemap provided
@@ -306,7 +338,8 @@ class Forcefield(object):
 
         if backend=='gmso':
             self._parametrize_gmsoFF(top=top,
-                                typemap=typemap)
+                                typemap=typemap,
+                                combining_rule=combining_rule)
         else:
             raise FoyerError('Backend not supported')
 
@@ -315,9 +348,12 @@ class Forcefield(object):
                              assert_dihedral_params,
                              assert_improper_params,
                              debug)
+        if references_file:
+            atom_types = set(site.atom_type for site in top.sites)
+            self._write_references_to_file(atom_types, references_file)
         return top
 
-    def _parametrize_gmsoFF(self, top, typemap):
+    def _parametrize_gmsoFF(self, top, typemap, combining_rule):
         """Parametrize a Topology with gmso.ForceField"""
         # Assign AtomTypes
         for atom in top.sites:
@@ -328,33 +364,72 @@ class Forcefield(object):
 
         # Assign BondTypes
         for bond in top.bonds:
+            self._connection_type_lookup(bond)
+        # Assign AngleTypes
+        for angle in top.angles:
+            self._connection_type_lookup(angle)
+        # Assign DihedralTypes
+        for dihedral in top.dihedrals:
+            self._connection_type_lookup(dihedral)
+        # Assign ImproperTypes
+        for improper in top.impropers:
+            self._connection_type_lookup(improper)
+        # Assign combining rules
+        top.combining_rule = combining_rule
+        return top
+
+    def _connection_type_lookup(self, connection):
+        if isinstance(connection, gmso.Bond):
             equiv_bmembers = bond.equivalent_members()
             btype_names = ['{}~{}'.format(
                                     bmem[0].atom_type.name,
                                     bmem[1].atom_type.name)
+                                    for bmem in equiv_bmembers]
+            btype_classes = ['{}~{}'.format(
+                                    bmem[0].atom_type.atomclass,
+                                    bmem[1].atom_type.atomclass)
                                     for bmem in equiv_bmembers]
             for btype_name in btype_names:
                 bond.bond_type = self.ff.bond_types.get(btype_name)
                 if bond.bond_type:
                     # Grab the first match and then break
                     break
-
-        # Assign AngleTypes
-        for angle in top.angles:
+            else:
+                for btype_class in btype_classes:
+                    bond.bond_type = self.ff.bond_types.get(btype_class)
+                    if bond.bond_type:
+                        # Grab the first match and then break
+                        break
+                else:
+                    self._wildcard_lookup(bond, equiv_members)
+        elif isinstance(connection, gmso.Angle):
             equiv_agmembers = angle.equivalent_members()
             agtype_names = ['{}~{}~{}'.format(
                                 agmem[0].atom_type.name,
                                 agmem[1].atom_type.name,
                                 agmem[2].atom_type.name)
                                 for agmem in equiv_agmembers]
+            # Add in wild card options
+            agtype_classes = ['{}~{}~{}'.format(
+                                agmem[0].atom_type.atomclass,
+                                agmem[1].atom_type.atomclass,
+                                agmem[2].atom_type.atomclass)
+                                for agmem in equiv_agmembers]
             for agtype_name in agtype_names:
                 angle.angle_type = self.ff.angle_types.get(agtype_name)
                 if angle.angle_type:
                     # Grab the first match and then break
                     break
+            else:
+                for agtype_class in agtype_classes:
+                    angle.angle_type = self.ff.angle_types.get(agtype_class)
+                    if angle.angle_type:
+                        # Grab the first match and then break
+                        break
+                else:
+                    self._wildcard_lookup(angle, equiv_members)
 
-        # Assign DihedralTypes
-        for dihedral in top.dihedrals:
+        elif isinstance(connection, gmso.Dihedral):
             equiv_dmembers = dihedral.equivalent_members()
             dtype_names = ['{}~{}~{}~{}'.format(
                                 dmem[0].atom_type.name,
@@ -362,14 +437,27 @@ class Forcefield(object):
                                 dmem[2].atom_type.name,
                                 dmem[3].atom_type.name)
                                 for dmem in equiv_dmembers]
+            dtype_classes = ['{}~{}~{}~{}'.format(
+                                dmem[0].atom_type.atomclass,
+                                dmem[1].atom_type.atomclass,
+                                dmem[2].atom_type.atomclass,
+                                dmem[3].atom_type.atomclass)
+                                for dmem in equiv_dmembers]
             for dtype_name in dtype_names:
                 dihedral.dihedral_type = self.ff.dihedral_types.get(dtype_name)
                 if dihedral.dihedral_type:
                     # Grab the first match and then break
                     break
+            else:
+                for dtype_class in dtype_classes:
+                    dihedral.dihedral_type = self.ff.dihedral_types.get(dtype_class)
+                    if dihedral.dihedral_type:
+                        # Grab the first match and then break
+                        break
+                else:
+                    self._wildcard_lookup(dihedral, equiv_members)
 
-        # Assing ImproperTypes
-        for improper in top.impropers:
+        elif isinstance(connection, gmso.Improper):
             equiv_imembers = improper.equivalent_members()
             itype_names = ['{}~{}~{}~{}'.format(
                                 imem[0].atom_type.name,
@@ -377,13 +465,58 @@ class Forcefield(object):
                                 imem[2].atom_type.name,
                                 imem[3].atom_type.name)
                            for imem in equiv_imembers]
+            itype_classes = ['{}~{}~{}~{}'.format(
+                                imem[0].atom_type.atomclass,
+                                imem[1].atom_type.atomclass,
+                                imem[2].atom_type.atomclass,
+                                imem[3].atom_type.atomclass)
+                           for imem in equiv_imembers]
+
             for itype_name in itype_names:
                 improper.improper_type = self.ff.improper_types.get(itype_name)
                 if improper.improper_type:
                     # Grab the first match and then break
                     break
+            else:
+                for itype_class in itype_classes:
+                    improper.improper_type = self.ff.improper_types.get(itype_class)
+                    if improper.improper_type:
+                        # Grab the first match and then break
+                        break
+                else:
+                    self._wildcard_lookup(improper, equiv_members)
 
-        return top
+
+    def _wildcard_lookup(self, connection, equiv_members):
+    """Generate and lookup wildcard connection type from the forcefield"""
+        wc_name, wc_class = self._generate_wildcard(equiv_members)
+        if isinstance(connection, gmso.Bond):
+
+        elif isinstance(connection, gmso.Angle):
+
+        elif isinstance(connection, gmso.Dihedral):
+
+        elif isinstance(connection, gmso.Improper):
+
+    def _generate_wildcard(self, equiv_members):
+    """Generate two list of wild cards, one based on name and the other based
+     on atomclass"""
+        # First work on "" wildcard (only applicable for first and last term
+        # of proper dihedral types
+        if len(equiv_members[0])==4:
+            # This will also include improper (but this should not hurt)
+            wc_name = ['*~{}~{}~*'.format(
+                                dmem[1].atom_type.name,
+                                dmem[2].atom_type.name),
+                                for dmem in equiv_dmembers]
+            wc_class = ['*~{}~{}~*'.format(
+                                dmem[1].atom_type.name,
+                                dmem[2].atom_type.name),
+                                for dmem in equiv_dmembers]
+
+        # Then work on * wildcard (only applicable for atomclass)
+        if len(equiv_members[0]) == 2:
+            tmp1 = ['{}*~{}'.format(equiv_members.atom_type.atomclass[0]]
 
     def _check_parameters(self, top,
                             assert_bond_params=True,
@@ -453,3 +586,35 @@ class Forcefield(object):
         if assert_improper_params and missing_improper_params:
             raise FoyerError('Some impropers are missing parameters. '
                              'Change debug=True for more information')
+        return (missing_bond_params,
+                missing_angle_params,
+                missing_dihedral_params,
+                missing_improper_params)
+
+    def _write_references_to_file(self, atom_types, references_file):
+        atomtype_references = {}
+        for atype in atom_types:
+            try:
+                atomtype_references[atype.name] = self.atomTypeRefs[atype.name]
+            except KeyError:
+                warnings.warn("Reference not found for atom type '{}'."
+                              "".format(atype))
+        unique_references = collections.defaultdict(list)
+        for atomtype, dois in atomtype_references.items():
+            for doi in dois:
+                unique_references[doi].append(atomtype)
+        unique_references = collections.OrderedDict(sorted(unique_references.items()))
+        with open(references_file, 'w') as f:
+            for doi, atomtypes in unique_references.items():
+                url = "http://api.crossref.org/works/{}/transform/application/x-bibtex".format(doi)
+                headers = {"accept": "application/x-bibtex"}
+                bibtex_ref = get_ref(url, headers=headers)
+                if bibtex_ref is None:
+                    warnings.warn('Could not get ref for doi'.format(doi))
+                    continue
+                else:
+                    bibtex_text = bibtex_ref.text
+                note = (',\n\tnote = {Parameters for atom types: ' +
+                        ', '.join(sorted(atomtypes)) + '}')
+                bibtex_text = bibtex_text[:-2] + note + bibtex_text[-2:]
+                f.write('{}\n'.format(bibtex_text))
