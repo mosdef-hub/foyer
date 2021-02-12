@@ -9,7 +9,7 @@ the user would like to examine more in-depth examples using ``foyer``
 with ``mBuild``, please refer to the `tutorial
 repository <https://github.com/mosdef-hub/mosdef_tutorials>`__.
 
-Below is *Listing 6* from the paper, a python script to fill a :math:`2x2x2 nm` 
+Below is *Listing 6* from the paper, a python script to fill a :math:`2x2x2 nm`
 box with 100 ethane molecules. The system is then atomtyped using the
 OPLS-AA forcefield. There are two approaches to the same problem
 detailed below in this listing, the first approach uses the
@@ -31,9 +31,9 @@ Example 1
 ^^^^^^^^^
 
 .. code:: python
-    
+
     import mbuild as mb
-    from mbuild.examples import Ethane
+    from mbuild.lib.molecules import Ethane
     from foyer.examples.utils import example_file_path
     from foyer import Forcefield
 
@@ -73,12 +73,12 @@ combined into a single ``ParmEd`` ``Structure`` and saved to disk.
     import mbuild as mb
     from mbuild.examples import Ethane
     from mbuild.lib.atoms import H
-    from mbuild.lib.bulk_materials import AmorphousSilica
+    from mbuild.lib.bulk_materials import AmorphousSilicaBulk
     from mbuild.lib.recipes import SilicaInterface
     from mbuild.lib.recipes import Monolayer
 
     # Create a silica substrate, capping surface oxygens with hydrogen
-    silica=SilicaInterface(bulk_silica=AmorphousSilica())
+    silica=SilicaInterface(bulk_silica=AmorphousSilicaBulk())
     silica_substrate=Monolayer(surface=silica,chains=H(),guest_port_name="up")
     # Determine the box dimensions dictated by the silica substrate
     box=mb.Box(mins=[0, 0,max(silica.xyz[:,2])],maxs=silica.periodicity+ [0, 0, 4])
