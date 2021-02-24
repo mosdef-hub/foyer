@@ -76,6 +76,15 @@ class TestOPLS(object):
         assert all(x.type for x in parametrized.dihedrals)
         assert parametrized.combining_rule == 'geometric'
 
+    def test_get_parameters_atoms(self):
+        atom_params = OPLSAA.get_parameters('atoms', 'opls_145')
+        assert atom_params['sigma'] == 0.355
+        assert atom_params['epsilon'] == 0.29288
+
+    def test_get_parameters_bonds(self):
+        bond_params = OPLSAA.get_parameters('bonds', ['opls_760', 'opls_145'])
+        assert bond_params['length'] == 0.146
+        assert bond_params['k'] == 334720.0
 
 if __name__ == '__main__':
     TestOPLS().find_correctly_implemented()

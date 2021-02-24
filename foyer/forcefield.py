@@ -18,15 +18,17 @@ from simtk import openmm as mm
 from simtk.openmm import app
 from simtk.openmm.app.forcefield import (NoCutoff, CutoffNonPeriodic, HBonds,
                                          AllBonds, HAngles, NonbondedGenerator,
-                                         _convertParameterToNumber)
+                                         _convertParameterToNumber, HarmonicBondGenerator,
+                                         HarmonicAngleGenerator, PeriodicTorsionGenerator)
 
 from foyer.atomtyper import find_atomtypes
-from foyer.exceptions import FoyerError
+from foyer.exceptions import FoyerError, MissingParametersError
 from foyer import smarts
 from foyer.validator import Validator
 from foyer.xml_writer import write_foyer
 from foyer.utils.io import import_, has_mbuild
 from foyer.utils.external import get_ref
+from foyer.utils.misc import validate_type
 
 
 def preprocess_forcefield_files(forcefield_files=None):
@@ -374,6 +376,7 @@ class Forcefield(app.ForceField):
         self.atomTypeDesc = dict()
         self.atomTypeRefs = dict()
         self.atomTypeClasses = dict()
+        self.atomClassTypes = dict()
         self.atomTypeElements = dict()
         self._included_forcefields = dict()
         self.non_element_types = dict()
@@ -519,6 +522,9 @@ class Forcefield(app.ForceField):
             self.atomTypeElements[name] = parameters['element']
         if 'class' in parameters:
             self.atomTypeClasses[name] = parameters['class']
+            if not self.atomClassTypes.get(parameters['class']):
+                self.atomClassTypes[parameters['class']] = set()
+            self.atomClassTypes[parameters['class']].add(name)
 
     def apply(self, structure, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
@@ -937,5 +943,171 @@ class Forcefield(app.ForceField):
                 bibtex_text = bibtex_text[:-2] + note + bibtex_text[-2:]
                 f.write('{}\n'.format(bibtex_text))
 
+    def get_parameters(self,
+                       group,
+                       key,
+                       keys_are_atom_classes=False):
+        """Get parameters for a specific group of Forces in this Forcefield"""
+        group = group.lower()
+
+        param_extractors = {
+            "atoms": self._extract_non_bonded_params,
+            "bonds": self._extract_harmonic_bond_params,
+            "angles": self._extract_harmonic_angle_params,
+            "periodic_propers": self._extract_periodic_proper_params,
+            "periodic_impropers": self._extract_periodic_improper_params,
+            "rb_propers": self._extract_rb_proper_params
+        }
+        if group not in param_extractors:
+            raise ValueError(
+                f"Cannot extract parameters for {group}"
+            )
+
+        validate_type(
+            [key] if isinstance(key, str) else key,
+            str
+        )
+
+        if keys_are_atom_classes:
+            key = self.map_atom_classes_to_types(key)
+
+        return param_extractors[group](key)
+
+    def _extract_non_bonded_params(self, atom_type):
+        """Returns parameters for a specefic atom type using"""
+        non_bonded_forces_gen = self.get_generator(
+            ff=self, gen_type=NonbondedGenerator
+        )
+
+        non_bonded_params = non_bonded_forces_gen.params.paramsForType
+
+        try:
+            return non_bonded_params[atom_type]
+        except KeyError:
+            raise MissingParametersError(
+                f"Missing parameters for atom {atom_type}"
+            )
+
+    def _extract_harmonic_bond_params(self, atom_types):
+        """Returns parameters for a specefic HarmonicBondForce between atom types"""
+        if len(atom_types) != 2:
+            raise ValueError(
+                f"Harmonic bond parameters can only "
+                f"be extracted for two atoms. Provided {atom_types}"
+            )
+
+        harmonic_bond_force_gen = self.get_generator(
+            ff=self, gen_type=HarmonicBondGenerator
+        )
+        atom_1_type = atom_types[0]
+        atom_2_type = atom_types[1]
+
+        bonds_for_atom_type = harmonic_bond_force_gen.bondsForAtomType
+        params = None
+
+        for i in bonds_for_atom_type[atom_1_type]:
+            types1 = harmonic_bond_force_gen.types1[i]
+            types2 = harmonic_bond_force_gen.types2[i]
+
+            if (atom_1_type in types1 and atom_2_type in types2) or (
+                atom_2_type in types1 and atom_1_type in types2
+            ):
+                params = {
+                    "k": harmonic_bond_force_gen.k[i],
+                    "length": harmonic_bond_force_gen.length[i]
+                }
+                break
+
+        if params is None:
+            raise MissingParametersError(
+                f"Missing parameters for bonds between "
+                f"atoms {atom_1_type} and {atom_2_type}"
+            )
+
+        return params
+
+    def _extract_harmonic_angle_params(self, atom_types):
+        """Returns parameters for a HarmonicAngle between atom types"""
+        if len(atom_types) != 3:
+            raise ValueError(
+                f"Harmonic angle parameters can only "
+                f"be extracted for three atoms. Provided {len(atom_types)}"
+            )
+
+        harmonic_angle_force_gen = self.get_generator(
+            ff=self, gen_type=HarmonicAngleGenerator
+        )
+
+        atom_1_type = atom_types[0]
+        atom_2_type = atom_types[1]
+        atom_3_type = atom_types[2]
+
+        angles_for_atom_2_type = harmonic_angle_force_gen.anglesForAtom2Type
+        params = None
+
+        for i in angles_for_atom_2_type[atom_2_type]:
+            types1 = harmonic_angle_force_gen.types1[i]
+            types2 = harmonic_angle_force_gen.types2[i]
+            types3 = harmonic_angle_force_gen.types3[i]
+
+            if (atom_1_type in types1 and atom_2_type in types2 and atom_3_type in types3) or (
+                atom_3_type in types1 and atom_2_type in types2 and atom_1_type in types3
+            ):
+                params = {
+                    'theta': harmonic_angle_force_gen.angle[i],
+                    'k': harmonic_angle_force_gen.k[i]
+                }
+                break
+
+        if params is None:
+            raise MissingParametersError(
+                f"Missing parameters for angles between "
+                f"atoms {atom_1_type}, {atom_2_type} and {atom_3_type}"
+            )
+
+        return params
+
+    def _extract_periodic_proper_params(self, atom_types):
+        """Returns parameters for a PeriodicTorsion (proper) between atom types"""
+        if len(atom_types) != 4:
+            raise ValueError(
+                f"Periodic torsion parameters can only "
+                f"be extracted for four atoms. Provided {len(atom_types)}"
+            )
+
+        periodic_torsion_force_gen = self.get_generator(
+            ff=self, gen_type=PeriodicTorisionGenerator
+        )
+
+        return
+
+    def _extract_periodic_improper_params(self, atom_types):
+        """Returns parameters for a PeriodicTorsion (improper) between atom types"""
+        pass
+
+    def _extract_rb_proper_params(self, atom_types):
+        """Returns parameters for a RBTorsion (proper) between atom types"""
+        pass
+
+    def map_atom_classes_to_types(self, keys):
+        """ToDo: Disscuss and find appropriate mapping between types and classes"""
+        return keys
+
+    @staticmethod
+    def get_generator(ff, gen_type):
+        """Returns a specefic force generator for this forcefield
+
+        Parameters
+        ----------
+        ff: foyer.Forcefield
+            The forcefield to return generator for
+        gen_type: Type
+            The generator type to return
+
+        Returns
+        -------
+        Union[NonBondedGenerator, HarmonicBondGenerator]
+        """
+        return list(filter(lambda x: isinstance(x, gen_type), ff.getGenerators())).pop()
 
 pmd.Structure.write_foyer = write_foyer
