@@ -58,7 +58,6 @@ NN-dimethylformamide
 o-xylene
 pentachloroethane
 phenol
-<<<<<<< HEAD
 propane
 propanenitrile
 propene
