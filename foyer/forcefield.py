@@ -310,22 +310,38 @@ def _check_dihedrals(data, structure, verbose,
     if verbose:
         for omm_ids in data.propers:
             missing_dihedral = True
+            for pmd_proper in proper_dihedrals:
+                pmd_ids = (pmd_proper.atom1.idx, pmd_proper.atom2.idx, pmd_proper.atom3.idx, pmd_proper.atom4.idx)
+                if pmd_ids == omm_ids:
+                    missing_dihedral = False
             for pmd_proper in structure.rb_torsions:
                 pmd_ids = (pmd_proper.atom1.idx, pmd_proper.atom2.idx, pmd_proper.atom3.idx, pmd_proper.atom4.idx)
                 if pmd_ids == omm_ids:
                     missing_dihedral = False
             if missing_dihedral:
-                print('missing improper with ids {}'.format(pmd_ids))
+                print("Missing dihedral with ids {} and types {}.".format(
+                        omm_ids, [structure.atoms[idx].type for idx in omm_ids]))
 
     if data.propers and len(data.propers) != \
-            len(proper_dihedrals) + len(structure.rb_torsions):
-        msg = ("Parameters have not been assigned to all proper dihedrals. "
-               "Total system dihedrals: {}, Parameterized dihedrals: {}. "
-               "Note that if your system contains torsions of Ryckaert-"
-               "Bellemans functional form, all of these torsions are "
-               "processed as propers.".format(len(data.propers),
-                                              len(proper_dihedrals) + len(structure.rb_torsions)))
-        _error_or_warn(assert_dihedral_params, msg)
+                len(proper_dihedrals) + len(structure.rb_torsions):
+            if data.propers and len(data.propers) < \
+                    len(proper_dihedrals) + len(structure.rb_torsions):
+                msg = ("Parameters have been assigned to all proper dihedrals.  "
+                       "However, there are more parameterized dihedrals ({}) "
+                       "than total system dihedrals ({}).  "
+                       "This may be due to having multiple periodic dihedrals "
+                       "for a single system dihedral.".format(len(proper_dihedrals) +
+                                                      len(structure.rb_torsions),
+                                                      len(data.propers)))
+                warnings.warn(msg)
+            else:
+                msg = ("Parameters have not been assigned to all proper dihedrals. "
+                       "Total system dihedrals: {}, Parameterized dihedrals: {}. "
+                       "Note that if your system contains torsions of Ryckaert-"
+                       "Bellemans functional form, all of these torsions are "
+                       "processed as propers.".format(len(data.propers),
+                                                      len(proper_dihedrals) + len(structure.rb_torsions)))
+                _error_or_warn(assert_dihedral_params, msg)
 
     improper_dihedrals = [dihedral for dihedral in structure.dihedrals
                           if dihedral.improper]
@@ -398,7 +414,7 @@ class Forcefield(app.ForceField):
             self._name = [self._parse_name(f) for f in forcefield_files]
 
         self.parser = smarts.SMARTS(self.non_element_types)
-        self._SystemData = self._SystemData()
+        self._system_data = None
 
     @property
     def version(self):
@@ -494,7 +510,7 @@ class Forcefield(app.ForceField):
                             in parameters['overrides'].split(","))
             if overrides:
                 self.atomTypeOverrides[name] = overrides
-        if 'des' in parameters:
+        if 'desc' in parameters:
             self.atomTypeDesc[name] = parameters['desc']
         if 'doi' in parameters:
             dois = set(doi.strip() for doi in parameters['doi'].split(','))
@@ -619,7 +635,7 @@ class Forcefield(app.ForceField):
 
         _separate_urey_bradleys(system, topology)
 
-        data = self._SystemData
+        data = self._system_data
 
         structure = pmd.openmm.load_topology(topology=topology, system=system)
         structure.bonds.sort(key=lambda x: x.atom1.idx)
@@ -641,6 +657,11 @@ class Forcefield(app.ForceField):
         # combining rule directly in XML, i.e.
         # if self.name == 'oplsaa':
         structure.combining_rule = combining_rule
+
+        total_charge = sum([atom.charge for atom in structure.atoms])
+        if not np.allclose(total_charge, 0):
+            warnings.warn("Parametrized structure has non-zero charge."
+                "Structure's total charge: {}".format(total_charge))
 
         return structure
 
@@ -686,28 +707,8 @@ class Forcefield(app.ForceField):
         """
         args['switchDistance'] = switchDistance
         # Overwrite previous _SystemData object
-        self._SystemData = app.ForceField._SystemData()
-
-        data = self._SystemData
-        data.atoms = list(topology.atoms())
-        for _ in data.atoms:
-            data.excludeAtomWith.append([])
-
-        # Make a list of all bonds
-        for bond in topology.bonds():
-            data.bonds.append(app.ForceField._BondData(bond[0].index, bond[1].index))
-
-        # Record which atoms are bonded to each other atom
-        bonded_to_atom = []
-        for i in range(len(data.atoms)):
-            bonded_to_atom.append(set())
-            data.atomBonds.append([])
-        for i in range(len(data.bonds)):
-            bond = data.bonds[i]
-            bonded_to_atom[bond.atom1].add(bond.atom2)
-            bonded_to_atom[bond.atom2].add(bond.atom1)
-            data.atomBonds[bond.atom1].append(i)
-            data.atomBonds[bond.atom2].append(i)
+        data = app.ForceField._SystemData(topology)
+        self._system_data = data
 
         # TODO: Better way to lookup nonbonded parameters...?
         nonbonded_params = None
@@ -769,13 +770,13 @@ class Forcefield(app.ForceField):
         # Make a list of all unique angles
         unique_angles = set()
         for bond in data.bonds:
-            for atom in bonded_to_atom[bond.atom1]:
+            for atom in data.bondedToAtom[bond.atom1]:
                 if atom != bond.atom2:
                     if atom < bond.atom2:
                         unique_angles.add((atom, bond.atom1, bond.atom2))
                     else:
                         unique_angles.add((bond.atom2, bond.atom1, atom))
-            for atom in bonded_to_atom[bond.atom2]:
+            for atom in data.bondedToAtom[bond.atom2]:
                 if atom != bond.atom1:
                     if atom > bond.atom1:
                         unique_angles.add((bond.atom1, bond.atom2, atom))
@@ -786,13 +787,13 @@ class Forcefield(app.ForceField):
         # Make a list of all unique proper torsions
         unique_propers = set()
         for angle in data.angles:
-            for atom in bonded_to_atom[angle[0]]:
+            for atom in data.bondedToAtom[angle[0]]:
                 if atom not in angle:
                     if atom < angle[2]:
                         unique_propers.add((atom, angle[0], angle[1], angle[2]))
                     else:
                         unique_propers.add((angle[2], angle[1], angle[0], atom))
-            for atom in bonded_to_atom[angle[2]]:
+            for atom in data.bondedToAtom[angle[2]]:
                 if atom not in angle:
                     if atom > angle[0]:
                         unique_propers.add((angle[0], angle[1], angle[2], atom))
@@ -801,8 +802,8 @@ class Forcefield(app.ForceField):
         data.propers = sorted(list(unique_propers))
 
         # Make a list of all unique improper torsions
-        for atom in range(len(bonded_to_atom)):
-            bonded_to = bonded_to_atom[atom]
+        for atom in range(len(data.bondedToAtom)):
+            bonded_to = data.bondedToAtom[atom]
             if len(bonded_to) > 2:
                 for subset in itertools.combinations(bonded_to, 3):
                     data.impropers.append((atom, subset[0], subset[1], subset[2]))
@@ -893,7 +894,7 @@ class Forcefield(app.ForceField):
         for atom in structure.atoms:
             atom.id = typemap[atom.idx]['atomtype']
 
-        if not all([a.id for a in structure.atoms][0]):
+        if not all([a.id for a in structure.atoms]):
             raise ValueError('Not all atoms in topology have atom types')
 
     def _prepare_structure(self, topology, **kwargs):

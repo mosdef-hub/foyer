@@ -15,7 +15,7 @@ save to run-able GROMACS files.
 .. code:: python
 
     import mbuild as mb
-    from mbuild.examples import Ethane
+    from mbuild.lib.molecules import Ethane
 
     ethane_box = mb.fill_box(compound=Ethane(), n_compounds=100, box=[2, 2, 2])
     ethane_box.save('ethane-box.gro')
@@ -76,7 +76,7 @@ operator and can be saved to Gromacs files.
     interface = Monolayer(surface=interface, chains=H(), guest_port_name='up')
 
     box = mb.Box(mins=[0, 0, max(interface.xyz[:,2])],
-                 maxs=interface.periodicity + [0, 0, 4]) 
+                 maxs=interface.periodicity + [0, 0, 4])
 
     ethane_box = mb.fill_box(compound=Ethane(), n_compounds=200, box=box)
 
