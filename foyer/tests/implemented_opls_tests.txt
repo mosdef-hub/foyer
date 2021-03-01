@@ -58,6 +58,7 @@ NN-dimethylformamide
 o-xylene
 pentachloroethane
 phenol
+<<<<<<< HEAD
 propane
 propanenitrile
 propene
@@ -75,3 +76,13 @@ methyltert-butylether
 t-butanol
 isopropanol
 methylnitroaniline
+=======
+2-methylphenol
+3-methylphenol
+4-methylphenol
+ethylene-carbonate
+propylene-carbonate
+dimethyl-sulfoxide
+dimethylformamide
+dichloromethane
+>>>>>>> c150d6f4c34e9ca7c5e4012e4406fb4ebab588cb
