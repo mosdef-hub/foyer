@@ -31,7 +31,7 @@ class ValidationWarning(FoyerWarning):
     pass
 
 class MissingParametersError(FoyerError):
-    """Error to be raised when a parameter is missing from the forcefield"""
+    """Error to be raised when parameters are missing from the forcefield"""
 
 
 def raise_collected(errors):
