@@ -77,14 +77,46 @@ class TestOPLS(object):
         assert parametrized.combining_rule == 'geometric'
 
     def test_get_parameters_atoms(self):
-        atom_params = OPLSAA.get_parameters('atoms', 'opls_145')
-        assert atom_params['sigma'] == 0.355
-        assert atom_params['epsilon'] == 0.29288
+        atom_params = OPLSAA.get_parameters("atoms", "opls_145")
+        assert atom_params["sigma"] == 0.355
+        assert atom_params["epsilon"] == 0.29288
 
     def test_get_parameters_bonds(self):
-        bond_params = OPLSAA.get_parameters('bonds', ['opls_760', 'opls_145'])
-        assert bond_params['length'] == 0.146
-        assert bond_params['k'] == 334720.0
+        bond_params = OPLSAA.get_parameters("bonds", ["opls_760", "opls_145"])
+        assert bond_params["length"] == 0.146
+        assert bond_params["k"] == 334720.0
+
+    def test_get_parameters_angle(self):
+        angle_params = OPLSAA.get_parameters(
+            "angles", ["opls_166", "opls_772", "opls_167"]
+        )
+        assert angle_params["theta"] == 2.09439510239
+        assert angle_params["k"] == 585.76
+
+    def test_get_parameters_rb_proper(self):
+        proper_params = OPLSAA.get_parameters(
+            "rb_propers", ["opls_215", "opls_215", "opls_235", "opls_269"]
+        )
+
+        assert proper_params["c0"] == 2.28446
+        assert proper_params["c1"] == 0.0
+        assert proper_params["c2"] == -2.28446
+        assert proper_params["c1"] == 0.0
+        assert proper_params["c4"] == 0.0
+        assert proper_params["c5"] == 0.0
+
+    def test_get_parameters_wildcard(self):
+        proper_params = OPLSAA.get_parameters(
+            "rb_propers", ["", "opls_235", "opls_544", ""]
+        )
+
+        assert proper_params["c0"] == 30.334
+        assert proper_params["c1"] == 0.0
+        assert proper_params["c2"] == -30.334
+        assert proper_params["c1"] == 0.0
+        assert proper_params["c4"] == 0.0
+        assert proper_params["c5"] == 0.0
+
 
 if __name__ == '__main__':
     TestOPLS().find_correctly_implemented()
