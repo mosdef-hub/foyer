@@ -1,29 +1,24 @@
-import os
-
-import parmed as pmd
-from pkg_resources import resource_filename
 import pytest
+import parmed as pmd
 
 from foyer import Forcefield
 from foyer.exceptions import FoyerError
 from foyer.tests.utils import get_fn
 
-OPLS_TESTFILES_DIR = resource_filename('foyer', 'opls_validation')
+from foyer.tests.base_test import BaseTest
 
 
-def test_missing_overrides():
-    top = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.top')
-    gro = os.path.join(OPLS_TESTFILES_DIR, 'benzene/benzene.gro')
-    structure = pmd.load_file(top, xyz=gro)
+class TestRunAtomTyping(BaseTest):
 
-    forcefield = Forcefield(get_fn('missing_overrides.xml'))
-    with pytest.raises(FoyerError):
-        forcefield.apply(structure)
+    @pytest.fixture(scope='session')
+    def missing_overrides_ff(self):
+        return Forcefield(get_fn('missing_overrides.xml'))
 
+    def test_missing_overrides(self, opls_validation_benzene, missing_overrides_ff):
+        with pytest.raises(FoyerError):
+            missing_overrides_ff.apply(opls_validation_benzene)
 
-def test_missing_definition():
-    structure = pmd.load_file(get_fn('silly_chemistry.mol2'), structure=True)
-
-    forcefield = Forcefield(get_fn('missing_overrides.xml'))
-    with pytest.raises(FoyerError):
-        forcefield.apply(structure)
+    def test_missing_definition(self, missing_overrides_ff):
+        structure = pmd.load_file(get_fn('silly_chemistry.mol2'), structure=True)
+        with pytest.raises(FoyerError):
+            missing_overrides_ff.apply(structure)
