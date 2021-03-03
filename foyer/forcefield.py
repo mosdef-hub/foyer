@@ -3,6 +3,7 @@ import glob
 import itertools
 import os
 from tempfile import NamedTemporaryFile
+from typing import Iterable
 import xml.etree.ElementTree as ET
 
 from pkg_resources import resource_filename
@@ -999,7 +1000,7 @@ class Forcefield(app.ForceField):
             )
 
         validate_type(
-            [key] if isinstance(key, str) else key,
+            [key] if isinstance(key, str) or not isinstance(key, Iterable) else key,
             str
         )
 
@@ -1120,7 +1121,7 @@ class Forcefield(app.ForceField):
         )
 
         match = None
-        for index in periodic_torsion_force_gen.properForAtomTypes[atom_2_type]:
+        for index in periodic_torsion_force_gen.propersForAtomType[atom_2_type]:
             tordef = periodic_torsion_force_gen.proper[index]
             types1 = tordef.types1
             types2 = tordef.types2

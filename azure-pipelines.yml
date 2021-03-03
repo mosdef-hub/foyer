@@ -53,7 +53,8 @@ stages:
               conda create -n test-environment python=$(python.version) --file requirements-dev.txt
               source activate test-environment
               pip install -e .
-            displayName: Create Conda env, Activate, Install dependencies, Install Branch
+              pip install git+https://github.com/rsdefever/antefoyer.git
+            displayName: Create Conda env, Activate, Install dependencies, Install Branch, Install antefoyer
           - bash: |
               source activate test-environment
               python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
@@ -84,7 +85,9 @@ stages:
               conda create -n test-environment python=$(python.version) --file requirements-dev.txt
               call activate test-environment
               pip install -e .
-            displayName: Create conda env, Install dependencies and Install Branch
+              pip install git+https://github.com/rsdefever/antefoyer.git
+
+            displayName: Create conda env, Install dependencies and Install Branch, antefoyer
 
           - script: |
               call activate test-environment
@@ -118,7 +121,9 @@ stages:
               pip uninstall foyer -y
               cd ..
               pip install -e .
-            displayName: Clone mbuild, install mbuild, install foyer
+              pip install git+https://github.com/rsdefever/antefoyer.git
+
+            displayName: Clone mbuild, install mbuild, install foyer, antefoyer
 
           - bash: |
               source activate bleeding-test-environment
