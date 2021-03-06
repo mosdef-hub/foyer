@@ -1029,7 +1029,7 @@ class Forcefield(app.ForceField):
         if len(atom_types) != 2:
             raise ValueError(
                 f"HarmonicBond parameters can only "
-                f"be extracted for two atoms. Provided {atom_types}"
+                f"be extracted for two atoms. Provided {len(atom_types}"
             )
 
         harmonic_bond_force_gen = self.get_generator(
