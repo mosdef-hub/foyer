@@ -4,6 +4,6 @@ def validate_type(iterator, type_):
     for item in iterator:
         if not isinstance(item, type_):
             raise TypeError(
-                f"Expected {item} to be of type {type_.__name__} but got"
-                f" {type(item).__name__} instead."
+                f"Expected {item} to be of type {type_.__name__} but got "
+                f"{type(item).__name__} instead."
             )
