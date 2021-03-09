@@ -7,6 +7,7 @@ from pkg_resources import resource_filename
 import pytest
 
 from foyer import Forcefield
+from foyer.exceptions import MissingForceError
 from foyer.tests.utils import atomtype
 
 OPLSAA = Forcefield(name='oplsaa')
@@ -116,6 +117,10 @@ class TestOPLS(object):
         assert proper_params["c1"] == 0.0
         assert proper_params["c4"] == 0.0
         assert proper_params["c5"] == 0.0
+
+    def test_opls_missing_force(self):
+        with pytest.raises(MissingForceError):
+            OPLSAA.get_parameters('periodic_propers', key=['a', 'b', 'c', 'd'])
 
 
 if __name__ == '__main__':

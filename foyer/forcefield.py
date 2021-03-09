@@ -17,20 +17,36 @@ import foyer.element as custom_elem
 import simtk.unit as u
 from simtk import openmm as mm
 from simtk.openmm import app
-from simtk.openmm.app.forcefield import (NoCutoff, CutoffNonPeriodic, HBonds,
-                                         AllBonds, HAngles, NonbondedGenerator,
-                                         _convertParameterToNumber, HarmonicBondGenerator,
-                                         HarmonicAngleGenerator, PeriodicTorsionGenerator,
-                                         RBTorsionGenerator)
+from simtk.openmm.app.forcefield import (
+    NoCutoff,
+    CutoffNonPeriodic,
+    HBonds,
+    AllBonds,
+    HAngles,
+    NonbondedGenerator,
+    _convertParameterToNumber,
+    HarmonicBondGenerator,
+    HarmonicAngleGenerator,
+    PeriodicTorsionGenerator,
+    RBTorsionGenerator,
+)
 
 from foyer.atomtyper import find_atomtypes
-from foyer.exceptions import FoyerError, MissingParametersError
+from foyer.exceptions import FoyerError, MissingParametersError, MissingForceError
 from foyer import smarts
 from foyer.validator import Validator
 from foyer.xml_writer import write_foyer
 from foyer.utils.io import import_, has_mbuild
 from foyer.utils.external import get_ref
 from foyer.utils.misc import validate_type
+
+force_for = {
+    NonbondedGenerator: 'NonBondedForce',
+    HarmonicBondGenerator: 'HarmonicBondForce',
+    HarmonicAngleGenerator: 'HarmonicAngleForce',
+    PeriodicTorsionGenerator: 'PeriodicTorsionForce',
+    RBTorsionGenerator: 'RBTorsionForce'
+}
 
 
 def preprocess_forcefield_files(forcefield_files=None):
@@ -941,10 +957,7 @@ class Forcefield(app.ForceField):
                 bibtex_text = bibtex_text[:-2] + note + bibtex_text[-2:]
                 f.write('{}\n'.format(bibtex_text))
 
-    def get_parameters(self,
-                       group,
-                       key,
-                       keys_are_atom_classes=False):
+    def get_parameters(self, group, key, keys_are_atom_classes=False):
         """Get parameters for a specific group of Forces in this Forcefield
 
         Parameters
@@ -995,41 +1008,48 @@ class Forcefield(app.ForceField):
             "rb_impropers": self._extract_rb_improper_params,
         }
         if group not in param_extractors:
-            raise ValueError(
-                f"Cannot extract parameters for {group}"
-            )
+            raise ValueError(f"Cannot extract parameters for {group}")
 
-        validate_type(
-            [key] if isinstance(key, str) or not isinstance(key, Iterable) else key,
-            str
-        )
+        key = [key] if isinstance(key, str) or not isinstance(key, Iterable) else key
+
+        validate_type(key, str)
 
         if keys_are_atom_classes:
-            key = self.map_atom_classes_to_types(key)
+            atom_types = self.map_atom_classes_to_types(key)
+            try:
+                return param_extractors[group](atom_types)
+            except MissingParametersError:
+                raise MissingParametersError(
+                    f"Missing {group} parameters between for class(es) {key}"
+                )
 
         return param_extractors[group](key)
 
     def _extract_non_bonded_params(self, atom_type):
         """Returns parameters for a specific atom type"""
-        non_bonded_forces_gen = self.get_generator(
-            ff=self, gen_type=NonbondedGenerator
-        )
+        if isinstance(atom_type, list):
+            assert len(atom_type) == 1, (
+                f"NonBondedForce parameters can only be extracted "
+                f"for one atom type. Provided {len(atom_type)}"
+            )
+
+            atom_type = atom_type[0]
+
+        non_bonded_forces_gen = self.get_generator(ff=self, gen_type=NonbondedGenerator)
 
         non_bonded_params = non_bonded_forces_gen.params.paramsForType
 
         try:
             return non_bonded_params[atom_type]
         except KeyError:
-            raise MissingParametersError(
-                f"Missing parameters for atom {atom_type}"
-            )
+            raise MissingParametersError(f"Missing parameters for atom {atom_type}")
 
     def _extract_harmonic_bond_params(self, atom_types):
         """Returns parameters for a specific HarmonicBondForce between atom types"""
         if len(atom_types) != 2:
             raise ValueError(
                 f"HarmonicBond parameters can only "
-                f"be extracted for two atoms. Provided {len(atom_types}"
+                f"be extracted for two atoms. Provided {len(atom_types)}"
             )
 
         harmonic_bond_force_gen = self.get_generator(
@@ -1050,7 +1070,7 @@ class Forcefield(app.ForceField):
             ):
                 params = {
                     "k": harmonic_bond_force_gen.k[i],
-                    "length": harmonic_bond_force_gen.length[i]
+                    "length": harmonic_bond_force_gen.length[i],
                 }
                 break
 
@@ -1086,12 +1106,18 @@ class Forcefield(app.ForceField):
             types2 = harmonic_angle_force_gen.types2[i]
             types3 = harmonic_angle_force_gen.types3[i]
 
-            if (atom_1_type in types1 and atom_2_type in types2 and atom_3_type in types3) or (
-                atom_3_type in types1 and atom_2_type in types2 and atom_1_type in types3
+            if (
+                atom_1_type in types1
+                and atom_2_type in types2
+                and atom_3_type in types3
+            ) or (
+                atom_3_type in types1
+                and atom_2_type in types2
+                and atom_1_type in types3
             ):
                 params = {
-                    'theta': harmonic_angle_force_gen.angle[i],
-                    'k': harmonic_angle_force_gen.k[i]
+                    "theta": harmonic_angle_force_gen.angle[i],
+                    "k": harmonic_angle_force_gen.k[i],
                 }
                 break
 
@@ -1115,10 +1141,13 @@ class Forcefield(app.ForceField):
             ff=self, gen_type=PeriodicTorsionGenerator
         )
 
-        wildcard = self._atomClasses['']
-        (atom_1_type, atom_2_type, atom_3_type, atom_4_type) = self.substitute_wildcards(
-            atom_types, wildcard
-        )
+        wildcard = self._atomClasses[""]
+        (
+            atom_1_type,
+            atom_2_type,
+            atom_3_type,
+            atom_4_type,
+        ) = self.substitute_wildcards(atom_types, wildcard)
 
         match = None
         for index in periodic_torsion_force_gen.propersForAtomType[atom_2_type]:
@@ -1128,8 +1157,17 @@ class Forcefield(app.ForceField):
             types3 = tordef.types3
             types4 = tordef.types4
 
-            if (atom_2_type in types2 and atom_3_type in types3 and atom_4_type in types4 and atom_1_type in types1) or (
-                    atom_2_type in types3 and atom_3_type in types2 and atom_4_type in types1 and atom_1_type in types4):
+            if (
+                atom_2_type in types2
+                and atom_3_type in types3
+                and atom_4_type in types4
+                and atom_1_type in types1
+            ) or (
+                atom_2_type in types3
+                and atom_3_type in types2
+                and atom_4_type in types1
+                and atom_1_type in types4
+            ):
                 has_wildcard = wildcard in (types1, types2, types3, types4)
                 if match is None or not has_wildcard:
                     match = tordef
@@ -1174,14 +1212,15 @@ class Forcefield(app.ForceField):
                 f"be extracted for four atoms. Provided {len(atom_types)}"
             )
 
-        rb_torsion_force_gen = self.get_generator(
-            ff=self, gen_type=RBTorsionGenerator
-        )
+        rb_torsion_force_gen = self.get_generator(ff=self, gen_type=RBTorsionGenerator)
 
-        wildcard = self._atomClasses['']
-        (atom_1_type, atom_2_type, atom_3_type, atom_4_type) = self.substitute_wildcards(
-            atom_types, wildcard
-        )
+        wildcard = self._atomClasses[""]
+        (
+            atom_1_type,
+            atom_2_type,
+            atom_3_type,
+            atom_4_type,
+        ) = self.substitute_wildcards(atom_types, wildcard)
 
         match = None
         for tordef in rb_torsion_force_gen.proper:
@@ -1190,8 +1229,17 @@ class Forcefield(app.ForceField):
             types3 = tordef.types3
             types4 = tordef.types4
 
-            if (atom_2_type in types2 and atom_3_type in types3 and atom_4_type in types4 and atom_1_type in types1) or (
-                    atom_2_type in types3 and atom_3_type in types2 and atom_4_type in types1 and atom_1_type in types4):
+            if (
+                atom_2_type in types2
+                and atom_3_type in types3
+                and atom_4_type in types4
+                and atom_1_type in types1
+            ) or (
+                atom_2_type in types3
+                and atom_3_type in types2
+                and atom_4_type in types1
+                and atom_1_type in types4
+            ):
                 has_wildcard = wildcard in (types1, types2, types3, types4)
                 if match is None or not has_wildcard:
                     match = tordef
@@ -1214,9 +1262,7 @@ class Forcefield(app.ForceField):
                 f"be extracted for four atoms. Provided {len(atom_types)}"
             )
 
-        rb_torsion_force_gen = self.get_generator(
-            ff=self, gen_type=RBTorsionGenerator
-        )
+        rb_torsion_force_gen = self.get_generator(ff=self, gen_type=RBTorsionGenerator)
 
         match = self._match_impropers(atom_types, rb_torsion_force_gen)
 
@@ -1228,18 +1274,29 @@ class Forcefield(app.ForceField):
                 f"atoms {atom_types[0]}, {atom_types[1]}, {atom_types[2]} and {atom_types[3]}."
             )
 
-    def map_atom_classes_to_types(self, keys):
-        """ToDo: Disscuss and find appropriate mapping between types and classes"""
-        return keys
+    def map_atom_classes_to_types(self, atom_classes_keys, strict=False):
+        """Replace the atom_classes in the provided list by atom_types"""
+        atom_type_keys = []
+
+        for key in atom_classes_keys:
+            # When to do this substitution with wildcards?
+            substitution = self._atomClasses.get(key)
+            if not substitution:
+                raise ValueError(f"Atom class {key} is missing from the Forcefield")
+            atom_type_keys.append(next(iter(substitution)))
+
+        return atom_type_keys
 
     @staticmethod
     def _match_impropers(atom_types, generator):
         """Try to find a match between an improper in the generator and atom types provided"""
-        wildcard = generator.ff._atomClasses['']
-        (atom_1_type,
-         atom_2_type,
-         atom_3_type,
-         atom_4_type) = Forcefield.substitute_wildcards(atom_types, wildcard)
+        wildcard = generator.ff._atomClasses[""]
+        (
+            atom_1_type,
+            atom_2_type,
+            atom_3_type,
+            atom_4_type,
+        ) = Forcefield.substitute_wildcards(atom_types, wildcard)
         match = None
         for improper in generator.improper:
             types1 = improper.types1
@@ -1251,7 +1308,9 @@ class Forcefield(app.ForceField):
                 # Prefer specific definitions over ones with wildcards
                 continue
             if atom_1_type in types1:
-                for (t2, t3, t4) in itertools.permutations(((atom_2_type, 1), (atom_3_type, 2), (atom_4_type, 3))):
+                for (t2, t3, t4) in itertools.permutations(
+                    ((atom_2_type, 1), (atom_3_type, 2), (atom_4_type, 3))
+                ):
                     if t2[0] in types2 and t3[0] in types3 and t4[0] in types4:
                         match = improper
                         break
@@ -1265,21 +1324,17 @@ class Forcefield(app.ForceField):
             "c2": torsion.c[2],
             "c3": torsion.c[3],
             "c4": torsion.c[4],
-            "c5": torsion.c[5]
+            "c5": torsion.c[5],
         }
 
     @staticmethod
     def _get_periodic_torsion_params(torsion):
-        params = {
-            'periodicity': [],
-            'phase': [],
-            'k': []
-        }
+        params = {"periodicity": [], "phase": [], "k": []}
         for i in range(len(torsion.phase)):
             if torsion.k[i] != 0:
-                params['periodicity'].append(torsion.periodicity[i])
-                params['phase'].append(torsion.phase[i])
-                params['k'].append(torsion.k[i])
+                params["periodicity"].append(torsion.periodicity[i])
+                params["phase"].append(torsion.phase[i])
+                params["k"].append(torsion.k[i])
 
         return params
 
@@ -1296,9 +1351,25 @@ class Forcefield(app.ForceField):
 
         Returns
         -------
-        Union[NonBondedGenerator, HarmonicBondGenerator]
+        instance of gen_type
+            The instance of `gen_type` for this Forcefield
+        Raises
+        ------
+        MissingForceError
+            If the Forcefield doesn't have a generator of type `gen_type`
         """
-        return list(filter(lambda x: isinstance(x, gen_type), ff.getGenerators())).pop()
+        generator = list(
+            filter(
+                lambda x: isinstance(x, gen_type),
+                ff.getGenerators(),
+            )
+        )
+        if generator:
+            return generator.pop()
+        else:
+            raise MissingForceError(
+                f"{force_for[gen_type]} is missing from the Forcefield"
+            )
 
     @staticmethod
     def substitute_wildcards(atom_types, wildcard):

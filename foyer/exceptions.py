@@ -30,8 +30,13 @@ class ValidationWarning(FoyerWarning):
     """Raised when validating .xml forcefield files """
     pass
 
+
 class MissingParametersError(FoyerError):
     """Error to be raised when parameters are missing from the forcefield"""
+
+
+class MissingForceError(FoyerError):
+    """Error to be raised when a particular force doesn't exist in the forcefield"""
 
 
 def raise_collected(errors):
