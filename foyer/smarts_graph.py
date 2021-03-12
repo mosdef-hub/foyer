@@ -95,7 +95,7 @@ class SMARTSGraph(nx.Graph):
     def _node_match(self, host, pattern):
         """ Determine if two graph nodes are equal """
         atom_expr = pattern['atom'].children[0]
-        atom = host['atom']
+        atom = host
         return self._atom_expr_matches(atom_expr, atom)
 
     def _atom_expr_matches(self, atom_expr, atom):
@@ -120,7 +120,11 @@ class SMARTSGraph(nx.Graph):
     @staticmethod
     def _atom_id_matches(atom_id, atom, typemap):
         """ Helper func for comparing atomic indices, symbols, neighbors, rings """
-        atomic_num = atom.element
+        atomic_num = atom['element']
+        atom_name = atom['name']
+        atom_idx = atom['index']
+        bond_partners = atom['bond_partners']
+
         if atom_id.data == 'atomic_num':
             return atomic_num == int(atom_id.children[0])
         elif atom_id.data == 'atom_symbol':
@@ -128,22 +132,22 @@ class SMARTSGraph(nx.Graph):
                 return True
             elif str(atom_id.children[0]).startswith('_'):
                 # Store non-element elements in .name
-                return atom.name == str(atom_id.children[0])
+                return atom_name == str(atom_id.children[0])
             else:
                 return atomic_num == pt.AtomicNum[str(atom_id.children[0])]
         elif atom_id.data == 'has_label':
             label = atom_id.children[0][1:]  # Strip the % sign from the beginning.
-            return label in typemap[atom.idx]['whitelist']
+            return label in typemap[atom_idx]['whitelist']
         elif atom_id.data == 'neighbor_count':
-            return len(atom.bond_partners) == int(atom_id.children[0])
+            return len(bond_partners) == int(atom_id.children[0])
         elif atom_id.data == 'ring_size':
             cycle_len = int(atom_id.children[0])
-            for cycle in typemap[atom.idx]['cycles']:
+            for cycle in typemap[atom_idx]['cycles']:
                 if len(cycle) == cycle_len:
                     return True
             return False
         elif atom_id.data == 'ring_count':
-            n_cycles = len(typemap[atom.idx]['cycles'])
+            n_cycles = len(typemap[atom_idx]['cycles'])
             if n_cycles == int(atom_id.children[0]):
                 return True
             return False
@@ -169,12 +173,6 @@ class SMARTSGraph(nx.Graph):
         has_ring_rules = any(list(self.ast.find_data(token))
                              for token in ring_tokens)
         _prepare_atoms(topology_graph, typemap, compute_cycles=has_ring_rules)
-
-        # top_graph = nx.Graph()
-        # top_graph.add_nodes_from(((a.idx, {'atom': a})
-        #                           for a in structure.atoms))
-        # top_graph.add_edges_from(((b.atom1.idx, b.atom2.idx)
-        #                           for b in structure.bonds))
 
         if self._graph_matcher is None:
             atom = nx.get_node_attributes(self, name='atom')[0]

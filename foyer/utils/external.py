@@ -20,8 +20,10 @@ def networkx_from_parmed(structure: Structure) -> nx.Graph:
             name=atom.name,
             index=atom.idx,
             atomic_number=atom.atomic_number,
-            atom=atom
+            element=atom.element,
+            bond_partners=[bonded_atom.idx for bonded_atom in atom.bond_partners]
         )
+
     for bond in structure.bonds:
         topology_graph.add_edge(
             bond.atom1.idx,
