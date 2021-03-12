@@ -56,7 +56,7 @@ stages:
             displayName: Create Conda env, Activate, Install dependencies, Install Branch
           - bash: |
               source activate test-environment
-              python -m pytest -v --cov=foyer --cov-report=html --pyargs foyer --no-coverage-upload
+              python -m pytest -v --cov=foyer --cov-report=html --pyargs foyer 
             displayName: Run Tests
           - bash: |
               source activate test-environment
