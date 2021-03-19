@@ -75,7 +75,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     rules = subrules
 
     _iterate_rules(rules, topology_graph, typemap, max_iter=max_iter)
-    _resolve_atomtypes(structure, typemap)
+    _resolve_atomtypes(topology_graph, typemap)
 
     return typemap
 
@@ -135,9 +135,9 @@ def _iterate_rules(rules, topology_graph, typemap, max_iter):
     return typemap
 
 
-def _resolve_atomtypes(structure, typemap):
+def _resolve_atomtypes(topology_graph, typemap):
     """Determine the final atomtypes from the white- and blacklists. """
-    atoms = structure.atoms
+    atoms = {atom_idx: data for atom_idx, data in topology_graph.nodes(data=True)}
     for atom_id, atom in typemap.items():
         atomtype = [rule_name for rule_name in
                     atom['whitelist'] - atom['blacklist']]
@@ -145,7 +145,7 @@ def _resolve_atomtypes(structure, typemap):
             atom['atomtype'] = atomtype[0]
         elif len(atomtype) > 1:
             raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
-                atom_id, atoms[atom_id].atomic_number, atomtype))
+                atom_id, atoms[atom_id]['atomic_number'], atomtype))
         else:
             raise FoyerError("Found no types for atom {} ({}).".format(
-                atom_id, atoms[atom_id].atomic_number))
+                atom_id, atoms[atom_id]['atomic_number']))
