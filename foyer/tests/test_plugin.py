@@ -7,10 +7,10 @@ def test_basic_import():
 
 
 def test_loading_forcefields():
-    #funcs = [func for func in dir(foyer.forcefields) if 'load' in func and '__' not in func]
-    for func in dir(foyer.forcefields):
-        if 'load_' in func and '__' not in func:
-            eval('foyer.forcefields.' + func)()
+    """Test that the forcefield loader functions run without error"""
+    available_loaders = foyer.forcefield.get_available_forcefield_loaders()
+    for loader in available_loaders:
+        loader()
 
 
 def test_load_forcefield():
