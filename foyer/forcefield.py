@@ -1030,7 +1030,7 @@ class Forcefield(app.ForceField):
                 return param_extractors[group](atom_types)
             except MissingParametersError:
                 raise MissingParametersError(
-                    f"Missing {group} parameters between for class(es) {key}"
+                    f"Missing {group} parameters between between class(es) {key}"
                 )
 
         return param_extractors[group](key)
