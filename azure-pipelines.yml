@@ -56,8 +56,13 @@ stages:
             displayName: Create Conda env, Activate, Install dependencies, Install Branch
           - bash: |
               source activate test-environment
-              python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
+              python -m pytest -v --cov=foyer --cov-report=html --pyargs foyer 
             displayName: Run Tests
+          - bash: |
+              source activate test-environment
+              bash <(curl -s https://codecov.io/bash) -C $(Build.SourceVersion)
+            condition: and( eq( variables['Agent.OS'], 'Linux' ), eq( variables['python.version'], '3.7' ) )
+            displayName: Upload coverage report to codecov.io
 
       - job: Windows_no_bleeding
         pool:
@@ -88,7 +93,7 @@ stages:
 
           - script: |
               call activate test-environment
-              python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
+              python -m pytest -v --cov=foyer --pyargs foyer
             displayName: Run Tests
 
       - job: LinuxBleedingMbuild
