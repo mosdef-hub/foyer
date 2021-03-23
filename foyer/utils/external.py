@@ -1,6 +1,4 @@
 import requests
-import networkx as nx
-from parmed import Structure
 
 
 def get_ref(ref_url, headers):
@@ -9,3 +7,4 @@ def get_ref(ref_url, headers):
         return bibtex_ref
     else:
         return None
+
