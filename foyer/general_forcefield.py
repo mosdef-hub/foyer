@@ -187,15 +187,15 @@ class Forcefield(object):
                 self.atomTypeDesc[name] = atype.description
                 self.atomTypeRefs[name] = {atype.doi}
                 self.atomTypeClasses[name] = atype.atomclass
-                if atype.element:
-                    if element.element_by_symbol(atype.element):
-                        self.atomTypeElements[atype.element] = atype.element
+                if atype.tags.get('element'):
+                    ele = atype.tags['element']
+                    if element.element_by_symbol(ele):
+                        self.atomTypeElements[atype.name] = ele
                     else:
-                        self.non_element_types[atype.element] = atype.element
+                        self.non_element_types[ele] = None
                 else:
-                    # Register atomtype with missing atomtype as atomistic
-                    # even though these are likely will not be touched
-                    self.atomTypeElements[name] = atype.element
+                    # Register atomtype with missing atomtype as atomistic (empty string)
+                    self.atomTypeElements[name] = ''
         return None
 
     def apply(self, top, references_file=None, use_residue_map=True,
@@ -250,7 +250,7 @@ class Forcefield(object):
                 top = gmso.external.from_mbuild(top)
 
             assert isinstance(top, gmso.Topology)
-            typemap = self.run_atomtyping(top,
+            typemap = self._run_atomtyping(top,
                     use_residue_map=use_residue_map,
                     **kwargs)
 
@@ -265,7 +265,7 @@ class Forcefield(object):
             combining_rule=combining_rule,
             *args, **kwargs)
 
-    def run_atomtyping(self, top, use_residue_map=True, **kwargs):
+    def _run_atomtyping(self, top, use_residue_map=True, **kwargs):
         """Atomtype the topology
 
         Parameters
@@ -380,143 +380,48 @@ class Forcefield(object):
 
     def _connection_type_lookup(self, connection):
         if isinstance(connection, gmso.Bond):
-            equiv_bmembers = bond.equivalent_members()
-            btype_names = ['{}~{}'.format(
-                                    bmem[0].atom_type.name,
-                                    bmem[1].atom_type.name)
-                                    for bmem in equiv_bmembers]
-            btype_classes = ['{}~{}'.format(
-                                    bmem[0].atom_type.atomclass,
-                                    bmem[1].atom_type.atomclass)
-                                    for bmem in equiv_bmembers]
-            for btype_name in btype_names:
-                bond.bond_type = self.ff.bond_types.get(btype_name)
-                if bond.bond_type:
-                    # Grab the first match and then break
+            bmem = connection.connection_members
+            btype_name = [bmem[i].atom_type.name for i in range(2)]
+            btype_class = [bmem[i].atom_type.atomclass for i in range(2)]
+            for name in [btype_name, btype_class]:
+                connection.bond_type = self.ff.get_potential('bond_type',
+                                                             name)
+                if connection.bond_type:
                     break
-            else:
-                for btype_class in btype_classes:
-                    bond.bond_type = self.ff.bond_types.get(btype_class)
-                    if bond.bond_type:
-                        # Grab the first match and then break
-                        break
-                else:
-                    self._wildcard_lookup(bond, equiv_members)
-        elif isinstance(connection, gmso.Angle):
-            equiv_agmembers = angle.equivalent_members()
-            agtype_names = ['{}~{}~{}'.format(
-                                agmem[0].atom_type.name,
-                                agmem[1].atom_type.name,
-                                agmem[2].atom_type.name)
-                                for agmem in equiv_agmembers]
-            # Add in wild card options
-            agtype_classes = ['{}~{}~{}'.format(
-                                agmem[0].atom_type.atomclass,
-                                agmem[1].atom_type.atomclass,
-                                agmem[2].atom_type.atomclass)
-                                for agmem in equiv_agmembers]
-            for agtype_name in agtype_names:
-                angle.angle_type = self.ff.angle_types.get(agtype_name)
-                if angle.angle_type:
-                    # Grab the first match and then break
-                    break
-            else:
-                for agtype_class in agtype_classes:
-                    angle.angle_type = self.ff.angle_types.get(agtype_class)
-                    if angle.angle_type:
-                        # Grab the first match and then break
-                        break
-                else:
-                    self._wildcard_lookup(angle, equiv_members)
-
-        elif isinstance(connection, gmso.Dihedral):
-            equiv_dmembers = dihedral.equivalent_members()
-            dtype_names = ['{}~{}~{}~{}'.format(
-                                dmem[0].atom_type.name,
-                                dmem[1].atom_type.name,
-                                dmem[2].atom_type.name,
-                                dmem[3].atom_type.name)
-                                for dmem in equiv_dmembers]
-            dtype_classes = ['{}~{}~{}~{}'.format(
-                                dmem[0].atom_type.atomclass,
-                                dmem[1].atom_type.atomclass,
-                                dmem[2].atom_type.atomclass,
-                                dmem[3].atom_type.atomclass)
-                                for dmem in equiv_dmembers]
-            for dtype_name in dtype_names:
-                dihedral.dihedral_type = self.ff.dihedral_types.get(dtype_name)
-                if dihedral.dihedral_type:
-                    # Grab the first match and then break
-                    break
-            else:
-                for dtype_class in dtype_classes:
-                    dihedral.dihedral_type = self.ff.dihedral_types.get(dtype_class)
-                    if dihedral.dihedral_type:
-                        # Grab the first match and then break
-                        break
-                else:
-                    self._wildcard_lookup(dihedral, equiv_members)
-
-        elif isinstance(connection, gmso.Improper):
-            equiv_imembers = improper.equivalent_members()
-            itype_names = ['{}~{}~{}~{}'.format(
-                                imem[0].atom_type.name,
-                                imem[1].atom_type.name,
-                                imem[2].atom_type.name,
-                                imem[3].atom_type.name)
-                           for imem in equiv_imembers]
-            itype_classes = ['{}~{}~{}~{}'.format(
-                                imem[0].atom_type.atomclass,
-                                imem[1].atom_type.atomclass,
-                                imem[2].atom_type.atomclass,
-                                imem[3].atom_type.atomclass)
-                           for imem in equiv_imembers]
-
-            for itype_name in itype_names:
-                improper.improper_type = self.ff.improper_types.get(itype_name)
-                if improper.improper_type:
-                    # Grab the first match and then break
-                    break
-            else:
-                for itype_class in itype_classes:
-                    improper.improper_type = self.ff.improper_types.get(itype_class)
-                    if improper.improper_type:
-                        # Grab the first match and then break
-                        break
-                else:
-                    self._wildcard_lookup(improper, equiv_members)
-
-
-    def _wildcard_lookup(self, connection, equiv_members):
-    """Generate and lookup wildcard connection type from the forcefield"""
-        wc_name, wc_class = self._generate_wildcard(equiv_members)
-        if isinstance(connection, gmso.Bond):
 
         elif isinstance(connection, gmso.Angle):
+            agmem = connection.connection_members
+            agtype_name = [agmem[i].atom_type.name for i in range(3)]
+            agtype_class = [agmem[i].atom_type.atomclass for i in range(3)]
+
+            for name in [agtype_name, agtype_class]:
+                connection.angle_type = self.ff.get_potential('angle_type',
+                                                              name)
+                if connection.angle_type:
+                    break
 
         elif isinstance(connection, gmso.Dihedral):
+            dmem = connection.connection_members
+            dtype_name = [dmem[i].atom_type.name for i in range(4)]
+            dtype_class = [dmem[i].atom_type.atomclass for i in range(4)]
+
+            for name in [dtype_name, dtype_class]:
+                connection.dihedral_type = self.ff.get_potential('dihedral_type',
+                                                                 name)
+                if connection.dihedral_type:
+                    break
 
         elif isinstance(connection, gmso.Improper):
+            imem = connection.connection_members
+            itype_name = [imem[i].atom_type.name for i in range(4)]
+            itype_class = [imem[i].atom_type.atomclass for i in range(4)]
 
-    def _generate_wildcard(self, equiv_members):
-    """Generate two list of wild cards, one based on name and the other based
-     on atomclass"""
-        # First work on "" wildcard (only applicable for first and last term
-        # of proper dihedral types
-        if len(equiv_members[0])==4:
-            # This will also include improper (but this should not hurt)
-            wc_name = ['*~{}~{}~*'.format(
-                                dmem[1].atom_type.name,
-                                dmem[2].atom_type.name),
-                                for dmem in equiv_dmembers]
-            wc_class = ['*~{}~{}~*'.format(
-                                dmem[1].atom_type.name,
-                                dmem[2].atom_type.name),
-                                for dmem in equiv_dmembers]
+            for name in [itype_name, itype_class]:
+                connection.improper_type = self.ff.get_potential('improper_type',
+                                                                 name)
+                if connection.improper_type:
+                    break
 
-        # Then work on * wildcard (only applicable for atomclass)
-        if len(equiv_members[0]) == 2:
-            tmp1 = ['{}*~{}'.format(equiv_members.atom_type.atomclass[0]]
 
     def _check_parameters(self, top,
                             assert_bond_params=True,
@@ -618,3 +523,5 @@ class Forcefield(object):
                         ', '.join(sorted(atomtypes)) + '}')
                 bibtex_text = bibtex_text[:-2] + note + bibtex_text[-2:]
                 f.write('{}\n'.format(bibtex_text))
+
+gmso.Topology.write_foyer = write_foyer
