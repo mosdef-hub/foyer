@@ -9,25 +9,3 @@ def get_ref(ref_url, headers):
         return bibtex_ref
     else:
         return None
-
-
-def networkx_from_parmed(structure: Structure) -> nx.Graph:
-    """Return a networkx graph with relevant attributes from a parmed Structure"""
-    topology_graph = nx.Graph()
-    for atom in structure.atoms:
-        topology_graph.add_node(
-            atom.idx,
-            name=atom.name,
-            index=atom.idx,
-            atomic_number=atom.atomic_number,
-            element=atom.element,
-            bond_partners=[bonded_atom.idx for bonded_atom in atom.bond_partners]
-        )
-
-    for bond in structure.bonds:
-        topology_graph.add_edge(
-            bond.atom1.idx,
-            bond.atom2.idx
-        )
-    return topology_graph
-

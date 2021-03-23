@@ -5,8 +5,8 @@ import pytest
 from foyer.exceptions import FoyerError
 from foyer.forcefield import Forcefield
 from foyer.smarts_graph import SMARTSGraph
+from foyer.topology_graph import TopologyGraph
 from foyer.smarts import SMARTS
-from foyer.utils.external import networkx_from_parmed
 from foyer.tests.utils import get_fn
 
 
@@ -46,7 +46,7 @@ def test_uniqueness():
                             'atomtype': None}
                             for atom in mol2.atoms}
 
-    mol2_graph = networkx_from_parmed(mol2)
+    mol2_graph = TopologyGraph.from_parmed(mol2)
 
     _rule_match(mol2_graph, typemap, '[#6]1[#6][#6][#6][#6][#6]1', False)
     _rule_match(mol2_graph, typemap, '[#6]1[#6][#6][#6][#6]1', False)
@@ -55,7 +55,7 @@ def test_uniqueness():
 
 def test_ringness():
     ring_mol2 = pmd.load_file(get_fn('ring.mol2'), structure=True)
-    ring_mol2_graph = networkx_from_parmed(ring_mol2)
+    ring_mol2_graph = TopologyGraph.from_parmed(ring_mol2)
     typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(),
                             'atomtype': None}
                             for atom in ring_mol2.atoms}
@@ -63,7 +63,7 @@ def test_ringness():
     _rule_match(ring_mol2_graph, typemap, '[#6]1[#6][#6][#6][#6][#6]1', True)
 
     not_ring_mol2 = pmd.load_file(get_fn('not_ring.mol2'), structure=True)
-    not_ring_mol2_graph = networkx_from_parmed(not_ring_mol2)
+    not_ring_mol2_graph = TopologyGraph.from_parmed(not_ring_mol2)
     typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(),
                             'atomtype': None}
                             for atom in not_ring_mol2.atoms}
@@ -73,7 +73,7 @@ def test_ringness():
 
 def test_fused_ring():
     mol2 = pmd.load_file(get_fn('fused.mol2'), structure=True)
-    mol2_graph = networkx_from_parmed(mol2)
+    mol2_graph = TopologyGraph.from_parmed(mol2)
     typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(),
                             'atomtype': None}
                             for atom in mol2.atoms}
@@ -91,7 +91,7 @@ def test_fused_ring():
 def test_ring_count():
     # Two rings
     fused = pmd.load_file(get_fn('fused.mol2'), structure=True)
-    fused_graph = networkx_from_parmed(fused)
+    fused_graph = TopologyGraph.from_parmed(fused)
     typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(),
                             'atomtype': None}
                             for atom in fused.atoms}
@@ -116,7 +116,7 @@ def test_ring_count():
                             'atomtype': None}
                             for atom in ring.atoms}
 
-    ring_graph = networkx_from_parmed(ring)
+    ring_graph = TopologyGraph.from_parmed(ring)
     rule = SMARTSGraph(name='test', parser=PARSER,
                        smarts_string='[#6;R1]', typemap=typemap)
     match_indices = list(rule.find_matches(ring_graph, typemap))
@@ -149,7 +149,7 @@ def test_precedence():
                             'atomtype': None}
                             for atom in mol2.atoms}
 
-    mol2_graph = networkx_from_parmed(mol2)
+    mol2_graph = TopologyGraph.from_parmed(mol2)
 
     checks = {'[C,O;C]': 2,
               '[C&O;C]': 0,
@@ -182,7 +182,7 @@ def test_not():
     typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(),
                             'atomtype': None}
                             for atom in mol2.atoms}
-    mol2_graph = networkx_from_parmed(mol2)
+    mol2_graph = TopologyGraph.from_parmed(mol2)
 
     checks = {'[!O]': 8,
               '[!#5]': 8,

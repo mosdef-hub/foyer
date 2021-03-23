@@ -95,7 +95,7 @@ class SMARTSGraph(nx.Graph):
     def _node_match(self, host, pattern):
         """ Determine if two graph nodes are equal """
         atom_expr = pattern['atom'].children[0]
-        atom = host
+        atom = host['atom_data']
         return self._atom_expr_matches(atom_expr, atom)
 
     def _atom_expr_matches(self, atom_expr, atom):
@@ -120,10 +120,10 @@ class SMARTSGraph(nx.Graph):
     @staticmethod
     def _atom_id_matches(atom_id, atom, typemap):
         """ Helper func for comparing atomic indices, symbols, neighbors, rings """
-        atomic_num = atom['element']
-        atom_name = atom['name']
-        atom_idx = atom['index']
-        bond_partners = atom['bond_partners']
+        atomic_num = atom.element
+        atom_name = atom.name
+        atom_idx = atom.index
+        bond_partners = atom.bond_partners
 
         if atom_id.data == 'atomic_num':
             return atomic_num == int(atom_id.children[0])
@@ -305,15 +305,13 @@ def _find_chordless_cycles(bond_graph, max_cycle_size):
 
 def _prepare_atoms(topology_graph, typemap, compute_cycles=False):
     """Compute cycles and add white-/blacklists to atoms."""
-    atom1 = topology_graph.nodes[0]['index'] #next(topology.atoms())
-    print(atom1)
+    atom1 = next(topology_graph.atoms(data=False)) #next(topology.atoms())
     has_whitelists = 'whitelist' in typemap[atom1]
     has_cycles = 'cycles' in typemap[atom1]
     compute_cycles = compute_cycles and not has_cycles
 
     if compute_cycles or not has_whitelists:
-        for _, data in topology_graph.nodes(data=True):
-            index = data['index']
+        for index in topology_graph.atoms(data=False):
             if compute_cycles:
                 typemap[index]['cycles'] = set()
             if not has_whitelists:

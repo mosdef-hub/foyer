@@ -1,7 +1,7 @@
 import parmed as pmd
 
 from foyer.smarts_graph import SMARTSGraph, _prepare_atoms
-from foyer.utils.external import networkx_from_parmed
+from foyer.topology_graph import TopologyGraph
 from foyer.tests.utils import get_fn
 
 
@@ -31,14 +31,14 @@ def test_lazy_cycle_finding():
                             for atom in mol2.atoms}
 
     rule = SMARTSGraph(smarts_string='[C]', typemap=typemap)
-    list(rule.find_matches(networkx_from_parmed(mol2), typemap))
+    list(rule.find_matches(TopologyGraph.from_parmed(mol2), typemap))
     assert not any(['cycles' in typemap[a.idx] for a in mol2.atoms])
 
     ring_tokens = ['R1', 'r6']
     for token in ring_tokens:
         rule = SMARTSGraph(smarts_string='[C;{}]'.format(token),
                             typemap=typemap)
-        list(rule.find_matches(networkx_from_parmed(mol2), typemap))
+        list(rule.find_matches(TopologyGraph.from_parmed(mol2), typemap))
         assert all(['cycles' in typemap[a.idx] for a in mol2.atoms])
 
 
@@ -48,7 +48,7 @@ def test_cycle_finding_multiple():
                             'atomtype': None}
                             for atom in mol2.atoms}
 
-    _prepare_atoms(networkx_from_parmed(mol2), typemap, compute_cycles=True)
+    _prepare_atoms(TopologyGraph.from_parmed(mol2), typemap, compute_cycles=True)
     cycle_lengths = [list(map(len, typemap[atom.idx]['cycles']))
                         for atom in mol2.atoms]
     expected = [5, 6, 6]

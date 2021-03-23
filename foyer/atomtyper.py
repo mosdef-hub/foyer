@@ -1,8 +1,10 @@
 from warnings import warn
 
+import parmed as pmd
 import parmed.periodic_table as pt
 
 from foyer.exceptions import FoyerError
+from foyer.topology_graph import TopologyGraph
 from foyer.smarts_graph import SMARTSGraph
 
 
@@ -11,7 +13,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
 
     Parameters
     ----------
-    topology : parmed.Structure of nx.Graph
+    topology : parmed.Structure or TopologyGraph
         The topology that we are trying to atomtype.
     forcefield : foyer.Forcefield
         The forcefield object.
@@ -19,18 +21,17 @@ def find_atomtypes(structure, forcefield, max_iter=10):
         The maximum number of iterations.
 
     """
-    import parmed as pmd
     topology_graph = structure
+
     if isinstance(structure, pmd.Structure):
-        from foyer.utils.external import networkx_from_parmed
-        topology_graph = networkx_from_parmed(structure)
+        topology_graph = TopologyGraph.from_parmed(structure)
 
     typemap = {
         atom_index: {
             'whitelist': set(),
             'blacklist': set(),
             'atomtype': None
-        } for atom_index in topology_graph.nodes
+        } for atom_index in topology_graph.atoms(data=False)
     }
 
     rules = _load_rules(forcefield, typemap)
@@ -39,10 +40,10 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     subrules = dict()
 
     system_elements = set()
-    for _, data in topology_graph.nodes(data=True):
+    for _, atom_data in topology_graph.atoms(data=True):
         # First add non-element types, which are strings, then elements
-        name = data['name']
-        atomic_number = data['atomic_number']
+        name = atom_data.name
+        atomic_number = atom_data.atomic_number
         if name.startswith('_'):
             if name in forcefield.non_element_types:
                 system_elements.add(name)
@@ -109,8 +110,8 @@ def _iterate_rules(rules, topology_graph, typemap, max_iter):
     rules : dict
         A dictionary mapping rule names (typically atomtype names) to
         SMARTSGraphs that evaluate those rules.
-    topology_graph : nx.Graph
-        The topology that we are trying to atomtype.
+    topology_graph : TopologyGraph
+        The topology graph that we are trying to atomtype.
     max_iter : int
         The maximum number of iterations.
 
@@ -137,7 +138,7 @@ def _iterate_rules(rules, topology_graph, typemap, max_iter):
 
 def _resolve_atomtypes(topology_graph, typemap):
     """Determine the final atomtypes from the white- and blacklists. """
-    atoms = {atom_idx: data for atom_idx, data in topology_graph.nodes(data=True)}
+    atoms = {atom_idx: data for atom_idx, data in topology_graph.atoms(data=True)}
     for atom_id, atom in typemap.items():
         atomtype = [rule_name for rule_name in
                     atom['whitelist'] - atom['blacklist']]
@@ -145,7 +146,7 @@ def _resolve_atomtypes(topology_graph, typemap):
             atom['atomtype'] = atomtype[0]
         elif len(atomtype) > 1:
             raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
-                atom_id, atoms[atom_id]['atomic_number'], atomtype))
+                atom_id, atoms[atom_id].atomic_number, atomtype))
         else:
             raise FoyerError("Found no types for atom {} ({}).".format(
-                atom_id, atoms[atom_id]['atomic_number']))
+                atom_id, atoms[atom_id].atomic_number))
