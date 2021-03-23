@@ -11,7 +11,7 @@ from foyer.exceptions import MissingParametersError, MissingForceError
     not in map(lambda func: func.__name__, get_available_forcefield_loaders()),
     reason="GAFF Plugin is not installed",
 )
-class TestGAFFParameters:
+class TestForcefieldParameters:
     @pytest.fixture(scope="session")
     def gaff(self):
         return forcefields.load_GAFF()
@@ -140,8 +140,9 @@ class TestGAFFParameters:
         angle_params = opls.get_parameters(
             "angles", ["opls_166", "opls_772", "opls_167"]
         )
-        assert angle_params["theta"] == 2.09439510239
-        assert angle_params["k"] == 585.76
+        assert np.allclose(
+            [angle_params["theta"], angle_params["k"]], [2.0943950239, 585.76]
+        )
 
     def test_opls_get_parameters_angle_reversed(self, opls):
         assert np.allclose(
@@ -159,36 +160,73 @@ class TestGAFFParameters:
 
     def test_opls_get_parameters_angle_atom_classes(self, opls):
         angle_params = opls.get_parameters(
-            "angles",
-            ["CA", "C_2", "CA"],
-            keys_are_atom_classes=True
+            "angles", ["CA", "C_2", "CA"], keys_are_atom_classes=True
         )
-        assert angle_params["theta"] == 2.09439510239
-        assert angle_params["k"] == 711.28
+
+        assert np.allclose(
+            [angle_params["theta"], angle_params["k"]], [2.09439510239, 711.28]
+        )
+
+    def test_opls_get_parameters_angle_atom_classes_reversed(self, opls):
+        assert np.allclose(
+            list(
+                opls.get_parameters(
+                    "angles", ["CA", "C", "O"], keys_are_atom_classes=True
+                ).values()
+            ),
+            list(
+                opls.get_parameters(
+                    "angles", ["O", "C", "CA"], keys_are_atom_classes=True
+                ).values()
+            ),
+        )
 
     def test_opls_get_parameters_rb_proper(self, opls):
         proper_params = opls.get_parameters(
             "rb_propers", ["opls_215", "opls_215", "opls_235", "opls_269"]
         )
+        assert np.allclose(
+            [
+                proper_params["c0"],
+                proper_params["c1"],
+                proper_params["c2"],
+                proper_params["c3"],
+                proper_params["c4"],
+                proper_params["c5"],
+            ],
+            [2.28446, 0.0, -2.28446, 0.0, 0.0, 0.0],
+        )
 
-        assert proper_params["c0"] == 2.28446
-        assert proper_params["c1"] == 0.0
-        assert proper_params["c2"] == -2.28446
-        assert proper_params["c1"] == 0.0
-        assert proper_params["c4"] == 0.0
-        assert proper_params["c5"] == 0.0
+    def test_get_parameters_rb_proper_reversed(self, opls):
+        assert np.allclose(
+            list(
+                opls.get_parameters(
+                    "rb_propers", ["opls_215", "opls_215", "opls_235", "opls_269"]
+                ).values()
+            ),
+            list(
+                opls.get_parameters(
+                    "rb_propers", ["opls_269", "opls_235", "opls_215", "opls_215"]
+                ).values()
+            ),
+        )
 
     def test_opls_get_parameters_wildcard(self, opls):
         proper_params = opls.get_parameters(
             "rb_propers", ["", "opls_235", "opls_544", ""]
         )
 
-        assert proper_params["c0"] == 30.334
-        assert proper_params["c1"] == 0.0
-        assert proper_params["c2"] == -30.334
-        assert proper_params["c1"] == 0.0
-        assert proper_params["c4"] == 0.0
-        assert proper_params["c5"] == 0.0
+        assert np.allclose(
+            [
+                proper_params["c0"],
+                proper_params["c1"],
+                proper_params["c2"],
+                proper_params["c3"],
+                proper_params["c4"],
+                proper_params["c5"],
+            ],
+            [30.334, 0.0, -30.334, 0.0, 0.0, 0.0],
+        )
 
     def test_opls_missing_force(self, opls):
         with pytest.raises(MissingForceError):

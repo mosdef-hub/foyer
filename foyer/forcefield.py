@@ -978,12 +978,7 @@ class Forcefield(app.ForceField):
         key: str, list of str
             The atom_types to extract parameters for
         keys_are_atom_classes: bool, default=False
-            If true, the entries in key are considered to be atom classes rather than atom types
-
-        Notes
-        -----
-        When using `keys_are_atom_classes`, it should be considered that there can be multiple matches
-        for the atom classes and this function can return multiple parameters.
+            If True, the entries in key are considered to be atom classes rather than atom types
 
         Examples
         --------
