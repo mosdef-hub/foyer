@@ -5,8 +5,9 @@ import os
 from tempfile import NamedTemporaryFile
 from typing import Iterable
 import xml.etree.ElementTree as ET
+from typing import List, Callable
 
-from pkg_resources import resource_filename
+from pkg_resources import resource_filename, iter_entry_points
 import warnings
 import re
 
@@ -101,6 +102,15 @@ def preprocess_forcefield_files(forcefield_files=None):
         preprocessed_files.append(temp_file.name)
 
     return preprocessed_files
+
+
+def get_available_forcefield_loaders() -> List[Callable]:
+    """Get a list of available force field loader functions"""
+    available_ff_paths = []
+    for entry_point in iter_entry_points(group="foyer.forcefields"):
+        available_ff_paths.append(entry_point.load())
+
+    return available_ff_paths
 
 
 def generate_topology(non_omm_topology, non_element_types=None, residues=None):
