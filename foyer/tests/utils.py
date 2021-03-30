@@ -23,7 +23,7 @@ def atomtype(structure, forcefield, non_atomistic=False, **kwargs):
 
     if non_atomistic:
         for atom in structure.atoms:
-            atom.element = atom.name
+            atom.element_name = atom.name
 
     typed_structure = forcefield.apply(structure, **kwargs)
 

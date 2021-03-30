@@ -121,7 +121,7 @@ class SMARTSGraph(nx.Graph):
     @staticmethod
     def _atom_id_matches(atom_id, atom, bond_partners, typemap):
         """ Helper func for comparing atomic indices, symbols, neighbors, rings """
-        atomic_num = atom.element
+        atomic_num = atom.atomic_number
         atom_name = atom.name
         atom_idx = atom.index
 

@@ -120,7 +120,7 @@ class TopologyGraph(nx.Graph):
                 name=atom.name,
                 index=atom.idx,
                 atomic_number=atom.atomic_number,
-                element=atom.element,
+                element=atom.element_name,
             )
 
         for bond in structure.bonds:
