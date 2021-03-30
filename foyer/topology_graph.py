@@ -1,6 +1,8 @@
 import networkx as nx
 from parmed import Structure
 
+from foyer.exceptions import FoyerError
+
 
 class AtomData:
     """Stores atom data necessary for atom typing
@@ -11,24 +13,22 @@ class AtomData:
         The index of the atom in the topology graph
     name: str
         The name of the atom
-    atomic_number: int
-        The atomic number of the atom
-    element: str
-        The element associated with the atom
-    bond_partners: list of int
-        The list of length two containing bond partner atom indices for this atom
+    atomic_number: optional, int, default=None
+        The atomic number if the atom represents an element
+    element: optional, str, default=None
+        The element symbol associated with the atom
+        if it represents an element
     **kwargs
         Any extra information for this atom
 
     ToDo: After 3.6 support removed, convert this to a dataclass
     """
 
-    def __init__(self, index, name, atomic_number, element, bond_partners, **kwargs):
+    def __init__(self, index, name, atomic_number=None, element=None, **kwargs):
         self.index = index
         self.name = name
         self.atomic_number = atomic_number
         self.element = element
-        self.bond_partners = bond_partners
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -45,31 +45,35 @@ class TopologyGraph(nx.Graph):
     def __init__(self, *args, **kwargs):
         super(TopologyGraph, self).__init__(*args, **kwargs)
 
-    def add_atom(self, index, name, atomic_number, element, bond_partners, **kwargs):
+    def add_atom(self, index, name, atomic_number=None, element=None, **kwargs):
         """Add an atom to the topology graph
         Parameters
         ----------
         index: int
             The index of the atom in the topology graph
         name: str
-            The name of the atom
-        atomic_number: int
-            The atomic number of the atom
-        element: str
-            The element associated with the atom
-        bond_partners: list of int
-            The list of length two containing bond partner atom indices for this atom
+            The name of the atom. For non-element type,
+            the name must start with an underscore (_)
+        atomic_number: optional, int, default=None
+            The atomic number if the atom represents an element
+        element: optional, str, default=None
+            The element symbol associated with the atom
+            if it represents an element
         **kwargs
             Any extra information for this atom
 
         See Also
         --------
         foyer.topology_graph.AtomData
-            The class used to store atom data.
+            The class used to store atom data
         """
-        atom_data = AtomData(
-            index, name, atomic_number, element, bond_partners, **kwargs
-        )
+        if not name.startswith("_") and not (atomic_number or element):
+            raise FoyerError(
+                "For atoms representing an element, please include "
+                "either the atomic_number or element symbol for the atom"
+            )
+
+        atom_data = AtomData(index, name, atomic_number, element, **kwargs)
         self.add_node(index, atom_data=atom_data)
 
     def add_bond(self, atom_1_index, atom_2_index):
@@ -92,6 +96,10 @@ class TopologyGraph(nx.Graph):
             for idx in self.nodes(data=data):
                 yield idx
 
+    def add_bond_partners(self):
+        for atom_idx, data in self.nodes(data=True):
+            data["bond_partners"] = list(self.neighbors(atom_idx))
+
     @classmethod
     def from_parmed(cls, structure: Structure) -> nx.Graph:
         """Return a TopologyGraph with relevant attributes from a parmed Structure
@@ -113,7 +121,6 @@ class TopologyGraph(nx.Graph):
                 index=atom.idx,
                 atomic_number=atom.atomic_number,
                 element=atom.element,
-                bond_partners=[bonded_atom.idx for bonded_atom in atom.bond_partners],
             )
 
         for bond in structure.bonds:

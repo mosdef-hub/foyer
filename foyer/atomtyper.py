@@ -43,11 +43,11 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     for _, atom_data in topology_graph.atoms(data=True):
         # First add non-element types, which are strings, then elements
         name = atom_data.name
-        atomic_number = atom_data.atomic_number
         if name.startswith('_'):
             if name in forcefield.non_element_types:
                 system_elements.add(name)
         else:
+            atomic_number = atom_data.atomic_number
             if 0 < atomic_number <= pt.KNOWN_ELEMENTS:
                 element = pt.Element[atomic_number]
                 system_elements.add(element)

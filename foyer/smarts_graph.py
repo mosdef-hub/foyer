@@ -96,34 +96,34 @@ class SMARTSGraph(nx.Graph):
         """ Determine if two graph nodes are equal """
         atom_expr = pattern['atom'].children[0]
         atom = host['atom_data']
-        return self._atom_expr_matches(atom_expr, atom)
+        bond_partners = host['bond_partners']
+        return self._atom_expr_matches(atom_expr, atom, bond_partners)
 
-    def _atom_expr_matches(self, atom_expr, atom):
+    def _atom_expr_matches(self, atom_expr, atom, bond_partners):
         """ Helper function for evaluating SMARTS string expressions """
         if atom_expr.data == 'not_expression':
-            return not self._atom_expr_matches(atom_expr.children[0], atom)
+            return not self._atom_expr_matches(atom_expr.children[0], atom, bond_partners)
         elif atom_expr.data in ('and_expression', 'weak_and_expression'):
-            return (self._atom_expr_matches(atom_expr.children[0], atom) and
-                    self._atom_expr_matches(atom_expr.children[1], atom))
+            return (self._atom_expr_matches(atom_expr.children[0], atom, bond_partners) and
+                    self._atom_expr_matches(atom_expr.children[1], atom, bond_partners))
         elif atom_expr.data == 'or_expression':
-            return (self._atom_expr_matches(atom_expr.children[0], atom) or
-                    self._atom_expr_matches(atom_expr.children[1], atom))
+            return (self._atom_expr_matches(atom_expr.children[0], atom, bond_partners) or
+                    self._atom_expr_matches(atom_expr.children[1], atom, bond_partners))
         elif atom_expr.data == 'atom_id':
-            return self._atom_id_matches(atom_expr.children[0], atom, self.typemap)
+            return self._atom_id_matches(atom_expr.children[0], atom, bond_partners, self.typemap)
         elif atom_expr.data == 'atom_symbol':
-            return self._atom_id_matches(atom_expr, atom, self.typemap)
+            return self._atom_id_matches(atom_expr, atom, bond_partners, self.typemap)
         else:
             raise TypeError('Expected atom_id, atom_symbol, and_expression, '
                             'or_expression, or not_expression. '
                             'Got {}'.format(atom_expr.data))
 
     @staticmethod
-    def _atom_id_matches(atom_id, atom, typemap):
+    def _atom_id_matches(atom_id, atom, bond_partners, typemap):
         """ Helper func for comparing atomic indices, symbols, neighbors, rings """
         atomic_num = atom.element
         atom_name = atom.name
         atom_idx = atom.index
-        bond_partners = atom.bond_partners
 
         if atom_id.data == 'atomic_num':
             return atomic_num == int(atom_id.children[0])
@@ -172,6 +172,7 @@ class SMARTSGraph(nx.Graph):
         ring_tokens = ['ring_size', 'ring_count']
         has_ring_rules = any(list(self.ast.find_data(token))
                              for token in ring_tokens)
+        topology_graph.add_bond_partners()
         _prepare_atoms(topology_graph, typemap, compute_cycles=has_ring_rules)
 
         if self._graph_matcher is None:
