@@ -29,34 +29,34 @@ class TestForcefieldParameters:
             gaff.get_parameters("atoms", key=1)
 
     def test_gaff_bond_parameters_gaff(self, gaff):
-        bond_params = gaff.get_parameters("bonds", ["br", "ca"])
+        bond_params = gaff.get_parameters("harmonic_bonds", ["br", "ca"])
         assert np.isclose(bond_params["length"], 0.19079)
         assert np.isclose(bond_params["k"], 219827.36)
 
     def test_gaff_bond_params_reversed(self, gaff):
-        assert gaff.get_parameters("bonds", ["ca", "br"]) == gaff.get_parameters(
-            "bonds", ["ca", "br"]
+        assert gaff.get_parameters("harmonic_bonds", ["ca", "br"]) == gaff.get_parameters(
+            "harmonic_bonds", ["ca", "br"]
         )
 
     def test_gaff_missing_bond_parameters(self, gaff):
         with pytest.raises(MissingParametersError):
-            gaff.get_parameters("bonds", ["str1", "str2"])
+            gaff.get_parameters("harmonic_bonds", ["str1", "str2"])
 
     def test_gaff_angle_parameters(self, gaff):
-        angle_params = gaff.get_parameters("angles", ["f", "c1", "f"])
+        angle_params = gaff.get_parameters("harmonic_angles", ["f", "c1", "f"])
         assert np.allclose(
             [angle_params["theta"], angle_params["k"]], [3.141592653589793, 487.0176]
         )
 
     def test_gaff_angle_parameters_reversed(self, gaff):
         assert np.allclose(
-            list(gaff.get_parameters("angles", ["f", "c2", "ha"]).values()),
-            list(gaff.get_parameters("angles", ["ha", "c2", "f"]).values()),
+            list(gaff.get_parameters("harmonic_angles", ["f", "c2", "ha"]).values()),
+            list(gaff.get_parameters("harmonic_angles", ["ha", "c2", "f"]).values()),
         )
 
     def test_gaff_missing_angle_parameters(self, gaff):
         with pytest.raises(MissingParametersError):
-            gaff.get_parameters("angles", ["1", "2", "3"])
+            gaff.get_parameters("harmonic_angles", ["1", "2", "3"])
 
     def test_gaff_periodic_proper_parameters(self, gaff):
         periodic_proper_params = gaff.get_parameters(
@@ -120,25 +120,25 @@ class TestForcefieldParameters:
         assert atom_params["epsilon"] == 0.29288
 
     def test_opls_get_parameters_bonds(self, opls):
-        bond_params = opls.get_parameters("bonds", ["opls_760", "opls_145"])
+        bond_params = opls.get_parameters("harmonic_bonds", ["opls_760", "opls_145"])
         assert bond_params["length"] == 0.146
         assert bond_params["k"] == 334720.0
 
     def test_opls_get_parameters_bonds_reversed(self, opls):
         assert np.allclose(
-            list(opls.get_parameters("bonds", ["opls_760", "opls_145"]).values()),
-            list(opls.get_parameters("bonds", ["opls_145", "opls_760"]).values()),
+            list(opls.get_parameters("harmonic_bonds", ["opls_760", "opls_145"]).values()),
+            list(opls.get_parameters("harmonic_bonds", ["opls_145", "opls_760"]).values()),
         )
 
     def test_opls_get_parameters_bonds_atom_classes_reversed(self, opls):
         assert np.allclose(
-            list(opls.get_parameters("bonds", ["C_2", "O_2"], True).values()),
-            list(opls.get_parameters("bonds", ["O_2", "C_2"], True).values()),
+            list(opls.get_parameters("harmonic_bonds", ["C_2", "O_2"], True).values()),
+            list(opls.get_parameters("harmonic_bonds", ["O_2", "C_2"], True).values()),
         )
 
     def test_opls_get_parameters_angle(self, opls):
         angle_params = opls.get_parameters(
-            "angles", ["opls_166", "opls_772", "opls_167"]
+            "harmonic_angles", ["opls_166", "opls_772", "opls_167"]
         )
         assert np.allclose(
             [angle_params["theta"], angle_params["k"]], [2.0943950239, 585.76]
@@ -148,19 +148,19 @@ class TestForcefieldParameters:
         assert np.allclose(
             list(
                 opls.get_parameters(
-                    "angles", ["opls_166", "opls_772", "opls_167"]
+                    "harmonic_angles", ["opls_166", "opls_772", "opls_167"]
                 ).values()
             ),
             list(
                 opls.get_parameters(
-                    "angles", ["opls_167", "opls_772", "opls_166"]
+                    "harmonic_angles", ["opls_167", "opls_772", "opls_166"]
                 ).values()
             ),
         )
 
     def test_opls_get_parameters_angle_atom_classes(self, opls):
         angle_params = opls.get_parameters(
-            "angles", ["CA", "C_2", "CA"], keys_are_atom_classes=True
+            "harmonic_angles", ["CA", "C_2", "CA"], keys_are_atom_classes=True
         )
 
         assert np.allclose(
@@ -171,12 +171,12 @@ class TestForcefieldParameters:
         assert np.allclose(
             list(
                 opls.get_parameters(
-                    "angles", ["CA", "C", "O"], keys_are_atom_classes=True
+                    "harmonic_angles", ["CA", "C", "O"], keys_are_atom_classes=True
                 ).values()
             ),
             list(
                 opls.get_parameters(
-                    "angles", ["O", "C", "CA"], keys_are_atom_classes=True
+                    "harmonic_angles", ["O", "C", "CA"], keys_are_atom_classes=True
                 ).values()
             ),
         )

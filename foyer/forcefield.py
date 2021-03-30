@@ -973,10 +973,10 @@ class Forcefield(app.ForceField):
         Parameters
         ----------
         group: str
-            One of {"atoms", "bonds", "angles", "periodic_propers", "periodic_impropers", "rb_propers", "rb_impropers"}.
+            One of {"atoms", "harmonic_bonds", "harmonic_angles", "periodic_propers", "periodic_impropers", "rb_propers", "rb_impropers"}.
             Note that these entries are case insensitive
         key: str, list of str
-            The atom_types to extract parameters for
+            The atom type(s)/class(es) to extract parameters for
         keys_are_atom_classes: bool, default=False
             If True, the entries in key are considered to be atom classes rather than atom types
 
@@ -999,19 +999,23 @@ class Forcefield(app.ForceField):
         Raises
         ------
         MissingParametersError
-            raised when parameters are missing from the forcefield or no matching parameters found
+            Raised when parameters are missing from the forcefield or no matching parameters found
+
+        MissingForceError
+            Raised when a particular force generator is missing from the Forcefield
         """
         group = group.lower()
 
         param_extractors = {
             "atoms": self._extract_non_bonded_params,
-            "bonds": self._extract_harmonic_bond_params,
-            "angles": self._extract_harmonic_angle_params,
+            "harmonic_bonds": self._extract_harmonic_bond_params,
+            "harmonic_angles": self._extract_harmonic_angle_params,
             "periodic_propers": self._extract_periodic_proper_params,
             "periodic_impropers": self._extract_periodic_improper_params,
             "rb_propers": self._extract_rb_proper_params,
             "rb_impropers": self._extract_rb_improper_params,
         }
+
         if group not in param_extractors:
             raise ValueError(f"Cannot extract parameters for {group}")
 
