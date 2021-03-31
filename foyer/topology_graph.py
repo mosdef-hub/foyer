@@ -67,7 +67,7 @@ class TopologyGraph(nx.Graph):
         foyer.topology_graph.AtomData
             The class used to store atom data
         """
-        if not name.startswith("_") and not (atomic_number or element):
+        if not name.startswith("_") and not (atomic_number and element):
             raise FoyerError(
                 "For atoms representing an element, please include "
                 "either the atomic_number or element symbol for the atom"
