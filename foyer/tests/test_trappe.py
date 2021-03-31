@@ -2,11 +2,11 @@ import glob
 import itertools as it
 import os
 
+import parmed as pmd
 from pkg_resources import resource_filename
 import pytest
 
 from foyer import Forcefield
-import parmed as pmd
 from foyer.tests.utils import atomtype
 
 TRAPPE_UA = Forcefield(name='trappe-ua')
