@@ -1,6 +1,6 @@
 Install from conda:
 ```bash
-conda install -c mosdef foyer
+conda install -c foyer
 ```
 
 Install an editable version from source:

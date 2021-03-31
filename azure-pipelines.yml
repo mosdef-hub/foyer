@@ -46,7 +46,6 @@ stages:
               conda config --set always_yes yes --set changeps1 no
               conda config --add channels janschulz
               conda config --add channels conda-forge
-              conda config --add channels mosdef
             displayName: Add relavent Channels
           - bash: |
               conda create -n test-environment python=$(python.version) --file requirements-dev.txt
@@ -81,7 +80,7 @@ stages:
           - script: |
               conda config --set always_yes yes --set changeps1 no
               conda config --add channels conda-forge
-              conda config --add channels mosdef
+              conda config --add channels omnia
             displayName: Add Relevent Channels
 
           - script: |
@@ -109,7 +108,6 @@ stages:
           - bash: |
               conda config --set always_yes yes --set changeps1 no
               conda config --add channels conda-forge
-              conda config --add channels mosdef
               conda create -n  bleeding-test-environment python=3.7 --file requirements-dev.txt
               source activate bleeding-test-environment
             displayName: Create a new bleeding test environment

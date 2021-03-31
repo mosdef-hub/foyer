@@ -1,7 +1,6 @@
 name: foyer-docs
 channels:
   - conda-forge
-  - mosdef
 dependencies:
   - python=3.7
   - openmm
