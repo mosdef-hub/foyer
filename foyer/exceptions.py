@@ -31,6 +31,14 @@ class ValidationWarning(FoyerWarning):
     pass
 
 
+class MissingParametersError(FoyerError):
+    """Error to be raised when parameters are missing from the forcefield"""
+
+
+class MissingForceError(FoyerError):
+    """Error to be raised when a particular force doesn't exist in the forcefield"""
+
+
 def raise_collected(errors):
     if len(errors) > 1:
         raise MultipleValidationError(errors)
