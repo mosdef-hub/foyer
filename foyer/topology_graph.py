@@ -116,11 +116,18 @@ class TopologyGraph(nx.Graph):
         """
         topology_graph = cls()
         for atom in structure.atoms:
+            if atom.name.startswith('_'):
+                atomic_number = None
+                element = None
+            else:
+                atomic_number = atom.atomic_number
+                element = atom.element_name
+
             topology_graph.add_atom(
                 name=atom.name,
                 index=atom.idx,
-                atomic_number=atom.atomic_number,
-                element=atom.element_name,
+                atomic_number=atomic_number,
+                element=element,
             )
 
         for bond in structure.bonds:

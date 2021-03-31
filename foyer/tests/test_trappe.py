@@ -2,11 +2,11 @@ import glob
 import itertools as it
 import os
 
-import parmed as pmd
 from pkg_resources import resource_filename
 import pytest
 
 from foyer import Forcefield
+import parmed as pmd
 from foyer.tests.utils import atomtype
 
 TRAPPE_UA = Forcefield(name='trappe-ua')
@@ -50,7 +50,7 @@ class TestTraPPE(object):
             _, ext = os.path.splitext(mol_file)
             mol2_path = os.path.join(testfiles_dir, mol_name, mol_file)
             structure = pmd.load_file(mol2_path, structure=True)
-        atomtype(structure, TRAPPE_UA, non_atomistic=False)
+            atomtype(structure, TRAPPE_UA)
 
 if __name__ == '__main__':
     TestTraPPE().find_correctly_implemented()
