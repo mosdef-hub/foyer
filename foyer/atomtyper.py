@@ -1,7 +1,7 @@
 from warnings import warn
 
 import parmed as pmd
-import parmed.periodic_table as pt
+import ele
 
 from foyer.exceptions import FoyerError
 from foyer.topology_graph import TopologyGraph
@@ -48,8 +48,8 @@ def find_atomtypes(structure, forcefield, max_iter=10):
                 system_elements.add(name)
         else:
             atomic_number = atom_data.atomic_number
-            if 0 < atomic_number <= pt.KNOWN_ELEMENTS:
-                element = pt.Element[atomic_number]
+            if 0 < atomic_number <= len(ele.Elements[0]):
+                element = ele.element_from_atomic_number(atomic_number).symbol
                 system_elements.add(element)
             else:
                 raise FoyerError(
