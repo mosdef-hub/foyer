@@ -17,6 +17,7 @@ import gmso
 from gmso.external import from_mbuild
 from gmso.core import element
 
+import mbuild as mb
 from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
@@ -276,6 +277,8 @@ class Forcefield(object):
             Spped up options for duplicates subtopology.
         """
 
+        if isinstance(top, mb.Compound):
+            top = from_mbuild(top)
         # TO DO in another PR
         if use_residue_map:
             # Detect duplicates subtopology/residues
@@ -343,11 +346,13 @@ class Forcefield(object):
         else:
             raise FoyerError('Backend not supported')
 
+        top.update_topology()
         self._check_parameters(top, assert_bond_params,
                              assert_angle_params,
                              assert_dihedral_params,
                              assert_improper_params,
                              debug)
+
         if references_file:
             atom_types = set(site.atom_type for site in top.sites)
             self._write_references_to_file(atom_types, references_file)
@@ -524,4 +529,5 @@ class Forcefield(object):
                 bibtex_text = bibtex_text[:-2] + note + bibtex_text[-2:]
                 f.write('{}\n'.format(bibtex_text))
 
-gmso.Topology.write_foyer = write_foyer
+#TO DO
+#gmso.Topology.write_foyer = write_foyer
