@@ -17,7 +17,7 @@ class SMARTSGraph(nx.Graph):
     smarts_string : str
         The SMARTS string outlined in the force field
     parser : foyer.smarts.SMARTS
-        The parser whose grammar rules convert the SMARTSstring 
+        The parser whose grammar rules convert the SMARTSstring
         into the AST
     name : str
     overrides : set
@@ -97,35 +97,37 @@ class SMARTSGraph(nx.Graph):
     def _node_match(self, host, pattern):
         """ Determine if two graph nodes are equal """
         atom_expr = pattern['atom'].children[0]
-        return self._atom_expr_matches(atom_expr, host)
+        atom = host['atom_data']
+        bond_partners = host['bond_partners']
+        return self._atom_expr_matches(atom_expr, atom, bond_partners)
 
-    def _atom_expr_matches(self, atom_expr, atom):
+    def _atom_expr_matches(self, atom_expr, atom, bond_partners):
         """ Helper function for evaluating SMARTS string expressions """
         if atom_expr.data == 'not_expression':
-            return not self._atom_expr_matches(atom_expr.children[0], atom)
+            return not self._atom_expr_matches(atom_expr.children[0], atom, bond_partners)
         elif atom_expr.data in ('and_expression', 'weak_and_expression'):
-            return (self._atom_expr_matches(atom_expr.children[0], atom) and
-                    self._atom_expr_matches(atom_expr.children[1], atom))
+            return (self._atom_expr_matches(atom_expr.children[0], atom, bond_partners) and
+                    self._atom_expr_matches(atom_expr.children[1], atom, bond_partners))
         elif atom_expr.data == 'or_expression':
-            return (self._atom_expr_matches(atom_expr.children[0], atom) or
-                    self._atom_expr_matches(atom_expr.children[1], atom))
+            return (self._atom_expr_matches(atom_expr.children[0], atom, bond_partners) or
+                    self._atom_expr_matches(atom_expr.children[1], atom, bond_partners))
         elif atom_expr.data == 'atom_id':
-            return self._atom_id_matches(atom_expr.children[0], atom, self.typemap)
+            return self._atom_id_matches(atom_expr.children[0], atom, bond_partners, self.typemap)
         elif atom_expr.data == 'atom_symbol':
-            return self._atom_id_matches(atom_expr, atom, self.typemap)
+            return self._atom_id_matches(atom_expr, atom, bond_partners, self.typemap)
         else:
             raise TypeError('Expected atom_id, atom_symbol, and_expression, '
                             'or_expression, or not_expression. '
                             'Got {}'.format(atom_expr.data))
 
     @staticmethod
-    def _atom_id_matches(atom_id, atom, typemap):
-        """ Helper func for comparing atomic indices, symbols, neighbors, rings 
 
-        atom_id is the AST-parsed rule (smarts expression)
-        atom is the networkx node containing information for a particular atom in the topology
-        """
-        atomic_num = atom['atomic_number']
+    def _atom_id_matches(atom_id, atom, bond_partners, typemap):
+        """ Helper func for comparing atomic indices, symbols, neighbors, rings """
+        atomic_num = atom.atomic_number
+        atom_name = atom.name
+        atom_idx = atom.index
+
         if atom_id.data == 'atomic_num':
             return atomic_num == int(atom_id.children[0])
         elif atom_id.data == 'atom_symbol':
@@ -133,29 +135,31 @@ class SMARTSGraph(nx.Graph):
                 return True
             elif str(atom_id.children[0]).startswith('_'):
                 # Store non-element elements in .name
-                return atom['name'] == str(atom_id.children[0])
+                return atom_name == str(atom_id.children[0])
             else:
                 return atomic_num == pt.AtomicNum[str(atom_id.children[0])]
         elif atom_id.data == 'has_label':
             label = atom_id.children[0][1:]  # Strip the % sign from the beginning.
-            return label in typemap[atom['idx']]['whitelist']
+            return label in typemap[atom_idx]['whitelist']
         elif atom_id.data == 'neighbor_count':
-            return atom['n_bond_partners'] == int(atom_id.children[0])
+            return len(bond_partners) == int(atom_id.children[0])
         elif atom_id.data == 'ring_size':
             cycle_len = int(atom_id.children[0])
-            for cycle in typemap[atom['idx']]['cycles']:
+            for cycle in typemap[atom_idx]['cycles']:
                 if len(cycle) == cycle_len:
                     return True
             return False
         elif atom_id.data == 'ring_count':
-            n_cycles = len(typemap[atom['idx']]['cycles'])
+
+            n_cycles = len(typemap[atom_idx]['cycles'])
             if n_cycles == int(atom_id.children[0]):
                 return True
             return False
         elif atom_id.data == 'matches_string':
             raise NotImplementedError('matches_string is not yet implemented')
 
-    def find_matches(self, topology, typemap):
+
+    def find_matches(self, topology_graph, typemap):
         """Return sets of atoms that match this SMARTS pattern in a topology.
 
         Parameters
@@ -180,11 +184,8 @@ class SMARTSGraph(nx.Graph):
         ring_tokens = ['ring_size', 'ring_count']
         has_ring_rules = any(list(self.ast.find_data(token))
                              for token in ring_tokens)
-
-        top_graph = _construct_topological_graph(topology)
-
-        if has_ring_rules:
-            typemap = _prepare_atoms(top_graph, typemap)
+        topology_graph.add_bond_partners()
+        _prepare_atoms(topology_graph, typemap, compute_cycles=has_ring_rules)
 
         if self._graph_matcher is None:
             atom = nx.get_node_attributes(self, name='atom')[0]
@@ -200,7 +201,7 @@ class SMARTSGraph(nx.Graph):
                         element = None
             else:
                 element = None
-            self._graph_matcher = SMARTSMatcher(top_graph, self,
+            self._graph_matcher = SMARTSMatcher(topology_graph, self,
                                                 node_match=self._node_match,
                                                 element=element,
                                                 typemap=typemap)
@@ -302,7 +303,7 @@ def _find_chordless_cycles(bond_graph, max_cycle_size):
 
                 for possible_ring in possible_rings:
                     if bond_graph.has_edge(possible_ring[-1], last_node):
-                        if any([bond_graph.has_edge(possible_ring[-1], 
+                        if any([bond_graph.has_edge(possible_ring[-1],
                                 internal_node)
                                 for internal_node in possible_ring[1:-2]]):
                             pass
@@ -346,7 +347,6 @@ def _construct_topological_graph(topology):
 
     return top_graph
 
-
 def _prepare_atoms(top_graph, typemap):
     """ Identify rings from topological graph """
     all_cycles = _find_chordless_cycles(top_graph, max_cycle_size=8)
@@ -357,5 +357,23 @@ def _prepare_atoms(top_graph, typemap):
 
     return typemap
 
+def _prepare_atoms(topology_graph, typemap, compute_cycles=False):
+    """Compute cycles and add white-/blacklists to atoms."""
+    atom1 = next(topology_graph.atoms(data=False)) #next(topology.atoms())
+    has_whitelists = 'whitelist' in typemap[atom1]
+    has_cycles = 'cycles' in typemap[atom1]
+    compute_cycles = compute_cycles and not has_cycles
 
+    if compute_cycles or not has_whitelists:
+        for index in topology_graph.atoms(data=False):
+            if compute_cycles:
+                typemap[index]['cycles'] = set()
+            if not has_whitelists:
+                typemap[index]['whitelist'] = set()
+                typemap[index]['blacklist'] = set()
 
+    if compute_cycles:
+        all_cycles = _find_chordless_cycles(topology_graph, max_cycle_size=8)
+        for atom, cycles in zip(topology_graph.nodes, all_cycles):
+            for cycle in cycles:
+                typemap[atom]['cycles'].add(tuple(cycle))
