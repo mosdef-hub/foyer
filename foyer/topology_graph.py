@@ -1,5 +1,6 @@
 import networkx as nx
 from parmed import Structure
+from gmso import Topology
 
 from foyer.exceptions import FoyerError
 
@@ -134,3 +135,39 @@ class TopologyGraph(nx.Graph):
             topology_graph.add_bond(bond.atom1.idx, bond.atom2.idx)
 
         return topology_graph
+
+    @classmethod
+    def from_gmso(cls, topology: Topology) -> nx.Graph:
+        """Return a TopologyGraph with relevant attributes from a gmso Topology
+
+        Parameters
+        ----------
+        topology : Topology
+            The GMSO Topology
+
+        Returns
+        -------
+        TopologyGraph
+            The equivalent TopologyGraph of the GMSO Topology `topology`
+        """
+        topology_graph = cls()
+        for atom in topology.sites:
+            if atom.name.startswith('_'):
+                atomic_number = None
+                element = None
+            else:
+                atomic_number = atom.element.atomic_number
+                element = atom.element.symbol
+
+            topology_graph.add_atom(
+                name=atom.name,
+                index=topology.get_index(atom),
+                atomic_number=atomic_number,
+                element=element
+            )
+        for bond in topology.bonds:
+            topology_graph.add_bond(topology.get_index(bond.connection_members[0]),
+                                    topology.get_index(bond.connection_members[1]))
+
+        return topology_graph
+

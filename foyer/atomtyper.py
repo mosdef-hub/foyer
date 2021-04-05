@@ -1,13 +1,14 @@
 from warnings import warn
 
-import gmso
-import parmed
+from gmso import Topology
+from parmed import Structure
 import parmed.periodic_table as pt
+
 from foyer.exceptions import FoyerError
 from foyer.topology_graph import TopologyGraph
 from foyer.smarts_graph import SMARTSGraph
 
-def find_atomtypes(topology, forcefield, max_iter=10):
+def find_atomtypes(structure, forcefield, max_iter=10):
     """Determine atomtypes for all atoms.
 
     Parameters
@@ -22,9 +23,9 @@ def find_atomtypes(topology, forcefield, max_iter=10):
     """
     topology_graph = structure
 
-    if isinstance(structure, pmd.Structure):
+    if isinstance(structure, Structure):
         topology_graph = TopologyGraph.from_parmed(structure)
-    elif isinstance(structure, gmso.Topology)
+    elif isinstance(structure, Topology):
         topology_graph = TopologyGraph.from_gmso(structure)
 
     typemap = {

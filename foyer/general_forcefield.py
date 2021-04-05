@@ -337,6 +337,8 @@ class Forcefield(object):
         -------
         """
         # Generate missing connections (angles, dihedrals, and impropers)
+        if isinstance(top, mb.Compound):
+            top = gmso.external.from_mbuild(top)
         top.identify_connections()
 
         if backend=='gmso':

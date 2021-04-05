@@ -223,6 +223,7 @@ def test_charmm_improper():
     assert len(struc.impropers) == 1
     assert len(struc.dihedrals) == 0
 
+''' To be implemented -> Lookup connection types with mixed atomtype-atomclass
 def test_topology_precedence():
     """Test to see if topology precedence is properly adhered to.
 
@@ -250,6 +251,7 @@ def test_topology_precedence():
                 if round(float(angle.angle_type.parameters['theta_eq'].value), 3) == 97.403]) == 6
     assert len([rb for rb in typed_ethane.dihedral
                 if round(float(rb.dihedral_type.parameters['c0'].value), 3) == 0.287]) == 9
+'''
 
 @pytest.mark.parametrize("ff_filename,kwargs", [
     ("ethane-angle-typo.xml", {"assert_angle_params": False}),
@@ -290,22 +292,19 @@ def test_apply_subfuncs():
 
     typemap = oplsaa._run_atomtyping(mol2, use_residue_map=False)
 
-    ethane2 = oplsaa._parametrize(mol2, typemap=typemap)
+    ethane2 = oplsaa._parametrize(mol2, typemap=typemap, assert_improper_params=False)
 
     assert ethane.box == ethane2.box
-    assert ethane.positions == ethane2.positions
+    assert (ethane.positions == ethane2.positions).all
     for a1, a2 in zip(ethane.sites, ethane2.sites):
         assert a1.name == a2.name
-        assert a1.idx == a2.idx
+        assert ethane.get_index(a1) == ethane2.get_index(a2)
         assert a1.atom_type == a2.atom_type
 
     for b1, b2 in zip(ethane.bonds, ethane2.bonds):
-        assert b1.atom1.atom_type == b2.atom1.atom_type
-        assert b1.atom2.atom_type == b2.atom2.atom_type
-        assert b1.type == b2.type
-
-    for ang1, ang2 in zip(ethane.angles, ethane2.angles):
-        assert ang1.type == ang2.type
+        assert b1.connection_members[0].atom_type == b2.connection_members[0].atom_type
+        assert b1.connection_members[1].atom_type == b2.connection_members[1].atom_type
+        assert b1.bond_type == b2.bond_type
 
 def test_non_zero_charge():
     compound = mb.load('C1=CC=C2C(=C1)C(C3=CC=CC=C3O2)C(=O)O', smiles=True)
@@ -406,7 +405,7 @@ def test_write_xml_overrides():
         elif attributes['name'] == 'opls_146':
             assert attributes['overrides'] == 'opls_144'
             assert str(item.xpath('comment()')) == '[<!--Note: original overrides="opls_144"-->]'
-'''
+
 def test_load_metadata():
     lj_ff = Forcefield(get_fn('lj.xml'), strict=False)
     assert lj_ff.version == '0.4.1'
@@ -415,3 +414,4 @@ def test_load_metadata():
     lj_ff = Forcefield(forcefield_files=[get_fn('lj.xml'), get_fn('lj2.xml')])
     assert lj_ff.version == ['0.4.1', '4.8.2']
     assert lj_ff.name == ['LJ', 'JL']
+'''
