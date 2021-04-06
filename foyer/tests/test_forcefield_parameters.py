@@ -1,9 +1,10 @@
-import pytest
 import numpy as np
+import pytest
 
-from foyer import forcefields
+from foyer import Forcefield, forcefields
+from foyer.exceptions import MissingForceError, MissingParametersError
 from foyer.forcefield import get_available_forcefield_loaders
-from foyer.exceptions import MissingParametersError, MissingForceError
+from foyer.tests.utils import get_fn
 
 
 @pytest.mark.skipif(
@@ -34,9 +35,9 @@ class TestForcefieldParameters:
         assert np.isclose(bond_params["k"], 219827.36)
 
     def test_gaff_bond_params_reversed(self, gaff):
-        assert gaff.get_parameters("harmonic_bonds", ["ca", "br"]) == gaff.get_parameters(
+        assert gaff.get_parameters(
             "harmonic_bonds", ["ca", "br"]
-        )
+        ) == gaff.get_parameters("harmonic_bonds", ["ca", "br"])
 
     def test_gaff_missing_bond_parameters(self, gaff):
         with pytest.raises(MissingParametersError):
@@ -104,6 +105,10 @@ class TestForcefieldParameters:
         with pytest.raises(MissingParametersError):
             gaff.get_parameters("periodic_impropers", ["a", "b", "c", "d"])
 
+    def test_gaff_scaling_factors(self, gaff):
+        assert gaff.lj14scale == 0.5
+        assert np.isclose(gaff.coulomb14scale, 0.833333333)
+
     def test_opls_get_parameters_atoms(self, opls):
         atom_params = opls.get_parameters("atoms", "opls_145")
         assert atom_params["sigma"] == 0.355
@@ -126,8 +131,12 @@ class TestForcefieldParameters:
 
     def test_opls_get_parameters_bonds_reversed(self, opls):
         assert np.allclose(
-            list(opls.get_parameters("harmonic_bonds", ["opls_760", "opls_145"]).values()),
-            list(opls.get_parameters("harmonic_bonds", ["opls_145", "opls_760"]).values()),
+            list(
+                opls.get_parameters("harmonic_bonds", ["opls_760", "opls_145"]).values()
+            ),
+            list(
+                opls.get_parameters("harmonic_bonds", ["opls_145", "opls_760"]).values()
+            ),
         )
 
     def test_opls_get_parameters_bonds_atom_classes_reversed(self, opls):
@@ -231,3 +240,14 @@ class TestForcefieldParameters:
     def test_opls_missing_force(self, opls):
         with pytest.raises(MissingForceError):
             opls.get_parameters("periodic_propers", key=["a", "b", "c", "d"])
+
+    def test_opls_scaling_factors(self, opls):
+        assert opls.lj14scale == 0.5
+        assert opls.coulomb14scale == 0.5
+
+    def test_missing_scaling_factors(self):
+        ff = Forcefield(forcefield_files=(get_fn("validate_customtypes.xml")))
+        with pytest.raises(AttributeError):
+            assert ff.lj14scale
+        with pytest.raises(AttributeError):
+            assert ff.coulomb14scale
