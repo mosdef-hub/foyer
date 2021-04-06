@@ -11,3 +11,4 @@ pytest-timeout
 codecov
 requests-mock
 bump2version
+openff-toolkit

@@ -31,6 +31,24 @@ or
 
 '''
 
+MESSAGES["gmso"] = """
+
+The code at {filename}:{line_number} requires the "gmso" package
+
+gmso can be installed using:
+
+# conda install -c conda-forge gmso
+"""
+
+MESSAGES["openff.toolkit"] = """
+
+The code at {filename}:{line_number} requires the "openff-toolkit" package
+
+openff-toolkit can be installed using:
+
+# conda install -c conda-forge openff-toolkit
+"""
+
 
 def import_(module):
     """Import a module, and issue a nice message to stderr if the module isn't installed.
@@ -81,3 +99,15 @@ try:
     del mbuild
 except ImportError:
     has_mbuild = False
+
+try:
+    import openff.tookit
+    has_openff_toolkit = True
+except ImportError:
+    has_openff_toolkit = False
+
+try:
+    import gmso
+    has_gmso = True
+except ImportError:
+    has_gmso = False
