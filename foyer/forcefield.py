@@ -470,7 +470,7 @@ class Forcefield(app.ForceField):
 
     @property
     def lj14scale(self):
-        """Get LJ-14Scale for this forcefield"""
+        """Get LJ 1-4 scale for this forcefield"""
         try:
             non_bonded_force_gen = self.get_generator(ff=self, gen_type=NonbondedGenerator)
         except MissingForceError:
