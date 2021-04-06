@@ -482,7 +482,7 @@ class Forcefield(app.ForceField):
 
     @property
     def coulomb14scale(self):
-        """Get coulomb14scale for this forcefield"""
+        """Get Coulombic 1-4 scale for this forcefield"""
         try:
             non_bonded_force_gen = self.get_generator(ff=self, gen_type=NonbondedGenerator)
         except MissingForceError:
