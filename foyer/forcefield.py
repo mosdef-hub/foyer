@@ -468,6 +468,30 @@ class Forcefield(app.ForceField):
             self._included_forcefields[basename] = ff_filepath
         return self._included_forcefields
 
+    @property
+    def lj14scale(self):
+        """Get LJ 1-4 scale for this forcefield"""
+        try:
+            non_bonded_force_gen = self.get_generator(ff=self, gen_type=NonbondedGenerator)
+        except MissingForceError:
+            raise AttributeError(
+                "Cannot get lj14Scale for the forcefield "
+                "because it doesn't have NonBondedForce."
+            )
+        return non_bonded_force_gen.lj14scale
+
+    @property
+    def coulomb14scale(self):
+        """Get Coulombic 1-4 scale for this forcefield"""
+        try:
+            non_bonded_force_gen = self.get_generator(ff=self, gen_type=NonbondedGenerator)
+        except MissingForceError:
+            raise AttributeError(
+                "Cannot get coulomb14scale for the Forcefield "
+                "because it doesn't have NonBondedForce."
+            )
+        return non_bonded_force_gen.coulomb14scale
+
     def _parse_version_number(self, forcefield_file):
         with open(forcefield_file, 'r') as f:
             tree = ET.parse(f)
