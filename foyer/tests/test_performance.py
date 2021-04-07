@@ -23,7 +23,9 @@ def test_surface():
 
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-@pytest.mark.timeout(45)
+#@pytest.mark.timeout(15)
+#Attempt to troubleshoot issues with py36 windows build on Azure
+@pytest.mark.timeout(150)
 def test_polymer():
     import mbuild as mb
     peg100 = mb.load(get_fn('peg100.mol2'))
