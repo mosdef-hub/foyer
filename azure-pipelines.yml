@@ -104,25 +104,24 @@ stages:
 
           - bash: |
               conda config --set always_yes yes --set changeps1 no
-              sed -i -E 's/python.*$/python=3.7/' environment-dev.yml
-              conda env create -f environment-dev.yml
-              source activate foyer-dev
+              pip install conda-merge
+              git clone https://github.com/mosdef-hub/mbuild.git
+              conda-merge environment-dev.yml mbuild/environment-dev.yml > combine.yml
+              sed -iE 's/python.*$/python=3.7/' combine.yml
+              sed -iE '$d' combine.yml
+              sed -iE '/mbuild/d' combine.yml
+              sed -iE '/foyer/d' combine.yml
+              sed -iE '1 i\name: bleeding' combine.yml
+              conda env create -f combine.yml
+              source activate bleeding
+              cd mbuild
+              pip install -e .
+              cd ..
+              pip install -e .
             displayName: Create a new bleeding test environment
 
           - bash: |
-              source activate foyer-dev
-              git clone https://github.com/mosdef-hub/mbuild.git
-              cd mbuild
-              conda env update -n foyer-dev -f environment.yml
-              pip install -e .
-              pip uninstall foyer -y
-              cd ..
-              pip install -e .
-
-            displayName: Clone mbuild, install mbuild, install foyer
-
-          - bash: |
-              source activate foyer-dev
+              source activate bleeding
               python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
             displayName: Run Tests
 
