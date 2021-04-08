@@ -108,11 +108,9 @@ stages:
               git clone https://github.com/mosdef-hub/mbuild.git
               conda-merge environment-dev.yml mbuild/environment-dev.yml > combine.yml
               sed -iE 's/python.*$/python=3.7/' combine.yml
-              sed -iE '$d' combine.yml
               sed -iE '/mbuild/d' combine.yml
               sed -iE '/ foyer/d' combine.yml
-              sed -iE '1 i\name: bleeding' combine.yml
-              conda env create -f combine.yml
+              conda env create -n bleeding -f combine.yml
               source activate bleeding
               cd mbuild
               pip install -e .
