@@ -110,7 +110,7 @@ stages:
               sed -iE 's/python.*$/python=3.7/' combine.yml
               sed -iE '$d' combine.yml
               sed -iE '/mbuild/d' combine.yml
-              sed -iE '/foyer/d' combine.yml
+              sed -iE '/ foyer/d' combine.yml
               sed -iE '1 i\name: bleeding' combine.yml
               conda env create -f combine.yml
               source activate bleeding
