@@ -81,8 +81,8 @@ stages:
             displayName: Add Relevent Channels
 
           - script: |
-              sed -i -E 's/python.*$/python='$(python.version)'/' environment-dev.yml
-              conda env create -f environment-dev.yml
+              sed -i -E 's/python.*$/python='$(python.version)'/' environment-win.yml
+              conda env create -f environment-win.yml
               call activate foyer-dev
               pip install -e .
 
