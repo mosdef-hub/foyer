@@ -4,6 +4,7 @@ import pytest
 
 from foyer.exceptions import FoyerError
 from foyer.forcefield import Forcefield
+
 from foyer.smarts import SMARTS
 from foyer.smarts_graph import SMARTSGraph
 from foyer.tests.base_test import BaseTest

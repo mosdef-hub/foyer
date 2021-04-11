@@ -3,6 +3,7 @@ import pytest
 
 from foyer.smarts_graph import SMARTSGraph, _prepare_atoms
 from foyer.tests.base_test import BaseTest
+
 from foyer.tests.utils import get_fn
 
 TEST_BANK = [

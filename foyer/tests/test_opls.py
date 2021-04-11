@@ -8,6 +8,7 @@ from pkg_resources import resource_filename
 
 from foyer import Forcefield
 from foyer.tests.base_test import BaseTest
+
 from foyer.tests.utils import atomtype
 
 OPLSAA = Forcefield(name="oplsaa")

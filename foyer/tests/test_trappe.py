@@ -52,7 +52,7 @@ class TestTraPPE(BaseTest):
             _, ext = os.path.splitext(mol_file)
             mol2_path = os.path.join(testfiles_dir, mol_name, mol_file)
             structure = pmd.load_file(mol2_path, structure=True)
-        atomtype(structure, TRAPPE_UA, non_atomistic=False)
+            atomtype(structure, TRAPPE_UA)
 
 
 if __name__ == "__main__":
