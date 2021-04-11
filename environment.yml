@@ -5,6 +5,7 @@ dependencies:
   - lark-parser
   - lxml
   - networkx>=2.0
+  - gmso
   - openmm>=7.5
   - parmed
   - python<=3.8
