@@ -44,23 +44,20 @@ stages:
 
           - bash: |
               conda config --set always_yes yes --set changeps1 no
-              conda config --add channels omnia
-              conda config --add channels janschulz
-              conda config --add channels conda-forge
-              conda config --add channels mosdef
             displayName: Add relavent Channels
           - bash: |
-              conda create -n test-environment python=$(python.version) --file requirements-dev.txt
-              source activate test-environment
+              sed -i -E 's/python.*$/python='$(python.version)'/' environment-dev.yml
+              conda env create -f environment-dev.yml
+              source activate foyer-dev
               pip install -e .
-              pip install git+https://github.com/rsdefever/antefoyer.git
-            displayName: Create Conda env, Activate, Install dependencies, Install Branch, Install antefoyer
+            displayName: Create Conda env, Activate, Install dependencies, Install Branch
           - bash: |
-              source activate test-environment
+              source activate foyer-dev
               python -m pytest -v --cov=foyer --cov-report=html --pyargs foyer 
             displayName: Run Tests
+
           - bash: |
-              source activate test-environment
+              source activate foyer-dev
               bash <(curl -s https://codecov.io/bash) -C $(Build.SourceVersion)
             condition: and( eq( variables['Agent.OS'], 'Linux' ), eq( variables['python.version'], '3.7' ) )
             displayName: Upload coverage report to codecov.io
@@ -81,21 +78,18 @@ stages:
 
           - script: |
               conda config --set always_yes yes --set changeps1 no
-              conda config --add channels omnia
-              conda config --add channels conda-forge
-              conda config --add channels mosdef
             displayName: Add Relevent Channels
 
           - script: |
-              conda create -n test-environment python=$(python.version) --file requirements-dev.txt
-              call activate test-environment
+              sed -i -E 's/python.*$/python='$(python.version)'/' environment-win.yml
+              conda env create -f environment-win.yml
+              call activate foyer-dev
               pip install -e .
-              pip install git+https://github.com/rsdefever/antefoyer.git
 
-            displayName: Create conda env, Install dependencies and Install Branch, antefoyer
+            displayName: Create conda env, Install dependencies and Install Branch
 
           - script: |
-              call activate test-environment
+              call activate foyer-dev
               python -m pytest -v --cov=foyer --pyargs foyer
             displayName: Run Tests
 
@@ -110,28 +104,22 @@ stages:
 
           - bash: |
               conda config --set always_yes yes --set changeps1 no
-              conda config --add channels omnia
-              conda config --add channels conda-forge
-              conda config --add channels mosdef
-              conda create -n  bleeding-test-environment python=3.7 --file requirements-dev.txt
-              source activate bleeding-test-environment
+              pip install conda-merge
+              git clone https://github.com/mosdef-hub/mbuild.git
+              conda-merge environment-dev.yml mbuild/environment-dev.yml > combine.yml
+              sed -iE 's/python.*$/python=3.7/' combine.yml
+              sed -iE '/mbuild/d' combine.yml
+              sed -iE '/ foyer/d' combine.yml
+              conda env create -n bleeding -f combine.yml
+              source activate bleeding
+              cd mbuild
+              pip install -e .
+              cd ..
+              pip install -e .
             displayName: Create a new bleeding test environment
 
           - bash: |
-              source activate bleeding-test-environment
-              git clone https://github.com/mosdef-hub/mbuild.git
-              cd mbuild
-              conda install --yes --file requirements-dev.txt
-              pip install -e .
-              pip uninstall foyer -y
-              cd ..
-              pip install -e .
-              pip install git+https://github.com/rsdefever/antefoyer.git
-
-            displayName: Clone mbuild, install mbuild, install foyer, antefoyer
-
-          - bash: |
-              source activate bleeding-test-environment
+              source activate bleeding
               python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
             displayName: Run Tests
 
