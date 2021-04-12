@@ -1,8 +1,18 @@
 trigger:
-  - master
-
+  branches:
+    include:
+    - master
+  tags:
+    include:
+    - 0.*
 pr:
-  - master
+  autoCancel: true
+  branches:
+    include:
+      - master
+  paths:
+    exclude:
+    - docs
 
 schedules:
 - cron: "0 0 * * *"
