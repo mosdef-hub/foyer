@@ -392,7 +392,8 @@ class Forcefield(object):
             btype_class = [bmem[i].atom_type.atomclass for i in range(2)]
             for name in [btype_name, btype_class]:
                 connection.bond_type = self.ff.get_potential('bond_type',
-                                                             name)
+                                                             name,
+                                                             warn=True)
                 if connection.bond_type:
                     break
 
@@ -403,7 +404,8 @@ class Forcefield(object):
 
             for name in [agtype_name, agtype_class]:
                 connection.angle_type = self.ff.get_potential('angle_type',
-                                                              name)
+                                                              name,
+                                                              warn=True)
                 if connection.angle_type:
                     break
 
@@ -414,7 +416,8 @@ class Forcefield(object):
 
             for name in [dtype_name, dtype_class]:
                 connection.dihedral_type = self.ff.get_potential('dihedral_type',
-                                                                 name)
+                                                                 name,
+                                                                 warn=True)
                 if connection.dihedral_type:
                     break
 
@@ -425,7 +428,8 @@ class Forcefield(object):
 
             for name in [itype_name, itype_class]:
                 connection.improper_type = self.ff.get_potential('improper_type',
-                                                                 name)
+                                                                 name,
+                                                                 warn=True)
                 if connection.improper_type:
                     break
 
