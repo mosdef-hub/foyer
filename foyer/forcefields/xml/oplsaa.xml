@@ -408,7 +408,7 @@
   <Type name="opls_403" class="opls_403" element="I" mass="126.9045"/>
   <Type name="opls_404" class="opls_404" element="Li" mass="6.941"/>
   <Type name="opls_405" class="opls_405" element="Na" mass="22.98977"/>
-  <Type name="opls_406" class="opls_406" element="Li" mass="6.941" def="Li" desc="Li+ cation" doi=""/>
+  <Type name="opls_406" class="opls_406" element="Li" mass="6.941" def="Li" desc="Li+ cation" doi="10.1021/j100384a009"/>
   <Type name="opls_407" class="opls_407" element="Na" mass="22.98977"/>
   <Type name="opls_408" class="opls_408" element="K" mass="39.0983"/>
   <Type name="opls_409" class="opls_409" element="Rb" mass="85.4678"/>
