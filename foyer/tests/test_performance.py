@@ -14,7 +14,7 @@ def test_fullerene():
 
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-@pytest.mark.timeout(45)
+@pytest.mark.timeout(15)
 def test_surface():
     import mbuild as mb
     surface = mb.load(get_fn('silica.mol2'))
@@ -23,7 +23,7 @@ def test_surface():
 
 
 @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-@pytest.mark.timeout(15)
+@pytest.mark.timeout(45)
 def test_polymer():
     import mbuild as mb
     peg100 = mb.load(get_fn('peg100.mol2'))
