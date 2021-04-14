@@ -1,3 +1,8 @@
+<!--
+     Parameters for atomtypes in this XML file
+     are imported from the gromacs atomtypes file at
+     https://github.com/gromacs/gromacs/blob/aa66efd3179a671aace62b827c54aadc3d89c1ee/share/top/oplsaa.ff/atomtypes.atp
+-->
 <ForceField>
  <AtomTypes>
   <Type name="opls_001" class="opls_001" element="C" mass="12.011"/>
@@ -148,7 +153,7 @@
   <Type name="opls_148" class="CT" element="C" mass="12.01100"   def="[C;X4]([C;%opls_145])(H)(H)H" desc="toluene CH3" overrides="opls_149,opls_135" doi="10.1021/ja9621760"/>
   <Type name="opls_149" class="CT" element="C" mass="12.01100"   def="[C;X4]([C;%opls_145])(H)(H)*" desc="ethyl benzene CH2" overrides="opls_136" doi="10.1021/ja9621760"/>
   <Type name="opls_150" class="opls_150" element="C" mass="12.011"/>
-  <Type name="opls_151" class="Cl" element="Cl" mass="35.453" def="[Cl][C;X4]" desc="Cl in alkyl chlorides" doi="10.1021/jp0484579"/>
+  <Type name="opls_151" class="Cl" element="Cl" mass="35.453" def="[Cl][C;X4]" overrides="opls_401" desc="Cl in alkyl chlorides" doi="10.1021/jp0484579"/>
   <Type name="opls_152" class="CT" element="C" mass="12.011" def="[C;X4](Cl)([Cl,C,H])([Cl,C,H])([Cl,C,H])" desc="RCH2Cl in alkyl chlorides" doi="10.1021/jp0484579"/>
   <Type name="opls_153" class="HC" element="H" mass="1.008" def="[H][C;X4](Cl)([Cl,C,H])([Cl,C,H])" overrides="opls_140" desc="H in alkyl chlorides" doi="10.1021/jp0484579"/>
   <Type name="opls_154" class="OH" element="O" mass="15.9994"   def="[O;X2]H" desc="all-atom O: mono alcohols" doi="10.1021/ja9621760"/>
@@ -243,7 +248,7 @@
   <Type name="opls_241" class="H" element="H" mass="1.008" def="[H;X1][N;%opls_238]" desc="H on a secondary nitrogen in amide" doi="10.1021/ja9621760"/>
   <Type name="opls_242" class="CT" element="C" mass="12.011" def="[C;X4](H)(H)(H)[N;%opls_238]" desc="methyl C attached to secondary N in amide" doi="10.1021/ja9621760"/>
   <Type name="opls_243" class="CT" element="C" mass="12.011" def="[C;X4](H)(H)(H)[N;%opls_239]" desc="methyl C attached to tertiary N in amide" doi="10.1021/ja9621760"/>
-  <Type name="opls_244" class="opls_244" element="C" mass="12.011"/> 
+  <Type name="opls_244" class="opls_244" element="C" mass="12.011"/>
   <Type name="opls_245" class="CT" element="C" mass="12.011" def="[C;X4](C)(H)(H)[N;%opls_239]" desc="secondary C attached to tertiary N. ex. NMP." doi="10.1021/ja9621760"/>
   <Type name="opls_246" class="opls_246" element="C" mass="12.011"/>
   <Type name="opls_247" class="opls_247" element="C" mass="12.011"/>
@@ -263,7 +268,7 @@
   <Type name="opls_261" class="CZ" element="C" mass="12.011" def="[C;X2]([C;X3;r6])" overrides = "opls_754" desc="Benzonitrile: carbon in nitrile group (CN) " doi="10.1021/ja9621760"/>
   <Type name="opls_262" class="NZ" element="N" mass="14.0067" def="[N;X1][C;%opls_261]" overrides = "opls_753" desc="Benzonitrile Nitrogen(benzene-C)N" doi="10.1021/ja9621760"/>
   <Type name="opls_263" class="CA" element="C" mass="12.011" def="[C;X3;r6]1(Cl)[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" overrides="opls_145" desc="Chlorobenzene C(Cl)" doi="10.1021/ja9621760"/>
-  <Type name="opls_264" class="Cl" element="Cl" mass="35.453" def="[Cl;X1]([C;%opls_263])" desc="Chlorobenzene (C)Cl" doi="10.1021/ja9621760"/>
+  <Type name="opls_264" class="Cl" element="Cl" mass="35.453" def="[Cl;X1]([C;%opls_263])" overrides="opls_401" desc="Chlorobenzene (C)Cl" doi="10.1021/ja9621760"/>
   <Type name="opls_265" class="opls_265" element="N" mass="14.0067"/>
   <Type name="opls_266" class="opls_266" element="C" mass="12.011"/>
   <Type name="opls_267" class="C" element="C" mass="12.01100"   def="[C;X3]([O;X1])OH" desc="Co in CCOOH" overrides="opls_277" doi="10.1021/ja9621760"/>
@@ -403,7 +408,7 @@
   <Type name="opls_395" class="opls_395" element="O" mass="15.9994"/>
   <Type name="opls_396" class="opls_396" element="C" mass="12.011"/>
   <Type name="opls_400" class="opls_400" element="F" mass="18.9984"/>
-  <Type name="opls_401" class="opls_401" element="Cl" mass="35.453"/>
+  <Type name="opls_401" class="opls_401" element="Cl" mass="35.453" def="[Cl]" desc="Chloride Ion(Cl-)" doi="https://doi.org/10.1021/ja00316a012"/>
   <Type name="opls_402" class="opls_402" element="Br" mass="79.904"/>
   <Type name="opls_403" class="opls_403" element="I" mass="126.9045"/>
   <Type name="opls_404" class="opls_404" element="Li" mass="6.941"/>
