@@ -1,6 +1,7 @@
 import os
 import glob
 from pkg_resources import resource_filename
+import warnings
 
 from foyer import Forcefield
 
@@ -29,8 +30,12 @@ def get_forcefield(name=None):
 
 
 def load_OPLSAA():
-    return get_forcefield(name='oplsaa')
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        return get_forcefield(name='oplsaa')
 
 
 def load_TRAPPE_UA():
-    return get_forcefield(name='trappe-ua')
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        return get_forcefield(name='trappe-ua')
