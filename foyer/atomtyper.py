@@ -1,8 +1,10 @@
 from warnings import warn
 
+import parmed as pmd
 import parmed.periodic_table as pt
 
 from foyer.exceptions import FoyerError
+from foyer.topology_graph import TopologyGraph
 from foyer.smarts_graph import SMARTSGraph
 
 
@@ -11,7 +13,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
 
     Parameters
     ----------
-    topology : simtk.openmm.app.Topology
+    topology : parmed.Structure or TopologyGraph
         The topology that we are trying to atomtype.
     forcefield : foyer.Forcefield
         The forcefield object.
@@ -19,8 +21,18 @@ def find_atomtypes(structure, forcefield, max_iter=10):
         The maximum number of iterations.
 
     """
-    typemap = {atom.idx: {'whitelist': set(), 'blacklist': set(), 
-        'atomtype': None} for atom in structure.atoms}
+    topology_graph = structure
+
+    if isinstance(structure, pmd.Structure):
+        topology_graph = TopologyGraph.from_parmed(structure)
+
+    typemap = {
+        atom_index: {
+            'whitelist': set(),
+            'blacklist': set(),
+            'atomtype': None
+        } for atom_index in topology_graph.atoms(data=False)
+    }
 
     rules = _load_rules(forcefield, typemap)
 
@@ -28,25 +40,27 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     subrules = dict()
 
     system_elements = set()
-    for a in structure.atoms:
+    for _, atom_data in topology_graph.atoms(data=True):
         # First add non-element types, which are strings, then elements
-        if a.name.startswith('_'):
-            if a.name in forcefield.non_element_types:
-                system_elements.add(a.name)
+        name = atom_data.name
+        if name.startswith('_'):
+            if name in forcefield.non_element_types:
+                system_elements.add(name)
         else:
-            if 0 < a.atomic_number <= pt.KNOWN_ELEMENTS:
-                element = pt.Element[a.atomic_number]
+            atomic_number = atom_data.atomic_number
+            if 0 < atomic_number <= pt.KNOWN_ELEMENTS:
+                element = pt.Element[atomic_number]
                 system_elements.add(element)
             else:
                 raise FoyerError(
                     'Parsed atom {} as having neither an element '
-                    'nor non-element type.'.format(a)
+                    'nor non-element type.'.format(name)
                 )
 
     for key, val in rules.items():
         atom = val.nodes[0]['atom']
         if len(list(atom.find_data('atom_symbol'))) == 1 and \
-                    not list(atom.find_data('not_expression')):
+                not list(atom.find_data('not_expression')):
             try:
                 element = next(atom.find_data('atom_symbol')).children[0]
             except IndexError:
@@ -61,10 +75,11 @@ def find_atomtypes(structure, forcefield, max_iter=10):
             subrules[key] = val
     rules = subrules
 
-    _iterate_rules(rules, structure, typemap, max_iter=max_iter)
-    _resolve_atomtypes(structure, typemap)
+    _iterate_rules(rules, topology_graph, typemap, max_iter=max_iter)
+    _resolve_atomtypes(topology_graph, typemap)
 
     return typemap
+
 
 def _load_rules(forcefield, typemap):
     """Load atomtyping rules from a forcefield into SMARTSGraphs. """
@@ -87,7 +102,7 @@ def _load_rules(forcefield, typemap):
     return rules
 
 
-def _iterate_rules(rules, structure, typemap, max_iter):
+def _iterate_rules(rules, topology_graph, typemap, max_iter):
     """Iteratively run all the rules until the white- and blacklists converge.
 
     Parameters
@@ -95,8 +110,8 @@ def _iterate_rules(rules, structure, typemap, max_iter):
     rules : dict
         A dictionary mapping rule names (typically atomtype names) to
         SMARTSGraphs that evaluate those rules.
-    topology : simtk.openmm.app.Topology
-        The topology that we are trying to atomtype.
+    topology_graph : TopologyGraph
+        The topology graph that we are trying to atomtype.
     max_iter : int
         The maximum number of iterations.
 
@@ -106,7 +121,7 @@ def _iterate_rules(rules, structure, typemap, max_iter):
         max_iter -= 1
         found_something = False
         for rule in rules.values():
-            for match_index in rule.find_matches(structure, typemap):
+            for match_index in rule.find_matches(topology_graph, typemap):
                 atom = typemap[match_index]
                 # This conditional is not strictly necessary, but it prevents
                 # redundant set addition on later iterations
@@ -120,11 +135,12 @@ def _iterate_rules(rules, structure, typemap, max_iter):
         warn("Reached maximum iterations. Something probably went wrong.")
     return typemap
 
-def _resolve_atomtypes(structure, typemap):
+
+def _resolve_atomtypes(topology_graph, typemap):
     """Determine the final atomtypes from the white- and blacklists. """
-    atoms = structure.atoms
+    atoms = {atom_idx: data for atom_idx, data in topology_graph.atoms(data=True)}
     for atom_id, atom in typemap.items():
-        atomtype = [rule_name for rule_name in 
+        atomtype = [rule_name for rule_name in
                     atom['whitelist'] - atom['blacklist']]
         if len(atomtype) == 1:
             atom['atomtype'] = atomtype[0]

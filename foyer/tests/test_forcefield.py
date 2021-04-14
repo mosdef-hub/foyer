@@ -8,7 +8,7 @@ from lxml import etree as ET
 import parmed as pmd
 import pytest
 
-from foyer import Forcefield
+from foyer import Forcefield, forcefields
 from foyer.forcefield import generate_topology
 from foyer.forcefield import _check_independent_residues
 from foyer.exceptions import FoyerError, ValidationWarning
