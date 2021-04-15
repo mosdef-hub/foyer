@@ -4,6 +4,7 @@ from pkg_resources import resource_filename
 import warnings
 
 from foyer import Forcefield
+from foyer.validator import ValidationWarning
 
 
 def get_ff_path():
@@ -24,18 +25,19 @@ def get_forcefield(name=None):
     try:
         ff_path = next(val for val in file_paths if name in val)
     except StopIteration:
-        raise ValueError('Could not find force field with name {}'
-                ' in path {}'.format(name, get_ff_path()))
+        raise ValueError(
+            f"Could not find forcefield named {name} in path {get_ff_path()}"
+            )
     return Forcefield(ff_path)
 
 
 def load_OPLSAA():
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
+        warnings.simplefilter("ignore", category=ValidationWarning)
         return get_forcefield(name='oplsaa')
 
 
 def load_TRAPPE_UA():
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
+        warnings.simplefilter("ignore", category=UserWarning)
         return get_forcefield(name='trappe-ua')
