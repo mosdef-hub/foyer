@@ -145,19 +145,11 @@ def _resolve_atomtypes(topology_graph, typemap):
                     atom['whitelist'] - atom['blacklist']]
         if len(atomtype) == 1:
             atom['atomtype'] = atomtype[0]
-        elif isinstance(structure, gmso.Topology):
-            if len(atomtype) > 1:
-                raise FoyerError("Found multiple types for Site {} ({}): {}.".format(
-                    atom_id, structure.sites[atom_id].element, atomtype))
-            else:
-                raise FoyerError("Found no types for Site {} ({}).".format(
-                    atom_id, structure.sites[atom_id]))
-        elif isinstance(structure, parmed.Structure):
-            if len(atomtype) > 1:
-                raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
-                    atom_id, structure.atoms[atom_id].atomic_number, atomtype))
-            else:
-                raise FoyerError("Found no types for atom {} ({}).".format(
-                    atom_id, structure.atoms[atom_id].atomic_number))
+        elif len(atomtype) > 1:
+            raise FoyerError("Found multiple types for atom {} ({}): {}.".format(
+                atom_id, atoms[atom_id].atomic_number, atomtype))
+        else:
+            raise FoyerError("Found no types for atom {} ({}).".format(
+                atom_id, atoms[atom_id].atomic_number))
 
     return typemap
