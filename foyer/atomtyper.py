@@ -7,6 +7,8 @@ from foyer.exceptions import FoyerError
 from foyer.topology_graph import TopologyGraph
 from foyer.smarts_graph import SMARTSGraph
 
+from ele.exceptions import ElementError
+
 
 def find_atomtypes(structure, forcefield, max_iter=10):
     """Determine atomtypes for all atoms.
@@ -48,10 +50,10 @@ def find_atomtypes(structure, forcefield, max_iter=10):
                 system_elements.add(name)
         else:
             atomic_number = atom_data.atomic_number
-            if 0 < atomic_number <= len(ele.Elements[0]):
+            try:
                 element = ele.element_from_atomic_number(atomic_number).symbol
                 system_elements.add(element)
-            else:
+            except ElementError:
                 raise FoyerError(
                     'Parsed atom {} as having neither an element '
                     'nor non-element type.'.format(name)
