@@ -6,6 +6,7 @@ dependencies:
   - python=3.7
   - openmm
   - parmed
+  - ele
   - pip:
     - sphinx
     - sphinx_rtd_theme

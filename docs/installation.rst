@@ -12,11 +12,6 @@ after which you can simply install without specifying the channels::
 
     $ conda config --add channels conda-forge
     $ conda install foyer
-Install with `pip <https://pypi.org/project/pip/>`_
----------------------------------------------------
-::
-
-    $ pip install foyer
 
 Install an editable version from source
 ---------------------------------------
