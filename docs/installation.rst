@@ -42,6 +42,6 @@ Building the documentation
 
 foyer uses `sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ to build its documentation. To build the docs locally, run the following while in the ``docs`` directory::
     
-    $ conda env create -f env-docs.yml
+    $ conda env create -f docs-env.yml
     $ conda activate foyer-docs
     $ make html
