@@ -27,6 +27,7 @@ acetamide
 acetone
 benzene
 benzonitrile
+chloride
 chloroethane
 chlorobenzene
 cyclohexane
