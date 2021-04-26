@@ -270,8 +270,8 @@
   <Type name="opls_268" class="OH" element="O" mass="15.9994"   def="[O;X2]([C;%opls_267])H" desc="Oh in CCOOH" overrides="opls_154" doi="10.1021/ja9621760"/>
   <Type name="opls_269" class="O_3" element="O" mass="15.9994"  def="[O;X1]([C;%opls_267])" desc="Oc in CCOOH" overrides="opls_278,opls_272" doi="10.1021/ja9621760"/>
   <Type name="opls_270" class="HO" element="H" mass="1.00800"   def="H([O;%opls_268])" desc="H in CCOOH" overrides="opls_155" doi="10.1021/ja9621760"/>
-  <Type name="opls_271" class="C" element="C" mass="12.011" def="[C;X3](O)(O)*" desc="acetate C in COO-"/>
-  <Type name="opls_272" class="O_3" element="O" mass="15.9994" def="[O;X1]([C;%opls_271])" desc="O- in acetate group COO-"/>
+  <Type name="opls_271" class="C" element="C" mass="12.011" def="[C;X3](O)(O)*" desc="acetate C in COO-" doi = "10.1021/ja9621760"/>
+  <Type name="opls_272" class="O_3" element="O" mass="15.9994" def="[O;X1]([C;%opls_271])" desc="O- in acetate group COO-" doi="10.1021/ja9621760"/>
   <Type name="opls_273" class="opls_273" element="C" mass="12.011"/>
   <Type name="opls_274" class="opls_274" element="C" mass="12.011"/>
   <Type name="opls_275" class="opls_275" element="C" mass="12.011"/>
