@@ -5,6 +5,7 @@ channels:
   - mosdef
 dependencies:
   - python=3.7
+  - gmso
   - openmm
   - parmed
   - pip:
