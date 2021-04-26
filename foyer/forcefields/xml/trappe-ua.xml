@@ -1,4 +1,4 @@
-<ForceField>
+<ForceField name="Trappe-UA" version="0.0.1">
  <AtomTypes>
   <Type name="O" class="O" element="O" mass="15.99940" def="OH" desc="Oxygen in hydroxyl" doi="10.1021/jp003882x"/>
   <Type name="H" class="H" element="H" mass="1.00800" def="HO" desc="Hydrogen in hydroxyl" doi="10.1021/jp003882x"/>
