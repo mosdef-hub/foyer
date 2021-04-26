@@ -68,6 +68,7 @@ views of the National Science Foundation.
     :hidden:
 
     installation
+    units
 
 .. toctree::
     :hidden:
