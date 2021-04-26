@@ -7,7 +7,7 @@ import networkx as nx
 import warnings
 
 import gmso
-import parmed
+import parmed as pmd
 import numpy as np
 
 
@@ -66,19 +66,10 @@ def write_foyer(self, filename, forcefield=None, unique=True):
             _write_periodic_torsions(root, self.dihedrals, unique)
         if len(self.rb_torsions) > 0 and self.rb_torsions[0].type is not None:
             _write_rb_torsions(root, self.rb_torsions, unique)
+
     # TO DO
     elif isinstance(self, gmso.Topology):
-        _write_atoms(self, root, self.sites, forcefield, unique)
-        if len(self.bonds) > 0 and self.bonds[0].bond_type is not None:
-            _write_bonds(root, self.bonds, unique)
-        if len(self.angles) > 0 and self.angles[0].angle_type is not None:
-            _write_angles(root, self.angles, unique)
-        if len(self.dihedrals) > 0 and self.dihedrals[0].dihedral_type is not None:
-            _write_periodic_torsions(root, self.dihedrals, unique)
-        '''
-        if len(self.impropers) > 0 and self.impropers[0].improper_type is not None:
-            _write_periodic_improper(root, self.impropers, unique)
-        '''
+        continue
 
     _remove_duplicate_elements(root, unique)
 
