@@ -69,7 +69,7 @@ def write_foyer(self, filename, forcefield=None, unique=True):
 
     # TO DO
     elif isinstance(self, gmso.Topology):
-        continue
+        pass
 
     _remove_duplicate_elements(root, unique)
 
