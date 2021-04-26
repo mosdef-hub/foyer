@@ -230,7 +230,7 @@ def _topology_from_residue(res):
 def _check_independent_residues(structure):
     """Check to see if residues will constitute independent graphs."""
     for res in structure.residues:
-        atoms_in_residue = set([*res.atoms])
+        atoms_in_residue = {*res.atoms}
         bond_partners_in_residue = [item for sublist in [atom.bond_partners for atom in res.atoms] for item in sublist]
         # Handle the case of a 'residue' with no neighbors
         if not bond_partners_in_residue:
@@ -422,7 +422,7 @@ class Forcefield(app.ForceField):
             try:
                 file = self.included_forcefields[name]
             except KeyError:
-                raise IOError('Forcefield {} cannot be found'.format(name))
+                raise OSError(f'Forcefield {name} cannot be found')
             else:
                 all_files_to_load.append(file)
 
@@ -431,7 +431,7 @@ class Forcefield(app.ForceField):
             for ff_file_name in preprocessed_files:
                 Validator(ff_file_name, debug)
         try:
-            super(Forcefield, self).__init__(*preprocessed_files)
+            super().__init__(*preprocessed_files)
         finally:
             for ff_file_name in preprocessed_files:
                 os.remove(ff_file_name)
@@ -493,7 +493,7 @@ class Forcefield(app.ForceField):
         return non_bonded_force_gen.coulomb14scale
 
     def _parse_version_number(self, forcefield_file):
-        with open(forcefield_file, 'r') as f:
+        with open(forcefield_file) as f:
             tree = ET.parse(f)
             root = tree.getroot()
             try:
@@ -505,7 +505,7 @@ class Forcefield(app.ForceField):
                 return None
 
     def _parse_name(self, forcefield_file):
-        with open(forcefield_file, 'r') as f:
+        with open(forcefield_file) as f:
             tree = ET.parse(f)
             root = tree.getroot()
             try:
@@ -560,14 +560,14 @@ class Forcefield(app.ForceField):
         if 'def' in parameters:
             self.atomTypeDefinitions[name] = parameters['def']
         if 'overrides' in parameters:
-            overrides = set(atype.strip() for atype
-                            in parameters['overrides'].split(","))
+            overrides = {atype.strip() for atype
+                            in parameters['overrides'].split(",")}
             if overrides:
                 self.atomTypeOverrides[name] = overrides
         if 'desc' in parameters:
             self.atomTypeDesc[name] = parameters['desc']
         if 'doi' in parameters:
-            dois = set(doi.strip() for doi in parameters['doi'].split(','))
+            dois = {doi.strip() for doi in parameters['doi'].split(',')}
             self.atomTypeRefs[name] = dois
         if 'element' in parameters:
             self.atomTypeElements[name] = parameters['element']
@@ -704,7 +704,7 @@ class Forcefield(app.ForceField):
                               assert_dihedral_params, assert_improper_params)
 
         if references_file:
-            atom_types = set(atom.type for atom in structure.atoms)
+            atom_types = {atom.type for atom in structure.atoms}
             self._write_references_to_file(atom_types, references_file)
 
         # TODO: Check against the name of the force field and/or store
@@ -789,7 +789,7 @@ class Forcefield(app.ForceField):
 
             # Look up the type name in the list of registered atom types, returning a helpful error message if it cannot be found.
             if typename not in self._atomTypes:
-                msg  = "Could not find typename '%s' for atom '%s' in list of known atom types.\n" % (typename, str(atom))
+                msg  = f"Could not find typename '{typename}' for atom '{str(atom)}' in list of known atom types.\n"
                 msg += "Known atom types are: %s" % str(self._atomTypes.keys())
                 raise Exception(msg)
 
@@ -978,18 +978,18 @@ class Forcefield(app.ForceField):
         unique_references = collections.OrderedDict(sorted(unique_references.items()))
         with open(references_file, 'w') as f:
             for doi, atomtypes in unique_references.items():
-                url = "http://api.crossref.org/works/{}/transform/application/x-bibtex".format(doi)
+                url = f"http://api.crossref.org/works/{doi}/transform/application/x-bibtex"
                 headers = {"accept": "application/x-bibtex"}
                 bibtex_ref = get_ref(url, headers=headers)
                 if bibtex_ref is None:
-                    warnings.warn('Could not get ref for doi'.format(doi))
+                    warnings.warn(f'Could not get ref for doi')
                     continue
                 else:
                     bibtex_text = bibtex_ref.text
                 note = (',\n\tnote = {Parameters for atom types: ' +
                         ', '.join(sorted(atomtypes)) + '}')
                 bibtex_text = bibtex_text[:-2] + note + bibtex_text[-2:]
-                f.write('{}\n'.format(bibtex_text))
+                f.write(f'{bibtex_text}\n')
 
     def get_parameters(self, group, key, keys_are_atom_classes=False):
         """Get parameters for a specific group of Forces in this Forcefield

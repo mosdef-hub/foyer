@@ -38,7 +38,7 @@ class SMARTSGraph(nx.Graph):
     def __init__(self, smarts_string, parser=None, name=None, overrides=None,
                 typemap=None,
                  *args, **kwargs):
-        super(SMARTSGraph, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.smarts_string = smarts_string
         self.name = name
@@ -210,7 +210,7 @@ class SMARTSGraph(nx.Graph):
 class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
     """ Inherits and implements VF2 for a SMARTSGraph"""
     def __init__(self, G1, G2, node_match, element, typemap):
-        super(SMARTSMatcher, self).__init__(G1, G2, node_match)
+        super().__init__(G1, G2, node_match)
         self.element = element
         # TODO: Parse out nodes containing other elements (see git history)
         self.valid_nodes = G1.nodes()

@@ -13,7 +13,7 @@ TRAPPE_UA = Forcefield(name='trappe-ua')
 
 TRAPPE_TESTFILES_DIR = resource_filename('foyer', 'trappe_validation')
 
-class TestTraPPE(object):
+class TestTraPPE:
 
     @pytest.fixture(autouse=True)
     def initdir(self, tmpdir):
@@ -41,7 +41,7 @@ class TestTraPPE(object):
                     continue
                 else:
                     if mol_name not in self.correctly_implemented:
-                        fh.write('{}\n'.format(mol_name))
+                        fh.write(f'{mol_name}\n')
 
     @pytest.mark.parametrize('mol_name', correctly_implemented)
     def test_atomtyping(self, mol_name, testfiles_dir=TRAPPE_TESTFILES_DIR):

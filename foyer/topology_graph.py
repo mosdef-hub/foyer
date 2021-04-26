@@ -43,7 +43,7 @@ class TopologyGraph(nx.Graph):
     """
 
     def __init__(self, *args, **kwargs):
-        super(TopologyGraph, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def add_atom(self, index, name, atomic_number=None, element=None, **kwargs):
         """Add an atom to the topology graph

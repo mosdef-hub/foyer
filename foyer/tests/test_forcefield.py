@@ -73,8 +73,8 @@ def test_from_parmed():
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2)
 
-    assert sum((1 for at in ethane.atoms if at.type == 'opls_135')) == 2
-    assert sum((1 for at in ethane.atoms if at.type == 'opls_140')) == 6
+    assert sum(1 for at in ethane.atoms if at.type == 'opls_135') == 2
+    assert sum(1 for at in ethane.atoms if at.type == 'opls_140') == 6
     assert len(ethane.bonds) == 7
     assert all(x.type for x in ethane.bonds)
     assert len(ethane.angles) == 12
@@ -96,8 +96,8 @@ def test_from_mbuild():
     oplsaa = Forcefield(name='oplsaa')
     ethane = oplsaa.apply(mol2)
 
-    assert sum((1 for at in ethane.atoms if at.type == 'opls_135')) == 2
-    assert sum((1 for at in ethane.atoms if at.type == 'opls_140')) == 6
+    assert sum(1 for at in ethane.atoms if at.type == 'opls_135') == 2
+    assert sum(1 for at in ethane.atoms if at.type == 'opls_140') == 6
     assert len(ethane.bonds) == 7
     assert all(x.type for x in ethane.bonds)
     assert len(ethane.angles) == 12
@@ -194,8 +194,8 @@ def test_from_mbuild_customtype():
     customtype_ff = Forcefield(forcefield_files=get_fn('validate_customtypes.xml'))
     ethane = customtype_ff.apply(mol2)
 
-    assert sum((1 for at in ethane.atoms if at.type == 'C3')) == 2
-    assert sum((1 for at in ethane.atoms if at.type == 'Hb')) == 6
+    assert sum(1 for at in ethane.atoms if at.type == 'C3') == 2
+    assert sum(1 for at in ethane.atoms if at.type == 'Hb') == 6
     assert len(ethane.bonds) == 7
     assert all(x.type for x in ethane.bonds)
     assert len(ethane.angles) == 12

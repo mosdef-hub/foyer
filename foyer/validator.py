@@ -12,7 +12,7 @@ from foyer.exceptions import (ValidationError, ValidationWarning,
 from foyer.smarts_graph import SMARTSGraph
 
 
-class Validator(object):
+class Validator:
     """ Verifies formatting of force field XML """
     def __init__(self, ff_file_name, debug=False):
         from foyer.forcefield import preprocess_forcefield_files
@@ -86,10 +86,10 @@ class Validator(object):
         for element, num_atoms in sections.items():
             valid_attribs = set()
             for n in range(1, num_atoms + 1):
-                valid_attribs.add('class{}'.format(n))
-                valid_attribs.add('type{}'.format(n))
+                valid_attribs.add(f'class{n}')
+                valid_attribs.add(f'type{n}')
 
-            for entry in ff_tree.xpath('/ForceField/{}'.format(element)):
+            for entry in ff_tree.xpath(f'/ForceField/{element}'):
                 attribs = [valid for valid in valid_attribs
                            if entry.attrib.get(valid) is not None]
                 if num_atoms != len(attribs):
@@ -141,12 +141,12 @@ class Validator(object):
             except lark.ParseError as ex:
                 if " col " in ex.args[0]:
                     column = ex.args[0][ex.args[0].find(" col ") + 5:].strip()
-                    column = " at character {} of {}".format(column, smarts_string)
+                    column = f" at character {column} of {smarts_string}"
                 else:
                     column = ""
 
                 malformed = ValidationError(
-                    "Malformed SMARTS string{} on line {}".format(column, entry.sourceline),
+                    f"Malformed SMARTS string{column} on line {entry.sourceline}",
                     ex, entry.sourceline)
                 errors.append(malformed)
                 continue

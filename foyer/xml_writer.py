@@ -1,5 +1,3 @@
-from __future__ import division
-
 import collections
 from lxml import etree as ET
 from foyer.smarts_graph import SMARTSGraph
@@ -84,7 +82,7 @@ def _write_atoms(self, root, atoms, forcefield, unique):
         ('doi', 'forcefield.atomTypeRefs[name]'),
         ('overrides', 'forcefield.atomTypeOverrides[name]')
         ])
-    atom_type_set = set([atom.atom_type.name for atom in atoms])
+    atom_type_set = {atom.atom_type.name for atom in atoms}
     for atom in atoms:
         atomtype = ET.SubElement(atomtypes, 'Type')
         nb_force = ET.SubElement(nonbonded, 'Atom')
@@ -170,7 +168,7 @@ def _write_bonds(root, bonds, unique):
             bond_force.set('id1', str(bond.atom1.idx))
             bond_force.set('id2', str(bond.atom2.idx))
         for id in range(2):
-            bond_force.set('type{}'.format(id+1), atypes[id])
+            bond_force.set(f'type{id+1}', atypes[id])
         bond_force.set('length', str(round(bond.type.req / 10, 4)))
         bond_force.set('k', str(round(bond.type.k * 4.184 * 200, 1)))
 
@@ -190,7 +188,7 @@ def _write_angles(root, angles, unique):
             angle_force.set('id2', str(angle.atom2.idx))
             angle_force.set('id3', str(angle.atom3.idx))
         for id in range(3):
-            angle_force.set('type{}'.format(id+1), atypes[id])
+            angle_force.set(f'type{id+1}', atypes[id])
         angle_force.set('angle', str(round(angle.type.theteq * (np.pi / 180), 10)))
         angle_force.set('k', str(round(angle.type.k * 4.184 * 2, 3)))
 
@@ -229,7 +227,7 @@ def _write_periodic_torsions(root, dihedrals, unique):
                 dihedral_force.set('id3', str(dihedral.atom3.idx))
                 dihedral_force.set('id4', str(dihedral.atom4.idx))
         for id in range(4):
-            dihedral_force.set('type{}'.format(id+1), atypes[id])
+            dihedral_force.set(f'type{id+1}', atypes[id])
         dihedral_force.set('periodicity1', str(dihedral.type.per))
         dihedral_force.set('phase1',
                            str(round(dihedral.type.phase * (np.pi / 180), 8)))
@@ -251,13 +249,13 @@ def _write_periodic_torsions(root, dihedrals, unique):
                 # Merge the last and current dihedral forces
                 # Find the nth periodicity we can set
                 n = 1
-                while 'periodicity{}'.format(n) in last_dihedral_force.attrib:
+                while f'periodicity{n}' in last_dihedral_force.attrib:
                     n +=1
-                last_dihedral_force.attrib['periodicity{}'.format(n)] = \
+                last_dihedral_force.attrib[f'periodicity{n}'] = \
                         dihedral_force.attrib['periodicity1']
-                last_dihedral_force.attrib['phase{}'.format(n)] = \
+                last_dihedral_force.attrib[f'phase{n}'] = \
                         dihedral_force.attrib['phase1']
-                last_dihedral_force.attrib['k{}'.format(n)] = \
+                last_dihedral_force.attrib[f'k{n}'] = \
                         dihedral_force.attrib['k1']
                 periodic_torsion_forces.remove(dihedral_force)
             else:
@@ -280,10 +278,10 @@ def _unique_periodictorsion_parameters(dihedral1, dihedral2):
     """
     n = 1
     param_tuples = set()
-    while 'periodicity{}'.format(n) in dihedral1.attrib:
-        param_tuples.add((dihedral1.attrib['periodicity{}'.format(n)],
-                            dihedral1.attrib['phase{}'.format(n)],
-                            dihedral1.attrib['k{}'.format(n)]))
+    while f'periodicity{n}' in dihedral1.attrib:
+        param_tuples.add((dihedral1.attrib[f'periodicity{n}'],
+                            dihedral1.attrib[f'phase{n}'],
+                            dihedral1.attrib[f'k{n}']))
         n+=1
     if (dihedral2.attrib['periodicity1'], dihedral2.attrib['phase1'], dihedral2.attrib['k1']) in param_tuples:
         return False
@@ -308,10 +306,10 @@ def _write_rb_torsions(root, rb_torsions, unique):
             rb_torsion_force.set('id3', str(rb_torsion.atom3.idx))
             rb_torsion_force.set('id4', str(rb_torsion.atom4.idx))
         for id in range(4):
-            rb_torsion_force.set('type{}'.format(id+1), atypes[id])
+            rb_torsion_force.set(f'type{id+1}', atypes[id])
         for c_id in range(6):
-            rb_torsion_force.set('c{}'.format(c_id),
-                str(round(getattr(rb_torsion.type, 'c{}'.format(c_id)) * 4.184,
+            rb_torsion_force.set(f'c{c_id}',
+                str(round(getattr(rb_torsion.type, f'c{c_id}') * 4.184,
                           4)))
 
 

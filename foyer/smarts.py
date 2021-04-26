@@ -44,7 +44,7 @@ GRAMMAR = r"""
 """
 
 
-class SMARTS(object):
+class SMARTS:
     """A wrapper class for parsing SMARTS grammar using lark.
 
     Provides functionality for injecting optional, custom, non-element symbols

@@ -14,7 +14,7 @@ OPLSAA = Forcefield(name='oplsaa')
 
 OPLS_TESTFILES_DIR = resource_filename('foyer', 'opls_validation')
 
-class TestOPLS(object):
+class TestOPLS:
 
     @pytest.fixture(autouse=True)
     def initdir(self, tmpdir):
@@ -43,7 +43,7 @@ class TestOPLS(object):
                     continue
                 else:
                     if mol_name not in self.correctly_implemented:
-                        fh.write('{}\n'.format(mol_name))
+                        fh.write(f'{mol_name}\n')
 
     @pytest.mark.parametrize('mol_name', correctly_implemented)
     def test_atomtyping(self, mol_name, testfiles_dir=OPLS_TESTFILES_DIR):
@@ -51,8 +51,8 @@ class TestOPLS(object):
         for mol_file in files:
             _, ext = os.path.splitext(mol_file)
             if ext == '.top':
-                top_filename = '{}.top'.format(mol_name)
-                gro_filename = '{}.gro'.format(mol_name)
+                top_filename = f'{mol_name}.top'
+                gro_filename = f'{mol_name}.gro'
                 top_path = os.path.join(testfiles_dir, mol_name, top_filename)
                 gro_path = os.path.join(testfiles_dir, mol_name, gro_filename)
                 structure = pmd.load_file(top_path, xyz=gro_path, parametrize=False)
@@ -67,8 +67,8 @@ class TestOPLS(object):
         structure = pmd.load_file(top, xyz=gro)
         parametrized = OPLSAA.apply(structure)
 
-        assert sum((1 for at in parametrized.atoms if at.type == 'opls_145')) == 6
-        assert sum((1 for at in parametrized.atoms if at.type == 'opls_146')) == 6
+        assert sum(1 for at in parametrized.atoms if at.type == 'opls_145') == 6
+        assert sum(1 for at in parametrized.atoms if at.type == 'opls_146') == 6
         assert len(parametrized.bonds) == 12
         assert all(x.type for x in parametrized.bonds)
         assert len(parametrized.angles) == 18
