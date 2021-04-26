@@ -3,7 +3,7 @@
      are imported from the gromacs atomtypes file at
      https://github.com/gromacs/gromacs/blob/aa66efd3179a671aace62b827c54aadc3d89c1ee/share/top/oplsaa.ff/atomtypes.atp
 -->
-<ForceField>
+<ForceField name="OPLS-AA" version="0.0.1">
  <AtomTypes>
   <Type name="opls_001" class="opls_001" element="C" mass="12.011"/>
   <Type name="opls_002" class="opls_002" element="O" mass="15.9994"/>
@@ -413,7 +413,7 @@
   <Type name="opls_403" class="opls_403" element="I" mass="126.9045"/>
   <Type name="opls_404" class="opls_404" element="Li" mass="6.941"/>
   <Type name="opls_405" class="opls_405" element="Na" mass="22.98977"/>
-  <Type name="opls_406" class="opls_406" element="Li" mass="6.941"/>
+  <Type name="opls_406" class="opls_406" element="Li" mass="6.941" def="Li" desc="Li+ cation" doi="10.1021/j100384a009"/>
   <Type name="opls_407" class="opls_407" element="Na" mass="22.98977"/>
   <Type name="opls_408" class="opls_408" element="K" mass="39.0983"/>
   <Type name="opls_409" class="opls_409" element="Rb" mass="85.4678"/>
