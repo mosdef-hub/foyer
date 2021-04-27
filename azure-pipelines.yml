@@ -132,7 +132,6 @@ stages:
               pip install -e .
               cd src/antefoyer
               pip install -e .
-              cd ../../
             displayName: Create a new bleeding test environment
 
           - bash: |
