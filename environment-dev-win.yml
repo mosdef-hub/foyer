@@ -1,6 +1,7 @@
 name: foyer-dev
 channels:
   - conda-forge
+  - omnia
 dependencies:
   - bump2version
   - codecov
