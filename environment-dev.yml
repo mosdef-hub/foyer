@@ -19,5 +19,4 @@ dependencies:
   - requests
   - requests-mock
   - pip:
-    - "--editable=git+https://github.com/rsdefever/GAFF-foyer.git#egg=gafffoyer"
     - git+https://github.com/rsdefever/antefoyer.git
