@@ -19,4 +19,4 @@ dependencies:
   - requests
   - requests-mock
   - pip:
-    - git+https://github.com/rsdefever/antefoyer.git
+    - "--editable=git+https://github.com/rsdefever/antefoyer.git#egg=antefoyer"

@@ -60,10 +60,13 @@ stages:
               conda env create -f environment-dev.yml
               source activate foyer-dev
               pip install -e .
+              cd src/antefoyer
+              pip install -e .
+              cd ../../
             displayName: Create Conda env, Activate, Install dependencies, Install Branch
           - bash: |
               source activate foyer-dev
-              python -m pytest -v --cov=foyer --cov-report=html --pyargs foyer 
+              python -m pytest -v --cov=foyer --cov-report=html --pyargs foyer
             displayName: Run Tests
 
           - bash: |
@@ -95,7 +98,9 @@ stages:
               conda env create -f environment-dev-win.yml
               call activate foyer-dev
               pip install -e .
-
+              cd src/antefoyer
+              pip install -e .
+              cd ../../
             displayName: Create conda env, Install dependencies and Install Branch
 
           - script: |
@@ -126,6 +131,9 @@ stages:
               pip install -e .
               cd ..
               pip install -e .
+              cd src/antefoyer
+              pip install -e .
+              cd ../../
             displayName: Create a new bleeding test environment
 
           - bash: |
