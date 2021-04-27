@@ -26,4 +26,4 @@ its `pre-print <https://arxiv.org/abs/1812.06779>`_:
       keywords = "Molecular simulation, Force fields, Reproducibility, Open-source software",
    }
 
-Download as :download:`BibTeX <files/foyer_citation.bib>` or :download:`RIS <files/foyer_citation.ris>`
+Download as :download:`BibTeX <../files/foyer_citation.bib>` or :download:`RIS <../files/foyer_citation.ris>`
