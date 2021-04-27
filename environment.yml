@@ -8,4 +8,5 @@ dependencies:
   - gmso
   - openmm>=7.5
   - parmed
+  - requests
   - python<=3.8

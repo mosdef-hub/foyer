@@ -14,7 +14,8 @@ ADD . /foyer
 
 WORKDIR /foyer
 
-RUN conda update conda -yq && \
+RUN apk add --no-cache git && \
+        conda update conda -yq && \
 	conda config --set always_yes yes --set changeps1 no && \
 	. /opt/conda/etc/profile.d/conda.sh && \
     sed -i -E "s/python.*$/python="$PY_VERSION"/" environment-dev.yml && \
