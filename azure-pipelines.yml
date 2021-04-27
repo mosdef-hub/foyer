@@ -99,7 +99,6 @@ stages:
               pip install -e .
               cd src/antefoyer
               pip install -e .
-              cd ../../
             displayName: Create conda env, Install dependencies and Install Branch
 
           - script: |
