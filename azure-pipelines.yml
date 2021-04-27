@@ -62,7 +62,6 @@ stages:
               pip install -e .
               cd src/antefoyer
               pip install -e .
-              cd ../../
             displayName: Create Conda env, Activate, Install dependencies, Install Branch
           - bash: |
               source activate foyer-dev
