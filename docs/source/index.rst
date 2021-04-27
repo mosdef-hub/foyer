@@ -138,7 +138,7 @@ Table of Contents
 
     topic_guides/smarts
     units
-    parameter_defitions
+    parameter_definitions
     atom-typing_options
     usage_examples
     paper_examples
