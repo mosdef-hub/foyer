@@ -3,12 +3,9 @@ import glob
 import os
 from pkg_resources import resource_filename
 
-from lxml import etree as ET
-
 import pytest
-import unyt as u
 from foyer.general_forcefield import Forcefield
-from foyer.exceptions import FoyerError, ValidationWarning
+from foyer.exceptions import FoyerError
 from foyer.tests.utils import get_fn, register_mock_request
 import mbuild as mb
 import gmso
@@ -17,31 +14,31 @@ FF_DIR = resource_filename('foyer', 'forcefields')
 FORCEFIELDS = glob.glob(os.path.join(FF_DIR, 'xml/*.xml'))
 
 RESPONSE_BIB_ETHANE_JA962170 = """@article{Jorgensen_1996,
-    doi = {10.1021/ja9621760},
-    url = {https://doi.org/10.1021%2Fja9621760},
-    year = 1996,
-    month = {jan},
-    publisher = {American Chemical Society ({ACS})},
-    volume = {118},
-    number = {45},
-    pages = {11225--11236},
-    author = {William L. Jorgensen and David S. Maxwell and Julian Tirado-Rives},
-    title = {Development and Testing of the {OPLS} All-Atom Force Field on Conformational Energetics and Properties of Organic Liquids},
-    journal = {Journal of the American Chemical Society}
+	doi = {10.1021/ja9621760},
+	url = {https://doi.org/10.1021%2Fja9621760},
+	year = 1996,
+	month = {jan},
+	publisher = {American Chemical Society ({ACS})},
+	volume = {118},
+	number = {45},
+	pages = {11225--11236},
+	author = {William L. Jorgensen and David S. Maxwell and Julian Tirado-Rives},
+	title = {Development and Testing of the {OPLS} All-Atom Force Field on Conformational Energetics and Properties of Organic Liquids},
+	journal = {Journal of the American Chemical Society}
 }"""
 
 RESPONSE_BIB_ETHANE_JP0484579="""@article{Jorgensen_2004,
-    doi = {10.1021/jp0484579},
-    url = {https://doi.org/10.1021%2Fjp0484579},
-    year = 2004,
-    month = {oct},
-    publisher = {American Chemical Society ({ACS})},
-    volume = {108},
-    number = {41},
-    pages = {16264--16270},
-    author = {William L. Jorgensen and Jakob P. Ulmschneider and Julian Tirado-Rives},
-    title = {Free Energies of Hydration from a Generalized Born Model and an All-Atom Force Field},
-    journal = {The Journal of Physical Chemistry B}
+	doi = {10.1021/jp0484579},
+	url = {https://doi.org/10.1021%2Fjp0484579},
+	year = 2004,
+	month = {oct},
+	publisher = {American Chemical Society ({ACS})},
+	volume = {108},
+	number = {41},
+	pages = {16264--16270},
+	author = {William L. Jorgensen and Jakob P. Ulmschneider and Julian Tirado-Rives},
+	title = {Free Energies of Hydration from a Generalized Born Model and an All-Atom Force Field},
+	journal = {The Journal of Physical Chemistry B}
 }"""
 
 def test_load_files():
@@ -52,9 +49,11 @@ def test_load_files():
         ff2 = Forcefield(forcefield_files=ff_file, strict=False)
         assert len(ff1.ff.atom_types) == len(ff2.ff.atom_types)
 
+''' Relies on https://github.com/mosdef-hub/gmso/pull/526
 def test_duplicate_type_definitions():
     with pytest.raises(ValueError):
         ff4 = Forcefield(name='oplsaa', forcefield_files=FORCEFIELDS, strict=False)
+'''
 
 def test_missing_type_definitions():
     with pytest.raises(FoyerError):

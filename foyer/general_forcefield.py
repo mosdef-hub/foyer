@@ -1,17 +1,11 @@
 import collections
 import glob
-import itertools
 import os
 from tempfile import NamedTemporaryFile
 import xml.etree.ElementTree as ET
-from lxml import etree
 from pkg_resources import resource_filename
 import warnings
 import re
-from pathlib import Path
-
-import numpy as np
-import foyer.element as custom_elem
 
 import gmso
 from gmso.external import from_mbuild
@@ -21,9 +15,7 @@ import mbuild as mb
 from foyer.atomtyper import find_atomtypes
 from foyer.exceptions import FoyerError
 from foyer import smarts
-from foyer.validator import Validator
-from foyer.xml_writer import write_foyer
-from foyer.utils.io import import_, has_mbuild
+from foyer.utils.io import import_
 from foyer.utils.external import get_ref
 
 
@@ -32,47 +24,6 @@ def preprocess_forcefield_files(forcefield_files=None, backend='gmso'):
     """Pre-process foyer Forcefield XML files"""
     if forcefield_files is None:
         return None
-
-    preprocessed_files = []
-
-    # Attempt to preprocessed the the xml files provided and make sure
-    # that they are in compliance with the foyer format
-    for xml_file in forcefield_files:
-        if not hasattr(xml_file, 'read'):
-            f = open(xml_file)
-            _, suffix = os.path.split(xml_file)
-        else:
-            f = xml_file
-            suffix = ""
-
-        # read and preprocess
-        xml_contents = f.read()
-        f.close()
-        xml_contents = re.sub(r"(def\w*=\w*[\"\'])(.*)([\"\'])", lambda m: m.group(1) + re.sub(r"&(?!amp;)", r"&amp;", m.group(2)) + m.group(3),
-                              xml_contents)
-
-        try:
-            '''
-            Sort topology objects by precedence, defined by the number of
-            `type` attributes specified, where a `type` attribute indicates
-            increased specificity as opposed to use of `class`
-            '''
-            root = ET.fromstring(xml_contents)
-            for element in root:
-                if 'Force' in element.tag:
-                    element[:] = sorted(element, key=lambda child: (
-                        -1 * len([attr_name for attr_name in child.keys()
-                                    if 'type' in attr_name])))
-            xml_contents = ET.tostring(root, method='xml').decode()
-        except ET.ParseError:
-            '''
-            Provide the user with a warning if sorting could not be performed.
-            This indicates a bad XML file, which will be passed on to the
-            Validator to yield a more descriptive error message.
-            '''
-            warnings.warn('Invalid XML detected. Could not auto-sort topology '
-                          'objects by precedence.')
-
 
     tmp_processed_files = list()
     if backend == 'gmso':
@@ -186,7 +137,7 @@ class Forcefield(object):
                 self.atomTypeDefinitions[name] = atype.definition
                 self.atomTypeOverrides[name] = atype.overrides
                 self.atomTypeDesc[name] = atype.description
-                self.atomTypeRefs[name] = {atype.doi}
+                self.atomTypeRefs[name] = set(atype.doi.split(','))
                 self.atomTypeClasses[name] = atype.atomclass
                 if atype.tags.get('element'):
                     ele = atype.tags['element']
@@ -248,7 +199,7 @@ class Forcefield(object):
             if not isinstance(top, gmso.Topology):
                 mb = import_('mbuild')
                 tmp_top = mb.load(top)
-                top = gmso.external.from_mbuild(top)
+                top = gmso.external.from_mbuild(tmp_top)
 
             assert isinstance(top, gmso.Topology)
             typemap = self._run_atomtyping(top,
