@@ -8,4 +8,5 @@ dependencies:
   - openmm>=7.5
   - parmed
   - ele
+  - requests
   - python<=3.8

@@ -24,6 +24,7 @@
 3-methylphenol
 4-methylphenol
 acetamide
+acetate
 acetone
 benzene
 benzonitrile
@@ -83,3 +84,16 @@ t-butanol
 isopropanol
 methylnitroaniline
 2-propanethiol
+1-butanethiol
+dimethyl-disulfide
+tetrahydrothiophene
+N-methylformamide
+formamide
+lithium
+2-methyl-2-butanol
+dimethyl-sulfide
+tbutanol
+diisopropyl-ether
+2-methyl-2-propanol
+3-pentanol
+diethyl-sulfide

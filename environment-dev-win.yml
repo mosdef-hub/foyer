@@ -1,6 +1,7 @@
 name: foyer-dev
 channels:
   - conda-forge
+  - omnia
 dependencies:
   - bump2version
   - codecov
@@ -10,7 +11,6 @@ dependencies:
   - networkx>=2.0
   - openmm>=7.5
   - parmed
-  - ele
   - pip
   - pytest
   - pytest-azurepipelines
