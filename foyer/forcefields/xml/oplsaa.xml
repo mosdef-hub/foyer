@@ -271,11 +271,11 @@
   <Type name="opls_264" class="Cl" element="Cl" mass="35.453" def="[Cl;X1]([C;%opls_263])" overrides="opls_401" desc="Chlorobenzene (C)Cl" doi="10.1021/ja9621760"/>
   <Type name="opls_265" class="opls_265" element="N" mass="14.0067"/>
   <Type name="opls_266" class="opls_266" element="C" mass="12.011"/>
-  <Type name="opls_267" class="C" element="C" mass="12.01100"   def="[C;X3]([O;X1])OH" overrides="opls_465" desc="Co in CCOOH" overrides="opls_277,opls_271" doi="10.1021/ja9621760"/>
+  <Type name="opls_267" class="C" element="C" mass="12.01100"   def="[C;X3]([O;X1])OH" desc="Co in CCOOH" overrides="opls_277,opls_271,opls_465" doi="10.1021/ja9621760"/>
   <Type name="opls_268" class="OH" element="O" mass="15.9994"   def="[O;X2]([C;%opls_267])H" desc="Oh in CCOOH" overrides="opls_154" doi="10.1021/ja9621760"/>
   <Type name="opls_269" class="O_3" element="O" mass="15.9994"  def="[O;X1]([C;%opls_267])" desc="Oc in CCOOH" overrides="opls_278,opls_272" doi="10.1021/ja9621760"/>
   <Type name="opls_270" class="HO" element="H" mass="1.00800"   def="H([O;%opls_268])" desc="H in CCOOH" overrides="opls_155" doi="10.1021/ja9621760"/>
-  <Type name="opls_271" class="C" element="C" mass="12.011" def="[C;X3](O)(O)*" desc="acetate C in COO-" doi = "10.1021/ja9621760"/>
+  <Type name="opls_271" class="C" element="C" mass="12.011" def="[C;X3]([O;X1])([O;X1])" desc="acetate C in COO-" doi = "10.1021/ja9621760"/>
   <Type name="opls_272" class="O_3" element="O" mass="15.9994" def="[O;X1]([C;%opls_271])" desc="O- in acetate group COO-" doi="10.1021/ja9621760"/>
   <Type name="opls_273" class="opls_273" element="C" mass="12.011"/>
   <Type name="opls_274" class="opls_274" element="C" mass="12.011"/>
@@ -469,10 +469,10 @@
   <Type name="opls_461" class="opls_461" element="C" mass="12.011"/>
   <Type name="opls_462" class="opls_462" element="H" mass="1.008"/>
   <Type name="opls_463" class="opls_463" element="C" mass="12.011"/>
-  <Type name="opls_465" class="C_2" element="C" mass="12.011" def="[C;X3](O)(O)" desc="C in C=O in ester" doi="10.1021/ja9539195"/>
+  <Type name="opls_465" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([O;X2])" desc="C in C=O in ester" doi="10.1021/ja9539195"/>
   <Type name="opls_466" class="O_2" element="O" mass="15.9994" def="[O;X1]([C;%opls_465])" desc="O in C=O in ester" doi="10.1021/ja9539195"/>
-  <Type name="opls_467" class="OS" element="O" mass="15.9994" def="[O;X2](C([O;%opls_466]))([!H])" overrides='opls_180' desc="O connected to R of O=C-O-R in esters" doi="10.1021/ja9539195"/>
-  <Type name="opls_468" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467]([C;%opls_465]))" overrides='opls_181' desc="methoxy C in esters" doi="10.1021/ja9539195"/>
+  <Type name="opls_467" class="OS" element="O" mass="15.9994" def="[O;X2]([C;%opls_465])([!H])" overrides='opls_180' desc="O connected to R of O=C-O-R in esters" doi="10.1021/ja9539195"/>
+  <Type name="opls_468" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467])" overrides='opls_181' desc="methoxy C in esters" doi="10.1021/ja9539195"/>
   <Type name="opls_469" class="HC" element="H" mass="1.008" def="H[C;%opls_468]" overrides='opls_185' desc="methoxy Hs in esters" doi="10.1021/ja9539195"/>
   <Type name="opls_470" class="opls_470" element="C" mass="12.011"/>
   <Type name="opls_471" class="opls_471" element="C" mass="12.011"/>
