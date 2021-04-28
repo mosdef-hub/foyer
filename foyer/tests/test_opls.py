@@ -7,6 +7,7 @@ from pkg_resources import resource_filename
 import pytest
 
 from foyer import Forcefield
+from foyer.exceptions import MissingForceError
 from foyer.tests.utils import atomtype
 
 OPLSAA = Forcefield(name='oplsaa')
@@ -75,6 +76,7 @@ class TestOPLS(object):
         assert len(parametrized.rb_torsions) == 24
         assert all(x.type for x in parametrized.dihedrals)
         assert parametrized.combining_rule == 'geometric'
+
 
 
 if __name__ == '__main__':

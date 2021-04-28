@@ -1,10 +1,9 @@
 ### Foyer: A package for atom-typing as well as applying and disseminating forcefields
 
 [![Gitter chat](https://badges.gitter.im/mosdef-hub/gitter.svg)](https://gitter.im/mosdef-hub/Lobby)
-[![Travis Build Status](https://travis-ci.org/mosdef-hub/foyer.svg?branch=master)](https://travis-ci.org/mosdef-hub/foyer)
 [![AZP Build Status](https://dev.azure.com/mosdef/mosdef/_apis/build/status/mosdef-hub.foyer?branchName=master)](https://dev.azure.com/mosdef/mosdef/_build/latest?definitionId=2&branchName=master)
 [![PyPI Version](https://badge.fury.io/py/foyer.svg)](https://pypi.python.org/pypi/foyer)
-[![Anaconda Badge](https://anaconda.org/mosdef/foyer/badges/version.svg)](https://anaconda.org/mosdef/foyer)
+[![Anaconda Badge](https://anaconda.org/conda-forge/foyer/badges/version.svg)](https://anaconda.org/conda-forge/foyer)
 [![codecov](https://codecov.io/gh/mosdef-hub/foyer/branch/master/graph/badge.svg)](https://codecov.io/gh/mosdef-hub/foyer)
 [![DOI](https://zenodo.org/badge/34077879.svg)](https://zenodo.org/badge/latestdoi/34077879)
 
@@ -67,7 +66,7 @@ Alternatively, you can also start a Bourne shell directly:
 $ docker run -it --name foyer mosdef/foyer:latest
 ```
 
-To learn more about using `foyer` with docker, please refer to the documentation `<here https://foyer.mosdef.org/en/latest/docker.html>_` .
+To learn more about using `foyer` with docker, please refer to the documentation [here](https://foyer.mosdef.org/en/latest/docker.html) .
 
 
 #### Getting started with SMARTS-based atom-typing
@@ -98,7 +97,7 @@ Example template for disseminating force fields:
 * [Jupyter notebook tutorials](https://github.com/mosdef-hub/foyer/tree/master/docs/examples), from [our paper](https://arxiv.org/abs/1812.06779)
 
 ### Documentation:
-* Documentation website: http://mosdef-hub.github.io/foyer/
+* Documentation website: http://foyer.mosdef.org
 
 ### Installation instructions
 * [Installation instructions](docs/installation.rst)

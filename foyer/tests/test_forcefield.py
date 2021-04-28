@@ -1,3 +1,4 @@
+import itertools as it
 import difflib
 import glob
 import os
@@ -8,9 +9,9 @@ from lxml import etree as ET
 import parmed as pmd
 import pytest
 
-from foyer import Forcefield
+from foyer import Forcefield, forcefields
 from foyer.forcefield import generate_topology
-from foyer.forcefield import _check_independent_residues
+from foyer.forcefield import _check_independent_residues, _structure_from_residue
 from foyer.exceptions import FoyerError, ValidationWarning
 from foyer.tests.utils import get_fn, register_mock_request
 from foyer.utils.io import has_mbuild
@@ -513,3 +514,28 @@ def test_load_metadata():
     lj_ff = Forcefield(forcefield_files=[get_fn('lj.xml'), get_fn('lj2.xml')])
     assert lj_ff.version == ['0.4.1', '4.8.2']
     assert lj_ff.name == ['LJ', 'JL']
+
+@pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+def test_no_overlap_residue_atom_overlap():
+    import mbuild as mb
+    mol1 = mb.load("CCC", smiles=True)
+    mol2 = mb.load("COC", smiles=True)
+
+    mol1.name = "CCC"
+    mol2.name = "COC"
+
+    box = mb.fill_box([mol1, mol2], n_compounds=[2, 2], density=700)
+
+    all_substructures = []
+    structure = box.to_parmed(residues=['CCC', 'COC'])
+    for res_id, res in enumerate(structure.residues):
+        all_substructures.append(
+            _structure_from_residue(res, structure)
+        )
+
+    residue_idx_per_atom = map(lambda x: x.residue.idx, structure.atoms)
+    num_unique_residue_indices = len(set([*residue_idx_per_atom]))
+    num_residues = len(structure.residues)
+
+    assert num_residues == num_unique_residue_indices
+
