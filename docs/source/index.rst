@@ -41,7 +41,7 @@ Resources
 ~~~~~~~~~
 
 * :doc:`Installation guide <getting_started/install>`: Instructions for installing foyer.
-* :ref:`Quickstart <getting_started/quickstart>`: A brief introduction to foyer.
+* :doc:`Quickstart <getting_started/quickstart>`: A brief introduction to foyer.
 * `MoSDeF  <https://mosdef.org>`_: Learn more about the **Mo**\ lecular **S**\ imulation **De**\ sign **F**\ ramework.
 * `Foyer paper <https://www.sciencedirect.com/science/article/pii/S0927025619303040>`_: The journal article describing foyer.
 * `GitHub repository <https://github.com/mosdef-hub/foyer>`_: Download the source code or contribute to the development of foyer.
@@ -112,9 +112,6 @@ https://github.com/mosdef-hub/forcefield_template
 Credits
 ~~~~~~~
 
-Various sub-portions of this library may be independently distributed
-under different licenses. See those files for their specific terms.
-
 This material is based upon work supported by the National Science
 Foundation under grants NSF ACI-1047828 and NSF ACI-1535150. Any
 opinions, findings, and conclusions or recommendations expressed in this
@@ -137,16 +134,17 @@ Table of Contents
     :caption: Topic Guides
 
     topic_guides/smarts
-    units
-    parameter_definitions
-    atom-typing_options
-    usage_examples
-    paper_examples
-    validation
+    topic_guides/parameter_definitions
+    topic_guides/ffapply
+    topic_guides/usage_examples
+    topic_guides/paper_examples
 
 .. toctree::
     :maxdepth: 2
     :caption: Reference
 
+    reference/units
+    reference/validation
+    reference/ffclass
     reference/citing
     reference/license
