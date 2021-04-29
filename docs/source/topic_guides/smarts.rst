@@ -73,7 +73,7 @@ were found for each carbon. Providing the ``overrides`` indicates that
 if the ``opls_145`` pattern matches, it should supercede the specified
 rules.
 
-Current Grammar Supported
+Supported SMARTS Grammar
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We currently do not (yet) support all of `SMARTS’
