@@ -9,7 +9,7 @@ dependencies:
   - lxml
   - mbuild
   - gmso
-  - networkx>=2.0
+  - networkx>=2.5
   - openmm>=7.5
   - parmed
   - pip
