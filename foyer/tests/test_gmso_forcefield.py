@@ -61,6 +61,9 @@ def test_missing_type_definitions():
         ethane = mb.load(get_fn('ethane.mol2'), backend='parmed')
         FF.apply(ethane, assert_improper_params=False)
 
+def test_unsupported_backend():
+    with pytest.raises(FoyerError, match=r'Backend not supported'):
+        FF = Forcefield(name='oplsaa', backend='void')
 def test_from_gmso():
     mol2 = mb.load(get_fn('ethane.mol2'), backend='parmed')
     top = gmso.external.from_mbuild(mol2)

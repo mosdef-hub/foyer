@@ -13,8 +13,10 @@ def find_atomtypes(structure, forcefield, max_iter=10):
 
     Parameters
     ----------
-    topology : parmed.Structure, or gmso.Topology, or TopologyGraph
-        The topology that we are trying to atomtype, must matched with backend.
+    structure : parmed.Structure, or gmso.Topology, or TopologyGraph
+        The topology that we are trying to atomtype. If a parmed.Structure or
+        gmso.Topology is provided, it will be convert to a TopologyGraph before
+        atomtyping.
     forcefield : foyer.Forcefield
         The forcefield object.
     max_iter : int, optional, default=10
