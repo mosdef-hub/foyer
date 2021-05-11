@@ -127,7 +127,7 @@ class Forcefield(object):
 
     # Parse forcefield meta information
     def _parse_gmso(self, forcefield_files, **kwargs):
-        """Parse meta fata information when using GMSO as backend
+        """Parse metadata information when using GMSO as backend
         """
         if forcefield_files:
             self.ff = gmso.ForceField(forcefield_files, **kwargs)
