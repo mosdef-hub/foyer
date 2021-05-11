@@ -1,4 +1,4 @@
-Contributions are welcomed via [pull requests on GitHub](https://github.com/mosdef-hub/foyer/pulls). Developers and/or 
+Contributions are welcomed via [pull requests on GitHub](https://github.com/mosdef-hub/foyer/pulls). Developers and/or
 users will review requested changes and make comments. The rest of this file will serve as a set of general guidelines
 for contributors.
 
@@ -18,7 +18,7 @@ Please try to keep the `master` branch of your fork up-to-date with the `master`
 
 ## Propose a single set of related changes
 
-Small changes are preferred over large changes. A major contribution can often be broken down into smaller PRs. Large PRs that 
+Small changes are preferred over large changes. A major contribution can often be broken down into smaller PRs. Large PRs that
 affect many parts of the codebase can be harder to review and are more likely to cause merge conflicts.
 
 # Source code
@@ -45,8 +45,8 @@ can have simple one-liner docstrings.
 
 ## Write unit tests
 
-All new functionality in Foyer should be tested with automatic unit tests that execute in a few seconds. These tests 
-should attempt to cover all options that the user can select. All or most of the added lines of source code should be 
+All new functionality in Foyer should be tested with automatic unit tests that execute in a few seconds. These tests
+should attempt to cover all options that the user can select. All or most of the added lines of source code should be
 covered by unit test(s). We currently use [pytest](https://docs.pytest.org/en/latest/), which can be executed simply by calling
-`pytest` from the root directory of the package. Additions to force field files should include test molecules that encompass 
+`pytest` from the root directory of the package. Additions to force field files should include test molecules that encompass
 the added or modified atom types or functionality.

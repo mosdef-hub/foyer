@@ -13,4 +13,3 @@ Forcefield
 
 .. autoclass:: foyer.forcefield.Forcefield
     :members:
-

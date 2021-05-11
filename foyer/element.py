@@ -1,4 +1,6 @@
+"""Element support in foyer."""
 import simtk.openmm.app.element as elem
+
 
 class Element(elem.Element):
     """An Element represents a chemical element.
@@ -12,8 +14,9 @@ class Element(elem.Element):
     Canonical, periodic table elements will utilize openmm.element,
     but custom elements will utilize this subclass foyer.element
     """
+
     def __init__(self, number, name, symbol, mass):
-        """Create a new element
+        """Create a new element.
 
         Parameters
         ----------
@@ -40,4 +43,4 @@ class Element(elem.Element):
         Element._elements_by_mass = None
 
         if s in Element._elements_by_symbol:
-            raise ValueError('Duplicate element symbol %s' % s)
+            raise ValueError("Duplicate element symbol %s" % s)

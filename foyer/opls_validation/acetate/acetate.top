@@ -8,15 +8,15 @@
 ;
 ;   Created by:
 ;   ParmEd:       , VERSION 3.4.0
-;   Executable:   
+;   Executable:
 ;   Library dir:  /usr/local/gromacs/share/gromacs/top
 ;   Command line:
-;     
+;
 ;
 
 [ defaults ]
 ; nbfunc        comb-rule       gen-pairs       fudgeLJ fudgeQQ
-1               2               no              1            0.5         
+1               2               no              1            0.5
 
 [ atomtypes ]
 ; name    at.num    mass    charge ptype  sigma      epsilon
