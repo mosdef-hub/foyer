@@ -30,8 +30,6 @@ class TestTopologyGraph:
 
     @pytest.fixture(scope="session")
     def parmed_topology_graph(self):
-        # Got errors for parmed.rdkit.from_smiles
-        # [23:55:10] Molecule does not have explicit Hs. Consider calling AddHs
         import mbuild as mb
 
         ethane = mb.conversion.to_parmed(mb.load("CC", smiles=True))
