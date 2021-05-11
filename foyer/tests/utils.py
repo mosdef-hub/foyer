@@ -1,5 +1,6 @@
 import glob
 from os.path import join, split, abspath
+import platform
 import urllib.parse as parseurl
 import numpy as np
 
@@ -25,9 +26,12 @@ def atomtype(structure, forcefield, **kwargs):
 
     generated_atom_types = list()
     for i, atom in enumerate(typed_structure.atoms):
-        message = ('Found multiple or no atom types for atom {} in {}: {}\n'
-                   'Should be atomtype: {}'.format(
-            i, structure.title, atom.type, known_types[i]))
+        message = (
+            "Found multiple or no atom types for atom {} in {}: {}\n"
+            "Should be atomtype: {}".format(
+                i, structure.title, atom.type, known_types[i]
+            )
+        )
         assert atom.type, message
         generated_atom_types.append(atom.type)
 
@@ -40,9 +44,14 @@ def atomtype(structure, forcefield, **kwargs):
     non_matches = np.array([a != b for a, b in both])
     message = "Found inconsistent atom types in {}: {}".format(
         structure.title,
-        list(zip(n_types[non_matches],
-                 generated_atom_types[non_matches],
-                 known_types[non_matches])))
+        list(
+            zip(
+                n_types[non_matches],
+                generated_atom_types[non_matches],
+                known_types[non_matches],
+            )
+        ),
+    )
     assert not non_matches.any(), message
 
 
@@ -59,7 +68,7 @@ def get_fn(filename):
     path: str
         Name of the test file with the full path location
     """
-    return join(split(abspath(__file__))[0], 'files', filename)
+    return join(split(abspath(__file__))[0], "files", filename)
 
 
 def glob_fn(pattern):
@@ -74,16 +83,18 @@ def glob_fn(pattern):
     -------
     list of file absolute paths matching the pattern.
     """
-    return glob.glob(join(split(abspath(__file__))[0], 'files', pattern))
+    return glob.glob(join(split(abspath(__file__))[0], "files", pattern))
 
 
-def register_mock_request(mocker,
-                          url='http://api.crossref.org/',
-                          http_verb='GET',
-                          text='',
-                          path=None,
-                          headers=None,
-                          status_code=200):
+def register_mock_request(
+    mocker,
+    url="http://api.crossref.org/",
+    http_verb="GET",
+    text="",
+    path=None,
+    headers=None,
+    status_code=200,
+):
     """Registers the mocker for the given uri.
 
     Parameters
@@ -101,4 +112,10 @@ def register_mock_request(mocker,
         headers = {}
     if path is not None:
         uri = parseurl.urljoin(url, path, allow_fragments=False)
-    mocker.register_uri(http_verb, uri, headers=headers, text=text, status_code=status_code)
+    mocker.register_uri(
+        http_verb, uri, headers=headers, text=text, status_code=status_code
+    )
+
+
+def is_running_on_windows():
+    return platform.system() == "Windows"

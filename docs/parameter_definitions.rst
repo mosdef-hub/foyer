@@ -32,7 +32,17 @@ forces are:
 
    -  `Periodic <http://docs.openmm.org/7.0.0/userguide/application.html#periodictorsionforce>`__
 
-Definitions for each molecular force follow the OpenMM standard.
+Definitions for each molecular force follow the `OpenMM standard <http://docs.openmm.org/latest/userguide/theory.html>`_.
+
+The harmonic bond potential is defined as
+
+.. math::
+
+    E = \frac{1}{2}k(r-r_{0})^{2}
+
+where `k` is the bond coefficient (:math:`\frac{energy}{distance^{2}}`) and `r`\ :sub:`0` is the equilibrium bond distance. Note the factor of :math:`\frac{1}{2}`.
+
+Dihedral potentials reported as a fourier series (e.g., OPLS) can be converted to Ryckaert-Bellemans (RB) torsions as specified in the `GROMACS User Manual <https://manual.gromacs.org/documentation/current/reference-manual/functions/bonded-interactions.html#proper-dihedrals-ryckaert-bellemans-function>`_.
 
 Classes vs. Types
 -----------------

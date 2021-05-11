@@ -4,11 +4,12 @@ import pytest
 from foyer.atomtyper import find_atomtypes
 from foyer.forcefield import Forcefield
 from foyer.topology_graph import TopologyGraph
+from foyer.tests.utils import is_running_on_windows
 from foyer.utils.io import has_gmso, has_openff_toolkit
 
 
 @pytest.mark.skipif(
-    condition=not (has_gmso or has_openff_toolkit),
+    condition=(is_running_on_windows() or (not (has_gmso or has_openff_toolkit))),
     reason="openff-toolkit and gmso not installed",
 )
 class TestTopologyGraph:
@@ -101,10 +102,10 @@ class TestTopologyGraph:
 
     def test_from_type_error(self):
         with pytest.raises(TypeError):
-            TopologyGraph.from_openff_topology('NonOpenFFTopology')
+            TopologyGraph.from_openff_topology("NonOpenFFTopology")
 
         with pytest.raises(TypeError):
-            TopologyGraph.from_gmso_topology('NonGMSOTopology')
+            TopologyGraph.from_gmso_topology("NonGMSOTopology")
 
         with pytest.raises(TypeError):
-            TopologyGraph.from_parmed('NonParmedStructure')
+            TopologyGraph.from_parmed("NonParmedStructure")

@@ -1,0 +1,12 @@
+name: foyer
+channels:
+  - conda-forge
+  - omnia
+dependencies:
+  - lark-parser
+  - lxml
+  - networkx>=2.5
+  - openmm>=7.5
+  - parmed
+  - requests
+  - python<=3.8

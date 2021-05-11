@@ -1,4 +1,5 @@
 import collections
+from copy import copy
 import glob
 import itertools
 import os
@@ -136,16 +137,16 @@ def generate_topology(non_omm_topology, non_element_types=None, residues=None):
 def _structure_from_residue(residue, parent_structure):
     """Convert a ParmEd Residue to an equivalent Structure."""
     structure = pmd.Structure()
+    orig_to_copy = dict() # Clone a lot of atoms to avoid any of parmed's tracking
     for atom in residue.atoms:
-        structure.add_atom(atom, resname=residue.name, resnum=residue.number)
+        new_atom = copy(atom)
+        new_atom._idx = atom.idx
+        orig_to_copy[atom] = new_atom
+        structure.add_atom(new_atom, resname=residue.name, resnum=residue.number)
 
     for bond in parent_structure.bonds:
         if bond.atom1 in residue.atoms and bond.atom2 in residue.atoms:
-            structure.bonds.append(bond)
-
-    idx_offset = min([a.idx for a in structure])
-    for atom in structure.atoms:
-        atom._idx -= idx_offset
+            structure.bonds.append(pmd.Bond(orig_to_copy[bond.atom1], orig_to_copy[bond.atom2]))
 
     return structure
 
@@ -467,6 +468,30 @@ class Forcefield(app.ForceField):
             basename, _ = os.path.splitext(ff_file)
             self._included_forcefields[basename] = ff_filepath
         return self._included_forcefields
+
+    @property
+    def lj14scale(self):
+        """Get LJ 1-4 scale for this forcefield"""
+        try:
+            non_bonded_force_gen = self.get_generator(ff=self, gen_type=NonbondedGenerator)
+        except MissingForceError:
+            raise AttributeError(
+                "Cannot get lj14Scale for the forcefield "
+                "because it doesn't have NonBondedForce."
+            )
+        return non_bonded_force_gen.lj14scale
+
+    @property
+    def coulomb14scale(self):
+        """Get Coulombic 1-4 scale for this forcefield"""
+        try:
+            non_bonded_force_gen = self.get_generator(ff=self, gen_type=NonbondedGenerator)
+        except MissingForceError:
+            raise AttributeError(
+                "Cannot get coulomb14scale for the Forcefield "
+                "because it doesn't have NonBondedForce."
+            )
+        return non_bonded_force_gen.coulomb14scale
 
     def _parse_version_number(self, forcefield_file):
         with open(forcefield_file, 'r') as f:

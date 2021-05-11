@@ -5,7 +5,7 @@ from __future__ import print_function
 from setuptools import setup, find_packages
 
 #####################################
-VERSION = "0.8.0"
+VERSION = "0.8.1"
 ISRELEASED = True
 if ISRELEASED:
     __version__ = VERSION

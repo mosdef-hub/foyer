@@ -115,6 +115,13 @@ class TopologyGraph(nx.Graph):
         TopologyGraph
             The equivalent TopologyGraph of the parmed Structure `structure`
         """
+
+        if not isinstance(structure, Structure):
+            raise TypeError(
+                f"Expected `structure` to be of type {Structure}. "
+                f"Got {type(structure).__name__} instead"
+            )
+
         topology_graph = cls()
         for atom in structure.atoms:
             if atom.name.startswith("_"):
