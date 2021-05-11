@@ -11,6 +11,7 @@ dependencies:
   - openmm>=7.5
   - parmed
   - openff-toolkit
+  - gmso
   - pip
   - pytest
   - pytest-azurepipelines
