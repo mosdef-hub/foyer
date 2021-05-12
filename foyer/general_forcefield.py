@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from pkg_resources import resource_filename
 import warnings
 import re
-from copy import copy
+from copy import deepcopy
 
 import gmso
 from gmso.external import from_mbuild
@@ -322,7 +322,7 @@ class Forcefield(object):
         """Parametrize a Topology with gmso.ForceField"""
         # Assign AtomTypes
         for atom in top.sites:
-            atom.atom_type = copy(self.ff.atom_types.get(
+            atom.atom_type = deepcopy(self.ff.atom_types.get(
                                 typemap[top.get_index(atom)]['atomtype']))
         if not all([a.atom_type for a in top.sites]):
             raise ValueError('Not all atoms in topology have atom types')
@@ -349,7 +349,7 @@ class Forcefield(object):
             btype_name = [bmem[i].atom_type.name for i in range(2)]
             btype_class = [bmem[i].atom_type.atomclass for i in range(2)]
             for name in [btype_name, btype_class]:
-                connection.bond_type = copy(self.ff.get_potential('bond_type',
+                connection.bond_type = deepcopy(self.ff.get_potential('bond_type',
                                                              name,
                                                              warn=True))
                 if connection.bond_type:
@@ -361,7 +361,7 @@ class Forcefield(object):
             agtype_class = [agmem[i].atom_type.atomclass for i in range(3)]
 
             for name in [agtype_name, agtype_class]:
-                connection.angle_type = copy(self.ff.get_potential('angle_type',
+                connection.angle_type = deepcopy(self.ff.get_potential('angle_type',
                                                               name,
                                                               warn=True))
                 if connection.angle_type:
@@ -373,7 +373,7 @@ class Forcefield(object):
             dtype_class = [dmem[i].atom_type.atomclass for i in range(4)]
 
             for name in [dtype_name, dtype_class]:
-                connection.dihedral_type = copy(self.ff.get_potential('dihedral_type',
+                connection.dihedral_type = deepcopy(self.ff.get_potential('dihedral_type',
                                                                  name,
                                                                  warn=True))
                 if connection.dihedral_type:
@@ -385,7 +385,7 @@ class Forcefield(object):
             itype_class = [imem[i].atom_type.atomclass for i in range(4)]
 
             for name in [itype_name, itype_class]:
-                connection.improper_type = copy(self.ff.get_potential('improper_type',
+                connection.improper_type = deepcopy(self.ff.get_potential('improper_type',
                                                                  name,
                                                                  warn=True))
                 if connection.improper_type:
