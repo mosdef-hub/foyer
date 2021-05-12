@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 from pkg_resources import resource_filename
 import warnings
 import re
+from copy import copy
 
 import gmso
 from gmso.external import from_mbuild
@@ -32,10 +33,13 @@ def preprocess_forcefield_files(forcefield_files=None, backend='gmso'):
         for idx, file in enumerate(forcefield_files):
             _, suffix = os.path.split(file)
             tempfile = NamedTemporaryFile(suffix=suffix, delete=False)
-            from_foyer_xml(foyer_xml=str(file),
+            try:
+                from_foyer_xml(foyer_xml=str(file),
                           gmso_xml=str(tempfile.name), overwrite=True)
-            tmp_processed_files.append(tempfile.name)
-
+                tmp_processed_files.append(tempfile.name)
+            except:
+                warnings.warn(f'Could not convert {str(file)}, attempt to read in as is.')
+                tmp_processed_files.append(str(file))
     else:
         raise FoyerError('Backend not supported')
 
@@ -67,6 +71,7 @@ class Forcefield(object):
         self.atomTypeClasses = dict()
         self.atomTypeElements = dict()
         self._included_forcefields = dict()
+        self.backend = backend
         self.non_element_types = dict()
         self._version = None
         self._name = None
@@ -153,7 +158,7 @@ class Forcefield(object):
     def apply(self, top, references_file=None, use_residue_map=True,
               assert_bond_params=True, assert_angle_params=True,
               assert_dihedral_params=True, assert_improper_params=True,
-              combining_rule='geometric', debug=False, backend='gmso',
+              combining_rule='geometric', debug=False,
               *args, **kwargs):
         """Apply the force field to a molecular topology
 
@@ -186,16 +191,12 @@ class Forcefield(object):
         debug : bool, optional, default=False
             If True, Foyer will print debug-level information about notable or
             potential problematic details it encounters.
-        backend : str, optional, default='gmso'
-            Name of the backend used to store all the Types' information.
-            At this point, 'gmso' is the only valid backend, but this set up
-            allows future backends to be implemented easier.
         """
         if self.atomTypeDefinitions == {}:
             raise FoyerError('Attempting to atom-type using a forcefield '
                 'with no atom type definitions.')
 
-        if backend == 'gmso':
+        if self.backend == 'gmso':
             if not isinstance(top, gmso.Topology):
                 mb = import_('mbuild')
                 tmp_top = mb.load(top)
@@ -213,7 +214,6 @@ class Forcefield(object):
             assert_dihedral_params=assert_dihedral_params,
             assert_improper_params=assert_improper_params,
             debug=debug,
-            backend=backend,
             combining_rule=combining_rule,
             *args, **kwargs)
 
@@ -254,7 +254,6 @@ class Forcefield(object):
                         assert_improper_params=True,
                         combining_rule='geometric',
                         debug=False,
-                        backend='gmso',
                         **kwargs):
         """Parametrize the Topology from the typemap provided
 
@@ -289,10 +288,6 @@ class Forcefield(object):
         debug : bool, optional, default=False
             If True, Foyer will print debug-level information about notable or
             potential problematic details it encounters.
-        backend : str, optional, default='gmso'
-            Name of the backend used to store all the Types' information.
-            At this point, 'gmso' is the only valid backend, but this set up
-            allow future backend to be implemented easier.
 
         Returns
         -------
@@ -304,7 +299,7 @@ class Forcefield(object):
             top = gmso.external.from_mbuild(top)
         top.identify_connections()
 
-        if backend=='gmso':
+        if self.backend=='gmso':
             self._parametrize_gmsoFF(top=top,
                                 typemap=typemap,
                                 combining_rule=combining_rule)
@@ -327,8 +322,8 @@ class Forcefield(object):
         """Parametrize a Topology with gmso.ForceField"""
         # Assign AtomTypes
         for atom in top.sites:
-            atom.atom_type = self.ff.atom_types.get(
-                                typemap[top.get_index(atom)]['atomtype'])
+            atom.atom_type = copy(self.ff.atom_types.get(
+                                typemap[top.get_index(atom)]['atomtype']))
         if not all([a.atom_type for a in top.sites]):
             raise ValueError('Not all atoms in topology have atom types')
 
@@ -354,9 +349,9 @@ class Forcefield(object):
             btype_name = [bmem[i].atom_type.name for i in range(2)]
             btype_class = [bmem[i].atom_type.atomclass for i in range(2)]
             for name in [btype_name, btype_class]:
-                connection.bond_type = self.ff.get_potential('bond_type',
+                connection.bond_type = copy(self.ff.get_potential('bond_type',
                                                              name,
-                                                             warn=True)
+                                                             warn=True))
                 if connection.bond_type:
                     break
 
@@ -366,9 +361,9 @@ class Forcefield(object):
             agtype_class = [agmem[i].atom_type.atomclass for i in range(3)]
 
             for name in [agtype_name, agtype_class]:
-                connection.angle_type = self.ff.get_potential('angle_type',
+                connection.angle_type = copy(self.ff.get_potential('angle_type',
                                                               name,
-                                                              warn=True)
+                                                              warn=True))
                 if connection.angle_type:
                     break
 
@@ -378,9 +373,9 @@ class Forcefield(object):
             dtype_class = [dmem[i].atom_type.atomclass for i in range(4)]
 
             for name in [dtype_name, dtype_class]:
-                connection.dihedral_type = self.ff.get_potential('dihedral_type',
+                connection.dihedral_type = copy(self.ff.get_potential('dihedral_type',
                                                                  name,
-                                                                 warn=True)
+                                                                 warn=True))
                 if connection.dihedral_type:
                     break
 
@@ -390,9 +385,9 @@ class Forcefield(object):
             itype_class = [imem[i].atom_type.atomclass for i in range(4)]
 
             for name in [itype_name, itype_class]:
-                connection.improper_type = self.ff.get_potential('improper_type',
+                connection.improper_type = copy(self.ff.get_potential('improper_type',
                                                                  name,
-                                                                 warn=True)
+                                                                 warn=True))
                 if connection.improper_type:
                     break
 
