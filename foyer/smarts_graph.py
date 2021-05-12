@@ -23,15 +23,15 @@ class SMARTSGraph(nx.Graph):
     overrides : set
         Rules or SMARTSGraph over which this SMARTSGraph takes precedence
 
-    Other Parameters
-    ----------------
-    args
-    kwargs
-
     Attributes
     ----------
     graph_matcher : smarts_graph.SMARTSMatcher
         implementation of VF2 that handles subgraph matching
+
+    Notes
+    -----
+    SMARTSGraph inherits from networkx.Graph, available features can be found
+    at networkx.org/documentation/stable/reference/classes/graph.html
     """
 
     # Because the first atom in a SMARTS string is always the one we want to
