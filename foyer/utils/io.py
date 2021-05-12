@@ -99,15 +99,3 @@ try:
     del mbuild
 except ImportError:
     has_mbuild = False
-
-try:
-    import openff.tookit
-    has_openff_toolkit = True
-except ImportError:
-    has_openff_toolkit = False
-
-try:
-    import gmso
-    has_gmso = True
-except ImportError:
-    has_gmso = False

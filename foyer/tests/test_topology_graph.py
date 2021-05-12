@@ -4,8 +4,7 @@ import pytest
 from foyer.atomtyper import find_atomtypes
 from foyer.forcefield import Forcefield
 from foyer.topology_graph import TopologyGraph
-from foyer.tests.utils import is_running_on_windows
-from foyer.utils.io import has_gmso, has_openff_toolkit
+from foyer.tests.utils import is_running_on_windows, has_gmso, has_openff_toolkit
 
 
 @pytest.mark.skipif(
