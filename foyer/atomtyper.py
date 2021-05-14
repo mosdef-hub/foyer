@@ -28,7 +28,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     if isinstance(structure, Structure):
         topology_graph = TopologyGraph.from_parmed(structure)
     elif isinstance(structure, Topology):
-        topology_graph = TopologyGraph.from_gmso(structure)
+        topology_graph = TopologyGraph.from_gmso_topology(structure)
 
     typemap = {
         atom_index: {

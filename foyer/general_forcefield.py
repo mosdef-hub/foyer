@@ -322,7 +322,7 @@ class Forcefield(object):
         """Parametrize a Topology with gmso.ForceField"""
         # Assign AtomTypes
         for atom in top.sites:
-            atom.atom_type = deepcopy(self.ff.atom_types.get(
+            atom.atom_type = deepcopy(self.ff.get_potential('atom_type', 
                                 typemap[top.get_index(atom)]['atomtype']))
         if not all([a.atom_type for a in top.sites]):
             raise ValueError('Not all atoms in topology have atom types')
