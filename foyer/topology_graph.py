@@ -107,8 +107,7 @@ class TopologyGraph(nx.Graph):
 
     @classmethod
     def from_parmed(cls, structure: Structure):
-        """Return a TopologyGraph with relevant attributes from a parmed Structure
-
+        """Return a TopologyGraph with relevant attributes from a parmed Structure.
         Parameters
         ----------
         structure: Structure
@@ -149,8 +148,7 @@ class TopologyGraph(nx.Graph):
 
     @classmethod
     def from_openff_topology(cls, openff_topology):
-        """Return a TopologyGraph with relevant attributes from an openForceField topology
-
+        """Return a TopologyGraph with relevant attributes from an openForceField topology.
         Parameters
         ----------
         openff_topology: openff.toolkit.Topology
@@ -193,6 +191,17 @@ class TopologyGraph(nx.Graph):
 
     @classmethod
     def from_gmso_topology(cls, gmso_topology):
+        """Return a TopologyGraph with relevant attributes from an GMSO topology.
+        Parameters
+        ----------
+        gmso_topology: gmso.Topology
+            The GMSO Topology
+
+        Returns
+        -------
+        TopologyGraph
+            The equivalent TopologyGraph of the openFF Topology `openff_topology`
+        """
         from foyer.utils.io import import_
 
         gmso = import_("gmso")  # This might only be required for type checking
