@@ -32,7 +32,9 @@ mbuild can be installed using:
 
 """
 
-MESSAGES["gmso"] = """
+MESSAGES[
+    "gmso"
+] = """
 
 The code at {filename}:{line_number} requires the "gmso" package
 
@@ -41,7 +43,9 @@ gmso can be installed using:
 # conda install -c conda-forge gmso
 """
 
-MESSAGES["openff.toolkit"] = """
+MESSAGES[
+    "openff.toolkit"
+] = """
 
 The code at {filename}:{line_number} requires the "openff-toolkit" package
 

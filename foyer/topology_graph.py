@@ -106,7 +106,6 @@ class TopologyGraph(nx.Graph):
             data["bond_partners"] = list(self.neighbors(atom_idx))
 
     @classmethod
-
     def from_parmed(cls, structure: Structure):
         """Return a TopologyGraph with relevant attributes from a parmed Structure
 
@@ -185,7 +184,9 @@ class TopologyGraph(nx.Graph):
             )
 
         for top_bond in openff_topology.topology_bonds:
-            atoms_indices = [atom.topology_atom_index for atom in top_bond.atoms]
+            atoms_indices = [
+                atom.topology_atom_index for atom in top_bond.atoms
+            ]
             top_graph.add_bond(atoms_indices[0], atoms_indices[1])
 
         return top_graph
@@ -214,7 +215,8 @@ class TopologyGraph(nx.Graph):
 
         for top_bond in gmso_topology.bonds:
             atoms_indices = [
-                gmso_topology.get_index(atom) for atom in top_bond.connection_members
+                gmso_topology.get_index(atom)
+                for atom in top_bond.connection_members
             ]
             top_graph.add_bond(atoms_indices[0], atoms_indices[1])
 
