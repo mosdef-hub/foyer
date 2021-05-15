@@ -324,7 +324,7 @@ class Forcefield(object):
         for atom in top.sites:
             atom.atom_type = deepcopy(self.ff.get_potential('atom_type', 
                                 typemap[top.get_index(atom)]['atomtype']))
-        if not all([a.atom_type for a in top.sites]):
+        if not all(a.atom_type for a in top.sites):
             raise ValueError('Not all atoms in topology have atom types')
 
         # Assign BondTypes
