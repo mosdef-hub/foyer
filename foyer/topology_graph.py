@@ -119,7 +119,6 @@ class TopologyGraph(nx.Graph):
         TopologyGraph
             The equivalent TopologyGraph of the parmed Structure `structure`
         """
-
         if not isinstance(structure, Structure):
             raise TypeError(
                 f"Expected `structure` to be of type {Structure}. "
