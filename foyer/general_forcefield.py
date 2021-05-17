@@ -318,6 +318,8 @@ class Forcefield(object):
         if references_file:
             atom_types = set(site.atom_type for site in top.sites)
             self._write_references_to_file(atom_types, references_file)
+
+        top.typed = True
         return top
 
     def _parametrize_gmsoFF(self, top, typemap, combining_rule):
