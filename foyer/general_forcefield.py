@@ -41,7 +41,8 @@ def preprocess_forcefield_files(forcefield_files=None, backend='gmso'):
                 warnings.warn(f'Could not convert {str(file)}, attempt to read in as is.')
                 tmp_processed_files.append(str(file))
     else:
-        raise FoyerError('Backend not supported')
+        raise FoyerError('Backend not supported.'
+                         'Supports backend: "gmso".')
 
     return tmp_processed_files
 
@@ -57,9 +58,9 @@ class Forcefield(object):
     name : str, optional, None
         Name of a forcefield to load that is packaged within foyer.
     backend : str, optional, default='gmso'
-        Name of the backend used to store all the Types' information.
+        Name of the backend used to store potential types information.
         At this point, 'gmso' is the only valid backend, but this set up
-        allow future backend to be implemented easier.
+        allow future backend to be implemented more easily.
     """
     def __init__(self, forcefield_files=None, name=None,
                        backend='gmso',
@@ -100,7 +101,8 @@ class Forcefield(object):
         if backend == 'gmso':
             self._parse_gmso(preprocessed_files, **kwargs)
         else:
-            raise FoyerError('Backend not supported')
+            raise FoyerError('Backend not supported.'
+                             'Supoprts backend: "gmso".')
 
         #Remove the temporary files afterward
         for ff_file_name in preprocessed_files:
@@ -223,7 +225,7 @@ class Forcefield(object):
         Parameters
         ----------
         top : gmso.Topology
-            Molecular Topology that need to be atomtyped.
+            Molecular Topology to be atomtyped.
         use_residue_map : bool, optional, default=True
             A speed-up option that utilizes previously atom typed
             molecules as a template for future atom typing of
@@ -258,8 +260,8 @@ class Forcefield(object):
         """Parametrize the Topology from the typemap provided
 
         Assign AtomTypes and BondTypes to Atoms and Bonds, respectively.
-        Creat Angles, Dihedrals, Impropers and assing corresponding
-        AngleType, DihedralTypes, and ImproperTypes.
+        Create Angles, Dihedrals, Impropers and assign corresponding
+        AngleTypes, DihedralTypes, and ImproperTypes.
 
         Parameters
         ----------
@@ -398,7 +400,7 @@ class Forcefield(object):
                             assert_dihedral_params=True,
                             assert_improper_params=True,
                             debug=False):
-        """Check if the parameters are fulling filled
+        """Check if the parameters are fulfilled
 
         Parameters
         -----------
