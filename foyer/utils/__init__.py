@@ -1,0 +1,1 @@
+"""Utility module for foyer."""

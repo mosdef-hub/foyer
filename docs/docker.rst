@@ -71,4 +71,3 @@ You can remove the created container by using the following command:
 .. note::
 
     Instead of using `latest`, you can use the image :code:`mosdef/foyer:stable` for most recent stable release of `foyer` and run the tutorials.
-

@@ -13,6 +13,7 @@ dependencies:
   - openff-toolkit
   - gmso
   - pip
+  - pre-commit
   - pytest
   - pytest-azurepipelines
   - pytest-cov

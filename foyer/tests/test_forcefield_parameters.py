@@ -46,13 +46,22 @@ class TestForcefieldParameters:
     def test_gaff_angle_parameters(self, gaff):
         angle_params = gaff.get_parameters("harmonic_angles", ["f", "c1", "f"])
         assert np.allclose(
-            [angle_params["theta"], angle_params["k"]], [3.141592653589793, 487.0176]
+            [angle_params["theta"], angle_params["k"]],
+            [3.141592653589793, 487.0176],
         )
 
     def test_gaff_angle_parameters_reversed(self, gaff):
         assert np.allclose(
-            list(gaff.get_parameters("harmonic_angles", ["f", "c2", "ha"]).values()),
-            list(gaff.get_parameters("harmonic_angles", ["ha", "c2", "f"]).values()),
+            list(
+                gaff.get_parameters(
+                    "harmonic_angles", ["f", "c2", "ha"]
+                ).values()
+            ),
+            list(
+                gaff.get_parameters(
+                    "harmonic_angles", ["ha", "c2", "f"]
+                ).values()
+            ),
         )
 
     def test_gaff_missing_angle_parameters(self, gaff):
@@ -64,9 +73,12 @@ class TestForcefieldParameters:
             "periodic_propers", ["c3", "c", "sh", "hs"]
         )
         assert np.allclose(periodic_proper_params["periodicity"], [2.0, 1.0])
-        assert np.allclose(periodic_proper_params["k"], [9.414, 5.4392000000000005])
         assert np.allclose(
-            periodic_proper_params["phase"], [3.141592653589793, 3.141592653589793]
+            periodic_proper_params["k"], [9.414, 5.4392000000000005]
+        )
+        assert np.allclose(
+            periodic_proper_params["phase"],
+            [3.141592653589793, 3.141592653589793],
         )
 
     def test_gaff_periodic_proper_parameters_reversed(self, gaff):
@@ -89,15 +101,21 @@ class TestForcefieldParameters:
         )
         assert np.allclose(periodic_improper_params["periodicity"], [2.0])
         assert np.allclose(periodic_improper_params["k"], [4.6024])
-        assert np.allclose(periodic_improper_params["phase"], [3.141592653589793])
+        assert np.allclose(
+            periodic_improper_params["phase"], [3.141592653589793]
+        )
 
     def test_gaff_periodic_improper_parameters_reversed(self, gaff):
         assert np.allclose(
             list(
-                gaff.get_parameters("periodic_impropers", ["c", "", "o", "o"]).values()
+                gaff.get_parameters(
+                    "periodic_impropers", ["c", "", "o", "o"]
+                ).values()
             ),
             list(
-                gaff.get_parameters("periodic_impropers", ["c", "o", "", "o"]).values()
+                gaff.get_parameters(
+                    "periodic_impropers", ["c", "o", "", "o"]
+                ).values()
             ),
         )
 
@@ -120,29 +138,45 @@ class TestForcefieldParameters:
         assert atom_params["epsilon"] == 0.29288
 
     def test_opls_get_parameters_atom_class(self, opls):
-        atom_params = opls.get_parameters("atoms", "CA", keys_are_atom_classes=True)
+        atom_params = opls.get_parameters(
+            "atoms", "CA", keys_are_atom_classes=True
+        )
         assert atom_params["sigma"] == 0.355
         assert atom_params["epsilon"] == 0.29288
 
     def test_opls_get_parameters_bonds(self, opls):
-        bond_params = opls.get_parameters("harmonic_bonds", ["opls_760", "opls_145"])
+        bond_params = opls.get_parameters(
+            "harmonic_bonds", ["opls_760", "opls_145"]
+        )
         assert bond_params["length"] == 0.146
         assert bond_params["k"] == 334720.0
 
     def test_opls_get_parameters_bonds_reversed(self, opls):
         assert np.allclose(
             list(
-                opls.get_parameters("harmonic_bonds", ["opls_760", "opls_145"]).values()
+                opls.get_parameters(
+                    "harmonic_bonds", ["opls_760", "opls_145"]
+                ).values()
             ),
             list(
-                opls.get_parameters("harmonic_bonds", ["opls_145", "opls_760"]).values()
+                opls.get_parameters(
+                    "harmonic_bonds", ["opls_145", "opls_760"]
+                ).values()
             ),
         )
 
     def test_opls_get_parameters_bonds_atom_classes_reversed(self, opls):
         assert np.allclose(
-            list(opls.get_parameters("harmonic_bonds", ["C_2", "O_2"], True).values()),
-            list(opls.get_parameters("harmonic_bonds", ["O_2", "C_2"], True).values()),
+            list(
+                opls.get_parameters(
+                    "harmonic_bonds", ["C_2", "O_2"], True
+                ).values()
+            ),
+            list(
+                opls.get_parameters(
+                    "harmonic_bonds", ["O_2", "C_2"], True
+                ).values()
+            ),
         )
 
     def test_opls_get_parameters_angle(self, opls):
@@ -180,12 +214,16 @@ class TestForcefieldParameters:
         assert np.allclose(
             list(
                 opls.get_parameters(
-                    "harmonic_angles", ["CA", "C", "O"], keys_are_atom_classes=True
+                    "harmonic_angles",
+                    ["CA", "C", "O"],
+                    keys_are_atom_classes=True,
                 ).values()
             ),
             list(
                 opls.get_parameters(
-                    "harmonic_angles", ["O", "C", "CA"], keys_are_atom_classes=True
+                    "harmonic_angles",
+                    ["O", "C", "CA"],
+                    keys_are_atom_classes=True,
                 ).values()
             ),
         )
@@ -210,12 +248,14 @@ class TestForcefieldParameters:
         assert np.allclose(
             list(
                 opls.get_parameters(
-                    "rb_propers", ["opls_215", "opls_215", "opls_235", "opls_269"]
+                    "rb_propers",
+                    ["opls_215", "opls_215", "opls_235", "opls_269"],
                 ).values()
             ),
             list(
                 opls.get_parameters(
-                    "rb_propers", ["opls_269", "opls_235", "opls_215", "opls_215"]
+                    "rb_propers",
+                    ["opls_269", "opls_235", "opls_215", "opls_215"],
                 ).values()
             ),
         )

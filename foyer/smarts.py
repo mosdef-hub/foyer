@@ -1,3 +1,4 @@
+"""Utility methods/classes for SMARTS grammar."""
 import lark
 
 from foyer.exceptions import FoyerError
@@ -60,19 +61,26 @@ class SMARTS(object):
         custom elements that will belong in SMARTS definitions
 
     """
-    def __init__(self, optional_names=''):
+
+    def __init__(self, optional_names=""):
         if optional_names:
             for n in optional_names:
-                if not n.startswith('_'):
-                    raise FoyerError('Non-element types must start with an underscore, you passed {}'.format(', '.join(optional_names)))
+                if not n.startswith("_"):
+                    raise FoyerError(
+                        "Non-element types must start with an underscore, you passed {}".format(
+                            ", ".join(optional_names)
+                        )
+                    )
 
             optional_names = sorted(optional_names, reverse=True)
-            self.grammar = GRAMMAR.format(optional='{}|'.format(
-                '|'.join(optional_names)))
+            self.grammar = GRAMMAR.format(
+                optional="{}|".format("|".join(optional_names))
+            )
 
         else:
-            self.grammar = GRAMMAR.format(optional='')
+            self.grammar = GRAMMAR.format(optional="")
         self.PARSER = lark.Lark(self.grammar, parser="lalr")
 
     def parse(self, smarts_string):
+        """Convert SMARTS string to parsed grammar object."""
         return self.PARSER.parse(smarts_string)

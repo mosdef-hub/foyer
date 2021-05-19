@@ -10,7 +10,7 @@
 
 ## Overview
 Foyer is an open-source Python tool for defining and applying force field atom-typing
-rules in a format that is both human- and machine-readable.  It parametrizes chemical topologies, 
+rules in a format that is both human- and machine-readable.  It parametrizes chemical topologies,
 generating, syntactically correct input files for various simulation engines. Foyer provides a framework for force field
 dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility
 (for more information, see [our paper](https://www.sciencedirect.com/science/article/pii/S0927025619303040) or its corresponding [pre-print](https://arxiv.org/pdf/1812.06779.pdf)).
@@ -50,10 +50,10 @@ ethane.save('ethane.top')
 ethane.save('ethane.gro')
 ```
 
-The `Foyer` package is part of the [Molecular Simulation Design Framework (MoSDeF) project](http://mosdef.org/). 
-Libraries in the MoSDeF ecosystem are designed to provide utilities neccessary to streamline 
+The `Foyer` package is part of the [Molecular Simulation Design Framework (MoSDeF) project](http://mosdef.org/).
+Libraries in the MoSDeF ecosystem are designed to provide utilities neccessary to streamline
 a researcher's simulation workflow. When setting up simulation studies,
-we also recommend users to follow the [TRUE](https://www.tandfonline.com/doi/full/10.1080/00268976.2020.1742938)  
+we also recommend users to follow the [TRUE](https://www.tandfonline.com/doi/full/10.1080/00268976.2020.1742938)
 (Transparent, Reproducible, Usable-by-others, and Extensible) standard, which is a set of common
 practices meant to improve the reproducibility of computational simulation research.
 
@@ -110,7 +110,7 @@ Example template for disseminating force fields:
 * [Installation instructions](docs/installation.rst)
 
 ### Citing Foyer:
-* If you use this package, please cite [our paper](https://www.sciencedirect.com/science/article/pii/S0927025619303040) published in [Computational Materials Science](https://www.journals.elsevier.com/computational-materials-science). 
+* If you use this package, please cite [our paper](https://www.sciencedirect.com/science/article/pii/S0927025619303040) published in [Computational Materials Science](https://www.journals.elsevier.com/computational-materials-science).
 * This manuscript is also available in its pre-print form on [arxiv](https://arxiv.org/pdf/1812.06779.pdf)
 * The paper and examples in this work were developed for tag [paper_COMMAT_2019](https://github.com/mosdef-hub/foyer/tree/paper_COMMAT_2019)
 
