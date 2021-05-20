@@ -1,17 +1,18 @@
 import difflib
 import glob
 import os
+
+import gmso
+import mbuild as mb
+import pytest
 from pkg_resources import resource_filename
 
-import pytest
-from foyer.general_forcefield import Forcefield
 from foyer.exceptions import FoyerError
+from foyer.general_forcefield import Forcefield
 from foyer.tests.utils import get_fn, register_mock_request
-import mbuild as mb
-import gmso
 
-FF_DIR = resource_filename('foyer', 'forcefields')
-FORCEFIELDS = glob.glob(os.path.join(FF_DIR, 'xml/*.xml'))
+FF_DIR = resource_filename("foyer", "forcefields")
+FORCEFIELDS = glob.glob(os.path.join(FF_DIR, "xml/*.xml"))
 
 RESPONSE_BIB_ETHANE_JA962170 = """@article{Jorgensen_1996,
 	doi = {10.1021/ja9621760},
@@ -27,7 +28,7 @@ RESPONSE_BIB_ETHANE_JA962170 = """@article{Jorgensen_1996,
 	journal = {Journal of the American Chemical Society}
 }"""
 
-RESPONSE_BIB_ETHANE_JP0484579="""@article{Jorgensen_2004,
+RESPONSE_BIB_ETHANE_JP0484579 = """@article{Jorgensen_2004,
 	doi = {10.1021/jp0484579},
 	url = {https://doi.org/10.1021%2Fjp0484579},
 	year = 2004,
@@ -41,6 +42,7 @@ RESPONSE_BIB_ETHANE_JP0484579="""@article{Jorgensen_2004,
 	journal = {The Journal of Physical Chemistry B}
 }"""
 
+
 def test_load_files():
     for ff_file in FORCEFIELDS:
         ff1 = Forcefield(forcefield_files=ff_file, strict=False)
@@ -49,29 +51,38 @@ def test_load_files():
         ff2 = Forcefield(forcefield_files=ff_file, strict=False)
         assert len(ff1.ff.atom_types) == len(ff2.ff.atom_types)
 
-''' Relies on https://github.com/mosdef-hub/gmso/pull/526
+
+""" Relies on https://github.com/mosdef-hub/gmso/pull/526
 def test_duplicate_type_definitions():
     with pytest.raises(ValueError):
         ff4 = Forcefield(name='oplsaa', forcefield_files=FORCEFIELDS, strict=False)
-'''
+"""
+
 
 def test_missing_type_definitions():
     with pytest.raises(FoyerError):
         FF = Forcefield()
-        ethane = mb.load(get_fn('ethane.mol2'), backend='parmed')
+        ethane = mb.load(get_fn("ethane.mol2"), backend="parmed")
         FF.apply(ethane, assert_improper_params=False)
 
+
 def test_unsupported_backend():
-    with pytest.raises(FoyerError, match=r'Backend not supported'):
-        FF = Forcefield(name='oplsaa', backend='void')
+    with pytest.raises(FoyerError, match=r"Backend not supported"):
+        FF = Forcefield(name="oplsaa", backend="void")
+
+
 def test_from_gmso():
-    mol2 = mb.load(get_fn('ethane.mol2'), backend='parmed')
+    mol2 = mb.load(get_fn("ethane.mol2"), backend="parmed")
     top = gmso.external.from_mbuild(mol2)
-    oplsaa = Forcefield(name='oplsaa', strict=False)
+    oplsaa = Forcefield(name="oplsaa", strict=False)
     ethane = oplsaa.apply(top, assert_improper_params=False)
 
-    assert sum((1 for at in ethane.sites if at.atom_type.name == 'opls_135')) == 2
-    assert sum((1 for at in ethane.sites if at.atom_type.name == 'opls_140')) == 6
+    assert (
+        sum((1 for at in ethane.sites if at.atom_type.name == "opls_135")) == 2
+    )
+    assert (
+        sum((1 for at in ethane.sites if at.atom_type.name == "opls_140")) == 6
+    )
     assert len(ethane.bonds) == 7
     assert all(x.bond_type for x in ethane.bonds)
     assert len(ethane.angles) == 12
@@ -79,7 +90,7 @@ def test_from_gmso():
     assert len(ethane.dihedrals) == 9
     assert all(x.dihedral_type for x in ethane.dihedrals)
 
-    '''
+    """
     Skip test for box information until mbuild box overhaul PR is completed
 
     mol2 = mb.load(get_fn('ethane.mol2'), backend='parmed')
@@ -88,15 +99,20 @@ def test_from_gmso():
     ethane = oplsaa.apply(mol2, assert_improper_params=False)
 
     assert ethane.box_vectors == mol2.box_vectors
-    '''
+    """
+
 
 def test_from_mbuild():
-    mol2 = mb.load(get_fn('ethane.mol2'), backend='parmed')
-    oplsaa = Forcefield(name='oplsaa', strict=False)
+    mol2 = mb.load(get_fn("ethane.mol2"), backend="parmed")
+    oplsaa = Forcefield(name="oplsaa", strict=False)
     ethane = oplsaa.apply(mol2, assert_improper_params=False)
 
-    assert sum((1 for at in ethane.sites if at.atom_type.name == 'opls_135')) == 2
-    assert sum((1 for at in ethane.sites if at.atom_type.name == 'opls_140')) == 6
+    assert (
+        sum((1 for at in ethane.sites if at.atom_type.name == "opls_135")) == 2
+    )
+    assert (
+        sum((1 for at in ethane.sites if at.atom_type.name == "opls_140")) == 6
+    )
     assert len(ethane.bonds) == 7
     assert all(x.bond_type for x in ethane.bonds)
     assert len(ethane.angles) == 12
@@ -104,64 +120,85 @@ def test_from_mbuild():
     assert len(ethane.dihedrals) == 9
     assert all(x.dihedral_type for x in ethane.dihedrals)
 
-@pytest.mark.parametrize("mixing_rule", ['lorentz', 'geometric'])
+
+@pytest.mark.parametrize("mixing_rule", ["lorentz", "geometric"])
 def test_comb_rule(mixing_rule):
-    mol2 = mb.load(get_fn('ethane.mol2'))
-    oplsaa = Forcefield(name='oplsaa', strict=False)
-    ethane = oplsaa.apply(mol2, combining_rule=mixing_rule, assert_improper_params=False)
+    mol2 = mb.load(get_fn("ethane.mol2"))
+    oplsaa = Forcefield(name="oplsaa", strict=False)
+    ethane = oplsaa.apply(
+        mol2, combining_rule=mixing_rule, assert_improper_params=False
+    )
     assert ethane.combining_rule == mixing_rule
 
+
 def test_write_refs(requests_mock):
-    register_mock_request(mocker=requests_mock,
-                          url='http://api.crossref.org/',
-                          path='works/10.1021/ja9621760/transform/application/x-bibtex',
-                          headers={'accept': 'application/x-bibtex'},
-                          text=RESPONSE_BIB_ETHANE_JA962170)
-    mol2 = mb.load(get_fn('ethane.mol2'), backend='parmed')
-    oplsaa = Forcefield(name='oplsaa', strict=False)
-    ethane = oplsaa.apply(mol2, references_file='ethane.bib', assert_improper_params=False)
-    assert os.path.isfile('ethane.bib')
-    with open(get_fn('ethane.bib')) as file1:
-        with open('ethane.bib') as file2:
-            diff = list(difflib.unified_diff(file1.readlines(),
-                                             file2.readlines(),
-                                             n=0))
+    register_mock_request(
+        mocker=requests_mock,
+        url="http://api.crossref.org/",
+        path="works/10.1021/ja9621760/transform/application/x-bibtex",
+        headers={"accept": "application/x-bibtex"},
+        text=RESPONSE_BIB_ETHANE_JA962170,
+    )
+    mol2 = mb.load(get_fn("ethane.mol2"), backend="parmed")
+    oplsaa = Forcefield(name="oplsaa", strict=False)
+    ethane = oplsaa.apply(
+        mol2, references_file="ethane.bib", assert_improper_params=False
+    )
+    assert os.path.isfile("ethane.bib")
+    with open(get_fn("ethane.bib")) as file1:
+        with open("ethane.bib") as file2:
+            diff = list(
+                difflib.unified_diff(file1.readlines(), file2.readlines(), n=0)
+            )
     assert not diff
+
 
 def test_write_refs_multiple(requests_mock):
-    register_mock_request(mocker=requests_mock,
-                          url='http://api.crossref.org/',
-                          path='works/10.1021/ja9621760/transform/application/x-bibtex',
-                          headers={'accept': 'application/x-bibtex'},
-                          text=RESPONSE_BIB_ETHANE_JA962170)
-    register_mock_request(mocker=requests_mock,
-                          url='http://api.crossref.org/',
-                          path='works/10.1021/jp0484579/transform/application/x-bibtex',
-                          headers={'accept': 'application/x-bibtex'},
-                          text=RESPONSE_BIB_ETHANE_JP0484579)
-    mol2 = mb.load(get_fn('ethane.mol2'))
-    oplsaa = Forcefield(forcefield_files=get_fn('refs-multi.xml'), strict=False)
-    ethane = oplsaa.apply(mol2, references_file='ethane-multi.bib', assert_improper_params=False)
-    assert os.path.isfile('ethane-multi.bib')
-    with open(get_fn('ethane-multi.bib')) as file1:
-        with open('ethane-multi.bib') as file2:
-            diff = list(difflib.unified_diff(file1.readlines(),
-                                             file2.readlines(),
-                                             n=0))
+    register_mock_request(
+        mocker=requests_mock,
+        url="http://api.crossref.org/",
+        path="works/10.1021/ja9621760/transform/application/x-bibtex",
+        headers={"accept": "application/x-bibtex"},
+        text=RESPONSE_BIB_ETHANE_JA962170,
+    )
+    register_mock_request(
+        mocker=requests_mock,
+        url="http://api.crossref.org/",
+        path="works/10.1021/jp0484579/transform/application/x-bibtex",
+        headers={"accept": "application/x-bibtex"},
+        text=RESPONSE_BIB_ETHANE_JP0484579,
+    )
+    mol2 = mb.load(get_fn("ethane.mol2"))
+    oplsaa = Forcefield(forcefield_files=get_fn("refs-multi.xml"), strict=False)
+    ethane = oplsaa.apply(
+        mol2, references_file="ethane-multi.bib", assert_improper_params=False
+    )
+    assert os.path.isfile("ethane-multi.bib")
+    with open(get_fn("ethane-multi.bib")) as file1:
+        with open("ethane-multi.bib") as file2:
+            diff = list(
+                difflib.unified_diff(file1.readlines(), file2.readlines(), n=0)
+            )
     assert not diff
 
-def test_write_bad_ref(requests_mock):
-    register_mock_request(mocker=requests_mock,
-                          url='http://api.crossref.org/',
-                          path='works/10.1021/garbage_bad_44444444jjjj/transform/application/x-bibtex',
-                          headers={'accept': 'application/x-bibtex'},
-                          status_code=404)
-    mol2 = mb.load(get_fn('ethane.mol2'), backend='parmed')
-    oplsaa = Forcefield(forcefield_files=get_fn('refs-bad.xml'), strict=False)
-    with pytest.warns(UserWarning):
-        ethane = oplsaa.apply(mol2, references_file='ethane.bib', assert_improper_params=False)
 
-'''
+def test_write_bad_ref(requests_mock):
+    register_mock_request(
+        mocker=requests_mock,
+        url="http://api.crossref.org/",
+        path="works/10.1021/garbage_bad_44444444jjjj/transform/application/x-bibtex",
+        headers={"accept": "application/x-bibtex"},
+        status_code=404,
+    )
+    mol2 = mb.load(get_fn("ethane.mol2"), backend="parmed")
+    oplsaa = Forcefield(forcefield_files=get_fn("refs-bad.xml"), strict=False)
+    with pytest.warns(UserWarning):
+        ethane = oplsaa.apply(
+            mol2, references_file="ethane.bib", assert_improper_params=False
+        )
+
+
+"""
 These XML files missed the whole nonbonded force section
 
 def test_from_mbuild_customtype():
@@ -185,45 +222,60 @@ def test_improper_dihedral():
     assert len(benzene.dihedrals) == 18
     assert len([dih for dih in benzene.dihedrals if dih.improper]) == 6
     assert len([dih for dih in benzene.dihedrals if not dih.improper]) == 12
-'''
+"""
+
 
 def test_urey_bradley():
     system = mb.Compound()
-    first = mb.Particle(name='_CTL2',pos=[-1,0,0])
-    second = mb.Particle(name='_CL', pos=[0,0,0])
-    third = mb.Particle(name='_OBL', pos=[1,0,0])
-    fourth = mb.Particle(name='_OHL', pos = [0,1,0])
+    first = mb.Particle(name="_CTL2", pos=[-1, 0, 0])
+    second = mb.Particle(name="_CL", pos=[0, 0, 0])
+    third = mb.Particle(name="_OBL", pos=[1, 0, 0])
+    fourth = mb.Particle(name="_OHL", pos=[0, 1, 0])
 
     system.add([first, second, third, fourth])
 
-    system.add_bond((first,second))
+    system.add_bond((first, second))
     system.add_bond((second, third))
     system.add_bond((second, fourth))
 
-    ff = Forcefield(forcefield_files=[get_fn('charmm36_cooh.xml')], strict=False)
-    struc = ff.apply(system, assert_angle_params=False, assert_dihedral_params=False,
-            assert_improper_params=False)
+    ff = Forcefield(
+        forcefield_files=[get_fn("charmm36_cooh.xml")], strict=False
+    )
+    struc = ff.apply(
+        system,
+        assert_angle_params=False,
+        assert_dihedral_params=False,
+        assert_improper_params=False,
+    )
     assert len(struc.angles) == 3
-    assert len(struc.angle_types) == 3 # 1 harmonic, 2 Urey Bradley
+    assert len(struc.angle_types) == 3  # 1 harmonic, 2 Urey Bradley
+
 
 def test_charmm_improper():
     system = mb.Compound()
-    first = mb.Particle(name='_CTL2',pos=[-1,0,0])
-    second = mb.Particle(name='_CL', pos=[0,0,0])
-    third = mb.Particle(name='_OBL', pos=[1,0,0])
-    fourth = mb.Particle(name='_OHL', pos = [0,1,0])
+    first = mb.Particle(name="_CTL2", pos=[-1, 0, 0])
+    second = mb.Particle(name="_CL", pos=[0, 0, 0])
+    third = mb.Particle(name="_OBL", pos=[1, 0, 0])
+    fourth = mb.Particle(name="_OHL", pos=[0, 1, 0])
 
     system.add([first, second, third, fourth])
 
-    system.add_bond((first,second))
+    system.add_bond((first, second))
     system.add_bond((second, third))
     system.add_bond((second, fourth))
 
-    ff = Forcefield(forcefield_files=[get_fn('charmm36_cooh.xml')], strict=False)
-    struc = ff.apply(system, assert_angle_params=False, assert_dihedral_params=False,
-            assert_improper_params=False)
+    ff = Forcefield(
+        forcefield_files=[get_fn("charmm36_cooh.xml")], strict=False
+    )
+    struc = ff.apply(
+        system,
+        assert_angle_params=False,
+        assert_dihedral_params=False,
+        assert_improper_params=False,
+    )
     assert len(struc.impropers) == 1
     assert len(struc.dihedrals) == 0
+
 
 ''' To be implemented -> Lookup connection types with mixed atomtype-atomclass
 def test_topology_precedence():
@@ -255,27 +307,36 @@ def test_topology_precedence():
                 if round(float(rb.dihedral_type.parameters['c0'].value), 3) == 0.287]) == 9
 '''
 
-@pytest.mark.parametrize("ff_filename,kwargs", [
-    ("ethane-angle-typo.xml", {"assert_angle_params": False}),
-    ("ethane-dihedral-typo.xml", {"assert_dihedral_params": False})
-])
+
+@pytest.mark.parametrize(
+    "ff_filename,kwargs",
+    [
+        ("ethane-angle-typo.xml", {"assert_angle_params": False}),
+        ("ethane-dihedral-typo.xml", {"assert_dihedral_params": False}),
+    ],
+)
 def test_missing_topo_params(ff_filename, kwargs):
     """Test that the user is notified if not all topology parameters are found."""
 
-    ethane = mb.load(get_fn('ethane.mol2'))
-    oplsaa_with_typo = Forcefield(forcefield_files=get_fn(ff_filename), strict=False)
+    ethane = mb.load(get_fn("ethane.mol2"))
+    oplsaa_with_typo = Forcefield(
+        forcefield_files=get_fn(ff_filename), strict=False
+    )
     with pytest.raises(Exception):
         ethane = oplsaa_with_typo.apply(ethane, assert_improper_params=False)
     with pytest.warns(UserWarning):
-        ethane = oplsaa_with_typo.apply(ethane, assert_improper_params=False, **kwargs)
+        ethane = oplsaa_with_typo.apply(
+            ethane, assert_improper_params=False, **kwargs
+        )
+
 
 def test_assert_bonds():
-    ff = Forcefield(name='trappe-ua', strict=False)
+    ff = Forcefield(name="trappe-ua", strict=False)
 
     derponium = mb.Compound()
-    at1 = mb.Particle(name='H')
-    at2 = mb.Particle(name='O')
-    at3 = mb.Particle(name='_CH4')
+    at1 = mb.Particle(name="H")
+    at2 = mb.Particle(name="O")
+    at3 = mb.Particle(name="_CH4")
 
     derponium.add([at1, at2, at3])
     derponium.add_bond((at1, at2))
@@ -283,18 +344,26 @@ def test_assert_bonds():
 
     with pytest.raises(Exception):
         ff.apply(derponium, assert_improper_params=False)
-    thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False, assert_improper_params=False)
+    thing = ff.apply(
+        derponium,
+        assert_bond_params=False,
+        assert_angle_params=False,
+        assert_improper_params=False,
+    )
     assert any(b.bond_type is None for b in thing.bonds)
 
+
 def test_apply_subfuncs():
-    mol2 = mb.load(get_fn('ethane.mol2'), backend='parmed')
-    oplsaa = Forcefield(name='oplsaa', strict=False)
+    mol2 = mb.load(get_fn("ethane.mol2"), backend="parmed")
+    oplsaa = Forcefield(name="oplsaa", strict=False)
 
     ethane = oplsaa.apply(mol2, assert_improper_params=False)
 
     typemap = oplsaa._run_atomtyping(mol2, use_residue_map=False)
 
-    ethane2 = oplsaa._parametrize(mol2, typemap=typemap, assert_improper_params=False)
+    ethane2 = oplsaa._parametrize(
+        mol2, typemap=typemap, assert_improper_params=False
+    )
 
     assert ethane.box == ethane2.box
     assert (ethane.positions == ethane2.positions).all
@@ -304,17 +373,27 @@ def test_apply_subfuncs():
         assert a1.atom_type == a2.atom_type
 
     for b1, b2 in zip(ethane.bonds, ethane2.bonds):
-        assert b1.connection_members[0].atom_type == b2.connection_members[0].atom_type
-        assert b1.connection_members[1].atom_type == b2.connection_members[1].atom_type
+        assert (
+            b1.connection_members[0].atom_type
+            == b2.connection_members[0].atom_type
+        )
+        assert (
+            b1.connection_members[1].atom_type
+            == b2.connection_members[1].atom_type
+        )
         assert b1.bond_type == b2.bond_type
 
-def test_non_zero_charge():
-    compound = mb.load('C1=CC=C2C(=C1)C(C3=CC=CC=C3O2)C(=O)O', smiles=True)
-    oplsaa = Forcefield(name='oplsaa', strict=False)
-    with pytest.warns(UserWarning):
-        oplsaa.apply(compound, assert_dihedral_params=False, assert_improper_params=False)
 
-'''
+def test_non_zero_charge():
+    compound = mb.load("C1=CC=C2C(=C1)C(C3=CC=CC=C3O2)C(=O)O", smiles=True)
+    oplsaa = Forcefield(name="oplsaa", strict=False)
+    with pytest.warns(UserWarning):
+        oplsaa.apply(
+            compound, assert_dihedral_params=False, assert_improper_params=False
+        )
+
+
+"""
 @pytest.mark.parametrize("filename", ['ethane.mol2', 'benzene.mol2'])
 def test_write_xml(filename):
     mol = mb.load(get_fn(filename), backend='parmed')
@@ -416,4 +495,4 @@ def test_load_metadata():
     lj_ff = Forcefield(forcefield_files=[get_fn('lj.xml'), get_fn('lj2.xml')])
     assert lj_ff.version == ['0.4.1', '4.8.2']
     assert lj_ff.name == ['LJ', 'JL']
-'''
+"""
