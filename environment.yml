@@ -4,8 +4,9 @@ channels:
 dependencies:
   - lark-parser
   - lxml
-  - networkx>=2.0
+  - networkx>=2.5
   - openmm>=7.5
   - parmed
   - ele
+  - requests
   - python<=3.8

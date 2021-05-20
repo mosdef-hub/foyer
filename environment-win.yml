@@ -1,25 +1,18 @@
-name: foyer-dev
+name: foyer
 channels:
   - conda-forge
   - omnia
 dependencies:
-  - bump2version
-  - codecov
   - lark-parser
   - lxml
-  - mbuild
-  - networkx>=2.0
+  - networkx>=2.5
   - openmm>=7.5
   - parmed
   - ele
+  - requests
   - pip
   - pytest
   - pytest-azurepipelines
   - pytest-cov
   - pytest-timeout
   - python<=3.8
-  - requests
-  - requests-mock
-  - pip:
-    - "--editable=git+https://github.com/rsdefever/GAFF-foyer.git#egg=gafffoyer"
-    - git+https://github.com/rsdefever/antefoyer.git

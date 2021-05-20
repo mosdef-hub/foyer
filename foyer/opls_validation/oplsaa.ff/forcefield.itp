@@ -3,7 +3,7 @@
 
 ; This force field uses a format that requires Gromacs 3.1.4 or later.
 ;
-; References for the OPLS-AA force field: 
+; References for the OPLS-AA force field:
 ;
 ; W. L. Jorgensen, D. S. Maxwell, and J. Tirado-Rives,
 ; J. Am. Chem. Soc. 118, 11225-11236 (1996).

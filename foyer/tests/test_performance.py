@@ -8,8 +8,8 @@ from foyer.utils.io import has_mbuild
 
 @pytest.mark.timeout(1)
 def test_fullerene():
-    fullerene = pmd.load_file(get_fn('fullerene.pdb'), structure=True)
-    forcefield = Forcefield(get_fn('fullerene.xml'))
+    fullerene = pmd.load_file(get_fn("fullerene.pdb"), structure=True)
+    forcefield = Forcefield(get_fn("fullerene.xml"))
     forcefield.apply(fullerene, assert_dihedral_params=False)
 
 
@@ -17,8 +17,9 @@ def test_fullerene():
 @pytest.mark.timeout(15)
 def test_surface():
     import mbuild as mb
-    surface = mb.load(get_fn('silica.mol2'))
-    forcefield = Forcefield(get_fn('opls-silica.xml'))
+
+    surface = mb.load(get_fn("silica.mol2"))
+    forcefield = Forcefield(get_fn("opls-silica.xml"))
     forcefield.apply(surface, assert_bond_params=False)
 
 
@@ -26,6 +27,7 @@ def test_surface():
 @pytest.mark.timeout(45)
 def test_polymer():
     import mbuild as mb
-    peg100 = mb.load(get_fn('peg100.mol2'))
-    forcefield = Forcefield(name='oplsaa')
+
+    peg100 = mb.load(get_fn("peg100.mol2"))
+    forcefield = Forcefield(name="oplsaa")
     forcefield.apply(peg100)

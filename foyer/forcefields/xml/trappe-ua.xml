@@ -191,7 +191,7 @@
   <Proper class1="CH2" class2="C" class3="O" class4="H" c0="1.35991" c1="4.07974" c2="0.0" c3="-5.43965" c4="0.0" c5="0.0"/>
   <Proper class1="CH" class2="C" class3="O" class4="H" c0="1.35991" c1="4.07974" c2="0.0" c3="-5.43965" c4="0.0" c5="0.0"/>
   <Proper class1="C" class2="C" class3="O" class4="H" c0="1.35991" c1="4.07974" c2="0.0" c3="-5.43965" c4="0.0" c5="0.0"/>
-  <!-- 
+  <!--
   No parameters for CHX-[CH2]-[CH]-OH, CHX-[CH2]-[C]-OH, CHX-[CH]-[CH2]-OH,
   CHX-[CH]-[CH]-OH, CHX-[CH]-[C]-OH, CHX-[C]-[CH2]-OH, CHX-[C]-[CH]-OH,
   CHX-[C]-[C]-OH ?
