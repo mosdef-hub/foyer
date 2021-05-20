@@ -1,7 +1,8 @@
 import glob
-from os.path import join, split, abspath
 import platform
 import urllib.parse as parseurl
+from os.path import abspath, join, split
+
 import numpy as np
 
 
@@ -123,12 +124,14 @@ def is_running_on_windows():
 
 try:
     import openff.tookit
+
     has_openff_toolkit = True
 except ImportError:
     has_openff_toolkit = False
 
 try:
     import gmso
+
     has_gmso = True
 except ImportError:
     has_gmso = False

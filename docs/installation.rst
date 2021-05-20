@@ -21,6 +21,20 @@ Install an editable version from source:
     cd foyer
     pip install -e .
 
+
+Install pre-commit
+------------------
+
+We use [pre-commit](https://pre-commit.com/) to automatically handle our code formatting and this package is included in the dev environment.
+With the ``foyer-dev`` conda environment active, pre-commit can be installed locally as a git hook by running::
+
+    $ pre-commit install
+
+And (optional) all files can be checked by running::
+
+    $ pre-commit run --all-files
+
+
 Supported Python Versions
 -------------------------
 
@@ -41,7 +55,7 @@ Building the documentation
 --------------------------
 
 foyer uses `sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ to build its documentation. To build the docs locally, run the following while in the ``docs`` directory::
-    
+
     $ conda env create -f docs-env.yml
     $ conda activate foyer-docs
     $ make html

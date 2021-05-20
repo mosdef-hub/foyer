@@ -11,7 +11,7 @@ License
 Copyright (c) 2012-2015 Stanford University and the Authors
 All rights reserved.
 
-Redistribution and use of all files in this folder (devtools) and (../basesetup.py, 
+Redistribution and use of all files in this folder (devtools) and (../basesetup.py,
 ../setup.py) files in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 

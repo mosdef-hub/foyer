@@ -3,12 +3,18 @@ import pytest
 
 from foyer.atomtyper import find_atomtypes
 from foyer.forcefield import Forcefield
+from foyer.tests.utils import (
+    has_gmso,
+    has_openff_toolkit,
+    is_running_on_windows,
+)
 from foyer.topology_graph import TopologyGraph
-from foyer.tests.utils import is_running_on_windows, has_gmso, has_openff_toolkit
 
 
 @pytest.mark.skipif(
-    condition=(is_running_on_windows() or (not (has_gmso or has_openff_toolkit))),
+    condition=(
+        is_running_on_windows() or (not (has_gmso or has_openff_toolkit))
+    ),
     reason="openff-toolkit and gmso not installed",
 )
 class TestTopologyGraph:

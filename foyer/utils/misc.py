@@ -1,6 +1,8 @@
+"""Miscellaneous helper methods."""
+
 
 def validate_type(iterator, type_):
-    """Validate all the elements of the iterable are of a particular type"""
+    """Validate all the elements of the iterable are of a particular type."""
     for item in iterator:
         if not isinstance(item, type_):
             raise TypeError(

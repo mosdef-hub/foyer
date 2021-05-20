@@ -6,7 +6,7 @@ molecular system.
 
 #### Creating a box of ethane
 Here we use mBuild to construct a box filled with ethane molecules and use Foyer to
-atom-type the system, applying the OPLS force field, and save to run-able GROMACS 
+atom-type the system, applying the OPLS force field, and save to run-able GROMACS
 files.
 ```python
 import mbuild as mb
@@ -42,7 +42,7 @@ In some instances, the use of multiple force fields may be desired to describe a
 molecular system.  For example, the user may want to use one force field for a
 surface and another for a fluid in the same system.  Foyer supports this
 functionality by allowing the user to separately atom-type parts of a system.  In
-this example, we take a system featuring bulk united atom ethane above a silica 
+this example, we take a system featuring bulk united atom ethane above a silica
 surface and apply the OPLS force field to the surface and the TraPPE force field to
 the ethane.  The two atomtyped Parmed structures are then combined using a simple
 '\+' operator and can be saved to Gromacs files.
@@ -58,7 +58,7 @@ interface = mb.SilicaInterface(bulk_silica=AmorphousSilica())
 interface = mb.Monolayer(surface=interface, chains=H(), guest_port_name='up')
 
 box = mb.Box(mins=[0, 0, max(interface.xyz[:,2])],
-             maxs=interface.periodicity + [0, 0, 4]) 
+             maxs=interface.periodicity + [0, 0, 4])
 
 ethane_box = mb.fill_box(compound=Ethane(), n_compounds=200, box=box)
 
