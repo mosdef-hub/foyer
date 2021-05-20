@@ -1,3 +1,4 @@
+"""Foyer general Forcefield class and utility method."""
 import collections
 import glob
 import os
@@ -22,7 +23,7 @@ from foyer.utils.io import import_
 
 # Copy from original forcefield.py
 def preprocess_forcefield_files(forcefield_files=None, backend="gmso"):
-    """Pre-process foyer Forcefield XML files"""
+    """Pre-process foyer Forcefield XML files."""
     if forcefield_files is None:
         return None
 
@@ -53,8 +54,7 @@ def preprocess_forcefield_files(forcefield_files=None, backend="gmso"):
 
 
 class Forcefield(object):
-    """General Forcefield object that can be created by either a GMSO XML
-    forcefield file of Foyer XML forcefield file
+    """General Forcefield object that can be created by either a GMSO XML forcefield file of Foyer XML forcefield file.
 
     Parameters
     ----------
@@ -119,14 +119,17 @@ class Forcefield(object):
 
     @property
     def version(self):
+        """Return version of the loaded Forcefield."""
         return self._version
 
     @property
     def name(self):
+        """Return name of the loaded Forcefield."""
         return self._name
 
     @property
     def included_forcefields(self):
+        """Access forcefield included with foyer."""
         if any(self._included_forcefields):
             return self._included_forcefields
 
@@ -141,7 +144,7 @@ class Forcefield(object):
 
     # Parse forcefield meta information
     def _parse_gmso(self, forcefield_files, **kwargs):
-        """Parse metadata information when using GMSO as backend"""
+        """Parse metadata information when using GMSO as backend."""
         if forcefield_files:
             self.ff = gmso.ForceField(forcefield_files, **kwargs)
             self._version = self.ff.version
@@ -177,7 +180,7 @@ class Forcefield(object):
         *args,
         **kwargs,
     ):
-        """Apply the force field to a molecular topology
+        """Apply the force field to a molecular topology.
 
         Parameters
         ----------
@@ -241,7 +244,7 @@ class Forcefield(object):
         )
 
     def _run_atomtyping(self, top, use_residue_map=True, **kwargs):
-        """Atomtype the topology
+        """Atomtype the topology.
 
         Parameters
         ----------
@@ -253,7 +256,6 @@ class Forcefield(object):
             identical molecules, instead of reevaluating them each
             individually. To be implemented
         """
-
         if isinstance(top, mb.Compound):
             top = from_mbuild(top)
         # TO DO in another PR
@@ -281,7 +283,7 @@ class Forcefield(object):
         debug=False,
         **kwargs,
     ):
-        """Parametrize the Topology from the typemap provided
+        """Parametrize the Topology from the typemap provided.
 
         Assign AtomTypes and BondTypes to Atoms and Bonds, respectively.
         Create Angles, Dihedrals, Impropers and assign corresponding
@@ -350,7 +352,7 @@ class Forcefield(object):
         return top
 
     def _parametrize_gmsoFF(self, top, typemap, combining_rule):
-        """Parametrize a Topology with gmso.ForceField"""
+        """Parametrize a Topology with gmso.ForceField."""
         # Assign AtomTypes
         for atom in top.sites:
             atom.atom_type = deepcopy(
@@ -434,10 +436,10 @@ class Forcefield(object):
         assert_improper_params=True,
         debug=False,
     ):
-        """Check if the parameters are fulfilled
+        """Check if the parameters are fulfilled.
 
         Parameters
-        -----------
+        ----------
         top : gmso.Topology
             Molecular Topology whose parameters are being checked.
         assert_bond_params : bool, optional, default=True
