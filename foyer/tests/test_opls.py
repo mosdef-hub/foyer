@@ -8,7 +8,6 @@ from pkg_resources import resource_filename
 
 from foyer import Forcefield
 from foyer.tests.base_test import BaseTest
-
 from foyer.tests.utils import atomtype
 
 OPLSAA = Forcefield(name="oplsaa")
@@ -57,7 +56,9 @@ class TestOPLS(BaseTest):
                 gro_filename = "{}.gro".format(mol_name)
                 top_path = os.path.join(testfiles_dir, mol_name, top_filename)
                 gro_path = os.path.join(testfiles_dir, mol_name, gro_filename)
-                structure = pmd.load_file(top_path, xyz=gro_path, parametrize=False)
+                structure = pmd.load_file(
+                    top_path, xyz=gro_path, parametrize=False
+                )
             elif ext == ".mol2":
                 mol2_path = os.path.join(testfiles_dir, mol_name, mol_file)
                 structure = pmd.load_file(mol2_path, structure=True)
@@ -69,8 +70,12 @@ class TestOPLS(BaseTest):
         structure = pmd.load_file(top, xyz=gro)
         parametrized = OPLSAA.apply(structure)
 
-        assert sum((1 for at in parametrized.atoms if at.type == "opls_145")) == 6
-        assert sum((1 for at in parametrized.atoms if at.type == "opls_146")) == 6
+        assert (
+            sum((1 for at in parametrized.atoms if at.type == "opls_145")) == 6
+        )
+        assert (
+            sum((1 for at in parametrized.atoms if at.type == "opls_146")) == 6
+        )
         assert len(parametrized.bonds) == 12
         assert all(x.type for x in parametrized.bonds)
         assert len(parametrized.angles) == 18

@@ -1,5 +1,6 @@
 import difflib
 import glob
+import itertools as it
 import os
 
 import parmed as pmd
@@ -131,7 +132,9 @@ class TestForceField(BaseTest):
         with open(get_fn("ethane.bib")) as file1:
             with open("ethane.bib") as file2:
                 diff = list(
-                    difflib.unified_diff(file1.readlines(), file2.readlines(), n=0)
+                    difflib.unified_diff(
+                        file1.readlines(), file2.readlines(), n=0
+                    )
                 )
         assert not diff
 
@@ -160,7 +163,9 @@ class TestForceField(BaseTest):
         with open(get_fn("ethane-multi.bib")) as file1:
             with open("ethane-multi.bib") as file2:
                 diff = list(
-                    difflib.unified_diff(file1.readlines(), file2.readlines(), n=0)
+                    difflib.unified_diff(
+                        file1.readlines(), file2.readlines(), n=0
+                    )
                 )
         assert not diff
 
@@ -203,7 +208,9 @@ class TestForceField(BaseTest):
         import mbuild as mb
 
         mol2 = mb.load(get_fn("ethane_customtype.pdb"))
-        customtype_ff = Forcefield(forcefield_files=get_fn("validate_customtypes.xml"))
+        customtype_ff = Forcefield(
+            forcefield_files=get_fn("validate_customtypes.xml")
+        )
         ethane = customtype_ff.apply(mol2)
 
         assert sum((1 for at in ethane.atoms if at.type == "C3")) == 2
@@ -217,8 +224,12 @@ class TestForceField(BaseTest):
 
     def test_improper_dihedral(self):
         untyped_benzene = pmd.load_file(get_fn("benzene.mol2"), structure=True)
-        ff_improper = Forcefield(forcefield_files=get_fn("improper_dihedral.xml"))
-        benzene = ff_improper.apply(untyped_benzene, assert_dihedral_params=False)
+        ff_improper = Forcefield(
+            forcefield_files=get_fn("improper_dihedral.xml")
+        )
+        benzene = ff_improper.apply(
+            untyped_benzene, assert_dihedral_params=False
+        )
         assert len(benzene.dihedrals) == 18
         assert len([dih for dih in benzene.dihedrals if dih.improper]) == 6
         assert len([dih for dih in benzene.dihedrals if not dih.improper]) == 12
@@ -287,7 +298,9 @@ class TestForceField(BaseTest):
         struct_without = ethane
         oplsaa._apply_typemap(struct_with, map_with)
         oplsaa._apply_typemap(struct_without, map_without)
-        for atom_with, atom_without in zip(struct_with.atoms, struct_without.atoms):
+        for atom_with, atom_without in zip(
+            struct_with.atoms, struct_without.atoms
+        ):
             assert atom_with.type == atom_without.type
             b_with = atom_with.bond_partners
             b_without = atom_without.bond_partners
@@ -337,12 +350,22 @@ class TestForceField(BaseTest):
 
         assert (
             len(
-                [bond for bond in typed_ethane.bonds if round(bond.type.req, 2) == 1.15]
+                [
+                    bond
+                    for bond in typed_ethane.bonds
+                    if round(bond.type.req, 2) == 1.15
+                ]
             )
             == 6
         )
         assert (
-            len([bond for bond in typed_ethane.bonds if round(bond.type.req, 2) == 1.6])
+            len(
+                [
+                    bond
+                    for bond in typed_ethane.bonds
+                    if round(bond.type.req, 2) == 1.6
+                ]
+            )
             == 1
         )
         assert (
@@ -367,7 +390,11 @@ class TestForceField(BaseTest):
         )
         assert (
             len(
-                [rb for rb in typed_ethane.rb_torsions if round(rb.type.c0, 3) == 0.287]
+                [
+                    rb
+                    for rb in typed_ethane.rb_torsions
+                    if round(rb.type.c0, 3) == 0.287
+                ]
             )
             == 9
         )
@@ -426,7 +453,9 @@ class TestForceField(BaseTest):
 
         with pytest.raises(Exception):
             ff.apply(derponium)
-        thing = ff.apply(derponium, assert_bond_params=False, assert_angle_params=False)
+        thing = ff.apply(
+            derponium, assert_bond_params=False, assert_angle_params=False
+        )
         assert any(b.type is None for b in thing.bonds)
 
     def test_apply_subfuncs(self):
@@ -471,14 +500,18 @@ class TestForceField(BaseTest):
         oplsaa = Forcefield(name="oplsaa")
         typed = oplsaa.apply(mol)
 
-        typed.write_foyer(filename="opls-snippet.xml", forcefield=oplsaa, unique=True)
+        typed.write_foyer(
+            filename="opls-snippet.xml", forcefield=oplsaa, unique=True
+        )
         oplsaa_partial = Forcefield("opls-snippet.xml")
         typed_by_partial = oplsaa_partial.apply(mol)
 
         for adj in typed.adjusts:
             type1 = adj.atom1.atom_type
             type2 = adj.atom1.atom_type
-            sigma_factor_pre = adj.type.sigma / ((type1.sigma + type2.sigma) / 2)
+            sigma_factor_pre = adj.type.sigma / (
+                (type1.sigma + type2.sigma) / 2
+            )
             epsilon_factor_pre = adj.type.epsilon / (
                 (type1.epsilon * type2.epsilon) ** 0.5
             )
@@ -486,7 +519,9 @@ class TestForceField(BaseTest):
         for adj in typed_by_partial.adjusts:
             type1 = adj.atom1.atom_type
             type2 = adj.atom1.atom_type
-            sigma_factor_post = adj.type.sigma / ((type1.sigma + type2.sigma) / 2)
+            sigma_factor_post = adj.type.sigma / (
+                (type1.sigma + type2.sigma) / 2
+            )
             epsilon_factor_post = adj.type.epsilon / (
                 (type1.epsilon * type2.epsilon) ** 0.5
             )
@@ -499,14 +534,18 @@ class TestForceField(BaseTest):
         oplsaa = Forcefield(get_fn("oplsaa-periodic.xml"))
         typed = oplsaa.apply(mol)
 
-        typed.write_foyer(filename="opls-snippet.xml", forcefield=oplsaa, unique=True)
+        typed.write_foyer(
+            filename="opls-snippet.xml", forcefield=oplsaa, unique=True
+        )
         oplsaa_partial = Forcefield("opls-snippet.xml")
         typed_by_partial = oplsaa_partial.apply(mol)
 
         for adj in typed.adjusts:
             type1 = adj.atom1.atom_type
             type2 = adj.atom1.atom_type
-            sigma_factor_pre = adj.type.sigma / ((type1.sigma + type2.sigma) / 2)
+            sigma_factor_pre = adj.type.sigma / (
+                (type1.sigma + type2.sigma) / 2
+            )
             epsilon_factor_pre = adj.type.epsilon / (
                 (type1.epsilon * type2.epsilon) ** 0.5
             )
@@ -514,7 +553,9 @@ class TestForceField(BaseTest):
         for adj in typed_by_partial.adjusts:
             type1 = adj.atom1.atom_type
             type2 = adj.atom1.atom_type
-            sigma_factor_post = adj.type.sigma / ((type1.sigma + type2.sigma) / 2)
+            sigma_factor_post = adj.type.sigma / (
+                (type1.sigma + type2.sigma) / 2
+            )
             epsilon_factor_post = adj.type.epsilon / (
                 (type1.epsilon * type2.epsilon) ** 0.5
             )
@@ -525,7 +566,9 @@ class TestForceField(BaseTest):
     @pytest.mark.parametrize("filename", ["ethane.mol2", "benzene.mol2"])
     def test_write_xml_multiple_periodictorsions(self, filename):
         cmpd = pmd.load_file(get_fn(filename), structure=True)
-        ff = Forcefield(forcefield_files=get_fn("oplsaa_multiperiodicitytorsion.xml"))
+        ff = Forcefield(
+            forcefield_files=get_fn("oplsaa_multiperiodicitytorsion.xml")
+        )
         typed_struc = ff.apply(cmpd, assert_dihedral_params=False)
         typed_struc.write_foyer(
             filename="multi-periodictorsions.xml", forcefield=ff, unique=True
@@ -561,7 +604,9 @@ class TestForceField(BaseTest):
         mol = pmd.load_file(get_fn("styrene.mol2"), structure=True)
         oplsaa = Forcefield(name="oplsaa")
         typed = oplsaa.apply(mol, assert_dihedral_params=False)
-        typed.write_foyer(filename="opls-styrene.xml", forcefield=oplsaa, unique=True)
+        typed.write_foyer(
+            filename="opls-styrene.xml", forcefield=oplsaa, unique=True
+        )
         styrene = ET.parse("opls-styrene.xml")
         atom_types = styrene.getroot().find("AtomTypes").findall("Type")
         for item in atom_types:
@@ -584,6 +629,31 @@ class TestForceField(BaseTest):
         assert lj_ff.version == "0.4.1"
         assert lj_ff.name == "LJ"
 
-        lj_ff = Forcefield(forcefield_files=[get_fn("lj.xml"), get_fn("lj2.xml")])
+        lj_ff = Forcefield(
+            forcefield_files=[get_fn("lj.xml"), get_fn("lj2.xml")]
+        )
         assert lj_ff.version == ["0.4.1", "4.8.2"]
         assert lj_ff.name == ["LJ", "JL"]
+
+    @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+    def test_no_overlap_residue_atom_overlap(self):
+        import mbuild as mb
+
+        mol1 = mb.load("CCC", smiles=True)
+        mol2 = mb.load("COC", smiles=True)
+
+        mol1.name = "CCC"
+        mol2.name = "COC"
+
+        box = mb.fill_box([mol1, mol2], n_compounds=[2, 2], density=700)
+
+        all_substructures = []
+        structure = box.to_parmed(residues=["CCC", "COC"])
+        for res_id, res in enumerate(structure.residues):
+            all_substructures.append(_structure_from_residue(res, structure))
+
+        residue_idx_per_atom = map(lambda x: x.residue.idx, structure.atoms)
+        num_unique_residue_indices = len(set([*residue_idx_per_atom]))
+        num_residues = len(structure.residues)
+
+        assert num_residues == num_unique_residue_indices

@@ -1,3 +1,4 @@
+"""Support non-bonded fixes for various interactions."""
 from copy import deepcopy
 
 
@@ -34,8 +35,10 @@ def apply_nbfix(struct, atom_type1, atom_type2, sigma, epsilon):
         a1
         a2
     except NameError:
-        raise ValueError('Atom types {} and {} not found '
-                'in structure.'.format(atom_type1, atom_type2))
+        raise ValueError(
+            "Atom types {} and {} not found "
+            "in structure.".format(atom_type1, atom_type2)
+        )
 
     # Calculate rmin from sigma because parmed uses it internally
     rmin = sigma * 2 ** (1.0 / 6.0)

@@ -3,7 +3,6 @@ import pytest
 
 from foyer.smarts_graph import SMARTSGraph, _prepare_atoms
 from foyer.tests.base_test import BaseTest
-
 from foyer.tests.utils import get_fn
 
 TEST_BANK = [
@@ -19,7 +18,7 @@ TEST_BANK = [
 class TestGraph(BaseTest):
     @pytest.mark.parametrize("smarts", TEST_BANK)
     def test_init(self, smarts):
-        """Initialization test. """
+        """Initialization test."""
         graph = SMARTSGraph(smarts)
         atoms = graph.ast.find_data("atom")
         for n, atom in enumerate(atoms):
@@ -38,7 +37,9 @@ class TestGraph(BaseTest):
 
         ring_tokens = ["R1", "r6"]
         for token in ring_tokens:
-            rule = SMARTSGraph(smarts_string="[C;{}]".format(token), typemap=typemap)
+            rule = SMARTSGraph(
+                smarts_string="[C;{}]".format(token), typemap=typemap
+            )
             list(rule.find_matches(mol2, typemap))
             assert all(["cycles" in typemap[a.idx] for a in mol2.atoms])
 

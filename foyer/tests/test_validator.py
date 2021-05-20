@@ -5,8 +5,11 @@ import pytest
 from lxml.etree import DocumentInvalid, XMLSyntaxError
 from pkg_resources import resource_filename
 
-from foyer.exceptions import (MultipleValidationError, ValidationError,
-                              ValidationWarning)
+from foyer.exceptions import (
+    MultipleValidationError,
+    ValidationError,
+    ValidationWarning,
+)
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import glob_fn
 from foyer.validator import Validator

@@ -1,5 +1,6 @@
 import parmed as pmd
 import pytest
+from pkg_resources import resource_filename
 
 from foyer import Forcefield
 from foyer.exceptions import FoyerError
@@ -12,11 +13,15 @@ class TestRunAtomTyping(BaseTest):
     def missing_overrides_ff(self):
         return Forcefield(get_fn("missing_overrides.xml"))
 
-    def test_missing_overrides(self, opls_validation_benzene, missing_overrides_ff):
+    def test_missing_overrides(
+        self, opls_validation_benzene, missing_overrides_ff
+    ):
         with pytest.raises(FoyerError):
             missing_overrides_ff.apply(opls_validation_benzene)
 
     def test_missing_definition(self, missing_overrides_ff):
-        structure = pmd.load_file(get_fn("silly_chemistry.mol2"), structure=True)
+        structure = pmd.load_file(
+            get_fn("silly_chemistry.mol2"), structure=True
+        )
         with pytest.raises(FoyerError):
             missing_overrides_ff.apply(structure)

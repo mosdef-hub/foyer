@@ -4,11 +4,11 @@ import pytest
 
 from foyer.exceptions import FoyerError
 from foyer.forcefield import Forcefield
-
 from foyer.smarts import SMARTS
 from foyer.smarts_graph import SMARTSGraph
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import get_fn
+from foyer.topology_graph import TopologyGraph
 
 
 class TestSMARTS(BaseTest):
@@ -16,7 +16,10 @@ class TestSMARTS(BaseTest):
     def rule_match(self, smarts_parser):
         def _rule_match(top, typemap, smart, result):
             rule = SMARTSGraph(
-                name="test", parser=smarts_parser, smarts_string=smart, typemap=typemap
+                name="test",
+                parser=smarts_parser,
+                smarts_string=smart,
+                typemap=typemap,
             )
             assert bool(list(rule.find_matches(top, typemap))) is result
 
@@ -26,7 +29,10 @@ class TestSMARTS(BaseTest):
     def rule_match_count(self, smarts_parser):
         def _rule_match_count(top, typemap, smart, count):
             rule = SMARTSGraph(
-                name="test", parser=smarts_parser, smarts_string=smart, typemap=typemap
+                name="test",
+                parser=smarts_parser,
+                smarts_string=smart,
+                typemap=typemap,
             )
             assert len(list(rule.find_matches(top, typemap))) is count
 
@@ -99,7 +105,10 @@ class TestSMARTS(BaseTest):
             for atom in fused.atoms
         }
         rule = SMARTSGraph(
-            name="test", parser=smarts_parser, smarts_string="[#6;R2]", typemap=typemap
+            name="test",
+            parser=smarts_parser,
+            smarts_string="[#6;R2]",
+            typemap=typemap,
         )
 
         match_indices = list(rule.find_matches(fused, typemap))
@@ -108,7 +117,10 @@ class TestSMARTS(BaseTest):
         assert len(match_indices) == 2
 
         rule = SMARTSGraph(
-            name="test", parser=smarts_parser, smarts_string="[#6;R1]", typemap=typemap
+            name="test",
+            parser=smarts_parser,
+            smarts_string="[#6;R1]",
+            typemap=typemap,
         )
         match_indices = list(rule.find_matches(fused, typemap))
         for atom_idx in (0, 1, 2, 5, 6, 7, 8, 9):
@@ -123,7 +135,10 @@ class TestSMARTS(BaseTest):
         }
 
         rule = SMARTSGraph(
-            name="test", parser=smarts_parser, smarts_string="[#6;R1]", typemap=typemap
+            name="test",
+            parser=smarts_parser,
+            smarts_string="[#6;R1]",
+            typemap=typemap,
         )
         match_indices = list(rule.find_matches(ring, typemap))
         for atom_idx in range(6):

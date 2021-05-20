@@ -1,4 +1,5 @@
 import glob
+import platform
 import urllib.parse as parseurl
 from os.path import abspath, join, split
 
@@ -115,3 +116,22 @@ def register_mock_request(
     mocker.register_uri(
         http_verb, uri, headers=headers, text=text, status_code=status_code
     )
+
+
+def is_running_on_windows():
+    return platform.system() == "Windows"
+
+
+try:
+    import openff.tookit
+
+    has_openff_toolkit = True
+except ImportError:
+    has_openff_toolkit = False
+
+try:
+    import gmso
+
+    has_gmso = True
+except ImportError:
+    has_gmso = False
