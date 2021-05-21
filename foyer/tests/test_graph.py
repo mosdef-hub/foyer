@@ -4,6 +4,7 @@ import pytest
 from foyer.smarts_graph import SMARTSGraph, _prepare_atoms
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import get_fn
+from foyer.topology_graph import TopologyGraph
 
 TEST_BANK = [
     "O([H&X1])(H)",
@@ -32,7 +33,7 @@ class TestGraph(BaseTest):
         }
 
         rule = SMARTSGraph(smarts_string="[C]", typemap=typemap)
-        list(rule.find_matches(mol2, typemap))
+        list(rule.find_matches(TopologyGraph.from_parmed(mol2), typemap))
         assert not any(["cycles" in typemap[a.idx] for a in mol2.atoms])
 
         ring_tokens = ["R1", "r6"]
@@ -40,7 +41,7 @@ class TestGraph(BaseTest):
             rule = SMARTSGraph(
                 smarts_string="[C;{}]".format(token), typemap=typemap
             )
-            list(rule.find_matches(mol2, typemap))
+            list(rule.find_matches(TopologyGraph.from_parmed(mol2), typemap))
             assert all(["cycles" in typemap[a.idx] for a in mol2.atoms])
 
     def test_cycle_finding_multiple(self):
@@ -50,7 +51,9 @@ class TestGraph(BaseTest):
             for atom in mol2.atoms
         }
 
-        _prepare_atoms(mol2, typemap, compute_cycles=True)
+        _prepare_atoms(
+            TopologyGraph.from_parmed(mol2), typemap, compute_cycles=True
+        )
         cycle_lengths = [
             list(map(len, typemap[atom.idx]["cycles"])) for atom in mol2.atoms
         ]

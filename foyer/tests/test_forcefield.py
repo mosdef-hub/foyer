@@ -10,7 +10,11 @@ from pkg_resources import resource_filename
 
 from foyer import Forcefield
 from foyer.exceptions import FoyerError, ValidationWarning
-from foyer.forcefield import _check_independent_residues, generate_topology
+from foyer.forcefield import (
+    _check_independent_residues,
+    _structure_from_residue,
+    generate_topology,
+)
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import get_fn, register_mock_request
 from foyer.utils.io import has_mbuild
