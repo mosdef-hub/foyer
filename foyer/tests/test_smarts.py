@@ -225,7 +225,7 @@ class TestSMARTS(BaseTest):
             "[!C;!H]": 0,
         }
         for smart, result in checks.items():
-            rule_match_count(mol2, typemap, smart, result)
+            rule_match_count(mol2_graph, typemap, smart, result)
 
     def test_hexa_coordinated(self):
         ff = Forcefield(forcefield_files=get_fn("pf6.xml"))
