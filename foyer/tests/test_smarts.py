@@ -13,24 +13,30 @@ from foyer.topology_graph import TopologyGraph
 
 class TestSMARTS(BaseTest):
     @pytest.fixture(scope="session")
-    def _rule_match(top, typemap, smart, result):
-        rule = SMARTSGraph(
-            name="test",
-            parser=smarts_parser,
-            smarts_string=smart,
-            typemap=typemap,
-        )
-        assert bool(list(rule.find_matches(top, typemap))) is result
+    def rule_match(self, smarts_parser):
+        def _rule_match(top, typemap, smart, result):
+            rule = SMARTSGraph(
+                name="test",
+                parser=smarts_parser,
+                smarts_string=smart,
+                typemap=typemap,
+            )
+            assert bool(list(rule.find_matches(top, typemap))) is result
+
+        return _rule_match
 
     @pytest.fixture(scope="session")
-    def _rule_match_count(top, typemap, smart, count):
-        rule = SMARTSGraph(
-            name="test",
-            parser=smarts_parser,
-            smarts_string=smart,
-            typemap=typemap,
-        )
-        assert len(list(rule.find_matches(top, typemap))) is count
+    def rule_match_count(self, smarts_parser):
+        def _rule_match_count(top, typemap, smart, count):
+            rule = SMARTSGraph(
+                name="test",
+                parser=smarts_parser,
+                smarts_string=smart,
+                typemap=typemap,
+            )
+            assert len(list(rule.find_matches(top, typemap))) is count
+
+        return _rule_match_count
 
     def test_ast(self, smarts_parser):
         ast = smarts_parser.parse("O([H&X1])(H)")
@@ -45,7 +51,7 @@ class TestSMARTS(BaseTest):
     def test_parse(self, pattern, smarts_parser):
         assert smarts_parser.parse(pattern)
 
-    def test_uniqueness(self, _rule_match):
+    def test_uniqueness(self, rule_match):
         mol2 = pmd.load_file(get_fn("uniqueness_test.mol2"), structure=True)
         typemap = {
             atom.idx: {"whitelist": set(), "blacklist": set(), "atomtype": None}
@@ -54,11 +60,11 @@ class TestSMARTS(BaseTest):
 
         mol2_graph = TopologyGraph.from_parmed(mol2)
 
-        _rule_match(mol2_graph, typemap, "[#6]1[#6][#6][#6][#6][#6]1", False)
-        _rule_match(mol2_graph, typemap, "[#6]1[#6][#6][#6][#6]1", False)
-        _rule_match(mol2_graph, typemap, "[#6]1[#6][#6][#6]1", True)
+        rule_match(mol2_graph, typemap, "[#6]1[#6][#6][#6][#6][#6]1", False)
+        rule_match(mol2_graph, typemap, "[#6]1[#6][#6][#6][#6]1", False)
+        rule_match(mol2_graph, typemap, "[#6]1[#6][#6][#6]1", True)
 
-    def test_ringness(self, _rule_match):
+    def test_ringness(self, rule_match):
         ring_mol2 = pmd.load_file(get_fn("ring.mol2"), structure=True)
         ring_mol2_graph = TopologyGraph.from_parmed(ring_mol2)
         typemap = {
@@ -66,9 +72,7 @@ class TestSMARTS(BaseTest):
             for atom in ring_mol2.atoms
         }
 
-        _rule_match(
-            ring_mol2_graph, typemap, "[#6]1[#6][#6][#6][#6][#6]1", True
-        )
+        rule_match(ring_mol2_graph, typemap, "[#6]1[#6][#6][#6][#6][#6]1", True)
 
         not_ring_mol2 = pmd.load_file(get_fn("not_ring.mol2"), structure=True)
         not_ring_mol2_graph = TopologyGraph.from_parmed(not_ring_mol2)
@@ -77,7 +81,7 @@ class TestSMARTS(BaseTest):
             for atom in not_ring_mol2.atoms
         }
 
-        _rule_match(
+        rule_match(
             not_ring_mol2_graph, typemap, "[#6]1[#6][#6][#6][#6][#6]1", False
         )
 
@@ -168,7 +172,7 @@ class TestSMARTS(BaseTest):
         assert ast1.children[0].children[0].children[1].data == "and_expression"
         assert ast2.children[0].children[0].children[0].data == "and_expression"
 
-    def test_precedence(self, _rule_match_count):
+    def test_precedence(self, rule_match_count):
         mol2 = pmd.load_file(get_fn("ethane.mol2"), structure=True)
         typemap = {
             atom.idx: {"whitelist": set(), "blacklist": set(), "atomtype": None}
@@ -185,7 +189,7 @@ class TestSMARTS(BaseTest):
         }
 
         for smart, result in checks.items():
-            _rule_match_count(mol2_graph, typemap, smart, result)
+            rule_match_count(mol2_graph, typemap, smart, result)
 
     def test_not_ast(self, smarts_parser):
         checks = {
@@ -204,7 +208,7 @@ class TestSMARTS(BaseTest):
             with pytest.raises(lark.UnexpectedInput):
                 smarts_parser.parse(smart)
 
-    def test_not(self, _rule_match_count):
+    def test_not(self, rule_match_count):
         mol2 = pmd.load_file(get_fn("ethane.mol2"), structure=True)
         typemap = {
             atom.idx: {"whitelist": set(), "blacklist": set(), "atomtype": None}
@@ -221,7 +225,7 @@ class TestSMARTS(BaseTest):
             "[!C;!H]": 0,
         }
         for smart, result in checks.items():
-            _rule_match_count(mol2, typemap, smart, result)
+            rule_match_count(mol2, typemap, smart, result)
 
     def test_hexa_coordinated(self):
         ff = Forcefield(forcefield_files=get_fn("pf6.xml"))
