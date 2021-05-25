@@ -2,10 +2,7 @@
 import itertools
 from collections import OrderedDict, defaultdict
 
-import gmso
 import networkx as nx
-import parmed as pmd
-import parmed.periodic_table as pt
 from networkx.algorithms import isomorphism
 
 from foyer.smarts import SMARTS
@@ -188,8 +185,8 @@ class SMARTSGraph(nx.Graph):
 
         Parameters
         ----------
-        topology : parmed.Structure or gmso.Topology
-            The target Topology that is being typed
+        topology_graph : TopologyGraph
+            The topology that we are trying to atomtype.
         typemap : dict
             The target typemap being used/edited
 

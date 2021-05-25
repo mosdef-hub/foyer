@@ -72,7 +72,10 @@ def write_foyer(self, filename, forcefield=None, unique=True):
 
     # TO DO
     elif isinstance(self, gmso.Topology):
-        pass
+        raise Exception(
+            "Currently cannot write Foyer XML from a gmso.Topology. "
+            "This feature will be implemented in future release."
+        )
 
     _remove_duplicate_elements(root, unique)
 

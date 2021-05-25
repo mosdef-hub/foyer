@@ -2,9 +2,7 @@
 import collections
 import glob
 import os
-import re
 import warnings
-import xml.etree.ElementTree as ET
 from copy import deepcopy
 from tempfile import NamedTemporaryFile
 
@@ -184,8 +182,8 @@ class Forcefield(object):
 
         Parameters
         ----------
-        top : gmso.Topology, or mb.Compound
-            Molecular Topology to apply the force field to
+        top : gmso.Topology, and structures/files that can be loaded by mbuild
+            Molecular Topology to apply the force field to.
         references_file : str, optional, defaut=None
             Name of file where force field references will be written
             (in Bibtex format).
