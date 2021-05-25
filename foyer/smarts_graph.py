@@ -3,6 +3,7 @@ import itertools
 from collections import OrderedDict, defaultdict
 
 import networkx as nx
+import parmed.periodic_table as pt
 from networkx.algorithms import isomorphism
 
 from foyer.smarts import SMARTS
