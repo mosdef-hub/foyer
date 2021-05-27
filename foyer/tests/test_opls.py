@@ -7,7 +7,7 @@ import pytest
 from pkg_resources import resource_filename
 
 from foyer import Forcefield
-from foyer.exceptions import MissingForceError
+from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import atomtype
 
 OPLSAA = Forcefield(name="oplsaa")
@@ -15,7 +15,7 @@ OPLSAA = Forcefield(name="oplsaa")
 OPLS_TESTFILES_DIR = resource_filename("foyer", "opls_validation")
 
 
-class TestOPLS(object):
+class TestOPLS(BaseTest):
     @pytest.fixture(autouse=True)
     def initdir(self, tmpdir):
         tmpdir.chdir()

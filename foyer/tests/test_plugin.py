@@ -1,21 +1,20 @@
 import pytest
 
 import foyer
+from foyer.tests.base_test import BaseTest
 
 
-def test_basic_import():
-    assert "forcefields" in dir(foyer)
+class TestPlugin(BaseTest):
+    def test_basic_import(self):
+        assert "forcefields" in dir(foyer)
 
+    def test_loading_forcefields(self):
+        for func in dir(foyer.forcefields):
+            if "load_" in func and "__" not in func:
+                eval("foyer.forcefields." + func)()
 
-def test_loading_forcefields():
-    """Test that the forcefield loader functions run without error"""
-    available_loaders = foyer.forcefield.get_available_forcefield_loaders()
-    for loader in available_loaders:
-        loader()
-
-
-def test_load_forcefield():
-    OPLSAA = foyer.forcefields.get_forcefield(name="oplsaa")
-    TRAPPE_UA = foyer.forcefields.get_forcefield(name="trappe-ua")
-    with pytest.raises(ValueError):
-        foyer.forcefields.get_forcefield("bogus_name")
+    def test_load_forcefield(self):
+        OPLSAA = foyer.forcefields.get_forcefield(name="oplsaa")
+        TRAPPE_UA = foyer.forcefields.get_forcefield(name="trappe-ua")
+        with pytest.raises(ValueError):
+            foyer.forcefields.get_forcefield("bogus_name")
