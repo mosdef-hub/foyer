@@ -51,7 +51,7 @@ RESPONSE_BIB_ETHANE_JP0484579 = """@article{Jorgensen_2004,
 }"""
 
 
-class TestForceField(BaseTest):
+class TestForcefield(BaseTest):
     @pytest.mark.parametrize("ff_file", FORCEFIELDS)
     def test_load_files(self, ff_file):
         ff1 = Forcefield(forcefield_files=ff_file)
