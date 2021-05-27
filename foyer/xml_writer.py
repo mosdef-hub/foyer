@@ -4,8 +4,10 @@ from __future__ import division
 import collections
 import warnings
 
+import gmso
 import networkx as nx
 import numpy as np
+import parmed as pmd
 from lxml import etree as ET
 
 from foyer.smarts_graph import SMARTSGraph
@@ -57,15 +59,23 @@ def write_foyer(self, filename, forcefield=None, unique=True):
         )
 
     root = ET.Element("ForceField")
-    _write_atoms(self, root, self.atoms, forcefield, unique)
-    if len(self.bonds) > 0 and self.bonds[0].type is not None:
-        _write_bonds(root, self.bonds, unique)
-    if len(self.angles) > 0 and self.angles[0].type is not None:
-        _write_angles(root, self.angles, unique)
-    if len(self.dihedrals) > 0 and self.dihedrals[0].type is not None:
-        _write_periodic_torsions(root, self.dihedrals, unique)
-    if len(self.rb_torsions) > 0 and self.rb_torsions[0].type is not None:
-        _write_rb_torsions(root, self.rb_torsions, unique)
+    if isinstance(self, pmd.Structure):
+        _write_atoms(self, root, self.atoms, forcefield, unique)
+        if len(self.bonds) > 0 and self.bonds[0].type is not None:
+            _write_bonds(root, self.bonds, unique)
+        if len(self.angles) > 0 and self.angles[0].type is not None:
+            _write_angles(root, self.angles, unique)
+        if len(self.dihedrals) > 0 and self.dihedrals[0].type is not None:
+            _write_periodic_torsions(root, self.dihedrals, unique)
+        if len(self.rb_torsions) > 0 and self.rb_torsions[0].type is not None:
+            _write_rb_torsions(root, self.rb_torsions, unique)
+
+    # TO DO
+    elif isinstance(self, gmso.Topology):
+        raise FoyerError(
+            "Currently, cannot write foyer XML file from a gmso.Topology. "
+            "This feature will be implemented in future releases."
+        )
 
     _remove_duplicate_elements(root, unique)
 
