@@ -158,6 +158,7 @@ class TopologyGraph(nx.Graph):
         Returns
         -------
         TopologyGraph
+
             The equivalent TopologyGraph of the openFF Topology `openff_topology`
         """
         from foyer.utils.io import import_
@@ -217,12 +218,21 @@ class TopologyGraph(nx.Graph):
         top_graph = cls()
         for atom in gmso_topology.sites:
             if isinstance(atom, gmso.Atom):
-                top_graph.add_atom(
-                    name=atom.name,
-                    index=gmso_topology.get_index(atom),
-                    atomic_number=atom.element.atomic_number,
-                    element=atom.element.symbol,
-                )
+                if atom.name.startswith("_"):
+                    top_graph.add_atom(
+                        name=atom.name,
+                        index=gmso_topology.get_index(atom),
+                        atomic_number=None,
+                        element=atom.name,
+                    )
+
+                else:
+                    top_graph.add_atom(
+                        name=atom.name,
+                        index=gmso_topology.get_index(atom),
+                        atomic_number=atom.element.atomic_number,
+                        element=atom.element.symbol,
+                    )
 
         for top_bond in gmso_topology.bonds:
             atoms_indices = [

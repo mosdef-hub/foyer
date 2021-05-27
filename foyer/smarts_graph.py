@@ -184,6 +184,13 @@ class SMARTSGraph(nx.Graph):
     def find_matches(self, topology_graph, typemap):
         """Return sets of atoms that match this SMARTS pattern in a topology.
 
+        Parameters
+        ----------
+        topology_graph : TopologyGraph
+            The topology that we are trying to atomtype.
+        typemap : dict
+            The target typemap being used/edited
+
         Notes
         -----
         When this function gets used in atomtyper.py, we actively modify the

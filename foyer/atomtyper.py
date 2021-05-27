@@ -1,8 +1,9 @@
 """Determine proper atom types for chemical systems."""
 from warnings import warn
 
-import parmed as pmd
 import parmed.periodic_table as pt
+from gmso import Topology
+from parmed import Structure
 
 from foyer.exceptions import FoyerError
 from foyer.smarts_graph import SMARTSGraph
@@ -14,8 +15,10 @@ def find_atomtypes(structure, forcefield, max_iter=10):
 
     Parameters
     ----------
-    topology : parmed.Structure or TopologyGraph
-        The topology that we are trying to atomtype.
+    structure : parmed.Structure, or gmso.Topology, or TopologyGraph
+        The topology that we are trying to atomtype. If a parmed.Structure or
+        gmso.Topology is provided, it will be convert to a TopologyGraph before
+        atomtyping.
     forcefield : foyer.Forcefield
         The forcefield object.
     max_iter : int, optional, default=10
@@ -24,8 +27,10 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     """
     topology_graph = structure
 
-    if isinstance(structure, pmd.Structure):
+    if isinstance(structure, Structure):
         topology_graph = TopologyGraph.from_parmed(structure)
+    elif isinstance(structure, Topology):
+        topology_graph = TopologyGraph.from_gmso_topology(structure)
 
     typemap = {
         atom_index: {"whitelist": set(), "blacklist": set(), "atomtype": None}
@@ -65,7 +70,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
             except IndexError:
                 try:
                     atomic_num = next(atom.find_data("atomic_num")).children[0]
-                    element = Element[atomic_num]
+                    element = pt.Element[atomic_num]
                 except IndexError:
                     element = None
         else:
@@ -154,6 +159,7 @@ def _resolve_atomtypes(topology_graph, typemap):
                 )
             )
         else:
+
             raise FoyerError(
                 "Found no types for atom {} ({}).".format(
                     atom_id, atoms[atom_id].atomic_number
