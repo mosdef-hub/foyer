@@ -3,7 +3,7 @@
      are imported from the gromacs atomtypes file at
      https://github.com/gromacs/gromacs/blob/aa66efd3179a671aace62b827c54aadc3d89c1ee/share/top/oplsaa.ff/atomtypes.atp
 -->
-<ForceField name="OPLS-AA" version="0.0.1">
+<ForceField name="OPLS-AA" version="0.0.2">
  <AtomTypes>
   <Type name="opls_001" class="opls_001" element="C" mass="12.011"/>
   <Type name="opls_002" class="opls_002" element="O" mass="15.9994"/>
@@ -469,11 +469,11 @@
   <Type name="opls_461" class="opls_461" element="C" mass="12.011"/>
   <Type name="opls_462" class="opls_462" element="H" mass="1.008"/>
   <Type name="opls_463" class="opls_463" element="C" mass="12.011"/>
-  <Type name="opls_465" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([O;X2])" desc="C in C=O in ester" doi="10.1021/ja9539195"/>
-  <Type name="opls_466" class="O_2" element="O" mass="15.9994" def="[O;X1]([C;%opls_465]([O;%opls_467]))" desc="O in C=O in ester" doi="10.1021/ja9539195"/>
-  <Type name="opls_467" class="OS" element="O" mass="15.9994" def="[O;X2]([C;%opls_465])([!H])" overrides='opls_180' desc="O connected to R of O=C-O-R in esters" doi="10.1021/ja9539195"/>
-  <Type name="opls_468" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467])" overrides='opls_181' desc="methoxy C in esters" doi="10.1021/ja9539195"/>
-  <Type name="opls_469" class="HC" element="H" mass="1.008" def="H[C;%opls_468]" overrides='opls_185' desc="methoxy Hs in esters" doi="10.1021/ja9539195"/>
+  <Type name="opls_465" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([O;X2])" desc="C in C=O in ester" doi="10.1002/jcc.1092"/>
+  <Type name="opls_466" class="O_2" element="O" mass="15.9994" def="[O;X1]([C;%opls_465]([O;%opls_467]))" desc="O in C=O in ester" doi="10.1002/jcc.1092"/>
+  <Type name="opls_467" class="OS" element="O" mass="15.9994" def="[O;X2]([C;%opls_465])([!H])" overrides='opls_180' desc="O connected to R of O=C-O-R in esters" doi="10.1002/jcc.1092"/>
+  <Type name="opls_468" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467])(H)(H)H" overrides='opls_181' desc="methoxy C in esters" doi="10.1002/jcc.1092"/>
+  <Type name="opls_469" class="HC" element="H" mass="1.008" def="H[C;%opls_468]" overrides='opls_185' desc="methoxy Hs in esters" doi="10.1002/jcc.1092"/>
   <Type name="opls_470" class="opls_470" element="C" mass="12.011"/>
   <Type name="opls_471" class="opls_471" element="C" mass="12.011"/>
   <Type name="opls_472" class="opls_472" element="C" mass="12.011"/>
