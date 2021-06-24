@@ -7,6 +7,7 @@ import pytest
 from pkg_resources import resource_filename
 
 from foyer import Forcefield
+from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import atomtype
 
 TRAPPE_UA = Forcefield(name="trappe-ua")
@@ -14,7 +15,7 @@ TRAPPE_UA = Forcefield(name="trappe-ua")
 TRAPPE_TESTFILES_DIR = resource_filename("foyer", "trappe_validation")
 
 
-class TestTraPPE(object):
+class TestTraPPE(BaseTest):
     @pytest.fixture(autouse=True)
     def initdir(self, tmpdir):
         tmpdir.chdir()
