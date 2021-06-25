@@ -283,7 +283,7 @@
   <Type name="opls_276" class="opls_276" element="C" mass="12.011"/>
   <Type name="opls_277" class="C_2" element="C" mass="12.01100" def="[C;X3]([O;X1])H" desc="C in aldehyde" doi="10.1021/ja9621760"/>
   <Type name="opls_278" class="O_2" element="O" mass="15.9994"  def="[O;X1][C;%opls_277]" desc="O in aldehyde" doi="10.1021/ja9621760"/>
-  <Type name="opls_279" class="HC"  element="H" mass="1.00800"  def="H[C;X3][O;X1]" desc="H-alpha in aldehyde and formamide" overrides="opls_144" doi="10.1021/ja9621760"/>
+  <Type name="opls_279" class="HC"  element="H" mass="1.00800"  def="H[C;X3][O;X1]" desc="H-alpha in aldehyde and formamide" overrides="opls_185, opls_144" doi="10.1021/ja9621760"/>
   <Type name="opls_280" class="C_2" element="C" mass="12.01100" def="[C;X3]([O;X1])(C)C" desc="C in ketone" doi="10.1021/ja9621760"/>
   <Type name="opls_281" class="O_2" element="O" mass="15.9994"  def="[O;X1]([C;%opls_280])" desc="O in ketone" doi="10.1021/ja9621760"/>
   <Type name="opls_282" class="HC"  element="H" mass="1.00800"  def="HC[C;%opls_277,C;%opls_280]" desc="H on C-alpha in ketone and aldehyde" overrides="opls_140,opls_144" doi="10.1021/ja9621760"/>
@@ -469,8 +469,8 @@
   <Type name="opls_461" class="opls_461" element="C" mass="12.011"/>
   <Type name="opls_462" class="opls_462" element="H" mass="1.008"/>
   <Type name="opls_463" class="opls_463" element="C" mass="12.011"/>
-  <Type name="opls_465" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([O;X2])" desc="C in C=O in ester" doi="10.1002/jcc.1092"/>
-  <Type name="opls_466" class="O_2" element="O" mass="15.9994" def="[O;X1]([C;%opls_465]([O;%opls_467]))" desc="O in C=O in ester" doi="10.1002/jcc.1092"/>
+  <Type name="opls_465" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([O;X2])" overrides="opls_277" desc="C in C=O in ester" doi="10.1002/jcc.1092"/>
+  <Type name="opls_466" class="O_2" element="O" mass="15.9994" def="[O;X1]([C;%opls_465]([O;%opls_467]))" overrides="opls_278" desc="O in C=O in ester" doi="10.1002/jcc.1092"/>
   <Type name="opls_467" class="OS" element="O" mass="15.9994" def="[O;X2]([C;%opls_465])([!H])" overrides='opls_180' desc="O connected to R of O=C-O-R in esters" doi="10.1002/jcc.1092"/>
   <Type name="opls_468" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467])(H)(H)H" overrides='opls_181' desc="methoxy C in esters" doi="10.1002/jcc.1092"/>
   <Type name="opls_469" class="HC" element="H" mass="1.008" def="H[C;%opls_468]" overrides='opls_185' desc="methoxy Hs in esters" doi="10.1002/jcc.1092"/>
@@ -493,7 +493,7 @@
   <Type name="opls_486" class="opls_486" element="C" mass="12.011"/>
   <Type name="opls_487" class="opls_487" element="H" mass="1.008"/>
   <Type name="opls_488" class="opls_488" element="C" mass="12.011"/>
-  <Type name="opls_490" class="opls_490" element="C" mass="12.011"/>
+  <Type name="opls_490" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467])(H)(H)C" overrides="opls_182" desc="ethoxy carbon; C(H2OS) ethyl ester" doi="10.1002/jcc.1092"/>
   <Type name="opls_491" class="opls_491" element="C" mass="12.011"/>
   <Type name="opls_492" class="opls_492" element="C" mass="12.011"/>
   <Type name="opls_493" class="opls_493" element="S" mass="32.06"/>
