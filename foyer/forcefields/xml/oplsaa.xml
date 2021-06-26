@@ -286,7 +286,7 @@
   <Type name="opls_279" class="HC"  element="H" mass="1.00800"  def="H[C;X3][O;X1]" desc="H-alpha in aldehyde and formamide" overrides="opls_185, opls_144" doi="10.1021/ja9621760"/>
   <Type name="opls_280" class="C_2" element="C" mass="12.01100" def="[C;X3]([O;X1])(C)C" desc="C in ketone" doi="10.1021/ja9621760"/>
   <Type name="opls_281" class="O_2" element="O" mass="15.9994"  def="[O;X1]([C;%opls_280])" desc="O in ketone" doi="10.1021/ja9621760"/>
-  <Type name="opls_282" class="HC"  element="H" mass="1.00800"  def="HC[C;%opls_277,C;%opls_280]" desc="H on C-alpha in ketone and aldehyde" overrides="opls_140,opls_144" doi="10.1021/ja9621760"/>
+  <Type name="opls_282" class="HC"  element="H" mass="1.00800"  def="HC[C;%opls_277,C;%opls_280,C;%opls_465]" desc="H on C-alpha in ketone and aldehyde" overrides="opls_140,opls_144" doi="10.1021/ja9621760"/>
   <Type name="opls_283" class="opls_283" element="C" mass="12.011"/>
   <Type name="opls_284" class="opls_284" element="C" mass="12.011"/>
   <Type name="opls_285" class="opls_285" element="C" mass="12.011"/>
