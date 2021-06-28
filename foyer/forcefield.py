@@ -874,19 +874,24 @@ class Forcefield(app.ForceField):
             atom_types = set(atom.type for atom in structure.atoms)
             self._write_references_to_file(atom_types, references_file)
 
-        # TODO: Check against the name of the force field and/or store
-        # combining rule directly in XML, i.e.
-        # if self.name == 'oplsaa':
+        if combining_rule != self.combining_rule:
+            # TODO: Maybe don't raise an exception here?
+            raise Exception(
+                f"Combining rule found in force field ({self.combining_rule}) "
+                f"and passed to Forcefield.apply() ({combining_rule}) do not "
+                "match."
+            )
+
         try:
-            structure.combining_rule = combining_rule
+            structure.combining_rule = self.combining_rule
         except ValueError as e:
             # Parmed raises ValueError: combining_rule must be 'lorentz' or 'geometric'
             if str(e).startswith("combining_rule must be"):
                 raise UnimplementedCombinationRuleError(
-                    f"Combination rule {combining_rule} is not implemented"
+                    f"Combination rule {self.combining_rule} is not implemented"
                 )
 
-        if combining_rule == "geometric":
+        if self.combining_rule == "geometric":
             self._patch_parmed_adjusts(structure, combining_rule=combining_rule)
 
         total_charge = sum([atom.charge for atom in structure.atoms])

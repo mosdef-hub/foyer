@@ -678,23 +678,30 @@ class TestForcefield(BaseTest):
         ):
             oplsaa.apply(structure=benzene, combining_rule="bogus")
 
+    @pytest.mark.parametrize(
+        ("ff_name", "expected_combining_rule", "expected_14_sigma"),
+        [
+            ("benzene_lb.xml", "lorentz", 0.3),
+            ("benzene_geo.xml", "geometric", 2.82842712474619),
+        ],
+    )
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-    def test_combining_rule_adjusts(self):
+    def test_combining_rule(
+        self, ff_name, expected_combining_rule, expected_14_sigma
+    ):
         import mbuild as mb
 
-        oplsaa = Forcefield(name="oplsaa")
+        ff = Forcefield(get_fn(ff_name))
         benzene = mb.load("c1ccccc1", smiles=True)
 
-        out = oplsaa.apply(benzene)
+        out = ff.apply(benzene)
 
-        assert out.combining_rule == "geometric"
+        assert out.combining_rule == expected_combining_rule
 
-        # Extract a C-H 1-4 pair from the Structure.adjusts list
         for adj in out.adjusts:
             if adj.atom1.name == "C" and adj.atom2.name == "H":
                 break
 
         found_14_sigma = adj.type.sigma
-        sigma_if_geometric = (adj.atom1.sigma * adj.atom2.sigma) ** 0.5
 
-        assert abs(found_14_sigma - sigma_if_geometric) < 1e-8
+        assert abs(found_14_sigma - expected_14_sigma) < 1e-10
