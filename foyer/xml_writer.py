@@ -447,7 +447,7 @@ def _infer_lj14scale(struct):
     for adj in struct.adjusts:
         type1 = adj.atom1.atom_type
         type2 = adj.atom2.atom_type
-        expected_sigma = (type1.sigma + type2.sigma) * 0.5
+        expected_sigma = (type1.sigma * type2.sigma) ** 0.5
         expected_epsilon = (type1.epsilon * type2.epsilon) ** 0.5
 
         # We expect sigmas to be the same but epsilons to be scaled by a factor
