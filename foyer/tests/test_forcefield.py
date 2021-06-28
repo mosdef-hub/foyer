@@ -9,7 +9,11 @@ from lxml import etree as ET
 from pkg_resources import resource_filename
 
 from foyer import Forcefield
-from foyer.exceptions import FoyerError, ValidationWarning
+from foyer.exceptions import (
+    FoyerError,
+    UnimplementedCombinationRuleError,
+    ValidationWarning,
+)
 from foyer.forcefield import (
     _check_independent_residues,
     _structure_from_residue,
@@ -661,3 +665,36 @@ class TestForcefield(BaseTest):
         num_residues = len(structure.residues)
 
         assert num_residues == num_unique_residue_indices
+
+    @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+    def test_unknown_combining_rule(self):
+        import mbuild as mb
+
+        oplsaa = Forcefield(name="oplsaa")
+        benzene = mb.load("c1ccccc1", smiles=True)
+
+        with pytest.raises(
+            UnimplementedCombinationRuleError, match="bogus is not impl"
+        ):
+            oplsaa.apply(structure=benzene, combining_rule="bogus")
+
+    @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+    def test_combining_rule_adjusts(self):
+        import mbuild as mb
+
+        oplsaa = Forcefield(name="oplsaa")
+        benzene = mb.load("c1ccccc1", smiles=True)
+
+        out = oplsaa.apply(benzene)
+
+        assert out.combining_rule == "geometric"
+
+        # Extract a C-H 1-4 pair from the Structure.adjusts list
+        for adj in out.adjusts:
+            if adj.atom1.name == "C" and adj.atom2.name == "H":
+                break
+
+        found_14_sigma = adj.type.sigma
+        sigma_if_geometric = (adj.atom1.sigma * adj.atom2.sigma) ** 0.5
+
+        assert abs(found_14_sigma - sigma_if_geometric) < 1e-8

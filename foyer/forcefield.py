@@ -38,6 +38,7 @@ from foyer.exceptions import (
     FoyerError,
     MissingForceError,
     MissingParametersError,
+    UnimplementedCombinationRuleError,
 )
 from foyer.utils.external import get_ref
 from foyer.utils.io import has_mbuild, import_
@@ -501,6 +502,7 @@ class Forcefield(app.ForceField):
         self.non_element_types = dict()
         self._version = None
         self._name = None
+        self._combining_rule = None
 
         all_files_to_load = []
         if forcefield_files is not None:
@@ -531,11 +533,16 @@ class Forcefield(app.ForceField):
         if isinstance(forcefield_files, str):
             self._version = self._parse_version_number(forcefield_files)
             self._name = self._parse_name(forcefield_files)
+            self._combining_rule = self._parse_combining_rule(forcefield_files)
+
         elif isinstance(forcefield_files, list):
             self._version = [
                 self._parse_version_number(f) for f in forcefield_files
             ]
             self._name = [self._parse_name(f) for f in forcefield_files]
+            self._combining_rule = [
+                self._parse_combining_rule(f) for f in forcefield_files
+            ]
 
         self.parser = smarts.SMARTS(self.non_element_types)
         self._system_data = None
@@ -549,6 +556,11 @@ class Forcefield(app.ForceField):
     def name(self):
         """Return the name of the force field XML."""
         return self._name
+
+    @property
+    def combining_rule(self):
+        """Return the combining rule of this force field."""
+        return self._combining_rule
 
     @property
     def included_forcefields(self):
@@ -614,6 +626,18 @@ class Forcefield(app.ForceField):
             except KeyError:
                 warnings.warn(
                     "No force field name found in force field XML file."
+                )
+                return None
+
+    def _parse_combining_rule(self, forcefield_file):
+        with open(forcefield_file, "r") as f:
+            tree = ET.parse(f)
+            root = tree.getroot()
+            try:
+                return root.attrib["combining_rule"]
+            except KeyError:
+                warnings.warn(
+                    "No combining rule found in force field XML file."
                 )
                 return None
 
@@ -853,7 +877,17 @@ class Forcefield(app.ForceField):
         # TODO: Check against the name of the force field and/or store
         # combining rule directly in XML, i.e.
         # if self.name == 'oplsaa':
-        structure.combining_rule = combining_rule
+        try:
+            structure.combining_rule = combining_rule
+        except ValueError as e:
+            # Parmed raises ValueError: combining_rule must be 'lorentz' or 'geometric'
+            if str(e).startswith("combining_rule must be"):
+                raise UnimplementedCombinationRuleError(
+                    f"Combination rule {combining_rule} is not implemented"
+                )
+
+        if combining_rule == "geometric":
+            self._patch_parmed_adjusts(structure, combining_rule=combining_rule)
 
         total_charge = sum([atom.charge for atom in structure.atoms])
         if not np.allclose(total_charge, 0):
@@ -1170,6 +1204,18 @@ class Forcefield(app.ForceField):
             positions[:] = np.nan
 
         return topology, positions
+
+    def _patch_parmed_adjusts(self, structure, combining_rule="geometric"):
+        if combining_rule != "geometric":
+            raise UnimplementedCombinationRuleError()
+
+        for adj in structure.adjusts:
+            sig1 = adj.atom1.sigma
+            sig2 = adj.atom2.sigma
+            sig_geo = (sig1 * sig2) ** 0.5
+            adj.type.sigma = sig_geo
+
+        return structure
 
     def _write_references_to_file(self, atom_types, references_file):
         atomtype_references = {}
