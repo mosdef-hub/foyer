@@ -4,7 +4,9 @@ import pytest
 from foyer import Forcefield, forcefields
 from foyer.exceptions import MissingForceError, MissingParametersError
 from foyer.forcefield import get_available_forcefield_loaders
+from foyer.forcefields.forcefields import get_forcefield
 from foyer.tests.utils import get_fn
+from foyer.utils.check_xml_dihedrals_RB_to_OPLS import test_xml_dihedral_rb_to_opls, _test_xml_dihedrals, run_xml_test
 
 
 @pytest.mark.skipif(
@@ -291,3 +293,460 @@ class TestForcefieldParameters:
             assert ff.lj14scale
         with pytest.raises(AttributeError):
             assert ff.coulomb14scale
+
+
+    # check xml files for dihedral conversions from RB to OPLS
+    # Note: the non-exact conversions are most likely due to the OPLS equation
+    # not using the f0/2 term (i.e., f0 = 0), regardless if the analytical
+    # conversion provides a non-zero f0 term.
+    def test_oplsaa_xml_dihedral_rb_to_opls(self):
+        oplsaa_non_exact_conversion_list = [
+            [
+                ['CT', 'OS', 'P', 'OS'],
+                [1.046, 3.138, 10.0416, -4.184, 0.0, 0.0],
+                [20.0832, 0.0, -10.0416, 2.092, -0.0],
+                10.0416,
+                False
+            ]
+        ]
+
+        pass_oplsaa_rb_to_opls = test_xml_dihedral_rb_to_opls("oplsaa",
+                                                              'all_oplsaa_rb_to_opls_errors.txt',
+                                                              oplsaa_non_exact_conversion_list,
+                                                              error_tolerance_rb_to_opls=1e-4)
+        assert pass_oplsaa_rb_to_opls is True
+
+    def test_trappeua_xml_dihedral_rb_to_opls(self):
+        trappeua_non_exact_conversion_list = [
+            [
+                ['CH3', 'CH2', 'CH', 'CH3'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH3', 'CH2', 'CH', 'CH2'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH3', 'CH2', 'CH', 'CH'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH3', 'CH2', 'CH', 'C'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH2', 'CH2', 'CH', 'CH3'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH2', 'CH2', 'CH', 'CH2'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH2', 'CH2', 'CH', 'CH'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH2', 'CH2', 'CH', 'C'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH', 'CH2', 'CH', 'CH3'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH', 'CH2', 'CH', 'CH2'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH', 'CH2', 'CH', 'CH'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH', 'CH2', 'CH', 'C'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['C', 'CH2', 'CH', 'CH3'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['C', 'CH2', 'CH', 'CH2'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['C', 'CH2', 'CH', 'CH'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['C', 'CH2', 'CH', 'C'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH3', 'CH', 'CH', 'CH3'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH3', 'CH', 'CH', 'CH2'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH3', 'CH', 'CH', 'CH'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH3', 'CH', 'CH', 'C'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH2', 'CH', 'CH', 'CH2'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH2', 'CH', 'CH', 'CH'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH2', 'CH', 'CH', 'C'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH', 'CH', 'CH', 'CH'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH', 'CH', 'CH', 'C'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['C', 'CH', 'CH', 'C'],
+                [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+                [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+                2.08734,
+                False
+            ],
+
+            [
+                ['CH3', 'CH', 'O', 'H'],
+                [2.51338, -5.97885, -0.52315, 5.78421, 0.0, 0.0],
+                [3.59118, 3.281385, 0.52315, -2.892105, -0.0],
+                1.79559,
+                False
+            ],
+
+            [
+                ['CH2', 'CH', 'O', 'H'],
+                [2.51338, -5.97885, -0.52315, 5.78421, 0.0, 0.0],
+                [3.59118, 3.281385, 0.52315, -2.892105, -0.0],
+                1.79559,
+                False
+            ],
+
+            [
+                ['CH', 'CH', 'O', 'H'],
+                [2.51338, -5.97885, -0.52315, 5.78421, 0.0, 0.0],
+                [3.59118, 3.281385, 0.52315, -2.892105, -0.0],
+                1.79559,
+                False
+            ],
+
+            [
+                ['C', 'CH', 'O', 'H'],
+                [2.51338, -5.97885, -0.52315, 5.78421, 0.0, 0.0],
+                [3.59118, 3.281385, 0.52315, -2.892105, -0.0],
+                1.79559,
+                False
+            ],
+        ]
+
+        pass_trappeua_rb_to_opls = test_xml_dihedral_rb_to_opls("trappe-ua",
+                                                                'all_trappeua_rb_to_opls_errors.txt',
+                                                                trappeua_non_exact_conversion_list,
+                                                                error_tolerance_rb_to_opls=1e-4)
+        assert pass_trappeua_rb_to_opls is True
+
+    def test_xml_dihedrals_function_error_not_float(self):
+        xml_file_directory_and_filename = 'test_ff'
+        output_file_name = 'test_filename.txt'
+        error_tolerance_rb_to_opls = 's'
+
+        with pytest.raises(
+            TypeError,
+            match=f"The error_tolerance_rb_to_opls variable must be a float, "
+                  f"is type {type(error_tolerance_rb_to_opls)}.",
+        ):
+            _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
+                                error_tolerance_rb_to_opls=error_tolerance_rb_to_opls,
+                                )
+
+    # error_tolerance_rb_to_opls range is 1e-1 to  1e-10
+    def test_xml_dihedrals_function_error_too_high(self):
+        xml_file_directory_and_filename = 'test_ff'
+        output_file_name = 'test_filename.txt'
+        error_tolerance_rb_to_opls = 1.01e-1
+
+        with pytest.raises(
+            ValueError,
+            match= f"The error_tolerance_rb_to_opls variable is not 1e-10 \<= "
+                   f"\( entered value is {error_tolerance_rb_to_opls} \) \<= 1e-1.",
+        ):
+            _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
+                                error_tolerance_rb_to_opls=error_tolerance_rb_to_opls,
+                                )
+
+    def test_xml_dihedrals_function_error_too_low(self):
+        xml_file_directory_and_filename = 'test_ff'
+        output_file_name = 'test_filename.txt'
+        error_tolerance_rb_to_opls = 0.999e-10
+
+        with pytest.raises(
+            ValueError,
+            match= f"The error_tolerance_rb_to_opls variable is not 1e-10 \<= "
+                   f"\( entered value is {error_tolerance_rb_to_opls} \) \<= 1e-1.",
+        ):
+            _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
+                                error_tolerance_rb_to_opls=error_tolerance_rb_to_opls,
+                                )
+
+    def test_xml_dihedrals_function_ff_xml_not_good_extension(self):
+        xml_file_directory_and_filename = 'test_ff.out'
+        output_file_name = 'test_filename.txt'
+        error_tolerance_rb_to_opls = 1e-4
+
+        with pytest.raises(
+            ValueError,
+            match= r"Please make sure you are entering the correct "
+                   "foyer FF name and not a path to a FF file. "
+                   "If you are entering a path to a FF file, "
+                   "please use the forcefield_files variable with the "
+                   "proper XML extension \(.xml\).",
+        ):
+            _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
+                                error_tolerance_rb_to_opls=error_tolerance_rb_to_opls,
+                                )
+
+    def test_xml_dihedrals_function_user_defined_ff_xml_not_exist(self):
+        xml_file_directory_and_filename = 'test_ff.xml'
+        output_file_name = 'test_filename.txt'
+        error_tolerance_rb_to_opls = 1e-4
+
+        with pytest.raises(
+            ValueError,
+            match= "Please make sure you are entering the correct foyer FF path, "
+                   "including the FF file name.xml "
+                   "If you are using the pre-build FF files in foyer, "
+                   "only use the string name without any extension."
+        ):
+            _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
+                                error_tolerance_rb_to_opls=error_tolerance_rb_to_opls,
+                                )
+
+    def test_xml_dihedrals_function_foyer_std_ff_xml_not_exist(self):
+        xml_file_directory_and_filename = 'test_ff'
+        output_file_name = 'test_filename.txt'
+        error_tolerance_rb_to_opls = 1e-4
+
+        with pytest.raises(
+            ValueError,
+            match= "Please make sure you are entering the correct foyer FF name "
+                   "without the .xml extension."
+        ):
+            _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
+                                error_tolerance_rb_to_opls=error_tolerance_rb_to_opls,
+                                )
+
+
+    def test_run_xml_test_input_not_dict(self):
+        xml_and_error_file_dict = ['test_ff.xml', 'test_filename.txt']
+
+        with pytest.raises(
+            TypeError,
+            match=  f"The xml_and_error_file_dict variable must be a dict, "
+                    f"is type {type(xml_and_error_file_dict)}."
+        ):
+            run_xml_test(xml_and_error_file_dict)
+
+    def test_run_xml_test_input_key_not_str(self):
+        xml_key = 1
+        xml_value = 'test_filename.txt'
+        xml_and_error_file_dict = {xml_key: xml_value}
+
+        with pytest.raises(
+            TypeError,
+            match=  f"The xml_and_error_file_dict keys are not all strings, "
+                    f"and has the type {type(xml_key)}."
+        ):
+            run_xml_test(xml_and_error_file_dict)
+
+    def test_run_xml_test_input_value_not_str(self):
+        xml_key = 'test_ff.xml'
+        xml_value = 1
+        xml_and_error_file_dict = {xml_key: xml_value}
+
+        with pytest.raises(
+            TypeError,
+            match = f"The xml_and_error_file_dict values are not all strings, "
+                    f"and has the type {type(xml_value)}."
+        ):
+
+            run_xml_test(xml_and_error_file_dict)
+
+    def test_xml_dihedral_rb_to_opls_non_exact_conversion_list_str(self):
+        xml_filename = 'test_ff.xml'
+        error_filename = 'test_filename.txt'
+        non_exact_conversion_list = 'str'
+
+        with pytest.raises(
+            TypeError,
+            match = f"The non_exact_conversion_list variables is not formated correctly. "
+                    f"Please see the test_xml_dihedral_rb_to_opls function for the " 
+                    f"proper format infomation."
+        ):
+            test_xml_dihedral_rb_to_opls(xml_filename,
+                                         error_filename,
+                                         non_exact_conversion_list)
+
+    def test_xml_dihedral_rb_to_opls_non_exact_conversion_list_str(self):
+        xml_filename = 'test_ff.xml'
+        error_filename = 'test_filename.txt'
+        non_exact_conversion_list = [
+        [
+            ['CH3', 'CH2', 'CH', 'CH3'],
+            [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+            [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+            2.08734,
+            'False'
+        ]
+        ]
+
+        with pytest.raises(
+                TypeError,
+                match=f"The non_exact_conversion_list variables is not formated correctly. "
+                      f"Please see the test_xml_dihedral_rb_to_opls function for the "
+                      f"proper format infomation."
+        ):
+            test_xml_dihedral_rb_to_opls(xml_filename,
+                                         error_filename,
+                                         non_exact_conversion_list)
+
+    def test_xml_dihedral_rb_to_opls_non_exact_conversion_list_4_length(self):
+        xml_filename = 'test_ff.xml'
+        error_filename = 'test_filename.txt'
+        non_exact_conversion_list = [
+        [
+            ['CH3', 'CH2', 'CH', 'CH3'],
+            [3.28629, 7.44211, 1.85995, -14.67569, 0.0, 0.0],
+            [-4.17468, 7.129315, -1.85995, 7.337845, -0.0],
+            2.08734
+        ]
+        ]
+
+        with pytest.raises(
+                TypeError,
+                match=f"The non_exact_conversion_list variables is not formated correctly. "
+                      f"Please see the test_xml_dihedral_rb_to_opls function for the "
+                      f"proper format infomation."
+        ):
+            test_xml_dihedral_rb_to_opls(xml_filename,
+                                         error_filename,
+                                         non_exact_conversion_list)
