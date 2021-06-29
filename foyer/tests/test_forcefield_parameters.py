@@ -695,7 +695,7 @@ class TestForcefieldParameters:
                 xml_filename, error_filename, non_exact_conversion_list
             )
 
-    def test_xml_dihedral_rb_to_opls_non_exact_conversion_list_str(self):
+    def test_xml_dihedral_rb_to_opls_non_exact_conversion_list_wrong_type_str(self):
         xml_filename = "test_ff.xml"
         error_filename = "test_filename.txt"
         non_exact_conversion_list = [
