@@ -2,13 +2,14 @@ import difflib
 import glob
 import itertools as it
 import os
+from typing import List
 
 import parmed as pmd
 import pytest
 from lxml import etree as ET
 from pkg_resources import resource_filename
 
-from foyer import Forcefield
+from foyer import Forcefield, forcefields
 from foyer.exceptions import (
     FoyerError,
     UnimplementedCombinationRuleError,
@@ -621,6 +622,30 @@ class TestForcefield(BaseTest):
         )
         assert lj_ff.version == ["0.4.1", "4.8.2"]
         assert lj_ff.name == ["LJ", "JL"]
+
+    def test_load_metadata_single_xml(self):
+        from_xml_ff = Forcefield(forcefield_files=get_fn("lj.xml"))
+        assert from_xml_ff.version == "0.4.1"
+        assert from_xml_ff.name == "LJ"
+
+    def test_load_metadata_list_xml(self):
+        from_xml_ff = Forcefield(
+            forcefield_files=[get_fn("lj.xml"), get_fn("lj2.xml")]
+        )
+        assert isinstance(from_xml_ff.version, List)
+        assert isinstance(from_xml_ff.name, List)
+        assert all([x in from_xml_ff.version for x in ["0.4.1", "4.8.2"]])
+        assert all([x in from_xml_ff.name for x in ["JL", "LJ"]])
+
+    def test_load_metadata_from_internal_forcefield_plugin_loader(self):
+        from_xml_ff = forcefields.load_OPLSAA()
+        assert from_xml_ff.version == "0.0.1"
+        assert from_xml_ff.name == "OPLS-AA"
+
+    def test_load_metadata_from_internal_name(self):
+        from_xml_ff = Forcefield(name="oplsaa")
+        assert from_xml_ff.version == "0.0.1"
+        assert from_xml_ff.name == "OPLS-AA"
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
     def test_no_overlap_residue_atom_overlap(self):

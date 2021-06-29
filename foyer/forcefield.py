@@ -524,25 +524,25 @@ class Forcefield(app.ForceField):
         if validation:
             for ff_file_name in preprocessed_files:
                 Validator(ff_file_name, debug)
-        try:
-            super(Forcefield, self).__init__(*preprocessed_files)
-        finally:
-            for ff_file_name in preprocessed_files:
-                os.remove(ff_file_name)
+        super(Forcefield, self).__init__(*preprocessed_files)
 
-        if isinstance(forcefield_files, str):
-            self._version = self._parse_version_number(forcefield_files)
-            self._name = self._parse_name(forcefield_files)
-            self._combining_rule = self._parse_combining_rule(forcefield_files)
-
-        elif isinstance(forcefield_files, list):
+        if len(preprocessed_files) == 1:
+            self._version = self._parse_version_number(preprocessed_files[0])
+            self._name = self._parse_name(preprocessed_files[0])
+            self._combining_rule = self._parse_combining_rule(
+                preprocessed_files[0]
+            )
+        elif len(preprocessed_files) > 1:
             self._version = [
-                self._parse_version_number(f) for f in forcefield_files
+                self._parse_version_number(f) for f in preprocessed_files
             ]
-            self._name = [self._parse_name(f) for f in forcefield_files]
+            self._name = [self._parse_name(f) for f in preprocessed_files]
             self._combining_rule = [
-                self._parse_combining_rule(f) for f in forcefield_files
+                self._parse_combining_rule(f) for f in preprocessed_files
             ]
+
+        for fp in preprocessed_files:
+            os.remove(fp)
 
         self.parser = smarts.SMARTS(self.non_element_types)
         self._system_data = None
