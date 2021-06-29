@@ -1,11 +1,10 @@
 """Determine proper atom types for chemical systems."""
 from warnings import warn
 
-from gmso import Topology
-from parmed import Structure
-
 import ele
 from ele.exceptions import ElementError
+from gmso import Topology
+from parmed import Structure
 
 from foyer.exceptions import FoyerError
 from foyer.smarts_graph import SMARTSGraph
@@ -72,7 +71,9 @@ def find_atomtypes(structure, forcefield, max_iter=10):
             except IndexError:
                 try:
                     atomic_num = next(atom.find_data("atomic_num")).children[0]
-                    element = ele.element_from_atomic_number(atomic_number).symbol
+                    element = ele.element_from_atomic_number(
+                        atomic_number
+                    ).symbol
                 except IndexError:
                     element = None
         else:
