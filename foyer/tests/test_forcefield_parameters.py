@@ -4,6 +4,7 @@ import pytest
 from foyer import Forcefield, forcefields
 from foyer.exceptions import MissingForceError, MissingParametersError
 from foyer.forcefield import get_available_forcefield_loaders
+from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import get_fn
 
 
@@ -12,7 +13,7 @@ from foyer.tests.utils import get_fn
     not in map(lambda func: func.__name__, get_available_forcefield_loaders()),
     reason="GAFF Plugin is not installed",
 )
-class TestForcefieldParameters:
+class TestForcefieldParameters(BaseTest):
     @pytest.fixture(scope="session")
     def gaff(self):
         return forcefields.load_GAFF()
@@ -123,82 +124,82 @@ class TestForcefieldParameters:
         assert gaff.lj14scale == 0.5
         assert np.isclose(gaff.coulomb14scale, 0.833333333)
 
-    def test_opls_get_parameters_atoms(self, opls):
-        atom_params = opls.get_parameters("atoms", "opls_145")
+    def test_opls_get_parameters_atoms(self, oplsaa):
+        atom_params = oplsaa.get_parameters("atoms", "opls_145")
         assert atom_params["sigma"] == 0.355
         assert atom_params["epsilon"] == 0.29288
 
-    def test_opls_get_parameters_atoms_list(self, opls):
-        atom_params = opls.get_parameters("atoms", ["opls_145"])
+    def test_opls_get_parameters_atoms_list(self, oplsaa):
+        atom_params = oplsaa.get_parameters("atoms", ["opls_145"])
         assert atom_params["sigma"] == 0.355
         assert atom_params["epsilon"] == 0.29288
 
-    def test_opls_get_parameters_atom_class(self, opls):
-        atom_params = opls.get_parameters(
+    def test_opls_get_parameters_atom_class(self, oplsaa):
+        atom_params = oplsaa.get_parameters(
             "atoms", "CA", keys_are_atom_classes=True
         )
         assert atom_params["sigma"] == 0.355
         assert atom_params["epsilon"] == 0.29288
 
-    def test_opls_get_parameters_bonds(self, opls):
-        bond_params = opls.get_parameters(
+    def test_opls_get_parameters_bonds(self, oplsaa):
+        bond_params = oplsaa.get_parameters(
             "harmonic_bonds", ["opls_760", "opls_145"]
         )
         assert bond_params["length"] == 0.146
         assert bond_params["k"] == 334720.0
 
-    def test_opls_get_parameters_bonds_reversed(self, opls):
+    def test_opls_get_parameters_bonds_reversed(self, oplsaa):
         assert np.allclose(
             list(
-                opls.get_parameters(
+                oplsaa.get_parameters(
                     "harmonic_bonds", ["opls_760", "opls_145"]
                 ).values()
             ),
             list(
-                opls.get_parameters(
+                oplsaa.get_parameters(
                     "harmonic_bonds", ["opls_145", "opls_760"]
                 ).values()
             ),
         )
 
-    def test_opls_get_parameters_bonds_atom_classes_reversed(self, opls):
+    def test_opls_get_parameters_bonds_atom_classes_reversed(self, oplsaa):
         assert np.allclose(
             list(
-                opls.get_parameters(
+                oplsaa.get_parameters(
                     "harmonic_bonds", ["C_2", "O_2"], True
                 ).values()
             ),
             list(
-                opls.get_parameters(
+                oplsaa.get_parameters(
                     "harmonic_bonds", ["O_2", "C_2"], True
                 ).values()
             ),
         )
 
-    def test_opls_get_parameters_angle(self, opls):
-        angle_params = opls.get_parameters(
+    def test_opls_get_parameters_angle(self, oplsaa):
+        angle_params = oplsaa.get_parameters(
             "harmonic_angles", ["opls_166", "opls_772", "opls_167"]
         )
         assert np.allclose(
             [angle_params["theta"], angle_params["k"]], [2.0943950239, 585.76]
         )
 
-    def test_opls_get_parameters_angle_reversed(self, opls):
+    def test_opls_get_parameters_angle_reversed(self, oplsaa):
         assert np.allclose(
             list(
-                opls.get_parameters(
+                oplsaa.get_parameters(
                     "harmonic_angles", ["opls_166", "opls_772", "opls_167"]
                 ).values()
             ),
             list(
-                opls.get_parameters(
+                oplsaa.get_parameters(
                     "harmonic_angles", ["opls_167", "opls_772", "opls_166"]
                 ).values()
             ),
         )
 
-    def test_opls_get_parameters_angle_atom_classes(self, opls):
-        angle_params = opls.get_parameters(
+    def test_opls_get_parameters_angle_atom_classes(self, oplsaa):
+        angle_params = oplsaa.get_parameters(
             "harmonic_angles", ["CA", "C_2", "CA"], keys_are_atom_classes=True
         )
 
@@ -206,17 +207,17 @@ class TestForcefieldParameters:
             [angle_params["theta"], angle_params["k"]], [2.09439510239, 711.28]
         )
 
-    def test_opls_get_parameters_angle_atom_classes_reversed(self, opls):
+    def test_opls_get_parameters_angle_atom_classes_reversed(self, oplsaa):
         assert np.allclose(
             list(
-                opls.get_parameters(
+                oplsaa.get_parameters(
                     "harmonic_angles",
                     ["CA", "C", "O"],
                     keys_are_atom_classes=True,
                 ).values()
             ),
             list(
-                opls.get_parameters(
+                oplsaa.get_parameters(
                     "harmonic_angles",
                     ["O", "C", "CA"],
                     keys_are_atom_classes=True,
@@ -224,8 +225,8 @@ class TestForcefieldParameters:
             ),
         )
 
-    def test_opls_get_parameters_rb_proper(self, opls):
-        proper_params = opls.get_parameters(
+    def test_opls_get_parameters_rb_proper(self, oplsaa):
+        proper_params = oplsaa.get_parameters(
             "rb_propers", ["opls_215", "opls_215", "opls_235", "opls_269"]
         )
         assert np.allclose(
@@ -240,24 +241,24 @@ class TestForcefieldParameters:
             [2.28446, 0.0, -2.28446, 0.0, 0.0, 0.0],
         )
 
-    def test_get_parameters_rb_proper_reversed(self, opls):
+    def test_get_parameters_rb_proper_reversed(self, oplsaa):
         assert np.allclose(
             list(
-                opls.get_parameters(
+                oplsaa.get_parameters(
                     "rb_propers",
                     ["opls_215", "opls_215", "opls_235", "opls_269"],
                 ).values()
             ),
             list(
-                opls.get_parameters(
+                oplsaa.get_parameters(
                     "rb_propers",
                     ["opls_269", "opls_235", "opls_215", "opls_215"],
                 ).values()
             ),
         )
 
-    def test_opls_get_parameters_wildcard(self, opls):
-        proper_params = opls.get_parameters(
+    def test_opls_get_parameters_wildcard(self, oplsaa):
+        proper_params = oplsaa.get_parameters(
             "rb_propers", ["", "opls_235", "opls_544", ""]
         )
 
@@ -273,13 +274,13 @@ class TestForcefieldParameters:
             [30.334, 0.0, -30.334, 0.0, 0.0, 0.0],
         )
 
-    def test_opls_missing_force(self, opls):
+    def test_opls_missing_force(self, oplsaa):
         with pytest.raises(MissingForceError):
-            opls.get_parameters("periodic_propers", key=["a", "b", "c", "d"])
+            oplsaa.get_parameters("periodic_propers", key=["a", "b", "c", "d"])
 
-    def test_opls_scaling_factors(self, opls):
-        assert opls.lj14scale == 0.5
-        assert opls.coulomb14scale == 0.5
+    def test_opls_scaling_factors(self, oplsaa):
+        assert oplsaa.lj14scale == 0.5
+        assert oplsaa.coulomb14scale == 0.5
 
     def test_missing_scaling_factors(self):
         ff = Forcefield(forcefield_files=(get_fn("validate_customtypes.xml")))

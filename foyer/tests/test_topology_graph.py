@@ -3,6 +3,7 @@ import pytest
 
 from foyer.atomtyper import find_atomtypes
 from foyer.forcefield import Forcefield
+from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import (
     has_gmso,
     has_openff_toolkit,
@@ -17,7 +18,7 @@ from foyer.topology_graph import TopologyGraph
     ),
     reason="openff-toolkit and gmso not installed",
 )
-class TestTopologyGraph:
+class TestTopologyGraph(BaseTest):
     @pytest.fixture(scope="session")
     def openff_topology_graph(self):
         from openff.toolkit.topology import Molecule, Topology
