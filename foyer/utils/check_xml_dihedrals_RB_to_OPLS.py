@@ -105,6 +105,7 @@ def RB_to_OPLS(
     f4 = -c4 / 4
     return np.array([f0, f1, f2, f3, f4])
 
+
 def _test_xml_dihedrals(
     xml_file_directory_and_filename,
     output_file_name,
