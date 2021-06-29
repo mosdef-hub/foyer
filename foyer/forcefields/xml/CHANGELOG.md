@@ -17,7 +17,13 @@ v0.0.2 - June 24, 2021
     -   opls_465 (from `""` to `"opls_277"`)
     -   opls_465 (from `""` to `"opls_278"`)
 
-  - update references for opls_465 to opls_469
+  - update references 
+    - opls_465 (from `"10.1021/ja9539195"` to `"10.1002/jcc.1092"`)
+    - opls_466 (from `"10.1021/ja9539195"` to `"10.1002/jcc.1092"`)
+    - opls_467 (from `"10.1021/ja9539195"` to `"10.1002/jcc.1092"`)
+    - opls_468 (from `"10.1021/ja9539195"` to `"10.1002/jcc.1092"`)
+    - opls_469 (from `"10.1021/ja9539195"` to `"10.1002/jcc.1092"`)
+
 ----
 ## Trappe-UA
 
