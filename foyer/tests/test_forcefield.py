@@ -676,17 +676,41 @@ class TestForcefield(BaseTest):
     def test_unknown_combining_rule(self, oplsaa):
         import mbuild as mb
 
+        oplsaa._combining_rule = "bogus"
+
         benzene = mb.load("c1ccccc1", smiles=True)
 
         with pytest.raises(
             UnimplementedCombinationRuleError, match="bogus is not impl"
         ):
-            oplsaa.apply(structure=benzene, combining_rule="bogus")
+            oplsaa.apply(structure=benzene)
+
+    @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
+    def test_combining_rule_in_forcefield_overrides_apply_arg(self, oplsaa):
+        """Test that the combining rule specified in a Forcefield object
+        overrides the value of the combining_rule argument passed to .apply()"""
+        import mbuild as mb
+
+        benzene = mb.load("c1ccccc1", smiles=True)
+
+        out = oplsaa.apply(structure=benzene, combining_rule="lorentz")
+
+        assert out.combining_rule == "geometric"
+
+        for adj in out.adjusts:
+            if adj.atom1.name == "C" and adj.atom2.name == "H":
+                break
+
+        found_14_sigma = adj.type.sigma
+
+        expected_14_sigma = (adj.atom1.sigma * adj.atom2.sigma) ** 0.5
+
+        assert abs(found_14_sigma - expected_14_sigma) < 1e-10
 
     @pytest.mark.parametrize(
         ("ff_name", "expected_combining_rule", "expected_14_sigma"),
         [
-            ("benzene_lb.xml", "lorentz", 0.3),
+            ("benzene_lb.xml", "lorentz", 3.0),
             ("benzene_geo.xml", "geometric", 2.82842712474619),
         ],
     )

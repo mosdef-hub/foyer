@@ -639,7 +639,7 @@ class Forcefield(app.ForceField):
                 warnings.warn(
                     "No combining rule found in force field XML file."
                 )
-                return None
+                return "lorentz"
 
     def _create_element(self, element, mass):
         if not isinstance(element, elem.Element):
@@ -714,7 +714,7 @@ class Forcefield(app.ForceField):
         assert_angle_params=True,
         assert_dihedral_params=True,
         assert_improper_params=False,
-        combining_rule="geometric",
+        combining_rule="lorentz",
         verbose=False,
         *args,
         **kwargs,
@@ -837,7 +837,7 @@ class Forcefield(app.ForceField):
         assert_angle_params=True,
         assert_dihedral_params=True,
         assert_improper_params=False,
-        combining_rule="geometric",
+        combining_rule="lorentz",
         verbose=False,
         *args,
         **kwargs,
@@ -876,11 +876,12 @@ class Forcefield(app.ForceField):
 
         if combining_rule != self.combining_rule:
             # TODO: Maybe don't raise an exception here?
-            raise Exception(
+            warnings.warn(
                 f"Combining rule found in force field ({self.combining_rule}) "
                 f"and passed to Forcefield.apply() ({combining_rule}) do not "
-                "match."
+                "match. Using the rule specified in the force field"
             )
+            combining_rule = self.combining_rule
 
         try:
             structure.combining_rule = self.combining_rule
