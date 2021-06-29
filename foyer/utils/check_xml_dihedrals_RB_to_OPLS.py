@@ -1,8 +1,9 @@
 import os
 import xml.etree.ElementTree as ET
+from warnings import warn
+
 import numpy as np
 
-from warnings import warn
 from foyer.forcefields import forcefields
 from foyer.forcefields.forcefields import get_forcefield
 
