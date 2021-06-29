@@ -6,11 +6,9 @@ import parmed as pmd
 import pytest
 from pkg_resources import resource_filename
 
-from foyer import Forcefield
+from foyer import Forcefield, forcefields
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import atomtype
-
-OPLSAA = Forcefield(name="oplsaa")
 
 OPLS_TESTFILES_DIR = resource_filename("foyer", "opls_validation")
 
@@ -45,6 +43,11 @@ class TestOPLS(BaseTest):
                 else:
                     if mol_name not in self.correctly_implemented:
                         fh.write("{}\n".format(mol_name))
+
+    def test_opls_metadata(self, oplsaa):
+        assert oplsaa.name == "OPLS-AA"
+        assert oplsaa.version == "0.0.1"
+        assert oplsaa.combining_rule == "geometric"
 
     @pytest.mark.parametrize("mol_name", correctly_implemented)
     def test_atomtyping(self, mol_name, testfiles_dir=OPLS_TESTFILES_DIR):
