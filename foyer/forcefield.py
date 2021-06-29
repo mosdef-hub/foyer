@@ -525,7 +525,6 @@ class Forcefield(app.ForceField):
         super(Forcefield, self).__init__(*preprocessed_files)
 
         if len(preprocessed_files) == 1:
-            print("fouind str")
             self._version = self._parse_version_number(preprocessed_files[0])
             self._name = self._parse_name(preprocessed_files[0])
         elif len(preprocessed_files) > 1:
@@ -534,6 +533,8 @@ class Forcefield(app.ForceField):
             ]
             self._name = [self._parse_name(f) for f in preprocessed_files]
 
+        for fp in preprocessed_files:
+            os.remove(fp)
         self.parser = smarts.SMARTS(self.non_element_types)
         self._system_data = None
 
