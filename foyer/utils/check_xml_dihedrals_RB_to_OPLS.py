@@ -1,10 +1,14 @@
-import numpy as np
 import os
 import xml.etree.ElementTree as ET
+
+# from mbuild.utils.conversion import RB_to_OPLS
+from warnings import warn
+
+import numpy as np
+
 from foyer.forcefields import forcefields
 from foyer.forcefields.forcefields import get_forcefield
-#from mbuild.utils.conversion import RB_to_OPLS
-from warnings import warn
+
 
 # ****************************************************************************
 # remove this RB_to_OPLS once the new version of foyer imports the new mBuild (START)
@@ -105,13 +109,18 @@ def RB_to_OPLS(
     f3 = -c3 / 2
     f4 = -c4 / 4
     return np.array([f0, f1, f2, f3, f4])
+
+
 # ****************************************************************************
 # remove this RB_to_OPLS once the new version of foyer imports the new mBuild (END)
 # ****************************************************************************
 
-def _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
-                        error_tolerance_rb_to_opls=1e-4,
-                        ):
+
+def _test_xml_dihedrals(
+    xml_file_directory_and_filename,
+    output_file_name,
+    error_tolerance_rb_to_opls=1e-4,
+):
     r"""
     Tests a single FF, comparing the RB to standard OPLS conversion for accuracy and generates dihedral error files
 
@@ -176,26 +185,24 @@ def _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
     """
     if not isinstance(error_tolerance_rb_to_opls, float):
         raise TypeError(
-                f"The error_tolerance_rb_to_opls variable must be a float, "
-                f"is type {type(error_tolerance_rb_to_opls)}."
-            )
+            f"The error_tolerance_rb_to_opls variable must be a float, "
+            f"is type {type(error_tolerance_rb_to_opls)}."
+        )
     else:
         if not 1e-10 <= error_tolerance_rb_to_opls <= 1e-1:
-            print(f"printed  The error_tolerance_rb_to_opls variable is not 1e-10 <= "
-                   f"( entered value is {error_tolerance_rb_to_opls} ) <= 1e-1.")
+            print(
+                f"printed  The error_tolerance_rb_to_opls variable is not 1e-10 <= "
+                f"( entered value is {error_tolerance_rb_to_opls} ) <= 1e-1."
+            )
             raise ValueError(
                 f"The error_tolerance_rb_to_opls variable is not 1e-10 <= "
-                   f"( entered value is {error_tolerance_rb_to_opls} ) <= 1e-1."
+                f"( entered value is {error_tolerance_rb_to_opls} ) <= 1e-1."
             )
 
-    if (
-            os.path.splitext(xml_file_directory_and_filename)[1] == ".xml"
-    ):
+    if os.path.splitext(xml_file_directory_and_filename)[1] == ".xml":
         foyer_packaged_ff = False
 
-    elif (
-            os.path.splitext(xml_file_directory_and_filename)[1] == ""
-    ):
+    elif os.path.splitext(xml_file_directory_and_filename)[1] == "":
         foyer_packaged_ff = True
 
     else:
@@ -223,10 +230,10 @@ def _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
 
     elif foyer_packaged_ff is True:
         ff_full_path_and_filename = (
-                forcefields.get_ff_path()[0]
-                + "/xml/"
-                + xml_file_directory_and_filename
-                + ".xml"
+            forcefields.get_ff_path()[0]
+            + "/xml/"
+            + xml_file_directory_and_filename
+            + ".xml"
         )
         try:
             ff_xml = ET.parse(ff_full_path_and_filename)
@@ -239,44 +246,49 @@ def _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
 
     with open(output_file_name, "w") as data_opls_rb:
         ff_root = ff_xml.getroot()
-        rb_torsionForce_proper_root = ff_root.findall('RBTorsionForce/Proper')
+        rb_torsionForce_proper_root = ff_root.findall("RBTorsionForce/Proper")
 
         count_no = 0
         for child in rb_torsionForce_proper_root:
             count_no += 1
-            class1_iter = child.attrib['class1']
-            class2_iter = child.attrib['class2']
-            class3_iter = child.attrib['class3']
-            class4_iter = child.attrib['class4']
+            class1_iter = child.attrib["class1"]
+            class2_iter = child.attrib["class2"]
+            class3_iter = child.attrib["class3"]
+            class4_iter = child.attrib["class4"]
 
-            class_list_iter = [class1_iter,
-                               class2_iter,
-                               class3_iter,
-                               class4_iter]
+            class_list_iter = [
+                class1_iter,
+                class2_iter,
+                class3_iter,
+                class4_iter,
+            ]
 
-            c0_iter = float(child.attrib['c0'])
-            c1_iter = float(child.attrib['c1'])
-            c2_iter = float(child.attrib['c2'])
-            c3_iter = float(child.attrib['c3'])
-            c4_iter = float(child.attrib['c4'])
-            c5_iter = float(child.attrib['c5'])
+            c0_iter = float(child.attrib["c0"])
+            c1_iter = float(child.attrib["c1"])
+            c2_iter = float(child.attrib["c2"])
+            c3_iter = float(child.attrib["c3"])
+            c4_iter = float(child.attrib["c4"])
+            c5_iter = float(child.attrib["c5"])
 
-            cX_list_iter = [c0_iter,
-                            c1_iter,
-                            c2_iter,
-                            c3_iter,
-                            c4_iter,
-                            c5_iter]
+            cX_list_iter = [
+                c0_iter,
+                c1_iter,
+                c2_iter,
+                c3_iter,
+                c4_iter,
+                c5_iter,
+            ]
 
-            fX_list_iter = RB_to_OPLS(c0_iter,
-                                      c1_iter,
-                                      c2_iter,
-                                      c3_iter,
-                                      c4_iter,
-                                      c5_iter,
-                                      error_tolerance = error_tolerance_rb_to_opls,
-                                      error_if_outside_tolerance=False
-                                      )
+            fX_list_iter = RB_to_OPLS(
+                c0_iter,
+                c1_iter,
+                c2_iter,
+                c3_iter,
+                c4_iter,
+                c5_iter,
+                error_tolerance=error_tolerance_rb_to_opls,
+                error_if_outside_tolerance=False,
+            )
 
             f0_iter = fX_list_iter[0]
             f1_iter = fX_list_iter[1]
@@ -284,12 +296,13 @@ def _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
             f3_iter = fX_list_iter[3]
             f4_iter = fX_list_iter[4]
 
-            fx_list_iter_6_decimals = [np.round(fX_list_iter[0], decimals=6),
-                                       np.round(fX_list_iter[1], decimals=6),
-                                       np.round(fX_list_iter[2], decimals=6),
-                                       np.round(fX_list_iter[3], decimals=6),
-                                       np.round(fX_list_iter[4], decimals=6)
-                                       ]
+            fx_list_iter_6_decimals = [
+                np.round(fX_list_iter[0], decimals=6),
+                np.round(fX_list_iter[1], decimals=6),
+                np.round(fX_list_iter[2], decimals=6),
+                np.round(fX_list_iter[3], decimals=6),
+                np.round(fX_list_iter[4], decimals=6),
+            ]
 
             # generate a 100 list for the functions over range of 2 * Pi
             no_points = 100
@@ -305,14 +318,15 @@ def _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
                 rad_psi_iter = rad_iter + np.pi
 
                 # RB torsions
-                rb_torsion_iter = c0_iter \
-                                  + c1_iter * (np.cos(rad_psi_iter)) ** 1 \
-                                  + c2_iter * (np.cos(rad_psi_iter)) ** 2 \
-                                  + c3_iter * (np.cos(rad_psi_iter)) ** 3 \
-                                  + c4_iter * (np.cos(rad_psi_iter)) ** 4 \
-                                  + c5_iter * (np.cos(rad_psi_iter)) ** 5
+                rb_torsion_iter = (
+                    c0_iter
+                    + c1_iter * (np.cos(rad_psi_iter)) ** 1
+                    + c2_iter * (np.cos(rad_psi_iter)) ** 2
+                    + c3_iter * (np.cos(rad_psi_iter)) ** 3
+                    + c4_iter * (np.cos(rad_psi_iter)) ** 4
+                    + c5_iter * (np.cos(rad_psi_iter)) ** 5
+                )
                 rb_torsion_list.append(rb_torsion_iter)
-
 
                 # RB torsions converted to standard OPLS version via alternate function;
                 # the f0 is removed here. It is not a part of the standard OPLS dihedral
@@ -321,54 +335,72 @@ def _test_xml_dihedrals(xml_file_directory_and_filename, output_file_name,
                 # If f0/2 is added to the rb_to_opls_iter variable, the RB to OPLS conversion
                 # should be analytically correct within the machine precision tolerance.
                 rb_to_opls_iter = (1 / 2) * (
-                                             + f1_iter * (1 + np.cos(rad_iter))
-                                             + f2_iter * (1 - np.cos(2 * rad_iter))
-                                             + f3_iter * (1 + np.cos(3 * rad_iter))
-                                             + f4_iter * (1 - np.cos(4 * rad_iter))
-                                             )
+                    +f1_iter * (1 + np.cos(rad_iter))
+                    + f2_iter * (1 - np.cos(2 * rad_iter))
+                    + f3_iter * (1 + np.cos(3 * rad_iter))
+                    + f4_iter * (1 - np.cos(4 * rad_iter))
+                )
                 rb_to_opls_list.append(rb_to_opls_iter)
 
-                abs_differene_opls_rb_iter = abs(rb_to_opls_iter - rb_torsion_iter)
+                abs_differene_opls_rb_iter = abs(
+                    rb_to_opls_iter - rb_torsion_iter
+                )
                 abs_differene_opls_rb_list.append(abs_differene_opls_rb_iter)
 
             if count_no == 1:
-                title_to_output = "{:35s}{:60s}{:60s}{:35s}{:35s}\n" \
-                                  "".format("dihedral_atoms_or_beads",
-                                            "rb_constants_c0_c1_c2_c3_c4_c5",
-                                            "opls_constants_f0_f1_f2_f3_f4_rounded_6_decimals",
-                                            "max_abs_delta_rb_to_opls_calc",
-                                            "exact_rb_to_opls_possible"
-                                            )
+                title_to_output = "{:35s}{:60s}{:60s}{:35s}{:35s}\n" "".format(
+                    "dihedral_atoms_or_beads",
+                    "rb_constants_c0_c1_c2_c3_c4_c5",
+                    "opls_constants_f0_f1_f2_f3_f4_rounded_6_decimals",
+                    "max_abs_delta_rb_to_opls_calc",
+                    "exact_rb_to_opls_possible",
+                )
 
                 data_opls_rb.write(title_to_output)
 
             # Is the iteration RB_to_opls conversion possible
-            if bool(np.isclose(c5_iter, 0, atol= error_tolerance_rb_to_opls, rtol=0)) is True  \
-                    and bool(np.isclose(f0_iter, 0, atol= error_tolerance_rb_to_opls, rtol=0)) is True:
+            if (
+                bool(
+                    np.isclose(
+                        c5_iter, 0, atol=error_tolerance_rb_to_opls, rtol=0
+                    )
+                )
+                is True
+                and bool(
+                    np.isclose(
+                        f0_iter, 0, atol=error_tolerance_rb_to_opls, rtol=0
+                    )
+                )
+                is True
+            ):
                 rb_to_opls_convertable_iter = True
 
             else:
                 rb_to_opls_convertable_iter = False
 
-            max_abs_diff_new_opls_rb = np.round(np.max(abs_differene_opls_rb_list),
-                                                decimals=int(np.log10((1/error_tolerance_rb_to_opls))+2)
-                                                )
+            max_abs_diff_new_opls_rb = np.round(
+                np.max(abs_differene_opls_rb_list),
+                decimals=int(np.log10((1 / error_tolerance_rb_to_opls)) + 2),
+            )
             if max_abs_diff_new_opls_rb > error_tolerance_rb_to_opls:
-                warning_to_output = "WARNING: The {} atoms with the {} RB constants not an exact conversion " \
-                                    "for the RB_to_OPLS conversion!. " \
-                                    "Max diff = {}, f0 = {}.\n" \
-                                    "".format(class_list_iter,
-                                              cX_list_iter,
-                                              max_abs_diff_new_opls_rb,
-                                              f0_iter
-                                              )
-                text_to_output = "{:35s}{:60s}{:60s}{:35s}{:35s}" \
-                                 "\n".format(str(class_list_iter),
-                                             str(cX_list_iter),
-                                             str(fx_list_iter_6_decimals),
-                                             str(max_abs_diff_new_opls_rb),
-                                             str(rb_to_opls_convertable_iter)
-                                             )
+                warning_to_output = (
+                    "WARNING: The {} atoms with the {} RB constants not an exact conversion "
+                    "for the RB_to_OPLS conversion!. "
+                    "Max diff = {}, f0 = {}.\n"
+                    "".format(
+                        class_list_iter,
+                        cX_list_iter,
+                        max_abs_diff_new_opls_rb,
+                        f0_iter,
+                    )
+                )
+                text_to_output = "{:35s}{:60s}{:60s}{:35s}{:35s}" "\n".format(
+                    str(class_list_iter),
+                    str(cX_list_iter),
+                    str(fx_list_iter_6_decimals),
+                    str(max_abs_diff_new_opls_rb),
+                    str(rb_to_opls_convertable_iter),
+                )
 
                 warn(warning_to_output)
                 data_opls_rb.write(text_to_output)
@@ -457,25 +489,30 @@ def run_xml_test(xml_and_error_file_dict, error_tolerance_rb_to_opls=1e-4):
 
     for i_iter in range(0, len(xml_file_list)):
         if not isinstance(xml_file_list[i_iter], str):
-            raise TypeError(f"The xml_and_error_file_dict keys are not all strings, "
-                            f"and has the type {type(xml_file_list[i_iter])}."
-                            )
+            raise TypeError(
+                f"The xml_and_error_file_dict keys are not all strings, "
+                f"and has the type {type(xml_file_list[i_iter])}."
+            )
 
         if not isinstance(output_file_name_list[i_iter], str):
-            raise TypeError(f"The xml_and_error_file_dict values are not all strings, "
-                            f"and has the type {type(output_file_name_list[i_iter])}."
-                            )
+            raise TypeError(
+                f"The xml_and_error_file_dict values are not all strings, "
+                f"and has the type {type(output_file_name_list[i_iter])}."
+            )
 
-        _test_xml_dihedrals(xml_file_list[i_iter],
-                            output_file_name_list[i_iter],
-                            error_tolerance_rb_to_opls
-                            )
+        _test_xml_dihedrals(
+            xml_file_list[i_iter],
+            output_file_name_list[i_iter],
+            error_tolerance_rb_to_opls,
+        )
 
-def test_xml_dihedral_rb_to_opls(xml_filename,
-                                 error_filename,
-                                 non_exact_conversion_list,
-                                 error_tolerance_rb_to_opls=1e-4
-                                 ):
+
+def test_xml_dihedral_rb_to_opls(
+    xml_filename,
+    error_filename,
+    non_exact_conversion_list,
+    error_tolerance_rb_to_opls=1e-4,
+):
     r"""
     Tests and compare RB to standard OPLS conversion for accuracy and against with known errors
 
@@ -567,40 +604,46 @@ def test_xml_dihedral_rb_to_opls(xml_filename,
     """
     passed_test = True
 
-    non_exact_conversion_list_error_txt = f"The non_exact_conversion_list variables is not formated correctly. "\
-                                          f"Please see the test_xml_dihedral_rb_to_opls function for the " \
-                                          f"proper format infomation."
+    non_exact_conversion_list_error_txt = (
+        f"The non_exact_conversion_list variables is not formated correctly. "
+        f"Please see the test_xml_dihedral_rb_to_opls function for the "
+        f"proper format infomation."
+    )
     if isinstance(non_exact_conversion_list, list):
         len_non_exact_conversion_list = len(non_exact_conversion_list)
         for error_list_i in non_exact_conversion_list:
             if len(error_list_i) == 5:
-                if not isinstance( error_list_i[0], list) \
-                        or not isinstance( error_list_i[1], list) \
-                        or not isinstance( error_list_i[2], list) \
-                        or not isinstance( error_list_i[3], float) \
-                        or not isinstance( error_list_i[4], bool):
+                if (
+                    not isinstance(error_list_i[0], list)
+                    or not isinstance(error_list_i[1], list)
+                    or not isinstance(error_list_i[2], list)
+                    or not isinstance(error_list_i[3], float)
+                    or not isinstance(error_list_i[4], bool)
+                ):
                     raise TypeError(non_exact_conversion_list_error_txt)
             else:
                 raise TypeError(non_exact_conversion_list_error_txt)
     else:
         raise TypeError(non_exact_conversion_list_error_txt)
 
-            # put the non_exact_conversion_list in the same string format with the same
+        # put the non_exact_conversion_list in the same string format with the same
     # spacing as the printed/read files.
     correct_file_strings_list = []
     for j_iter in non_exact_conversion_list:
         correct_file_strings_list.append(
-            '{:35s}{:60s}{:60s}{:35s}{:35s}\n'.format(str(j_iter[0]),
-                                                      str(j_iter[1]),
-                                                      str(j_iter[2]),
-                                                      str(j_iter[3]),
-                                                      str(j_iter[4])
-                                                      )
+            "{:35s}{:60s}{:60s}{:35s}{:35s}\n".format(
+                str(j_iter[0]),
+                str(j_iter[1]),
+                str(j_iter[2]),
+                str(j_iter[3]),
+                str(j_iter[4]),
+            )
         )
 
-    run_xml_test({xml_filename: error_filename},
-                 error_tolerance_rb_to_opls=error_tolerance_rb_to_opls
-                 )
+    run_xml_test(
+        {xml_filename: error_filename},
+        error_tolerance_rb_to_opls=error_tolerance_rb_to_opls,
+    )
 
     with open(error_filename, "r") as fp:
         out_gomc = fp.readlines()
@@ -608,8 +651,11 @@ def test_xml_dihedral_rb_to_opls(xml_filename,
             split_line = line.split()
 
             # check the values for the dihedrals
-            if i_iter != 0 and len(split_line) > 0 \
-                    and line not in correct_file_strings_list:
-                    passed_test = False
+            if (
+                i_iter != 0
+                and len(split_line) > 0
+                and line not in correct_file_strings_list
+            ):
+                passed_test = False
 
     return passed_test
