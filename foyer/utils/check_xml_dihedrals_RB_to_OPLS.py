@@ -122,7 +122,7 @@ def _test_xml_dihedrals(
     error_tolerance_rb_to_opls=1e-4,
 ):
     r"""
-    Tests a single FF, comparing the RB to standard OPLS conversion for accuracy and generates dihedral error files
+    Tests a single FF, comparing the RB to standard OPLS conversion for accuracy and generates dihedral error files.
 
     Checks the conversion of the Ryckaert-Bellemans (RB) type to OPLS
     type dihedrals (i.e., the mBuild RB_to_OPLS function) for errors and generates ouput
@@ -143,6 +143,8 @@ def _test_xml_dihedrals(
 
     where :math:`psi = t - pi = t - 180 degrees`
 
+    Parameters
+    ----------
     xml_file_directory_and_filename : str
         A string with the RB torsions xml file path, file names, and
         extensions (i.e., '.xml'), or the just the name of the standard foyer force
@@ -410,7 +412,7 @@ def _test_xml_dihedrals(
 
 def run_xml_test(xml_and_error_file_dict, error_tolerance_rb_to_opls=1e-4):
     r"""
-    Tests multiple FFs, comparing the RB to standard OPLS conversion for accuracy and generates dihedral error files
+    Test multiple FFs, comparing the RB to standard OPLS conversion for accuracy and generates dihedral error files.
 
     Checks the conversion of the Ryckaert-Bellemans (RB) type to OPLS
     type dihedrals (i.e., the mBuild RB_to_OPLS function) for errors and generates ouput
@@ -514,7 +516,7 @@ def test_xml_dihedral_rb_to_opls(
     error_tolerance_rb_to_opls=1e-4,
 ):
     r"""
-    Tests and compare RB to standard OPLS conversion for accuracy and against with known errors
+    Test and compare RB to standard OPLS conversion for accuracy and against with known errors.
 
     Test that all the xml dihedrals either pass the RB to standard OPLS conversion
     via the mBuild RB_to_OPLS function, or they are in the know list that is not
