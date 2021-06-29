@@ -641,11 +641,13 @@ class TestForcefield(BaseTest):
         from_xml_ff = forcefields.load_OPLSAA()
         assert from_xml_ff.version == "0.0.1"
         assert from_xml_ff.name == "OPLS-AA"
+        assert from_xml_ff.combining_rule == "geometric"
 
     def test_load_metadata_from_internal_name(self):
         from_xml_ff = Forcefield(name="oplsaa")
         assert from_xml_ff.version == "0.0.1"
         assert from_xml_ff.name == "OPLS-AA"
+        assert from_xml_ff.combining_rule == "geometric"
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
     def test_no_overlap_residue_atom_overlap(self):
