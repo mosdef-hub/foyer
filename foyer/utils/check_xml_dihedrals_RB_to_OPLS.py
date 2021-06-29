@@ -1,17 +1,15 @@
 import os
 import xml.etree.ElementTree as ET
-
-# from mbuild.utils.conversion import RB_to_OPLS
-from warnings import warn
-
 import numpy as np
 
+from warnings import warn
 from foyer.forcefields import forcefields
 from foyer.forcefields.forcefields import get_forcefield
 
 
 # ****************************************************************************
 # remove this RB_to_OPLS once the new version of foyer imports the new mBuild (START)
+# add this when removed # from mbuild.utils.conversion import RB_to_OPLS
 # ****************************************************************************
 def RB_to_OPLS(
     c0,
@@ -122,7 +120,7 @@ def _test_xml_dihedrals(
     error_tolerance_rb_to_opls=1e-4,
 ):
     r"""
-    Tests a single FF, comparing the RB to standard OPLS conversion for accuracy and generates dihedral error files.
+    Test a single FF, comparing the RB to standard OPLS conversion for accuracy and generates dihedral error files.
 
     Checks the conversion of the Ryckaert-Bellemans (RB) type to OPLS
     type dihedrals (i.e., the mBuild RB_to_OPLS function) for errors and generates ouput
