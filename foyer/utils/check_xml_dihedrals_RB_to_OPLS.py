@@ -8,10 +8,6 @@ from foyer.forcefields import forcefields
 from foyer.forcefields.forcefields import get_forcefield
 
 
-# ****************************************************************************
-# remove this RB_to_OPLS once the new version of foyer imports the new mBuild (START)
-# add this when removed # from mbuild.utils.conversion import RB_to_OPLS
-# ****************************************************************************
 def RB_to_OPLS(
     c0,
     c1,
@@ -108,12 +104,6 @@ def RB_to_OPLS(
     f3 = -c3 / 2
     f4 = -c4 / 4
     return np.array([f0, f1, f2, f3, f4])
-
-
-# ****************************************************************************
-# remove this RB_to_OPLS once the new version of foyer imports the new mBuild (END)
-# ****************************************************************************
-
 
 def _test_xml_dihedrals(
     xml_file_directory_and_filename,
