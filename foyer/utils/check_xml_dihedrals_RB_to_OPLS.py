@@ -1,3 +1,4 @@
+"""Test if the pre-packaged foyer XML file dihderals can be converted from RB to standard OPLS dihedrals (f0 is 0)."""
 import os
 import xml.etree.ElementTree as ET
 from warnings import warn
