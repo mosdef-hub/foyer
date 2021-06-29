@@ -17,10 +17,6 @@ class TestForcefieldParameters:
     def gaff(self):
         return forcefields.load_GAFF()
 
-    @pytest.fixture(scope="session")
-    def opls(self):
-        return forcefields.load_OPLSAA()
-
     def test_gaff_missing_group(self, gaff):
         with pytest.raises(ValueError):
             gaff.get_parameters("missing", key=[])

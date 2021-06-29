@@ -74,9 +74,8 @@ class TestForcefield(BaseTest):
             ethane = pmd.load_file(get_fn("ethane.mol2"), structure=True)
             FF.apply(ethane)
 
-    def test_from_parmed(self):
+    def test_from_parmed(self, oplsaa):
         mol2 = pmd.load_file(get_fn("ethane.mol2"), structure=True)
-        oplsaa = Forcefield(name="oplsaa")
         ethane = oplsaa.apply(mol2)
 
         assert sum((1 for at in ethane.atoms if at.type == "opls_135")) == 2
@@ -90,17 +89,15 @@ class TestForcefield(BaseTest):
 
         mol2 = pmd.load_file(get_fn("ethane.mol2"), structure=True)
         mol2.box_vectors = [[2, 0, 0], [0, 2, 0], [0, 0, 2]]
-        oplsaa = Forcefield(name="oplsaa")
         ethane = oplsaa.apply(mol2)
 
         assert ethane.box_vectors == mol2.box_vectors
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-    def test_from_mbuild(self):
+    def test_from_mbuild(self, oplsaa):
         import mbuild as mb
 
         mol2 = mb.load(get_fn("ethane.mol2"))
-        oplsaa = Forcefield(name="oplsaa")
         ethane = oplsaa.apply(mol2)
 
         assert sum((1 for at in ethane.atoms if at.type == "opls_135")) == 2
@@ -112,18 +109,8 @@ class TestForcefield(BaseTest):
         assert len(ethane.rb_torsions) == 9
         assert all(x.type for x in ethane.dihedrals)
 
-    @pytest.mark.parametrize("mixing_rule", ["lorentz", "geometric"])
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-    def test_comb_rule(self, mixing_rule):
-        import mbuild as mb
-
-        mol2 = mb.load(get_fn("ethane.mol2"))
-        oplsaa = Forcefield(name="oplsaa")
-        ethane = oplsaa.apply(mol2, combining_rule=mixing_rule)
-        assert ethane.combining_rule == mixing_rule
-
-    @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-    def test_write_refs(self, requests_mock):
+    def test_write_refs(self, requests_mock, oplsaa):
         import mbuild as mb
 
         register_mock_request(
@@ -134,7 +121,6 @@ class TestForcefield(BaseTest):
             text=RESPONSE_BIB_ETHANE_JA962170,
         )
         mol2 = mb.load(get_fn("ethane.mol2"))
-        oplsaa = Forcefield(name="oplsaa")
         ethane = oplsaa.apply(mol2, references_file="ethane.bib")
         assert os.path.isfile("ethane.bib")
         with open(get_fn("ethane.bib")) as file1:
@@ -193,22 +179,20 @@ class TestForcefield(BaseTest):
         with pytest.warns(UserWarning):
             ethane = oplsaa.apply(mol2, references_file="ethane.bib")
 
-    def test_preserve_resname(self):
+    def test_preserve_resname(self, oplsaa):
         untyped_ethane = pmd.load_file(get_fn("ethane.mol2"), structure=True)
         untyped_resname = untyped_ethane.residues[0].name
-        oplsaa = Forcefield(name="oplsaa")
         typed_ethane = oplsaa.apply(untyped_ethane)
         typed_resname = typed_ethane.residues[0].name
         assert typed_resname == untyped_resname
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-    def test_apply_residues(self):
+    def test_apply_residues(self, oplsaa):
         import mbuild.recipes
 
         propane = mbuild.recipes.Alkane(n=3)
 
-        opls = Forcefield(name="oplsaa")
-        typed = opls.apply(propane, residues="CH3")
+        typed = oplsaa.apply(propane, residues="CH3")
         assert len([res for res in typed.residues if res.name == "CH3"]) == 2
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
@@ -294,10 +278,9 @@ class TestForcefield(BaseTest):
         assert len(struc.impropers) == 1
         assert len(struc.dihedrals) == 0
 
-    def test_residue_map(self):
+    def test_residue_map(self, oplsaa):
         ethane = pmd.load_file(get_fn("ethane.mol2"), structure=True)
         ethane *= 2
-        oplsaa = Forcefield(name="oplsaa")
         map_with = oplsaa.run_atomtyping(ethane, use_residue_map=True)
         map_without = oplsaa.run_atomtyping(ethane, use_residue_map=False)
         assert all([a["atomtype"] for a in map_with.values()])
@@ -466,9 +449,8 @@ class TestForcefield(BaseTest):
         )
         assert any(b.type is None for b in thing.bonds)
 
-    def test_apply_subfuncs(self):
+    def test_apply_subfuncs(self, oplsaa):
         mol2 = pmd.load_file(get_fn("ethane.mol2"), structure=True)
-        oplsaa = Forcefield(name="oplsaa")
 
         ethane = oplsaa.apply(mol2)
 
@@ -494,18 +476,16 @@ class TestForcefield(BaseTest):
             assert ang1.type == ang2.type
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-    def test_non_zero_charge(self):
+    def test_non_zero_charge(self, oplsaa):
         import mbuild as mb
 
         compound = mb.load("C1=CC=C2C(=C1)C(C3=CC=CC=C3O2)C(=O)O", smiles=True)
-        oplsaa = Forcefield(name="oplsaa")
         with pytest.warns(UserWarning):
             oplsaa.apply(compound, assert_dihedral_params=False)
 
     @pytest.mark.parametrize("filename", ["ethane.mol2", "benzene.mol2"])
-    def test_write_xml(self, filename):
+    def test_write_xml(self, filename, oplsaa):
         mol = pmd.load_file(get_fn(filename), structure=True)
-        oplsaa = Forcefield(name="oplsaa")
         typed = oplsaa.apply(mol)
 
         typed.write_foyer(
@@ -596,21 +576,20 @@ class TestForcefield(BaseTest):
         assert "phase2" in periodic_element[0].attrib
 
     @pytest.mark.parametrize("filename", ["ethane.mol2", "benzene.mol2"])
-    def test_load_xml(self, filename):
+    def test_load_xml(self, filename, oplsaa):
         mol = pmd.load_file(get_fn(filename), structure=True)
         if filename == "ethane.mol2":
             ff = Forcefield(get_fn("ethane-multiple.xml"))
         else:
-            ff = Forcefield(name="oplsaa")
+            ff = oplsaa
         typed = ff.apply(mol)
         typed.write_foyer(filename="snippet.xml", forcefield=ff, unique=True)
 
         generated_ff = Forcefield("snippet.xml")
 
-    def test_write_xml_overrides(self):
+    def test_write_xml_overrides(self, oplsaa):
         # Test xml_writer new overrides and comments features
         mol = pmd.load_file(get_fn("styrene.mol2"), structure=True)
-        oplsaa = Forcefield(name="oplsaa")
         typed = oplsaa.apply(mol, assert_dihedral_params=False)
         typed.write_foyer(
             filename="opls-styrene.xml", forcefield=oplsaa, unique=True
@@ -667,10 +646,9 @@ class TestForcefield(BaseTest):
         assert num_residues == num_unique_residue_indices
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-    def test_unknown_combining_rule(self):
+    def test_unknown_combining_rule(self, oplsaa):
         import mbuild as mb
 
-        oplsaa = Forcefield(name="oplsaa")
         benzene = mb.load("c1ccccc1", smiles=True)
 
         with pytest.raises(
