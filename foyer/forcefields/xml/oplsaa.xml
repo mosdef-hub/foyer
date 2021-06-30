@@ -3,7 +3,7 @@
      are imported from the gromacs atomtypes file at
      https://github.com/gromacs/gromacs/blob/aa66efd3179a671aace62b827c54aadc3d89c1ee/share/top/oplsaa.ff/atomtypes.atp
 -->
-<ForceField name="OPLS-AA" version="0.0.1">
+<ForceField name="OPLS-AA" version="0.0.1" combining_rule="geometric">
  <AtomTypes>
   <Type name="opls_001" class="opls_001" element="C" mass="12.011"/>
   <Type name="opls_002" class="opls_002" element="O" mass="15.9994"/>

@@ -6,11 +6,9 @@ import parmed as pmd
 import pytest
 from pkg_resources import resource_filename
 
-from foyer import Forcefield
+from foyer import Forcefield, forcefields
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import atomtype
-
-OPLSAA = Forcefield(name="oplsaa")
 
 OPLS_TESTFILES_DIR = resource_filename("foyer", "opls_validation")
 
@@ -46,8 +44,15 @@ class TestOPLS(BaseTest):
                     if mol_name not in self.correctly_implemented:
                         fh.write("{}\n".format(mol_name))
 
+    def test_opls_metadata(self, oplsaa):
+        assert oplsaa.name == "OPLS-AA"
+        assert oplsaa.version == "0.0.1"
+        assert oplsaa.combining_rule == "geometric"
+
     @pytest.mark.parametrize("mol_name", correctly_implemented)
-    def test_atomtyping(self, mol_name, testfiles_dir=OPLS_TESTFILES_DIR):
+    def test_atomtyping(
+        self, mol_name, oplsaa, testfiles_dir=OPLS_TESTFILES_DIR
+    ):
         files = glob.glob(os.path.join(testfiles_dir, mol_name, "*"))
         for mol_file in files:
             _, ext = os.path.splitext(mol_file)
@@ -62,13 +67,13 @@ class TestOPLS(BaseTest):
             elif ext == ".mol2":
                 mol2_path = os.path.join(testfiles_dir, mol_name, mol_file)
                 structure = pmd.load_file(mol2_path, structure=True)
-        atomtype(structure, OPLSAA)
+        atomtype(structure, oplsaa)
 
-    def test_full_parametrization(self):
+    def test_full_parametrization(self, oplsaa):
         top = os.path.join(OPLS_TESTFILES_DIR, "benzene/benzene.top")
         gro = os.path.join(OPLS_TESTFILES_DIR, "benzene/benzene.gro")
         structure = pmd.load_file(top, xyz=gro)
-        parametrized = OPLSAA.apply(structure)
+        parametrized = oplsaa.apply(structure)
 
         assert (
             sum((1 for at in parametrized.atoms if at.type == "opls_145")) == 6
