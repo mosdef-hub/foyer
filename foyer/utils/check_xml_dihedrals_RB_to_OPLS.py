@@ -499,8 +499,11 @@ def run_xml_test(xml_and_error_file_dict, error_tolerance_rb_to_opls=1e-4):
         )
 
 
-def test_xml_dihedral_rb_to_opls(xml_filename, error_filename,
-                                 non_exact_conversion_list, error_tolerance_rb_to_opls=1e-4,
+def test_xml_dihedral_rb_to_opls(
+    xml_filename,
+    error_filename,
+    non_exact_conversion_list,
+    error_tolerance_rb_to_opls=1e-4,
 ):
     r"""
     Test and compare RB to standard OPLS conversion for accuracy and against with known errors.
