@@ -45,6 +45,10 @@ RESPONSE_BIB_ETHANE_JP0484579 = """@article{Jorgensen_2004,
 
 
 class TestGeneralForcefield(BaseTest):
+    @pytest.fixture(scope="session")
+    def oplsaa(self):
+        return Forcefield(name="oplsaa", strict=False)
+
     @pytest.mark.parametrize("ff_file", FORCEFIELDS)
     def test_load_files(self, ff_file):
         ff1 = Forcefield(forcefield_files=ff_file, strict=False)
@@ -69,10 +73,9 @@ class TestGeneralForcefield(BaseTest):
         with pytest.raises(FoyerError, match=r"Backend not supported"):
             FF = Forcefield(name="oplsaa", backend="void")
 
-    def test_from_gmso(self):
+    def test_from_gmso(self, oplsaa):
         mol2 = mb.load(get_fn("ethane.mol2"), backend="parmed")
         top = gmso.external.from_mbuild(mol2)
-        oplsaa = Forcefield(name="oplsaa", strict=False)
         ethane = oplsaa.apply(top, assert_improper_params=False)
 
         assert (
@@ -101,9 +104,8 @@ class TestGeneralForcefield(BaseTest):
         assert ethane.box_vectors == mol2.box_vectors
         """
 
-    def test_from_mbuild(self):
+    def test_from_mbuild(self, oplsaa):
         mol2 = mb.load(get_fn("ethane.mol2"), backend="parmed")
-        oplsaa = Forcefield(name="oplsaa", strict=False)
         ethane = oplsaa.apply(mol2, assert_improper_params=False)
 
         assert (
@@ -122,15 +124,14 @@ class TestGeneralForcefield(BaseTest):
         assert all(x.dihedral_type for x in ethane.dihedrals)
 
     @pytest.mark.parametrize("mixing_rule", ["lorentz", "geometric"])
-    def test_comb_rule(self, mixing_rule):
+    def test_comb_rule(self, mixing_rule, oplsaa):
         mol2 = mb.load(get_fn("ethane.mol2"))
-        oplsaa = Forcefield(name="oplsaa", strict=False)
         ethane = oplsaa.apply(
             mol2, combining_rule=mixing_rule, assert_improper_params=False
         )
         assert ethane.combining_rule == mixing_rule
 
-    def test_write_refs(self, requests_mock):
+    def test_write_refs(self, requests_mock, oplsaa):
         register_mock_request(
             mocker=requests_mock,
             url="http://api.crossref.org/",
@@ -139,7 +140,6 @@ class TestGeneralForcefield(BaseTest):
             text=RESPONSE_BIB_ETHANE_JA962170,
         )
         mol2 = mb.load(get_fn("ethane.mol2"), backend="parmed")
-        oplsaa = Forcefield(name="oplsaa", strict=False)
         ethane = oplsaa.apply(
             mol2, references_file="ethane.bib", assert_improper_params=False
         )
@@ -355,9 +355,8 @@ class TestGeneralForcefield(BaseTest):
         )
         assert any(b.bond_type is None for b in thing.bonds)
 
-    def test_apply_subfuncs(self):
+    def test_apply_subfuncs(self, oplsaa):
         mol2 = mb.load(get_fn("ethane.mol2"), backend="parmed")
-        oplsaa = Forcefield(name="oplsaa", strict=False)
 
         ethane = oplsaa.apply(mol2, assert_improper_params=False)
 
@@ -385,9 +384,8 @@ class TestGeneralForcefield(BaseTest):
             )
             assert b1.bond_type == b2.bond_type
 
-    def test_non_zero_charge(self):
+    def test_non_zero_charge(self, oplsaa):
         compound = mb.load("C1=CC=C2C(=C1)C(C3=CC=CC=C3O2)C(=O)O", smiles=True)
-        oplsaa = Forcefield(name="oplsaa", strict=False)
         with pytest.warns(UserWarning):
             oplsaa.apply(
                 compound,
