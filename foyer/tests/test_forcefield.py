@@ -656,12 +656,12 @@ class TestForcefield(BaseTest):
 
     def test_load_metadata_from_internal_forcefield_plugin_loader(self):
         from_xml_ff = forcefields.load_OPLSAA()
-        assert from_xml_ff.version == "0.0.1"
+        assert from_xml_ff.version == "0.0.2"
         assert from_xml_ff.name == "OPLS-AA"
 
     def test_load_metadata_from_internal_name(self):
         from_xml_ff = Forcefield(name="oplsaa")
-        assert from_xml_ff.version == "0.0.1"
+        assert from_xml_ff.version == "0.0.2"
         assert from_xml_ff.name == "OPLS-AA"
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
