@@ -3,6 +3,7 @@ import pytest
 
 from foyer.atomtyper import find_atomtypes
 from foyer.forcefield import Forcefield
+from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import (
     has_gmso,
     has_openff_toolkit,
@@ -17,7 +18,7 @@ from foyer.topology_graph import TopologyGraph
     ),
     reason="openff-toolkit and gmso not installed",
 )
-class TestTopologyGraph:
+class TestTopologyGraph(BaseTest):
     @pytest.fixture(scope="session")
     def openff_topology_graph(self):
         from openff.toolkit.topology import Molecule, Topology
@@ -94,13 +95,20 @@ class TestTopologyGraph:
             idx += 1
 
     def test_atom_typing(
-        self, openff_topology_graph, gmso_topology_graph, parmed_topology_graph
+        self,
+        openff_topology_graph,
+        gmso_topology_graph,
+        parmed_topology_graph,
+        oplsaa,
     ):
         # ToDo: More robust testing for atomtyping
-        opls = Forcefield(name="oplsaa")
-        openff_typemap = find_atomtypes(openff_topology_graph, forcefield=opls)
-        gmso_typemap = find_atomtypes(gmso_topology_graph, forcefield=opls)
-        parmed_typemap = find_atomtypes(parmed_topology_graph, forcefield=opls)
+        openff_typemap = find_atomtypes(
+            openff_topology_graph, forcefield=oplsaa
+        )
+        gmso_typemap = find_atomtypes(gmso_topology_graph, forcefield=oplsaa)
+        parmed_typemap = find_atomtypes(
+            parmed_topology_graph, forcefield=oplsaa
+        )
         assert openff_typemap
         assert gmso_typemap
         assert parmed_typemap

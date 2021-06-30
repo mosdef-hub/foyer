@@ -25,9 +25,8 @@ class TestPerformance(BaseTest):
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
     @pytest.mark.timeout(45)
-    def test_polymer(self):
+    def test_polymer(self, oplsaa):
         import mbuild as mb
 
         peg100 = mb.load(get_fn("peg100.mol2"))
-        forcefield = Forcefield(name="oplsaa")
-        forcefield.apply(peg100)
+        oplsaa.apply(peg100)
