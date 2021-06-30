@@ -1,0 +1,26 @@
+<ForceField name="benzene-test-geometric" version="0.0.0" combining_rule="geometric">
+  <!--Data modified from OPLS-AA source and calling foyer.xml_writer.write_foyer on a benzene-->
+  <AtomTypes>
+    <Type name="foo_c" class="CA" element="C" mass="12.01078" def="[C;X3;r6]1[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" desc="" doi="10.1021/ja9621760" overrides="">
+    </Type>
+    <Type name="foo_h" class="HA" element="H" mass="1.007947" def="[H][C;%foo_c]" desc="benzene H" doi="10.1021/ja9621760" overrides="">
+    </Type>
+  </AtomTypes>
+  <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
+    <Atom type="foo_c" charge="-0.115" sigma="0.4" epsilon="0.29288"/>
+    <Atom type="foo_h" charge="0.115" sigma="0.2" epsilon="0.12552"/>
+  </NonbondedForce>
+  <HarmonicBondForce>
+    <Bond type1="foo_c" type2="foo_c" length="0.14" k="392459.2"/>
+    <Bond type1="foo_c" type2="foo_h" length="0.108" k="307105.6"/>
+  </HarmonicBondForce>
+  <HarmonicAngleForce>
+    <Angle type1="foo_c" type2="foo_c" type3="foo_c" angle="2.0943951024" k="527.184"/>
+    <Angle type1="foo_c" type2="foo_c" type3="foo_h" angle="2.0943951024" k="292.88"/>
+  </HarmonicAngleForce>
+  <RBTorsionForce>
+    <Proper type1="foo_c" type2="foo_c" type3="foo_c" type4="foo_c" c0="30.334" c1="0.0" c2="-30.334" c3="0.0" c4="0.0" c5="0.0"/>
+    <Proper type1="foo_c" type2="foo_c" type3="foo_c" type4="foo_h" c0="30.334" c1="0.0" c2="-30.334" c3="0.0" c4="0.0" c5="0.0"/>
+    <Proper type1="foo_h" type2="foo_c" type3="foo_c" type4="foo_h" c0="30.334" c1="0.0" c2="-30.334" c3="0.0" c4="0.0" c5="0.0"/>
+  </RBTorsionForce>
+</ForceField>
