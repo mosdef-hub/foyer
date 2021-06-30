@@ -685,6 +685,10 @@ class TestForcefield(BaseTest):
         ):
             oplsaa.apply(structure=benzene)
 
+        # Reset the combining rule to its original value; re-using the same fixture
+        # is probably more performant than re-loading it on each use
+        oplsaa._combining_rule = "geometric"
+
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
     def test_combining_rule_in_forcefield_overrides_apply_arg(self, oplsaa):
         """Test that the combining rule specified in a Forcefield object
