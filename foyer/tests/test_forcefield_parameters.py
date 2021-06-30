@@ -4,7 +4,6 @@ import pytest
 from foyer import Forcefield, forcefields
 from foyer.exceptions import MissingForceError, MissingParametersError
 from foyer.forcefield import get_available_forcefield_loaders
-from foyer.forcefields.forcefields import get_forcefield
 from foyer.tests.utils import get_fn
 from foyer.utils.check_xml_dihedrals_RB_to_OPLS import (
     _test_xml_dihedrals,
@@ -681,7 +680,7 @@ class TestForcefieldParameters:
             run_xml_test(xml_and_error_file_dict)
 
     def test_xml_dihedral_rb_to_opls_non_exact_conversion_list_str(self):
-        xml_filename = "test_ff.xml"
+        ff_filename = "test_ff.xml"
         error_filename = "test_filename.txt"
         non_exact_conversion_list = "str"
 
@@ -692,13 +691,13 @@ class TestForcefieldParameters:
             f"proper format infomation.",
         ):
             test_xml_dihedral_rb_to_opls(
-                xml_filename, error_filename, non_exact_conversion_list
+                ff_filename, error_filename, non_exact_conversion_list
             )
 
     def test_xml_dihedral_rb_to_opls_non_exact_conversion_list_wrong_type_str(
         self,
     ):
-        xml_filename = "test_ff.xml"
+        ff_filename = "test_ff.xml"
         error_filename = "test_filename.txt"
         non_exact_conversion_list = [
             [
@@ -717,11 +716,11 @@ class TestForcefieldParameters:
             f"proper format infomation.",
         ):
             test_xml_dihedral_rb_to_opls(
-                xml_filename, error_filename, non_exact_conversion_list
+                ff_filename, error_filename, non_exact_conversion_list
             )
 
     def test_xml_dihedral_rb_to_opls_non_exact_conversion_list_4_length(self):
-        xml_filename = "test_ff.xml"
+        ff_filename = "test_ff.xml"
         error_filename = "test_filename.txt"
         non_exact_conversion_list = [
             [
@@ -739,5 +738,5 @@ class TestForcefieldParameters:
             f"proper format infomation.",
         ):
             test_xml_dihedral_rb_to_opls(
-                xml_filename, error_filename, non_exact_conversion_list
+                ff_filename, error_filename, non_exact_conversion_list
             )

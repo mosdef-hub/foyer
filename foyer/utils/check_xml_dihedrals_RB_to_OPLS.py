@@ -6,7 +6,6 @@ from warnings import warn
 import numpy as np
 
 from foyer.forcefields import forcefields
-from foyer.forcefields.forcefields import get_forcefield
 
 
 def RB_to_OPLS(
@@ -500,11 +499,8 @@ def run_xml_test(xml_and_error_file_dict, error_tolerance_rb_to_opls=1e-4):
         )
 
 
-def test_xml_dihedral_rb_to_opls(
-    xml_filename,
-    error_filename,
-    non_exact_conversion_list,
-    error_tolerance_rb_to_opls=1e-4,
+def test_xml_dihedral_rb_to_opls(xml_filename, error_filename,
+                                 non_exact_conversion_list, error_tolerance_rb_to_opls=1e-4,
 ):
     r"""
     Test and compare RB to standard OPLS conversion for accuracy and against with known errors.
@@ -603,7 +599,6 @@ def test_xml_dihedral_rb_to_opls(
         f"proper format infomation."
     )
     if isinstance(non_exact_conversion_list, list):
-        len_non_exact_conversion_list = len(non_exact_conversion_list)
         for error_list_i in non_exact_conversion_list:
             if len(error_list_i) == 5:
                 if (
