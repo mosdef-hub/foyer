@@ -3,7 +3,8 @@
      are imported from the gromacs atomtypes file at
      https://github.com/gromacs/gromacs/blob/aa66efd3179a671aace62b827c54aadc3d89c1ee/share/top/oplsaa.ff/atomtypes.atp
 -->
-<ForceField name="OPLS-AA" version="0.0.1" combining_rule="geometric">
+<ForceField name="OPLS-AA" version="0.0.2" combining_rule="geometric">
+
  <AtomTypes>
   <Type name="opls_001" class="opls_001" element="C" mass="12.011"/>
   <Type name="opls_002" class="opls_002" element="O" mass="15.9994"/>
@@ -183,7 +184,7 @@
   <Type name="opls_179" class="opls_179" element="O" mass="15.9994"/>
   <Type name="opls_180" class="OS" element="O" mass="15.9994"  def="[O;X2](C)C" desc="O, dialkyl ether" doi="10.1021/ja9621760"/>
   <Type name="opls_181" class="CT" element="C" mass="12.01100" def="[C;X4]([O;%opls_180])(H)(H)H" desc="C(H3OR), methyl ether" overrides="opls_182" doi="10.1021/ja9621760"/>
-  <Type name="opls_182" class="CT" element="C" mass="12.01100" def="[C;X4]([O;%opls_180])(H)(H)" desc="C(H2OR), methyl ether" doi="10.1021/ja9621760"/>
+  <Type name="opls_182" class="CT" element="C" mass="12.01100" def="[C;X4]([O;%opls_180])(H)(H)C" desc="C(H2OR), methyl ether" doi="10.1021/ja9621760"/>
   <Type name="opls_183" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_180])(C)(C)H" desc = "Central Carbon in Isopropyl group attached to Oxygen in ether" doi="10.1021/ja9621760"/>
   <Type name="opls_184" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_180])(C)(C)(C)" desc = "Central Carbon in t-butyl group attached to Oxygen in ether" doi="10.1021/ja9621760"/>
   <Type name="opls_185" class="HC" element="C" mass="1.00800"   def="HC[O;%opls_180]" desc="H(COR), alpha H ether" overrides="opls_140" doi="10.1021/ja9621760"/>
@@ -283,10 +284,10 @@
   <Type name="opls_276" class="opls_276" element="C" mass="12.011"/>
   <Type name="opls_277" class="C_2" element="C" mass="12.01100" def="[C;X3]([O;X1])H" desc="C in aldehyde" doi="10.1021/ja9621760"/>
   <Type name="opls_278" class="O_2" element="O" mass="15.9994"  def="[O;X1][C;%opls_277]" desc="O in aldehyde" doi="10.1021/ja9621760"/>
-  <Type name="opls_279" class="HC"  element="H" mass="1.00800"  def="H[C;X3][O;X1]" desc="H-alpha in aldehyde and formamide" overrides="opls_144" doi="10.1021/ja9621760"/>
+  <Type name="opls_279" class="HC"  element="H" mass="1.00800"  def="H[C;X3][O;X1]" desc="H-alpha in aldehyde and formamide" overrides="opls_185, opls_144" doi="10.1021/ja9621760"/>
   <Type name="opls_280" class="C_2" element="C" mass="12.01100" def="[C;X3]([O;X1])(C)C" desc="C in ketone" doi="10.1021/ja9621760"/>
   <Type name="opls_281" class="O_2" element="O" mass="15.9994"  def="[O;X1]([C;%opls_280])" desc="O in ketone" doi="10.1021/ja9621760"/>
-  <Type name="opls_282" class="HC"  element="H" mass="1.00800"  def="HC[C;%opls_277,C;%opls_280]" desc="H on C-alpha in ketone and aldehyde" overrides="opls_140,opls_144" doi="10.1021/ja9621760"/>
+  <Type name="opls_282" class="HC"  element="H" mass="1.00800"  def="HC[C;%opls_277,%opls_280,%opls_465;!%opls_267]" desc="H on C-alpha in ketone and aldehyde" overrides="opls_140,opls_144" doi="10.1021/ja9621760"/>
   <Type name="opls_283" class="opls_283" element="C" mass="12.011"/>
   <Type name="opls_284" class="opls_284" element="C" mass="12.011"/>
   <Type name="opls_285" class="opls_285" element="C" mass="12.011"/>
@@ -469,11 +470,11 @@
   <Type name="opls_461" class="opls_461" element="C" mass="12.011"/>
   <Type name="opls_462" class="opls_462" element="H" mass="1.008"/>
   <Type name="opls_463" class="opls_463" element="C" mass="12.011"/>
-  <Type name="opls_465" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([O;X2])" desc="C in C=O in ester" doi="10.1021/ja9539195"/>
-  <Type name="opls_466" class="O_2" element="O" mass="15.9994" def="[O;X1]([C;%opls_465]([O;%opls_467]))" desc="O in C=O in ester" doi="10.1021/ja9539195"/>
-  <Type name="opls_467" class="OS" element="O" mass="15.9994" def="[O;X2]([C;%opls_465])([!H])" overrides='opls_180' desc="O connected to R of O=C-O-R in esters" doi="10.1021/ja9539195"/>
-  <Type name="opls_468" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467])" overrides='opls_181' desc="methoxy C in esters" doi="10.1021/ja9539195"/>
-  <Type name="opls_469" class="HC" element="H" mass="1.008" def="H[C;%opls_468]" overrides='opls_185' desc="methoxy Hs in esters" doi="10.1021/ja9539195"/>
+  <Type name="opls_465" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([O;X2])" overrides="opls_277" desc="C in C=O in ester" doi="10.1002/jcc.1092"/>
+  <Type name="opls_466" class="O_2" element="O" mass="15.9994" def="[O;X1]([C;%opls_465]([O;%opls_467]))" overrides="opls_278" desc="O in C=O in ester" doi="10.1002/jcc.1092"/>
+  <Type name="opls_467" class="OS" element="O" mass="15.9994" def="[O;X2]([C;%opls_465])([!H])" overrides='opls_180' desc="O connected to R of O=C-O-R in esters" doi="10.1002/jcc.1092"/>
+  <Type name="opls_468" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467])(H)(H)H" overrides='opls_181' desc="methoxy C in esters" doi="10.1002/jcc.1092"/>
+  <Type name="opls_469" class="HC" element="H" mass="1.008" def="H[C;%opls_468,%opls_490]" overrides='opls_185' desc="methoxy Hs in esters; alpha-alkoxy hydrogen" doi="10.1002/jcc.1092"/>
   <Type name="opls_470" class="opls_470" element="C" mass="12.011"/>
   <Type name="opls_471" class="opls_471" element="C" mass="12.011"/>
   <Type name="opls_472" class="opls_472" element="C" mass="12.011"/>
@@ -493,7 +494,7 @@
   <Type name="opls_486" class="opls_486" element="C" mass="12.011"/>
   <Type name="opls_487" class="opls_487" element="H" mass="1.008"/>
   <Type name="opls_488" class="opls_488" element="C" mass="12.011"/>
-  <Type name="opls_490" class="opls_490" element="C" mass="12.011"/>
+  <Type name="opls_490" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467])(H)(H)C" overrides="opls_182" desc="ethoxy carbon; C(H2OS) ethyl ester" doi="10.1002/jcc.1092"/>
   <Type name="opls_491" class="opls_491" element="C" mass="12.011"/>
   <Type name="opls_492" class="opls_492" element="C" mass="12.011"/>
   <Type name="opls_493" class="opls_493" element="S" mass="32.06"/>
