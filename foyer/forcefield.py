@@ -540,7 +540,12 @@ class Forcefield(app.ForceField):
             self._combining_rule = [
                 self._parse_combining_rule(f) for f in preprocessed_files
             ]
-
+            if len(set(self._combining_rule)) == 1:
+                self._combining_rule = self._combining_rule[0]
+            else:
+                raise FoyerError(
+                    "Inconsistent combining_rule among loaded forecfield files"
+                    )
         for fp in preprocessed_files:
             os.remove(fp)
 
@@ -714,7 +719,6 @@ class Forcefield(app.ForceField):
         assert_angle_params=True,
         assert_dihedral_params=True,
         assert_improper_params=False,
-        combining_rule="lorentz",
         verbose=False,
         *args,
         **kwargs,
@@ -749,9 +753,6 @@ class Forcefield(app.ForceField):
         assert_improper_params : bool, optional, default=False
             If True, Foyer will exit if parameters are not found for all system
             improper dihedrals.
-        combining_rule : str, optional, default='geometric'
-            The combining rule of the system, stored as an attribute of the
-            ParmEd structure. Accepted arguments are `geometric` and `lorentz`.
         verbose : bool, optional, default=False
             If True, Foyer will print debug-level information about notable or
             potentially problematic details it encounters.
@@ -780,7 +781,6 @@ class Forcefield(app.ForceField):
             assert_angle_params=assert_angle_params,
             assert_dihedral_params=assert_dihedral_params,
             assert_improper_params=assert_improper_params,
-            combining_rule=combining_rule,
             verbose=verbose,
             *args,
             **kwargs,
@@ -837,7 +837,6 @@ class Forcefield(app.ForceField):
         assert_angle_params=True,
         assert_dihedral_params=True,
         assert_improper_params=False,
-        combining_rule="lorentz",
         verbose=False,
         *args,
         **kwargs,
@@ -874,15 +873,6 @@ class Forcefield(app.ForceField):
             atom_types = set(atom.type for atom in structure.atoms)
             self._write_references_to_file(atom_types, references_file)
 
-        if combining_rule != self.combining_rule:
-            # TODO: Maybe don't raise an exception here?
-            warnings.warn(
-                f"Combining rule found in force field ({self.combining_rule}) "
-                f"and passed to Forcefield.apply() ({combining_rule}) do not "
-                "match. Using the rule specified in the force field"
-            )
-            combining_rule = self.combining_rule
-
         try:
             structure.combining_rule = self.combining_rule
         except ValueError as e:
@@ -893,7 +883,7 @@ class Forcefield(app.ForceField):
                 )
 
         if self.combining_rule == "geometric":
-            self._patch_parmed_adjusts(structure, combining_rule=combining_rule)
+            self._patch_parmed_adjusts(structure, combining_rule=self.combining_rule)
 
         total_charge = sum([atom.charge for atom in structure.atoms])
         if not np.allclose(total_charge, 0):
