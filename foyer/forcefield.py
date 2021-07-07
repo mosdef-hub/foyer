@@ -545,7 +545,7 @@ class Forcefield(app.ForceField):
             else:
                 raise FoyerError(
                     "Inconsistent combining_rule among loaded forecfield files"
-                    )
+                )
         for fp in preprocessed_files:
             os.remove(fp)
 
@@ -883,7 +883,9 @@ class Forcefield(app.ForceField):
                 )
 
         if self.combining_rule == "geometric":
-            self._patch_parmed_adjusts(structure, combining_rule=self.combining_rule)
+            self._patch_parmed_adjusts(
+                structure, combining_rule=self.combining_rule
+            )
 
         total_charge = sum([atom.charge for atom in structure.atoms])
         if not np.allclose(total_charge, 0):

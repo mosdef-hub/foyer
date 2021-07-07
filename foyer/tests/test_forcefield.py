@@ -640,7 +640,7 @@ class TestForcefield(BaseTest):
         with pytest.raises(FoyerError):
             mismatch_comb_rule = Forcefield(
                 forcefield_files=[get_fn("lj.xml"), get_fn("lj3.xml")]
-        )
+            )
 
     def test_load_metadata_from_internal_forcefield_plugin_loader(self):
         from_xml_ff = forcefields.load_OPLSAA()
