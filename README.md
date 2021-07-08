@@ -16,7 +16,7 @@ dissemination, helping to eliminate ambiguity in atom-typing and improving repro
 
 #### Foyer within the MoSDeF Ecosystem
 <p align="center">
-  <img src="docs/images/mosdef_foyer.svg?raw=true" alt="Foyer within the MoSDeF Ecosystem" width="500" height="500"/>
+  <img src="docs/images/mosdef_graphic_foyer.svg?raw=true" alt="Foyer within the MoSDeF Ecosystem" width="500" height="500"/>
 </p>
 
 Foyer defines force fields in an XML format, where SMARTS strings are used to define the chemical context
