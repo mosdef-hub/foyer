@@ -14,6 +14,10 @@ generating, syntactically correct input files for various simulation engines. Fo
 dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility
 (for more information, see [our paper](https://www.sciencedirect.com/science/article/pii/S0927025619303040) or its corresponding [pre-print](https://arxiv.org/pdf/1812.06779.pdf)).
 
+#### Foyer within the MoSDeF Ecosystem
+<p align="center">
+  <img src="docs/images/mosdef_foyer.svg?raw=true" alt="Foyer within the MoSDeF Ecosystem" width="500" height="500"/>
+</p>
 
 Foyer defines force fields in an XML format, where SMARTS strings are used to define the chemical context
 of a particular atom type and “overrides” are used to set rule precedence, rather than a rigid hierarchical scheme.
