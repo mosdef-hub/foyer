@@ -21,5 +21,3 @@ from the units used in
 Please note that the units of the parameters found in the parameterized
 ``parmed.Structure`` will follow the
 `units used by ParmEd <https://parmed.github.io/ParmEd/html/dimensional_analysis.html#>`_
-
-

@@ -22,6 +22,3 @@ The other important optional argument is the ``combining_rule`` option,
 which is ``"geometric"`` by default. The other valid option
 is ``"lorentz"``, if your force field uses Lorentz-Berthelot combining
 rules.
-
-
-

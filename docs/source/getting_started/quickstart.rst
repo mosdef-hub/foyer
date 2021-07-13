@@ -92,12 +92,9 @@ and then apply the force field parameters.
     ff = foyer.ForceField("ff_custom.xml")
 
     mol_ff = ff.apply(mol)
-	
+
 	mol_ff.save("hfc125.top")
 
 Foyer can be used to save input files for any simulation engine supported by
 ``parmed``. If you also install mBuild, then a variety of other simulation
 engines are also supported.
-
-
-
