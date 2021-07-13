@@ -34,6 +34,19 @@ you create an editable installation with all the required dependencies:
     pip install -e .
 
 
+Install pre-commit
+------------------
+
+We use [pre-commit](https://pre-commit.com/) to automatically handle our code formatting and this package is included in the dev environment.
+With the ``foyer-dev`` conda environment active, pre-commit can be installed locally as a git hook by running::
+
+    $ pre-commit install
+
+And (optional) all files can be checked by running::
+
+    $ pre-commit run --all-files
+
+
 Supported Python Versions
 -------------------------
 

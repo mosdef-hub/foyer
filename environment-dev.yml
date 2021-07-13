@@ -7,10 +7,14 @@ dependencies:
   - lark-parser
   - lxml
   - mbuild
-  - networkx>=2.0
+  - gmso
+  - networkx>=2.5
   - openmm>=7.5
   - parmed
+  - openff-toolkit
+  - gmso
   - pip
+  - pre-commit
   - pytest
   - pytest-azurepipelines
   - pytest-cov
@@ -19,5 +23,4 @@ dependencies:
   - requests
   - requests-mock
   - pip:
-    - "--editable=git+https://github.com/rsdefever/GAFF-foyer.git#egg=gafffoyer"
-    - git+https://github.com/rsdefever/antefoyer.git
+    - "--editable=git+https://github.com/rsdefever/antefoyer.git#egg=antefoyer"

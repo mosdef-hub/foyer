@@ -9,4 +9,3 @@ function based on a particular use case.
 
 .. autoclass:: foyer.forcefield.Forcefield
     :members:
-
