@@ -28,19 +28,14 @@ class TestRunAtomTyping(BaseTest):
 
     def test_element_not_found(self, oplsaa):
         from foyer.topology_graph import TopologyGraph
-        #Create a TopologyGraph object for a methane molecule.
-        #The central C has bad element info, which will trigger an error
-        #during the atomtyping step
+
+        # Create a TopologyGraph object for a methane molecule.
+        # The central C has bad element info, which will trigger an error
+        # during the atomtyping step
         top_graph = TopologyGraph()
-        top_graph.add_atom(name="C",
-                           index=0,
-                           atomic_number=200,
-                           element='Boo')
+        top_graph.add_atom(name="C", index=0, atomic_number=200, element="Boo")
         for i in range(1, 5):
-            top_graph.add_atom(name='H',
-                               index=i,
-                               atomic_number=1,
-                               element='H')
+            top_graph.add_atom(name="H", index=i, atomic_number=1, element="H")
             top_graph.add_bond(0, i)
 
         with pytest.raises(FoyerError):
