@@ -71,9 +71,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
             except IndexError:
                 try:
                     atomic_num = next(atom.find_data("atomic_num")).children[0]
-                    element = ele.element_from_atomic_number(
-                        atomic_num
-                    ).symbol
+                    element = ele.element_from_atomic_number(atomic_num).symbol
                 except IndexError:
                     element = None
         else:
