@@ -1,5 +1,5 @@
-Paper Examples
-~~~~~~~~~~~~~~
+Examples from Foyer paper
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Contained below are the toy examples from the *Usage Examples* section of the `foyer paper <https://arxiv.org/pdf/1812.06779.pdf>`__. The source code selections are listed below on this page, there are `Jupyter
 Notebooks <https://github.com/mosdef-hub/foyer/tree/master/docs/examples>`__
@@ -27,8 +27,8 @@ calling the ``save`` routine, are converted into a ``ParmEd``
 ``Structures``. This is subject to change in later iterations of
 ``foyer``.
 
-Example 1
-^^^^^^^^^
+Homogeneous fluid
+^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
@@ -58,8 +58,8 @@ Example 1
 
 ---------------------------------------
 
-Example 2
-^^^^^^^^^
+Fluid on silica substrate
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The other example listing from the text showcases the ability to create
 two separate chemical topologies and applying different forcefield files
@@ -96,3 +96,4 @@ combined into a single ``ParmEd`` ``Structure`` and saved to disk.
     # Save the atom-typed system
     system.save("ethane-silica.top")
     system.save("ethane-silica.gro")
+
