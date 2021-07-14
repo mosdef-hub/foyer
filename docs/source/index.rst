@@ -30,7 +30,7 @@ simultaneously human- and machine-readable. A primary goal of **foyer**
 is to eliminate ambiguity in the atom-typing and force field application steps of
 molecular simulations in order to improve reproducibility. Foyer force fields are
 defined in an XML format derived from the
-`OpenMM XML specification <http://docs.openmm.org/latest/userguide/application.html#basic-concepts>_`.
+`OpenMM XML specification <http://docs.openmm.org/latest/userguide/application.html#basic-concepts>`_.
 `SMARTS strings <https://www.daylight.com/dayhtml/doc/theory/theory.smarts.html>`_
 are used to define the chemical context of each atom type and "overrides" are used
 to define clear precedence of different atom types. **Foyer** is designed to
