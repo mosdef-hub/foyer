@@ -96,4 +96,3 @@ combined into a single ``ParmEd`` ``Structure`` and saved to disk.
     # Save the atom-typed system
     system.save("ethane-silica.top")
     system.save("ethane-silica.gro")
-

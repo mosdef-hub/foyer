@@ -21,4 +21,3 @@ number of bonds/angles/dihedrals/impropers for your system.
 The other important optional argument is the ``combining_rule`` option,
 which is ``"lorentz"`` (Lorentz-Berthelot) by default. The other valid
 option is ``"geometric"``, if your force field uses geometric combining rules.
-
