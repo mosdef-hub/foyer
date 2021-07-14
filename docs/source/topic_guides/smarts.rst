@@ -24,7 +24,7 @@ methyl group carbon and its hydrogen atoms:
     </ForceField>
 
 This ``.xml`` format is an extension of the `OpenMM force field
-format <http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields>`__
+format <http://docs.openmm.org/latest/userguide/application.html#creating-force-fields>`__
 The above example utilizes two additional ``.xml`` attributes supported
 by foyer: ``def`` and ``desc``. The atomtype that we are attempting to
 match is always the **first** token in the SMARTS string, in the above

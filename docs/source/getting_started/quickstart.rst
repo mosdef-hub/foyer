@@ -96,5 +96,5 @@ and then apply the force field parameters.
 	mol_ff.save("hfc125.top")
 
 Foyer can be used to save input files for any simulation engine supported by
-``parmed``. If you also install mBuild, then a variety of other simulation
+``parmed``. If you also install ``mbuild``, then a variety of other simulation
 engines are also supported.

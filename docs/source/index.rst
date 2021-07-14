@@ -29,7 +29,8 @@ it enables users to define and apply atom-typing rules in a format that is
 simultaneously human- and machine-readable. A primary goal of **foyer**
 is to eliminate ambiguity in the atom-typing and force field application steps of
 molecular simulations in order to improve reproducibility. Foyer force fields are
-defined in an XML format derived from the OpenMM XML.
+defined in an XML format derived from the
+`OpenMM XML specification <http://docs.openmm.org/latest/userguide/application.html#basic-concepts>_`.
 `SMARTS strings <https://www.daylight.com/dayhtml/doc/theory/theory.smarts.html>`_
 are used to define the chemical context of each atom type and "overrides" are used
 to define clear precedence of different atom types. **Foyer** is designed to
@@ -70,7 +71,7 @@ Example
 ~~~~~~~
 
 Annotate an `OpenMM .xml force
-field <http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields>`__
+field <http://docs.openmm.org/latest/userguide/application.html#creating-force-fields>`__
 file with SMARTS-based atomtypes:
 
 .. code:: xml
@@ -85,7 +86,7 @@ file with SMARTS-based atomtypes:
 Apply the forcefield to arbitrary chemical topologies. We currently
 support:
 
--  `OpenMM.Topology <http://docs.openmm.org/7.0.0/api-python/generated/simtk.openmm.app.topology.Topology.html#>`__
+-  `OpenMM.Topology <http://docs.openmm.org/latest/api-python/generated/simtk.openmm.app.topology.Topology.html#>`__
 -  `ParmEd.Structure <http://parmed.github.io/ParmEd/html/structure.html>`__
 -  `mBuild.Compound <http://mosdef-hub.github.io/mbuild/data_structures.html>`__
 
