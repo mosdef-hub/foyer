@@ -14,7 +14,7 @@ it means that your force field is missing parameters for one of the
 bonds/angles/dihedrals/impropers in the system. This could be
 because the parameters are missing or because the atom-typing
 (i.e., the SMARTS strings) are incorrect. These arguments are ``True`` by default,
-with the exception of ``insert_improper_params``. In all cases, it
+with the exception of ``assert_improper_params``. In all cases, it
 is wise to verify that the final files you generate have the expected
 number of bonds/angles/dihedrals/impropers for your system.
 
