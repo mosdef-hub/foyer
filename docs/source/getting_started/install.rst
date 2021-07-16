@@ -1,25 +1,37 @@
 Installation
 ==============
 
-Install with `conda <https://repo.anaconda.com/miniconda/>`_
------------------------------------------------------
-::
+For most users we recommend a conda installation:
 
-    $ conda install -c conda-forge foyer
+.. code:: bash
 
-Alternatively you can add all the required channels to your ``.condarc``
-after which you can simply install without specifying the channels::
+    conda install -c conda-forge -c omnia foyer
 
-    $ conda config --add channels conda-forge
-    $ conda install foyer
 
-Install an editable version from source
----------------------------------------
-::
+If you wish to install from source, you can use the following commands:
 
-    $ git clone https://github.com/mosdef-hub/foyer
-    $ cd foyer
-    $ pip install -e .
+.. code:: bash
+
+    git clone https://github.com/mosdef-hub/foyer.git
+    cd foyer
+    conda env create -f environment.yml
+    conda activate foyer
+    pip install .
+
+If you are using windows, you should use ``environment-win.yml`` rather than
+``environment.yml``.
+
+
+If you plan on contributing to the development of foyer, we recommend
+you create an editable installation with all the required dependencies:
+
+.. code:: bash
+
+    git clone https://github.com/mosdef-hub/foyer.git
+    cd foyer
+    conda env create -f environment-dev.yml
+    conda activate foyer-dev
+    pip install -e .
 
 
 Install pre-commit
