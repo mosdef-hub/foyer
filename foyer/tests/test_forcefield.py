@@ -490,9 +490,15 @@ class TestForcefield(BaseTest):
         typed = oplsaa.apply(mol)
 
         typed.write_foyer(
-            filename="opls-snippet.xml", forcefield=oplsaa, unique=True
+            filename="opls-snippet.xml",
+            name="oplsaa-snippet",
+            version="0.1.0",
+            forcefield=oplsaa, unique=True
         )
         oplsaa_partial = Forcefield("opls-snippet.xml")
+        assert oplsaa_partial.name == "oplsaa-snippet"
+        assert oplsaa_partial.version == "0.1.0"
+        assert oplsaa_partial.combining_rule == "geometric"
         typed_by_partial = oplsaa_partial.apply(mol)
 
         for adj in typed.adjusts:
