@@ -493,7 +493,8 @@ class TestForcefield(BaseTest):
             filename="opls-snippet.xml",
             name="oplsaa-snippet",
             version="0.1.0",
-            forcefield=oplsaa, unique=True
+            forcefield=oplsaa,
+            unique=True,
         )
         oplsaa_partial = Forcefield("opls-snippet.xml")
         assert oplsaa_partial.name == "oplsaa-snippet"

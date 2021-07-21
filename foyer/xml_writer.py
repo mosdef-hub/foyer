@@ -13,7 +13,14 @@ from lxml import etree as ET
 from foyer.smarts_graph import SMARTSGraph
 
 
-def write_foyer(self, filename, name="Forcefield", version="0.0.1", forcefield=None, unique=True):
+def write_foyer(
+    self,
+    filename,
+    name="Forcefield",
+    version="0.0.1",
+    forcefield=None,
+    unique=True,
+):
     """Output a Foyer XML from a ParmEd Structure.
 
     Information from a ParmEd Structure is used to create a Foyer force
