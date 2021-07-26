@@ -19,7 +19,7 @@ def write_foyer(
     forcefield=None,
     unique=True,
     name="Forcefield",
-    version="0.0.1"
+    version="0.0.1",
 ):
     """Output a Foyer XML from a ParmEd Structure.
 
