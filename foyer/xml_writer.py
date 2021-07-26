@@ -16,10 +16,10 @@ from foyer.smarts_graph import SMARTSGraph
 def write_foyer(
     self,
     filename,
-    name="Forcefield",
-    version="0.0.1",
     forcefield=None,
     unique=True,
+    name="Forcefield",
+    version="0.0.1"
 ):
     """Output a Foyer XML from a ParmEd Structure.
 
