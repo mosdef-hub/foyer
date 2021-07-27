@@ -55,9 +55,14 @@ stages:
           - bash: |
               conda config --set always_yes yes --set changeps1 no
             displayName: Add relavent Channels
+
+          - bash: |
+              conda install -c conda-forge mamba
+            displayName: Install mamba
+
           - bash: |
               sed -i -E 's/python.*$/python='$(python.version)'/' environment-dev.yml
-              conda env create -f environment-dev.yml
+              mamba env create -f environment-dev.yml
               source activate foyer-dev
               pip install -e .
               cd src/antefoyer
@@ -117,13 +122,14 @@ stages:
 
           - bash: |
               conda config --set always_yes yes --set changeps1 no
+              conda install -c conda-forge mamba
               pip install conda-merge
               git clone https://github.com/mosdef-hub/mbuild.git
               conda-merge environment-dev.yml mbuild/environment-dev.yml > combine.yml
               sed -iE 's/python.*$/python=3.7/' combine.yml
               sed -iE '/mbuild/d' combine.yml
               sed -iE '/ foyer/d' combine.yml
-              conda env create -n bleeding -f combine.yml
+              mamba env create -n bleeding -f combine.yml
               source activate bleeding
               cd mbuild
               pip install -e .
