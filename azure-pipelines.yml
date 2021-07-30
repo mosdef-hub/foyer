@@ -55,9 +55,14 @@ stages:
           - bash: |
               conda config --set always_yes yes --set changeps1 no
             displayName: Add relavent Channels
+
+          - bash: |
+              conda install -c conda-forge mamba
+            displayName: Install mamba
+
           - bash: |
               sed -i -E 's/python.*$/python='$(python.version)'/' environment-dev.yml
-              conda env create -f environment-dev.yml
+              mamba env create -f environment-dev.yml
               source activate foyer-dev
               pip install -e .
               cd src/antefoyer
@@ -65,7 +70,7 @@ stages:
             displayName: Create Conda env, Activate, Install dependencies, Install Branch
           - bash: |
               source activate foyer-dev
-              python -m pytest -v --cov=foyer --cov-report=html --pyargs foyer
+              python -m pytest -v --cov=foyer --cov-report=html --color=yes --pyargs foyer
             displayName: Run Tests
 
           - bash: |
@@ -103,7 +108,7 @@ stages:
 
           - script: |
               call activate foyer-dev
-              python -m pytest -v --cov=foyer --pyargs foyer
+              python -m pytest -v --cov=foyer --color=yes --pyargs foyer
             displayName: Run Tests
 
       - job: LinuxBleedingMbuild
@@ -117,15 +122,12 @@ stages:
 
           - bash: |
               conda config --set always_yes yes --set changeps1 no
-              pip install conda-merge
+              conda install -c conda-forge mamba
               git clone https://github.com/mosdef-hub/mbuild.git
-              conda-merge environment-dev.yml mbuild/environment-dev.yml > combine.yml
-              sed -iE 's/python.*$/python=3.7/' combine.yml
-              sed -iE '/mbuild/d' combine.yml
-              sed -iE '/ foyer/d' combine.yml
-              conda env create -n bleeding -f combine.yml
+              mamba env create --name bleeding --file environment-dev.yml
               source activate bleeding
               cd mbuild
+              mamba env update --name bleeding --file environment.yml
               pip install -e .
               cd ..
               pip install -e .
@@ -135,7 +137,7 @@ stages:
 
           - bash: |
               source activate bleeding
-              python -m pytest -v --cov=foyer --cov-report= --pyargs foyer
+              python -m pytest -v --cov=foyer --cov-report=html --color=yes --pyargs foyer
             displayName: Run Tests
 
 

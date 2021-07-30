@@ -19,7 +19,8 @@ RUN apk add --no-cache git && \
 	conda config --set always_yes yes --set changeps1 no && \
 	. /opt/conda/etc/profile.d/conda.sh && \
     sed -i -E "s/python.*$/python="$PY_VERSION"/" environment-dev.yml && \
-	conda env create nomkl -f environment-dev.yml && \
+  conda install -c conda-forge mamba && \
+	mamba env create nomkl -f environment-dev.yml && \
 	conda activate foyer-dev && \
         python setup.py install && \
 	echo "source activate foyer-dev" >> \
