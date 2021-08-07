@@ -1,24 +1,36 @@
 Installation
 ==============
 
-Install from conda:
+For most users we recommend a conda installation:
 
 .. code:: bash
 
-    conda install -c conda-forge -c omnia -c mosdef foyer
+    conda install -c conda-forge -c omnia foyer
 
-Install from pip:
 
-.. code:: bash
-
-    pip install foyer
-
-Install an editable version from source:
+If you wish to install from source, you can use the following commands:
 
 .. code:: bash
 
     git clone https://github.com/mosdef-hub/foyer.git
     cd foyer
+    conda env create -f environment.yml
+    conda activate foyer
+    pip install .
+
+If you are using windows, you should use ``environment-win.yml`` rather than
+``environment.yml``.
+
+
+If you plan on contributing to the development of foyer, we recommend
+you create an editable installation with all the required dependencies:
+
+.. code:: bash
+
+    git clone https://github.com/mosdef-hub/foyer.git
+    cd foyer
+    conda env create -f environment-dev.yml
+    conda activate foyer-dev
     pip install -e .
 
 

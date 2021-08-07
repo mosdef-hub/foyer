@@ -46,6 +46,10 @@ class MissingForceError(FoyerError):
     """Error to be raised when a particular force doesn't exist in the forcefield."""
 
 
+class UnimplementedCombinationRuleError(FoyerError):
+    """Error to be raised when a combination rule is requested but not implemented."""
+
+
 def raise_collected(errors):
     """Return errors for all collected exceptions."""
     if len(errors) > 1:

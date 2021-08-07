@@ -18,11 +18,11 @@ import os
 import pathlib
 import sys
 
-sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, os.path.abspath("../.."))
 sys.path.insert(0, os.path.abspath("sphinxext"))
 
 base_path = pathlib.Path(__file__).parent
-os.system("python {} --name".format((base_path / "../setup.py").resolve()))
+os.system("python {} --name".format((base_path / "../../setup.py").resolve()))
 
 
 import foyer
@@ -33,7 +33,7 @@ project = u"foyer"
 copyright = u"2014-2020, Vanderbilt University"
 
 # The short X.Y version
-version = "0.9.1"
+version = "0.9.2"
 # The full version, including alpha/beta/rc tags
 release = version
 

@@ -3,7 +3,7 @@ Parameter definitions
 
 Parameter definitions within force field XMLs follow the same
 conventions as defined in the `OpenMM
-documentation <http://docs.openmm.org/7.0.0/userguide/application.html#creating-force-fields>`__.
+documentation <http://docs.openmm.org/latest/userguide/application.html#creating-force-fields>`__.
 Currently, only certain functional forms for molecular forces are
 supported, while future developments are expected to allow Foyer to
 support any desired functional form, including reactive and tabulated
@@ -13,24 +13,24 @@ forces are:
 -  **Nonbonded**
 
    -  `Lennard-Jones
-      (12-6) <http://docs.openmm.org/7.0.0/userguide/application.html#nonbondedforce>`__
+      (12-6) <http://docs.openmm.org/latest/userguide/application.html#nonbondedforce>`__
 
 -  **Bonds**
 
-   -  `Harmonic <http://docs.openmm.org/7.0.0/userguide/application.html#harmonicbondforce>`__
+   -  `Harmonic <http://docs.openmm.org/latest/userguide/application.html#harmonicbondforce>`__
 
 -  **Angles**
 
-   -  `Harmonic <http://docs.openmm.org/7.0.0/userguide/application.html#harmonicangleforce>`__
+   -  `Harmonic <http://docs.openmm.org/latest/userguide/application.html#harmonicangleforce>`__
 
 -  **Torsions (proper)**
 
-   -  `Periodic <http://docs.openmm.org/7.0.0/userguide/application.html#periodictorsionforce>`__
-   -  `Ryckaert-Bellemans <http://docs.openmm.org/7.0.0/userguide/application.html#rbtorsionforce>`__
+   -  `Periodic <http://docs.openmm.org/latest/userguide/application.html#periodictorsionforce>`__
+   -  `Ryckaert-Bellemans <http://docs.openmm.org/latest/userguide/application.html#rbtorsionforce>`__
 
 -  **Torsions (improper)**
 
-   -  `Periodic <http://docs.openmm.org/7.0.0/userguide/application.html#periodictorsionforce>`__
+   -  `Periodic <http://docs.openmm.org/latest/userguide/application.html#periodictorsionforce>`__
 
 Definitions for each molecular force follow the `OpenMM standard <http://docs.openmm.org/latest/userguide/theory.html>`_.
 
@@ -49,7 +49,7 @@ Classes vs. Types
 
 OpenMM allows users to specify either a ``class`` or a
 ``type`` (See `Atom Types and Atom Classes
-<http://docs.openmm.org/7.0.0/userguide/application.html#atom-types-and-atom-classes>`_),
+<http://docs.openmm.org/latest/userguide/application.html#atom-types-and-atom-classes>`_),
 to define each particle within the force definition. Here, ``type``
 refers to a specific atom type (as defined in the ``<AtomTypes>``
 section), while ``class`` refers to a more general description that can

@@ -25,6 +25,8 @@
 4-methylphenol
 acetamide
 acetate
+2-acetyloxyethyl-acetate
+4-acetyloxybutyl-acetate
 acetone
 benzene
 benzonitrile

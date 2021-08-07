@@ -1,0 +1,100 @@
+Quickstart
+==========
+
+**Foyer** is distributed with partial support for the OPLS-AA
+force field. First, we will load a PDB file
+(:download:`here <../files/ethane.pdb>`) with ``parmed``
+and then load the OPLS-AA force field with foyer.
+
+.. code:: python
+
+    import foyer
+    import parmed
+
+    mol = parmed.load("ethane.pdb")
+    ff = foyer.forcefield.load_OPLSAA()
+
+    mol_ff = ff.apply(mol)
+
+    mol_ff.save("ethane.gro")
+    mol_ff.save("ethane.top")
+
+
+The first step loads ``ethane.pdb``. ``mol`` is a ``parmed.Structure``.
+Next, we load the OPLS force field as a ``foyer.forcefield`` object.
+Then, we apply the force field to the molecule. ``mol_ff`` is also
+a ``parmed.Structure``, but it now contains all of the force field
+parameters (Lennard-Jones parameters, partial charges, bond, angle,
+dihedral parameters). Finally, we save the parameterized structure
+to input formats for GROMACS. In this example, ``ff`` has the force field parameters
+for the OPLS-AA force field. You can view the XML file with all of the
+parameters `here <https://github.com/mosdef-hub/foyer/blob/master/foyer/forcefields/xml/oplsaa.xml>`_.
+As you can see from the XML file, SMARTS
+strings have been added for many of the OPLS-AA atom types. You
+should always verify that the atom-typing is performed correctly for
+a single molecule before applying the force field to your entire system.
+If you wish to add supported molecules to the OPLS-AA force field,
+you can view `this issue <https://github.com/mosdef-hub/foyer/issues/314>`_
+
+The real power of **foyer** is to build and distribute XML files with your
+own parameter sets. Here we show an example of an XML file for
+pentafluoroethane. This is a custom parameter set taken from
+`this paper <https://arxiv.org/abs/2103.03208>`_.
+
+.. code:: bash
+
+	<ForceField name="example_custom" version="0.0.1">
+	 <AtomTypes>
+	  <Type name="C1" class="c3" element="C" mass="12.011" def="C(C)(H)(F)(F)" desc="carbon bonded to 2 Fs, a H, and another carbon"/>
+	  <Type name="C2" class="c3" element="C" mass="12.011" def="C(C)(F)(F)(F)" desc="carbon bonded to 3 Fs and another carbon"/>
+	  <Type name="F1" class="f" element="F" mass="18.998" def="FC(C)(F)H" desc="F bonded to C1"/>
+	  <Type name="F2" class="f" element="F" mass="18.998" def="FC(C)(F)F" desc="F bonded to C2"/>
+	  <Type name="H1" class="h2" element="H" mass="1.008" def="H(C)" desc="single H bonded to C1"/>
+	 </AtomTypes>
+	 <HarmonicBondForce>
+	  <Bond class1="c3" class2="c3" length="0.15375" k="251793.12"/>
+	  <Bond class1="c3" class2="f" length="0.13497" k="298653.92"/>
+	  <Bond class1="c3" class2="h2" length="0.10961" k="277566.56"/>
+	 </HarmonicBondForce>
+	 <HarmonicAngleForce>
+	  <Angle class1="c3" class2="c3" class3="f" angle="1.9065976748786053" k="553.1248"/>
+	  <Angle class1="c3" class2="c3" class3="h2" angle="1.9237019015481498" k="386.6016"/>
+	  <Angle class1="f" class2="c3" class3="f" angle="1.8737854849411122" k="593.2912"/>
+	  <Angle class1="f" class2="c3" class3="h2" angle="1.898743693244631" k="427.6048"/>
+	 </HarmonicAngleForce>
+	 <PeriodicTorsionForce>
+	  <Proper class1="f" class2="c3" class3="c3" class4="f" periodicity1="3" k1="0.0" phase1="0.0" periodicity2="1" k2="5.0208" phase2="3.141592653589793"/>
+	  <Proper class1="" class2="c3" class3="c3" class4="" periodicity1="3" k1="0.6508444444444444" phase1="0.0"/>
+	 </PeriodicTorsionForce>
+	 <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
+	  <Atom type="C1" charge="0.224067"  sigma="0.371084" epsilon="0.304665"/>
+	  <Atom type="C2" charge="0.500886"  sigma="0.393872" epsilon="0.222541"/>
+	  <Atom type="F1" charge="-0.167131" sigma="0.298239" epsilon="0.208221"/>
+	  <Atom type="F2" charge="-0.170758" sigma="0.276783" epsilon="0.237635"/>
+	  <Atom type="H1" charge="0.121583"  sigma="0.264229" epsilon="0.071381"/>
+	 </NonbondedForce>
+	</ForceField>
+
+The SMARTS strings are defined in the ``<AtomTypes>`` section.
+The bond, angle, and dihedral parameters are defined in the following sections.
+This time we load a ``.gro`` file for HFC-125
+(:download:`here <../files/hfc125.gro>`),
+load our custom force field XML file
+(:download:`here <../files/ff_custom.xml>`),
+and then apply the force field parameters.
+
+.. code:: python
+
+    import foyer
+    import parmed
+
+    mol = parmed.load("hfc125.gro")
+    ff = foyer.ForceField("ff_custom.xml")
+
+    mol_ff = ff.apply(mol)
+
+	mol_ff.save("hfc125.top")
+
+Foyer can be used to save input files for any simulation engine supported by
+``parmed``. If you also install ``mbuild``, then a variety of other simulation
+engines are also supported.

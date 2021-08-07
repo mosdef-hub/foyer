@@ -4,7 +4,7 @@ import parmed as pmd
 import pytest
 from pkg_resources import resource_filename
 
-from foyer import Forcefield
+from foyer import Forcefield, forcefields
 from foyer.smarts import SMARTS
 
 OPLS_TEST_FILE_DIR = Path(
@@ -26,7 +26,7 @@ class BaseTest:
 
     @pytest.fixture(scope="session")
     def oplsaa(self):
-        return Forcefield(name="oplsaa")
+        return forcefields.load_OPLSAA()
 
     @pytest.fixture(autouse=True)
     def initdir(self, tmpdir):

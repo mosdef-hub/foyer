@@ -2,7 +2,6 @@
 
 [![Gitter chat](https://badges.gitter.im/mosdef-hub/gitter.svg)](https://gitter.im/mosdef-hub/Lobby)
 [![AZP Build Status](https://dev.azure.com/mosdef/mosdef/_apis/build/status/mosdef-hub.foyer?branchName=master)](https://dev.azure.com/mosdef/mosdef/_build/latest?definitionId=2&branchName=master)
-[![PyPI Version](https://badge.fury.io/py/foyer.svg)](https://pypi.python.org/pypi/foyer)
 [![Anaconda Badge](https://anaconda.org/conda-forge/foyer/badges/version.svg)](https://anaconda.org/conda-forge/foyer)
 [![codecov](https://codecov.io/gh/mosdef-hub/foyer/branch/master/graph/badge.svg)](https://codecov.io/gh/mosdef-hub/foyer)
 [![DOI](https://zenodo.org/badge/34077879.svg)](https://zenodo.org/badge/latestdoi/34077879)
@@ -15,6 +14,10 @@ generating, syntactically correct input files for various simulation engines. Fo
 dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility
 (for more information, see [our paper](https://www.sciencedirect.com/science/article/pii/S0927025619303040) or its corresponding [pre-print](https://arxiv.org/pdf/1812.06779.pdf)).
 
+#### Foyer within the MoSDeF Ecosystem
+<p align="center">
+  <img src="docs/images/mosdef_graphic_foyer.svg?raw=true" alt="Foyer within the MoSDeF Ecosystem" width="500" height="500"/>
+</p>
 
 Foyer defines force fields in an XML format, where SMARTS strings are used to define the chemical context
 of a particular atom type and “overrides” are used to set rule precedence, rather than a rigid hierarchical scheme.

@@ -1,0 +1,8 @@
+<ForceField version="0.4.2" name="LJ" combining_rule='geometric'>
+ <AtomTypes>
+   <Type name="LJ3" class="" element="_LJ" mass="1.0" def="[_LJ]" desc="Generic LJ particle"/>
+ </AtomTypes>
+ <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
+  <Atom type="LJ3" charge="0" sigma="1.0" epsilon="1.0"/>
+ </NonbondedForce>
+</ForceField>

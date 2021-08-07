@@ -13,7 +13,14 @@ from lxml import etree as ET
 from foyer.smarts_graph import SMARTSGraph
 
 
-def write_foyer(self, filename, forcefield=None, unique=True):
+def write_foyer(
+    self,
+    filename,
+    forcefield=None,
+    unique=True,
+    name="Forcefield",
+    version="0.0.1",
+):
     """Output a Foyer XML from a ParmEd Structure.
 
     Information from a ParmEd Structure is used to create a Foyer force
@@ -41,6 +48,10 @@ def write_foyer(self, filename, forcefield=None, unique=True):
     ----------
     filename : str
         Name of the Foyer XML file to be written
+    name : str, optional, default="Forcefield"
+        User defined name for the Forcefield, default to "Forcefield"
+    version : str, optional, default="0.0.1"
+        User defined version of the forcefield, default to "0.0.1"
     forcefield : foyer.Forcefield, optional, default=None
         Foyer Forcefield used to parameterize the ParmEd Structure. This
         is used to obtain additional information that is not available
@@ -59,6 +70,10 @@ def write_foyer(self, filename, forcefield=None, unique=True):
         )
 
     root = ET.Element("ForceField")
+    # Write Forcefield information
+    root.set("name", name)
+    root.set("version", version)
+    root.set("combining_rule", self.combining_rule)
     if isinstance(self, pmd.Structure):
         _write_atoms(self, root, self.atoms, forcefield, unique)
         if len(self.bonds) > 0 and self.bonds[0].type is not None:
@@ -83,10 +98,12 @@ def write_foyer(self, filename, forcefield=None, unique=True):
 
 
 def _write_atoms(self, root, atoms, forcefield, unique):
+    combining_rule = getattr(forcefield, "combining_rule", "lorentz")
+
     atomtypes = ET.SubElement(root, "AtomTypes")
     nonbonded = ET.SubElement(root, "NonbondedForce")
     nonbonded.set("coulomb14scale", str(_infer_coulomb14scale(self)))
-    nonbonded.set("lj14scale", str(_infer_lj14scale(self)))
+    nonbonded.set("lj14scale", str(_infer_lj14scale(self, combining_rule)))
     atomtype_attrs = collections.OrderedDict(
         [
             ("name", "name"),
@@ -440,21 +457,27 @@ def _infer_coulomb14scale(struct):
         )
 
 
-def _infer_lj14scale(struct):
+def _infer_lj14scale(struct, combining_rule: str):
     """Infer the Lennard-Jones 1-4 scaling factor in the structure."""
     lj14scale = list()
 
     for adj in struct.adjusts:
         type1 = adj.atom1.atom_type
         type2 = adj.atom2.atom_type
-        expected_sigma = (type1.sigma + type2.sigma) * 0.5
+        if combining_rule == "lorentz":
+            expected_sigma = (type1.sigma + type2.sigma) * 0.5
+        elif combining_rule == "geometric":
+            expected_sigma = (type1.sigma * type2.sigma) ** 0.5
         expected_epsilon = (type1.epsilon * type2.epsilon) ** 0.5
 
         # We expect sigmas to be the same but epsilons to be scaled by a factor
         if not np.isclose(adj.type.sigma, expected_sigma):
             raise ValueError(
                 "Unexpected 1-4 sigma value found in adj {}. Expected {}"
-                "and found {}".format(adj, adj.type.sigma, expected_sigma)
+                "and found {}. This estimate was made assuming a combining "
+                "rule of {}".format(
+                    adj, adj.type.sigma, expected_sigma, combining_rule
+                )
             )
 
         lj14scale.append(adj.type.epsilon / expected_epsilon)

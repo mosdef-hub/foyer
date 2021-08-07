@@ -38,6 +38,7 @@ from foyer.exceptions import (
     FoyerError,
     MissingForceError,
     MissingParametersError,
+    UnimplementedCombinationRuleError,
 )
 from foyer.utils.external import get_ref
 from foyer.utils.io import has_mbuild, import_
@@ -501,6 +502,7 @@ class Forcefield(app.ForceField):
         self.non_element_types = dict()
         self._version = None
         self._name = None
+        self._combining_rule = None
 
         all_files_to_load = []
         if forcefield_files is not None:
@@ -522,20 +524,30 @@ class Forcefield(app.ForceField):
         if validation:
             for ff_file_name in preprocessed_files:
                 Validator(ff_file_name, debug)
-        try:
-            super(Forcefield, self).__init__(*preprocessed_files)
-        finally:
-            for ff_file_name in preprocessed_files:
-                os.remove(ff_file_name)
+        super(Forcefield, self).__init__(*preprocessed_files)
 
-        if isinstance(forcefield_files, str):
-            self._version = self._parse_version_number(forcefield_files)
-            self._name = self._parse_name(forcefield_files)
-        elif isinstance(forcefield_files, list):
+        if len(preprocessed_files) == 1:
+            self._version = self._parse_version_number(preprocessed_files[0])
+            self._name = self._parse_name(preprocessed_files[0])
+            self._combining_rule = self._parse_combining_rule(
+                preprocessed_files[0]
+            )
+        elif len(preprocessed_files) > 1:
             self._version = [
-                self._parse_version_number(f) for f in forcefield_files
+                self._parse_version_number(f) for f in preprocessed_files
             ]
-            self._name = [self._parse_name(f) for f in forcefield_files]
+            self._name = [self._parse_name(f) for f in preprocessed_files]
+            self._combining_rule = [
+                self._parse_combining_rule(f) for f in preprocessed_files
+            ]
+            if len(set(self._combining_rule)) == 1:
+                self._combining_rule = self._combining_rule[0]
+            else:
+                raise FoyerError(
+                    "Inconsistent combining_rule among loaded forecfield files"
+                )
+        for fp in preprocessed_files:
+            os.remove(fp)
 
         self.parser = smarts.SMARTS(self.non_element_types)
         self._system_data = None
@@ -549,6 +561,11 @@ class Forcefield(app.ForceField):
     def name(self):
         """Return the name of the force field XML."""
         return self._name
+
+    @property
+    def combining_rule(self):
+        """Return the combining rule of this force field."""
+        return self._combining_rule
 
     @property
     def included_forcefields(self):
@@ -616,6 +633,18 @@ class Forcefield(app.ForceField):
                     "No force field name found in force field XML file."
                 )
                 return None
+
+    def _parse_combining_rule(self, forcefield_file):
+        with open(forcefield_file, "r") as f:
+            tree = ET.parse(f)
+            root = tree.getroot()
+            try:
+                return root.attrib["combining_rule"]
+            except KeyError:
+                warnings.warn(
+                    "No combining rule found in force field XML file."
+                )
+                return "lorentz"
 
     def _create_element(self, element, mass):
         if not isinstance(element, elem.Element):
@@ -690,7 +719,6 @@ class Forcefield(app.ForceField):
         assert_angle_params=True,
         assert_dihedral_params=True,
         assert_improper_params=False,
-        combining_rule="geometric",
         verbose=False,
         *args,
         **kwargs,
@@ -725,9 +753,6 @@ class Forcefield(app.ForceField):
         assert_improper_params : bool, optional, default=False
             If True, Foyer will exit if parameters are not found for all system
             improper dihedrals.
-        combining_rule : str, optional, default='geometric'
-            The combining rule of the system, stored as an attribute of the
-            ParmEd structure. Accepted arguments are `geometric` and `lorentz`.
         verbose : bool, optional, default=False
             If True, Foyer will print debug-level information about notable or
             potentially problematic details it encounters.
@@ -756,7 +781,6 @@ class Forcefield(app.ForceField):
             assert_angle_params=assert_angle_params,
             assert_dihedral_params=assert_dihedral_params,
             assert_improper_params=assert_improper_params,
-            combining_rule=combining_rule,
             verbose=verbose,
             *args,
             **kwargs,
@@ -813,7 +837,6 @@ class Forcefield(app.ForceField):
         assert_angle_params=True,
         assert_dihedral_params=True,
         assert_improper_params=False,
-        combining_rule="geometric",
         verbose=False,
         *args,
         **kwargs,
@@ -850,10 +873,19 @@ class Forcefield(app.ForceField):
             atom_types = set(atom.type for atom in structure.atoms)
             self._write_references_to_file(atom_types, references_file)
 
-        # TODO: Check against the name of the force field and/or store
-        # combining rule directly in XML, i.e.
-        # if self.name == 'oplsaa':
-        structure.combining_rule = combining_rule
+        try:
+            structure.combining_rule = self.combining_rule
+        except ValueError as e:
+            # Parmed raises ValueError: combining_rule must be 'lorentz' or 'geometric'
+            if str(e).startswith("combining_rule must be"):
+                raise UnimplementedCombinationRuleError(
+                    f"Combination rule {self.combining_rule} is not implemented"
+                )
+
+        if self.combining_rule == "geometric":
+            self._patch_parmed_adjusts(
+                structure, combining_rule=self.combining_rule
+            )
 
         total_charge = sum([atom.charge for atom in structure.atoms])
         if not np.allclose(total_charge, 0):
@@ -1170,6 +1202,18 @@ class Forcefield(app.ForceField):
             positions[:] = np.nan
 
         return topology, positions
+
+    def _patch_parmed_adjusts(self, structure, combining_rule="geometric"):
+        if combining_rule != "geometric":
+            raise UnimplementedCombinationRuleError()
+
+        for adj in structure.adjusts:
+            sig1 = adj.atom1.sigma
+            sig2 = adj.atom2.sigma
+            sig_geo = (sig1 * sig2) ** 0.5
+            adj.type.sigma = sig_geo
+
+        return structure
 
     def _write_references_to_file(self, atom_types, references_file):
         atomtype_references = {}
