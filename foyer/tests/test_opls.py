@@ -46,7 +46,7 @@ class TestOPLS(BaseTest):
 
     def test_opls_metadata(self, oplsaa):
         assert oplsaa.name == "OPLS-AA"
-        assert oplsaa.version == "0.0.2"
+        assert oplsaa.version == "0.0.3"
         assert oplsaa.combining_rule == "geometric"
 
     @pytest.mark.parametrize("mol_name", correctly_implemented)
