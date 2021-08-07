@@ -13,7 +13,14 @@ from lxml import etree as ET
 from foyer.smarts_graph import SMARTSGraph
 
 
-def write_foyer(self, filename, forcefield=None, unique=True):
+def write_foyer(
+    self,
+    filename,
+    forcefield=None,
+    unique=True,
+    name="Forcefield",
+    version="0.0.1",
+):
     """Output a Foyer XML from a ParmEd Structure.
 
     Information from a ParmEd Structure is used to create a Foyer force
@@ -41,6 +48,10 @@ def write_foyer(self, filename, forcefield=None, unique=True):
     ----------
     filename : str
         Name of the Foyer XML file to be written
+    name : str, optional, default="Forcefield"
+        User defined name for the Forcefield, default to "Forcefield"
+    version : str, optional, default="0.0.1"
+        User defined version of the forcefield, default to "0.0.1"
     forcefield : foyer.Forcefield, optional, default=None
         Foyer Forcefield used to parameterize the ParmEd Structure. This
         is used to obtain additional information that is not available
@@ -59,6 +70,10 @@ def write_foyer(self, filename, forcefield=None, unique=True):
         )
 
     root = ET.Element("ForceField")
+    # Write Forcefield information
+    root.set("name", name)
+    root.set("version", version)
+    root.set("combining_rule", self.combining_rule)
     if isinstance(self, pmd.Structure):
         _write_atoms(self, root, self.atoms, forcefield, unique)
         if len(self.bonds) > 0 and self.bonds[0].type is not None:

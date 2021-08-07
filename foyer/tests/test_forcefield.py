@@ -490,9 +490,16 @@ class TestForcefield(BaseTest):
         typed = oplsaa.apply(mol)
 
         typed.write_foyer(
-            filename="opls-snippet.xml", forcefield=oplsaa, unique=True
+            filename="opls-snippet.xml",
+            name="oplsaa-snippet",
+            version="0.1.0",
+            forcefield=oplsaa,
+            unique=True,
         )
         oplsaa_partial = Forcefield("opls-snippet.xml")
+        assert oplsaa_partial.name == "oplsaa-snippet"
+        assert oplsaa_partial.version == "0.1.0"
+        assert oplsaa_partial.combining_rule == "geometric"
         typed_by_partial = oplsaa_partial.apply(mol)
 
         for adj in typed.adjusts:
@@ -637,6 +644,11 @@ class TestForcefield(BaseTest):
         assert all([x in from_xml_ff.version for x in ["0.4.1", "4.8.2"]])
         assert all([x in from_xml_ff.name for x in ["JL", "LJ"]])
 
+        with pytest.raises(FoyerError):
+            mismatch_comb_rule = Forcefield(
+                forcefield_files=[get_fn("lj.xml"), get_fn("lj3.xml")]
+            )
+
     def test_load_metadata_from_internal_forcefield_plugin_loader(self):
         from_xml_ff = forcefields.load_OPLSAA()
         assert from_xml_ff.version == "0.0.2"
@@ -697,7 +709,7 @@ class TestForcefield(BaseTest):
 
         benzene = mb.load("c1ccccc1", smiles=True)
 
-        out = oplsaa.apply(structure=benzene, combining_rule="lorentz")
+        out = oplsaa.apply(structure=benzene)
 
         assert out.combining_rule == "geometric"
 
