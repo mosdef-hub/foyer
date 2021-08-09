@@ -33,4 +33,11 @@ RUN apk add --no-cache git && \
 
 WORKDIR /home/anaconda
 
-CMD /bin/su anaconda -s /bin/sh -l
+COPY devtools/docker-entrypoint.sh /entrypoint.sh
+
+RUN chmod a+x /entrypoint.sh
+
+USER anaconda
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["jupyter"]
