@@ -544,7 +544,7 @@ class Forcefield(app.ForceField):
                 self._combining_rule = self._combining_rule[0]
             else:
                 raise FoyerError(
-                    "Inconsistent combining_rule among loaded forecfield files"
+                    "Inconsistent combining_rule among loaded forcefield files"
                 )
         for fp in preprocessed_files:
             os.remove(fp)
