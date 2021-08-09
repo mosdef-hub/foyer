@@ -54,6 +54,13 @@ class TestTraPPE(BaseTest):
             structure = pmd.load_file(mol2_path, structure=True)
             atomtype(structure, TRAPPE_UA)
 
+    def test_trappe_metadata(
+        self,
+    ):
+        assert TRAPPE_UA.name == "Trappe-UA"
+        assert TRAPPE_UA.version == "0.0.2"
+        assert TRAPPE_UA.combining_rule == "lorentz"
+
 
 if __name__ == "__main__":
     TestTraPPE().find_correctly_implemented()
