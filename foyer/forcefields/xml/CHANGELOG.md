@@ -29,3 +29,5 @@ v0.0.2 - June 24, 2021
 
 v0.0.1 - April 15, 2021
  - started versioning of forcefield xmls
+v0.0.2 - August 9, 2021
+ - Updated `combining_rule` to `lorentz`
