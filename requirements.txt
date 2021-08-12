@@ -1,0 +1,7 @@
+openmm >=7.5
+parmed
+networkx >=2.0
+lark-parser
+requests
+lxml
+ele

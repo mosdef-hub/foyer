@@ -1,7 +1,8 @@
 """Determine proper atom types for chemical systems."""
 from warnings import warn
 
-import parmed.periodic_table as pt
+import ele
+from ele.exceptions import ElementError
 from gmso import Topology
 from parmed import Structure
 
@@ -51,13 +52,23 @@ def find_atomtypes(structure, forcefield, max_iter=10):
                 system_elements.add(name)
         else:
             atomic_number = atom_data.atomic_number
-            if 0 < atomic_number <= pt.KNOWN_ELEMENTS:
-                element = pt.Element[atomic_number]
-                system_elements.add(element)
-            else:
+            atomic_symbol = atom_data.element
+            try:
+                element_from_num = ele.element_from_atomic_number(
+                    atomic_number
+                ).symbol
+                element_from_sym = ele.element_from_symbol(atomic_symbol).symbol
+                assert element_from_num == element_from_sym
+                system_elements.add(element_from_num)
+            except ElementError:
                 raise FoyerError(
                     "Parsed atom {} as having neither an element "
                     "nor non-element type.".format(name)
+                )
+            except AssertionError:
+                raise FoyerError(
+                    f"Parsed atom {name} has mismatching atom number ({atomic_number}) "
+                    f"and atom symbol ({atomic_symbol})."
                 )
 
     for key, val in rules.items():
@@ -70,7 +81,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
             except IndexError:
                 try:
                     atomic_num = next(atom.find_data("atomic_num")).children[0]
-                    element = pt.Element[atomic_num]
+                    element = ele.element_from_atomic_number(atomic_num).symbol
                 except IndexError:
                     element = None
         else:

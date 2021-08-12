@@ -7,6 +7,7 @@ dependencies:
   - gmso
   - openmm
   - parmed
+  - ele
   - pip:
     - sphinx
     - sphinx_rtd_theme

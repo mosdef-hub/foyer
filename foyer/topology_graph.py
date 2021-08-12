@@ -73,7 +73,7 @@ class TopologyGraph(nx.Graph):
         if not name.startswith("_") and not (atomic_number and element):
             raise FoyerError(
                 "For atoms representing an element, please include "
-                "either the atomic_number or element symbol for the atom"
+                "both the atomic_number or element symbol for the atom"
             )
 
         atom_data = AtomData(index, name, atomic_number, element, **kwargs)
