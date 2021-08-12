@@ -19,7 +19,7 @@ After you have a working docker installation, please use the following command t
 
 If no command is provided to the container (as above), the container starts a ``jupyter-notebook`` at the container location ``/home/anaconda/data``.
 Then, the notebook can be accessed by copying and pasting the notebook URL into a web browser on your computer.
-When finish with the session, you can use Ctr+C and follow instruction to exit the notebook as usual.
+When finished with the session, you can use `Ctr`+`C` and follow instruction to exit the notebook as usual.
 The docker container will exit upon notebook shutdown.
 
 .. warning::
