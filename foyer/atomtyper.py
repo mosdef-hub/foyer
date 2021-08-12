@@ -52,13 +52,23 @@ def find_atomtypes(structure, forcefield, max_iter=10):
                 system_elements.add(name)
         else:
             atomic_number = atom_data.atomic_number
+            atomic_symbol = atom_data.symbol
             try:
-                element = ele.element_from_atomic_number(atomic_number).symbol
-                system_elements.add(element)
+                element_from_num = ele.element_from_atomic_number(
+                    atomic_number
+                ).symbol
+                element_from_sym = ele.element_from_symbol(atomic_symbol).symbol
+                assert element_from_num == element_from_sym
+                system_elements.add(element_from_num)
             except ElementError:
                 raise FoyerError(
                     "Parsed atom {} as having neither an element "
                     "nor non-element type.".format(name)
+                )
+            except AssertionError:
+                raise FoyerError(
+                    f"Parsed atom {name} has mismatching atom number ({atomic_number}) "
+                    f"and atom symbol ({atomic_symbol})."
                 )
 
     for key, val in rules.items():
