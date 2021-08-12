@@ -26,14 +26,19 @@ class TestRunAtomTyping(BaseTest):
         with pytest.raises(FoyerError):
             missing_overrides_ff.apply(structure)
 
-    def test_element_not_found(self, oplsaa):
+    @pytest.mark.parametrize(
+        "atomic_num, symbol", [(6, "Boo"), (200, "C"), (200, "Boo")]
+    )
+    def test_element_not_found(self, oplsaa, atomic_num, symbol):
         from foyer.topology_graph import TopologyGraph
 
         # Create a TopologyGraph object for a methane molecule.
         # The central C has bad element info, which will trigger an error
         # during the atomtyping step
         top_graph = TopologyGraph()
-        top_graph.add_atom(name="C", index=0, atomic_number=200, element="Boo")
+        top_graph.add_atom(
+            name="C", index=0, atomic_number=atomic_num, element=symbol
+        )
         for i in range(1, 5):
             top_graph.add_atom(name="H", index=i, atomic_number=1, element="H")
             top_graph.add_bond(0, i)
