@@ -24,6 +24,9 @@ v0.0.2 - June 24, 2021
     - opls_468 (from `"10.1021/ja9539195"` to `"10.1002/jcc.1092"`)
     - opls_469 (from `"10.1021/ja9539195"` to `"10.1002/jcc.1092"`)
 
+v0.0.3 - August 7, 2021
+ - update SMARTS string for opls_154 (from `[O;X2]H` to `[O;X2](H)([!H])`)
+
 ----
 ## Trappe-UA
 
