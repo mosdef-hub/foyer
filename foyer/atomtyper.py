@@ -54,7 +54,9 @@ def find_atomtypes(structure, forcefield, max_iter=10):
             atomic_number = atom_data.atomic_number
             atomic_symbol = atom_data.symbol
             try:
-                element_from_num = ele.element_from_atomic_number(atomic_number).symbol
+                element_from_num = ele.element_from_atomic_number(
+                    atomic_number
+                ).symbol
                 element_from_sym = ele.element_from_symbol(atomic_symbol).symbol
                 assert element_from_num == element_from_sym
                 system_elements.add(element_from_num)
