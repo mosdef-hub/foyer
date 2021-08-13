@@ -1,7 +1,7 @@
 Using foyer with Docker
 ========================
 
-As much of scientific software development happens in unix platforms, to avoid the quirks of development dependent on system you use, a recommended way is to use docker or other containerization technologies. This section is a how to guide on using foyer with docker.
+As much of scientific software development happens in unix platforms, to avoid the quirks of development dependent on system you use, a recommended way is to use docker or other containerization technologies. This section is a how to guide on using ``foyer`` with docker.
 
 Prerequisites
 -------------
@@ -14,51 +14,75 @@ After you have a working docker installation, please use the following command t
 .. code-block:: bash
 
     $ docker pull mosdef/foyer:latest
-    $ docker run -it --name foyer -p 8888:8888 mosdef/foyer:latest su anaconda -s\
-      /bin/sh -l -c "jupyter-notebook --no-browser --ip="0.0.0.0" --notebook-dir\
-      /home/anaconda/foyer-notebooks"
+    $ docker run -it --name foyer -p 8888:8888 mosdef/foyer:latest
 
 
-If every thing happens correctly, you should a be able to start a `jupyter-notebook` server running in a python environment with all the dependencies for `foyer` installed.
+If no command is provided to the container (as above), the container starts a ``jupyter-notebook`` at the container location ``/home/anaconda/data``.
+Then, the notebook can be accessed by copying and pasting the notebook URL into a web browser on your computer.
+When finished with the session, you can use `Ctr`+`C` and follow instruction to exit the notebook as usual.
+The docker container will exit upon notebook shutdown.
 
-Alternatively, you can also start a Bourne shell to use python from the container's terminal:
+.. warning::
 
-.. code-block:: bash
+    Containers by nature are ephemeral, so filesystem changes (e.g., adding a new notebook) only persist until the end of the container's lifecyle.
+    If the container is removed, any changes or code addition will not persist.
+    See the section below for persistent data.
 
-    $ docker run -it --name foyer mosdef/foyer:latest
+.. note::
+    The ``-it`` flags connect your keyboard to the terminal running in the container.
+    You may run the prior command without those flags, but be aware that the container will not respond to any keyboard input.
+    In that case, you would need to use the ``docker ps`` and ``docker kill`` commands to shut down the container.
 
-.. important::
-
-    The instructions above will start a docker container but containers by nature are ephemeral, so any filesystem changes (like adding a new notebook) you make will only persist till the end of the container's lifecycle. If the container is removed, any changes or code additions will not persist.
 
 Persisting User Volumes
 -----------------------
 If you will be using `foyer` from a docker container, a recommended way is to mount what are called user volumes in the container. User volumes will provide a way to persist all filesystem/code additions made to a container regardless of the container lifecycle. For example, you might want to create a directory called `foyer-notebooks` in your local system, which will store all your `foyer` notebooks/code. In order to make that accessible to the container(where the notebooks will be created/edited), use the following steps:
 
-
-1. Create a directory in your filesystem
-
 .. code-block:: bash
 
     $ mkdir -p /path/to/foyer-notebooks
     $ cd /path/to/foyer-notebooks
+    $ docker run -it --name foyer --mount type=bind,source=$(pwd),target=/home/anaconda/data -p 8888:8888 mosdef/foyer:latest
 
-2. Define an entry-point script. Inside `foyer-notebooks` in your local file system create a file called :code:`dir_entrypoint.sh` and paste the following content.
+You can easily mount a different directory from your local machine by changing ``source=$(pwd)`` to ``source=/path/to/my/favorite/directory``.
+
+.. note::
+
+    The ``--mount`` flag mounts a volume into the docker container.
+    Here we use a ``bind`` mount to bind the current directory on our local filesystem to the ``/home/anaconda/data`` location in the container.
+    The files you see in the ``jupyter-notebook`` browser window are those that exist on your local machine.
+
+.. warning::
+
+    If you are using the container with jupyter notebooks you should use the ``/home/anaconda/data`` location as the mount point inside the container;
+    this is the default notebook directory.
+
+    Running Python scripts in the container
+    ---------------------------------------
+    Jupyter notebooks are a great way to explore new software and prototype code. However, when it comes time for production sciences, it is often better to work with python scripts.
+    In order to execute a python script (``example.py``) that exists in the current working directory of your local machine, run:
 
 .. code-block:: bash
 
-    #!/bin/sh
+    $ docker run --mount type=bind,source=$(pwd),target=/home/anaconda/data mosdef/foyer:latest "python data/test.py"
 
-    chown -R anaconda:anaconda /home/anaconda/foyer-notebooks
+Note that once again we are ``bind`` mounting the current working directory to ``/home/anaconda/data``.
+The command we pass to the container is ``python data/test.py``.
+Note the prefix ``data/`` to the script; this is because we enter the container in the home folder (``/home/anaconda``), but our script is located under ``/home/anaconda/data``.
 
-    su anaconda -s /bin/sh -l -c "jupyter-notebook --no-browser --ip="0.0.0.0" --notebook-dir /home/anaconda/foyer-notebooks"
+.. warning::
+    Do not bind mount to ``target=/home/anaconda``. This will cause errors.
 
-3. Run docker image for `foyer`
+
+If you don't want a Jupyter notebook, but just want a Python interpreter, you can run:
 
 .. code-block:: bash
+    $ docker run --mount type=bind,source=$(pwd),target=/home/anaconda/data mosdef/foyer:latest python
 
-    $ docker run -it --name foyer -p 8888:8888 --entrypoint /home/anaconda/foyer-notebooks/dir_entrypoint.sh -v $HOME/foyer-notebooks:/home/anaconda/foyer-notebooks mosdef/foyer:latest
+If you don't need access to any local data, you can of course drop the ``--mount`` command:
 
+.. code-block:: bash
+    $ docker run mosdef/foyer:latest python
 
 Cleaning Up
 -----------
