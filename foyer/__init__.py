@@ -2,6 +2,6 @@
 from foyer.forcefield import Forcefield
 from foyer.forcefields import forcefields
 
-__version__ = "0.9.2"
+__version__ = "0.9.3"
 
 __all__ = ("Forcefield", "forcefields", "__version__")
