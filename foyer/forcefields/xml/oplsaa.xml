@@ -799,7 +799,7 @@
   <Type name="opls_909" class="H" element="H" mass="1.00800" def="H[N;%opls_900]" desc="H(N) primary amines" doi="10.1021/ja984106u"/>
   <Type name="opls_910" class="H" element="H" mass="1.008" def="H[N;%opls_901]" desc="H(N) secondary amines" doi="10.1021/ja984106u"/>
   <Type name="opls_911" class="HC" element="H" mass="1.00800" def="H([C;%opls_903,%opls_904,%opls_905,%opls_906,%opls_908])" desc="H(C) for C bonded to N in amines, diamines (aziridine H2,H3)" overrides="opls_140" doi="10.1021/ja984106u"/>
-  <Type name="opls_912" class="opls_912" element="C" mass="12.011"/>
+  <Type name="opls_912" class="CT" element="C" mass="12.011" def="[C;X4]([N;%opls_900])(H)CC" desc="CH primary isopropyl amine" doi="10.1021/ja984106u"/>
   <Type name="opls_912B" class="opls_912B" element="C" mass="12.011"/>
   <Type name="opls_913" class="opls_913" element="C" mass="12.011"/>
   <Type name="opls_914" class="opls_914" element="C" mass="12.011"/>
