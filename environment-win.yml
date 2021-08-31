@@ -6,7 +6,7 @@ dependencies:
   - lark-parser
   - lxml
   - networkx>=2.5
-  - openmm=7.6
+  - openmm>=7.6
   - parmed
   - ele
   - requests
