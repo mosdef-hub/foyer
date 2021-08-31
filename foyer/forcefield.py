@@ -11,11 +11,10 @@ from tempfile import NamedTemporaryFile
 from typing import Callable, Iterable, List
 
 import numpy as np
-import parmed as pmd
-import openmm.app.element as elem
-import simtk.unit as u
-from pkg_resources import iter_entry_points, resource_filename
 import openmm as mm
+import openmm.app.element as elem
+import parmed as pmd
+import simtk.unit as u
 from openmm import app
 from openmm.app.forcefield import (
     AllBonds,
@@ -30,6 +29,7 @@ from openmm.app.forcefield import (
     RBTorsionGenerator,
     _convertParameterToNumber,
 )
+from pkg_resources import iter_entry_points, resource_filename
 
 import foyer.element as custom_elem
 from foyer import smarts
