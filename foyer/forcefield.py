@@ -12,12 +12,12 @@ from typing import Callable, Iterable, List
 
 import numpy as np
 import parmed as pmd
-import simtk.openmm.app.element as elem
+import openmm.app.element as elem
 import simtk.unit as u
 from pkg_resources import iter_entry_points, resource_filename
-from simtk import openmm as mm
-from simtk.openmm import app
-from simtk.openmm.app.forcefield import (
+import openmm as mm
+from openmm import app
+from openmm.app.forcefield import (
     AllBonds,
     CutoffNonPeriodic,
     HAngles,
