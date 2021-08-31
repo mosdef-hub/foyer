@@ -10,7 +10,7 @@ dependencies:
   - mbuild
   - gmso
   - networkx>=2.5
-  - openmm=7.5
+  - openmm=7.6
   - parmed
   - pip
   - pytest

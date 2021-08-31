@@ -1,4 +1,4 @@
-openmm ==7.5
+openmm ==7.6
 parmed
 networkx >=2.0
 lark-parser
