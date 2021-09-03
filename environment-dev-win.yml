@@ -11,7 +11,7 @@ dependencies:
   - gmso
   - networkx>=2.5
   - openmm>=7.6
-  - parmed
+  - parmed>=3.4.3
   - pip
   - pytest
   - pytest-azurepipelines
