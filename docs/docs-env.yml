@@ -5,8 +5,8 @@ channels:
 dependencies:
   - python=3.7
   - gmso
-  - openmm =7.5
-  - parmed
+  - openmm>=7.6
+  - parmed>=3.4.3
   - ele
   - pip:
     - sphinx

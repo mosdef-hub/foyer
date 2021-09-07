@@ -35,9 +35,11 @@ file, annotated with SMARTS-based atomtypes, e.g.:
 
 Foyer can apply the forcefield to arbitrary chemical topologies. We currently support:
 
-* [OpenMM.Topology](http://docs.openmm.org/7.0.0/api-python/generated/simtk.openmm.app.topology.Topology.html#)
+* [OpenMM.Topology](https://github.com/openmm/openmm/blob/7.6.0/wrappers/python/openmm/app/topology.py#L70)
 * [ParmEd.Structure](http://parmed.github.io/ParmEd/html/structure.html)
 * [mBuild.Compound](http://mosdef-hub.github.io/mbuild/data_structures.html)
+* [gmso.Topology](https://gmso.mosdef.org/en/stable/data_structures.html#gmso.Topology)
+* [openff.tookit.topology.Topology](https://open-forcefield-toolkit.readthedocs.io/en/0.9.2/api/generated/openff.toolkit.topology.Topology.html#openff-toolkit-topology-topology)
 
 Application of a force field can be as simple as:
 ```python
