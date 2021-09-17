@@ -217,7 +217,7 @@ class TopologyGraph(nx.Graph):
             top_graph.add_bond(
                 atoms_indices[0],
                 atoms_indices[1],
-                bond_type=bond_type_dict[top_bond.bond_order],
+                bond_type=bond_type_dict.get(top_bond.bond_order, "un"),
             )
 
         return top_graph
