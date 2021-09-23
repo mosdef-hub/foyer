@@ -1,5 +1,5 @@
 ARG PY_VERSION=3.7
-FROM continuumio/miniconda3:4.8.2-alpine AS builder
+FROM continuumio/miniconda3:4.10.3-alpine AS builder
 
 EXPOSE 8888
 
@@ -14,6 +14,9 @@ ADD . /foyer
 
 WORKDIR /foyer
 
+# Create a group and user
+RUN addgroup -S anaconda && adduser -S anaconda -G anaconda
+
 RUN /sbin/apk add --no-cache git && \
   conda update conda -yq && conda install -c conda-forge mamba && \
   conda config --set always_yes yes --set changeps1 no && \
@@ -25,7 +28,7 @@ RUN /sbin/apk add --no-cache git && \
   python setup.py install && \
   echo "source activate foyer-dev" >> /home/anaconda/.profile && \
   conda clean -afy && \
-  mkdir /home/anaconda/data && \
+  mkdir -p /home/anaconda/data && \
   chown -R anaconda:anaconda /foyer && \
   chown -R anaconda:anaconda /opt && \
   chown -R anaconda:anaconda /home/anaconda
