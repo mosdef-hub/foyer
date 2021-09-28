@@ -39,7 +39,7 @@ Foyer can apply the forcefield to arbitrary chemical topologies. We currently su
 * [ParmEd.Structure](http://parmed.github.io/ParmEd/html/structure.html)
 * [mBuild.Compound](http://mosdef-hub.github.io/mbuild/data_structures.html)
 * [gmso.Topology](https://gmso.mosdef.org/en/stable/data_structures.html#gmso.Topology)
-* [openff.tookit.topology.Topology](https://open-forcefield-toolkit.readthedocs.io/en/0.9.2/api/generated/openff.toolkit.topology.Topology.html#openff-toolkit-topology-topology)
+* [openff.toolkit.topology.Topology](https://open-forcefield-toolkit.readthedocs.io/en/0.9.2/api/generated/openff.toolkit.topology.Topology.html#openff-toolkit-topology-topology)
 
 Application of a force field can be as simple as:
 ```python
@@ -56,7 +56,7 @@ ethane.save('ethane.gro')
 ```
 
 The `Foyer` package is part of the [Molecular Simulation Design Framework (MoSDeF) project](http://mosdef.org/).
-Libraries in the MoSDeF ecosystem are designed to provide utilities neccessary to streamline
+Libraries in the MoSDeF ecosystem are designed to provide utilities necessary to streamline
 a researcher's simulation workflow. When setting up simulation studies,
 we also recommend users to follow the [TRUE](https://www.tandfonline.com/doi/full/10.1080/00268976.2020.1742938)
 (Transparent, Reproducible, Usable-by-others, and Extensible) standard, which is a set of common
