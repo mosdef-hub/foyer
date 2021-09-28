@@ -40,7 +40,7 @@ def preprocess_forcefield_files(forcefield_files=None, backend="gmso"):
                     overwrite=True,
                 )
                 tmp_processed_files.append(tempfile.name)
-            except:
+            except Exception:
                 warnings.warn(
                     f"Could not convert {str(file)}, attempt to read in as is."
                 )
