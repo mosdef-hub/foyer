@@ -1239,7 +1239,7 @@ class Forcefield(app.ForceField):
                 headers = {"accept": "application/x-bibtex"}
                 bibtex_ref = get_ref(url, headers=headers)
                 if bibtex_ref is None:
-                    warnings.warn("Could not get ref for doi".format(doi))
+                    warnings.warn("Could not get ref for doi {}".format(doi))
                     continue
                 else:
                     bibtex_text = bibtex_ref.text
