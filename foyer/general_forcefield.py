@@ -40,7 +40,7 @@ def preprocess_forcefield_files(forcefield_files=None, backend="gmso"):
                     overwrite=True,
                 )
                 tmp_processed_files.append(tempfile.name)
-            except:
+            except Exception:
                 warnings.warn(
                     f"Could not convert {str(file)}, attempt to read in as is."
                 )
@@ -545,7 +545,7 @@ class Forcefield(object):
                 headers = {"accept": "application/x-bibtex"}
                 bibtex_ref = get_ref(url, headers=headers)
                 if bibtex_ref is None:
-                    warnings.warn("Could not get ref for doi".format(doi))
+                    warnings.warn("Could not get ref for doi {}".format(doi))
                     continue
                 else:
                     bibtex_text = bibtex_ref.text
