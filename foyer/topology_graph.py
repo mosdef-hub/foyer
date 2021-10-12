@@ -1,9 +1,17 @@
 """Module to represent chemical systems as graph structures."""
+from typing import TYPE_CHECKING
+
 import networkx as nx
 from parmed import Structure
 from parmed import periodic_table as pt
 
 from foyer.exceptions import FoyerError
+
+if TYPE_CHECKING:
+    from foyer.utils.io import import_
+
+    openff_toolkit = import_("openff.toolkit")
+    gmso = import_("gmso")
 
 
 class AtomData:
@@ -147,7 +155,9 @@ class TopologyGraph(nx.Graph):
         return topology_graph
 
     @classmethod
-    def from_openff_topology(cls, openff_topology):
+    def from_openff_topology(
+        cls, openff_topology: "openff_toolkit.topology.Topology"
+    ):
         """Return a TopologyGraph with relevant attributes from an openForceField topology.
 
         Parameters
@@ -161,38 +171,64 @@ class TopologyGraph(nx.Graph):
 
             The equivalent TopologyGraph of the openFF Topology `openff_topology`
         """
-        from foyer.utils.io import import_
+        try:
+            from openff.toolkit.topology import Topology
+        except ImportError as e:
+            raise ImportError(
+                "`TopologyGraph.from_openff_topology` requires that "
+                "the OpenFF Toolkit is installed."
+            ) from e
 
-        openff_toolkit = import_(
-            "openff.toolkit"
-        )  # This might only be required for type checking
-        if not isinstance(openff_topology, openff_toolkit.topology.Topology):
+        if not isinstance(openff_topology, Topology):
             raise TypeError(
-                f"Expected `openff_topology` to be of type {openff_toolkit.topology.Topology}. "
+                f"Expected `openff_topology` to be of type {Topology}. "
                 f"Got {type(openff_topology).__name__} instead"
             )
 
+        uses_old_api = hasattr(Topology(), "_topology_molecules")
+
         top_graph = cls()
-        for top_atom in openff_topology.topology_atoms:
-            atom = top_atom.atom
-            element = pt.Element[atom.atomic_number]
-            top_graph.add_atom(
-                name=atom.name,
-                index=top_atom.topology_atom_index,
-                atomic_number=atom.atomic_number,
-                element=element,
-            )
 
-        for top_bond in openff_topology.topology_bonds:
-            atoms_indices = [
-                atom.topology_atom_index for atom in top_bond.atoms
-            ]
-            top_graph.add_bond(atoms_indices[0], atoms_indices[1])
+        if uses_old_api:
+            for top_atom in openff_topology.topology_atoms:
+                atom = top_atom.atom
+                element = pt.Element[atom.atomic_number]
+                top_graph.add_atom(
+                    name=atom.name,
+                    index=top_atom.topology_atom_index,
+                    atomic_number=atom.atomic_number,
+                    element=element,
+                )
 
-        return top_graph
+            for top_bond in openff_topology.topology_bonds:
+                atoms_indices = [
+                    atom.topology_atom_index for atom in top_bond.atoms
+                ]
+                top_graph.add_bond(atoms_indices[0], atoms_indices[1])
+
+            return top_graph
+
+        else:
+            for atom in openff_topology.atoms:
+                atom_index = openff_topology.atom_index(atom)
+                element = pt.Element[atom.atomic_number]
+                top_graph.add_atom(
+                    name=atom.name,
+                    index=atom_index,
+                    atomic_number=atom.atomic_number,
+                    element=element,
+                )
+
+            for bond in openff_topology.bonds:
+                atoms_indices = [
+                    openff_topology.atom_index(atom) for atom in bond.atoms
+                ]
+                top_graph.add_bond(*atoms_indices)
+
+            return top_graph
 
     @classmethod
-    def from_gmso_topology(cls, gmso_topology):
+    def from_gmso_topology(cls, gmso_topology: "gmso.Topology"):
         """Return a TopologyGraph with relevant attributes from an GMSO topology.
 
         Parameters
@@ -205,13 +241,16 @@ class TopologyGraph(nx.Graph):
         TopologyGraph
             The equivalent TopologyGraph of the openFF Topology `openff_topology`
         """
-        from foyer.utils.io import import_
-
-        gmso = import_("gmso")  # This might only be required for type checking
+        try:
+            import gmso
+        except ImportError as e:
+            raise ImportError(
+                "`TopologyGraph.from_gmso_topology` requires that GMSO is installed."
+            ) from e
 
         if not isinstance(gmso_topology, gmso.Topology):
             raise TypeError(
-                f"Expected `openff_topology` to be of type {gmso.Topology}. "
+                f"Expected `gmso_topology` to be of type {gmso.Topology}. "
                 f"Got {type(gmso_topology).__name__} instead"
             )
 
