@@ -13,6 +13,8 @@ dependencies:
   - parmed>=3.4.3
   - ele
   - openff-toolkit
+  - requests-mock
+  - cached-property
   - gmso
   - pip
   - pre-commit
@@ -25,3 +27,4 @@ dependencies:
   - requests-mock
   - pip:
     - "--editable=git+https://github.com/rsdefever/antefoyer.git#egg=antefoyer"
+    - git+https://github.com/openforcefield/openff-toolkit.git@topology-biopolymer-refactor
