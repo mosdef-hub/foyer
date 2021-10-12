@@ -13,7 +13,7 @@ dependencies:
   - parmed>=3.4.3
   - ele
   - openff-toolkit
-  - requests-mock
+  - cachetools
   - cached-property
   - gmso
   - pip
