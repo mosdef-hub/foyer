@@ -1,4 +1,6 @@
 """Module to represent chemical systems as graph structures."""
+import enum
+
 import networkx as nx
 from parmed import Structure
 from parmed import periodic_table as pt
@@ -33,6 +35,24 @@ class AtomData:
         self.element = element
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+
+class BondOrder(enum.Enum):
+    """Enum to represent various bond orders from multiple sources."""
+
+    SINGLE = "1"
+    DOUBLE = "2"
+    TRIPLE = "3"
+    AMIDE = "am"
+    AROMATIC = "ar"
+    DUMMY = "du"
+    NOTCONNECTED = "nc"
+    UNKNOWN = "un"
+
+    @classmethod
+    def _missing_(cls, value):
+        """If value cannot be found, default to unknown."""
+        return cls.UNKNOWN
 
 
 class TopologyGraph(nx.Graph):
@@ -79,7 +99,7 @@ class TopologyGraph(nx.Graph):
         atom_data = AtomData(index, name, atomic_number, element, **kwargs)
         self.add_node(index, atom_data=atom_data)
 
-    def add_bond(self, atom_1_index, atom_2_index, bond_type="1"):
+    def add_bond(self, atom_1_index, atom_2_index, bond_type=BondOrder.SINGLE):
         """Add a bond(edge) between two atoms in this TopologyGraph.
 
         Parameters
@@ -88,7 +108,7 @@ class TopologyGraph(nx.Graph):
             The index of the first atom that forms this bond
         atom_2_index: int
             The index of the second atom that forms this bond
-        bond_type: str, default = "1"
+        bond_type: str, default = BondOrder.SINGLE
             The type of bond being added, can be:
             "1": single,
             "2": double,
@@ -151,17 +171,19 @@ class TopologyGraph(nx.Graph):
                 element=element,
             )
         bond_type_dict = {
-            round(1, 2): "1",
-            round(2, 2): "2",
-            round(3, 2): "3",
-            round(1.5, 2): "ar",
-            round(1.25, 2): "am",
+            round(1, 2): BondOrder.SINGLE,
+            round(2, 2): BondOrder.DOUBLE,
+            round(3, 2): BondOrder.TRIPLE,
+            round(1.5, 2): BondOrder.AROMATIC,
+            round(1.25, 2): BondOrder.AMIDE,
         }
         for bond in structure.bonds:
             topology_graph.add_bond(
                 bond.atom1.idx,
                 bond.atom2.idx,
-                bond_type=bond_type_dict.get(round(bond.order, 2), "un"),
+                bond_type=bond_type_dict.get(
+                    round(bond.order, 2), BondOrder.UNKNOWN
+                ),
             )
 
         return topology_graph
@@ -204,11 +226,11 @@ class TopologyGraph(nx.Graph):
             )
 
         bond_type_dict = {
-            "Single": "1",
-            "Double": "2",
-            "Triple": "3",
-            "Aromatic": "ar",
-            "Amide": "am",
+            "Single": BondOrder.SINGLE,
+            "Double": BondOrder.DOUBLE,
+            "Triple": BondOrder.TRIPLE,
+            "Aromatic": BondOrder.AROMATIC,
+            "Amide": BondOrder.AMIDE,
         }
         for top_bond in openff_topology.topology_bonds:
             atoms_indices = [
@@ -217,7 +239,7 @@ class TopologyGraph(nx.Graph):
             top_graph.add_bond(
                 atoms_indices[0],
                 atoms_indices[1],
-                bond_type=bond_type_dict.get(top_bond.bond_order, "un"),
+                bond_type=bond_type_dict.get(top_bond.type, BondOrder.UNKNOWN),
             )
 
         return top_graph
@@ -271,7 +293,7 @@ class TopologyGraph(nx.Graph):
                 for atom in top_bond.connection_members
             ]
             top_graph.add_bond(
-                atoms_indices[0], atoms_indices[1], bond_type="1"
+                atoms_indices[0], atoms_indices[1], bond_type=BondOrder.SINGLE
             )
 
         return top_graph
