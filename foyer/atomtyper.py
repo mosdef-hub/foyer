@@ -13,7 +13,20 @@ from foyer.topology_graph import TopologyGraph
 
 
 class AtomTypingRulesProvider:
-    """A generic rules provider for atomtyping, agnostic of the forcefield."""
+    """A generic rules provider for atomtyping, agnostic of the forcefield.
+
+    Parameters
+    ----------
+    atomtype_definitions: dict, required
+        The smarts definition for the atomtypes
+    atomtype_overrides: dict, required
+        The overrides for particular atomtypes
+    non_element_types: set, required
+        The non-element types used for atomtyping
+    parser: The chemical grammer parser, default=None
+        The parser for the SMARTS strings. If not provided foyer.smarts.SMARTS
+        instance will be used.
+    """
 
     def __init__(
         self,
