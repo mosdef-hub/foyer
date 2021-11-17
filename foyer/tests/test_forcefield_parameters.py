@@ -78,6 +78,18 @@ class TestForcefieldParameters(BaseTest):
             [3.141592653589793, 3.141592653589793],
         )
 
+    def test_gaff_periodic_proper_params_zero_k(self, gaff):
+        periodic_proper_params = gaff.get_parameters(
+            "periodic_propers", ["", "c", "c1", ""]
+        )
+        assert all(len(param) for param in periodic_proper_params.values())
+        assert np.allclose(periodic_proper_params["periodicity"], [2.0])
+        assert np.allclose(periodic_proper_params["k"], [0.0])
+        assert np.allclose(
+            periodic_proper_params["phase"],
+            [3.141592653589793],
+        )
+
     def test_gaff_periodic_proper_parameters_reversed(self, gaff):
         assert np.allclose(
             list(

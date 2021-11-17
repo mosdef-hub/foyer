@@ -1638,10 +1638,9 @@ class Forcefield(app.ForceField):
     def _get_periodic_torsion_params(torsion):
         params = {"periodicity": [], "phase": [], "k": []}
         for i in range(len(torsion.phase)):
-            if torsion.k[i] != 0:
-                params["periodicity"].append(torsion.periodicity[i])
-                params["phase"].append(torsion.phase[i])
-                params["k"].append(torsion.k[i])
+            params["periodicity"].append(torsion.periodicity[i])
+            params["phase"].append(torsion.phase[i])
+            params["k"].append(torsion.k[i])
 
         return params
 
