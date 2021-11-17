@@ -42,7 +42,7 @@ class AtomTypingRulesProvider:
 
     @classmethod
     def from_foyer_forcefield(cls, ff):
-        """Create an instance of the rules provider for an foyer-forcefield."""
+        """Create an instance of the rules provider for a foyer-forcefield."""
         return cls(
             atomtype_definitions=ff.atomTypeDefinitions,
             atomtype_overrides=ff.atomTypeOverrides,
