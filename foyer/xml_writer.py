@@ -293,7 +293,9 @@ def _write_periodic_torsions(root, dihedrals, unique):
             dihedral_force.set(
                 "phase1", str(round(dihedral.type[0].phase * (np.pi / 180), 8))
             )
-            dihedral_force.set("k1", str(round(dihedral.type[0].phi_k * 4.184, 3)))
+            dihedral_force.set(
+                "k1", str(round(dihedral.type[0].phi_k * 4.184, 3))
+            )
         if last_dihedral_force is not None:
             # Check to see if this current dihedral force needs to be
             # "merged" into the last dihedral force
