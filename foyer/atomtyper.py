@@ -23,7 +23,7 @@ class AtomTypingRulesProvider:
         The overrides for particular atomtypes
     non_element_types: set, required
         The non-element types used for atomtyping
-    parser: The chemical grammer parser, default=None
+    parser: The chemical grammar parser, default=None
         The parser for the SMARTS strings. If not provided foyer.smarts.SMARTS
         instance will be used.
     """
