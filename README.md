@@ -106,7 +106,7 @@ Example template for disseminating force fields:
 #### Using Foyer to perform atom typing:
 * [Basic usage examples](docs/source/topic_guides/usage_examples.rst)
 * [Detailed Jupyter notebook tutorials, including integration with mBuild](https://github.com/mosdef-hub/foyer_tutorials)
-* [Jupyter notebook tutorials](https://github.com/mosdef-hub/foyer/tree/master/docs/examples), from [our paper](https://arxiv.org/abs/1812.06779)
+* [Jupyter notebook tutorials](https://github.com/mosdef-hub/foyer_tutorials/tree/master), from [our paper](https://arxiv.org/abs/1812.06779)
 
 ### Documentation:
 * Documentation website: http://foyer.mosdef.org
