@@ -14,9 +14,10 @@ from pkg_resources import resource_filename
 
 from foyer import smarts
 from foyer.atomtyper import find_atomtypes
-from foyer.exceptions import FoyerError
+from foyer.exceptions import FoyerError, ValidationError
 from foyer.utils.external import get_ref
 from foyer.utils.io import import_
+from foyer.validator import Validator
 
 
 # Copy from original forcefield.py
@@ -34,17 +35,18 @@ def preprocess_forcefield_files(forcefield_files=None, backend="gmso"):
             _, suffix = os.path.split(file)
             tempfile = NamedTemporaryFile(suffix=suffix, delete=False)
             try:
+                Validator(ff_file_name=file, debug=False)
                 from_foyer_xml(
                     foyer_xml=str(file),
                     gmso_xml=str(tempfile.name),
                     overwrite=True,
                 )
-                tmp_processed_files.append(tempfile.name)
-            except Exception:
+            except:
                 warnings.warn(
                     f"Could not convert {str(file)}, attempt to read in as is."
                 )
-                tmp_processed_files.append(str(file))
+                os.popen(f"cp {file} {tempfile.name}")
+            tmp_processed_files.append(tempfile.name)
     else:
         raise FoyerError("Backend not supported." 'Supports backend: "gmso".')
 
