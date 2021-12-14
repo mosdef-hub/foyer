@@ -5,6 +5,7 @@ import os
 import warnings
 from copy import deepcopy
 from tempfile import NamedTemporaryFile
+import shutil
 
 import gmso
 import mbuild as mb
@@ -45,7 +46,7 @@ def preprocess_forcefield_files(forcefield_files=None, backend="gmso"):
                 warnings.warn(
                     f"Could not convert {str(file)}, attempt to read in as is."
                 )
-                os.popen(f"cp {file} {tempfile.name}")
+                shutil.copyfile(file, tempfile.name)
             tmp_processed_files.append(tempfile.name)
     else:
         raise FoyerError("Backend not supported." 'Supports backend: "gmso".')
