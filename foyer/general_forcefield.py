@@ -2,10 +2,10 @@
 import collections
 import glob
 import os
+import shutil
 import warnings
 from copy import deepcopy
 from tempfile import NamedTemporaryFile
-import shutil
 
 import gmso
 import mbuild as mb
