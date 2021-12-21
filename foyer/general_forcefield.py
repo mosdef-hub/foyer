@@ -375,7 +375,10 @@ class Forcefield(object):
             self._connection_type_lookup(improper)
         # Assign combining rules and mixing rules
         top.combining_rule = combining_rule
-        top.scaling_factors = self.ff.scaling_factors
+        for key in self.ff.scaling_factors.keys():
+            msg = f"Incorrect scaling_factors key word provided: {key}"
+            assert key in top.scaling_factors.keys(), msg
+        top.scaling_factors.update(self.ff.scaling_factors)
         return top
 
     def _connection_type_lookup(self, connection):
