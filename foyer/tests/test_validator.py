@@ -36,6 +36,9 @@ class TestValidator(BaseTest):
         elif file_name.startswith("warning"):
             with pytest.warns(ValidationWarning):
                 Validator(ff_file)
+        elif file_name.startswith("gmso"):
+            with pytest.raises(Exception):
+                Validator(ff_file)
         else:
             Validator(ff_file)
 
