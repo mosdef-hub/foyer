@@ -351,7 +351,7 @@ class Forcefield(object):
             assert_dihedral_params,
             assert_improper_params,
             debug,
-            remove_untyped_connections
+            remove_untyped_connections,
         )
 
         if references_file:
@@ -494,25 +494,25 @@ class Forcefield(object):
                 missing_improper_params[improper.name] = [
                     a.atom_type.name for a in improper.connection_members
                 ]
-        
+
         if remove_untyped_connections:
             if assert_bond_params == False and missing_bond_params:
-                for i in range(top.n_bonds-1,-1,-1):
+                for i in range(top.n_bonds - 1, -1, -1):
                     if not top.bonds[i].bond_type:
                         top._bonds.pop(i)
             if assert_angle_params == False and missing_angle_params:
-                for i in range(top.n_angles-1,-1,-1):
+                for i in range(top.n_angles - 1, -1, -1):
                     if not top.angles[i].angle_type:
                         top._angles.pop(i)
             if assert_dihedral_params == False and missing_dihedral_params:
-                for i in range(top.n_dihedrals-1,-1,-1):
+                for i in range(top.n_dihedrals - 1, -1, -1):
                     if not top.dihedrals[i].dihedral_type:
                         top._dihedrals.pop(i)
             if assert_improper_params == False and missing_improper_params:
-                for i in range(top.n_impropers-1,-1,-1):
+                for i in range(top.n_impropers - 1, -1, -1):
                     if not top.impropers[i].improper_type:
                         top._impropers.pop(i)
-        
+
         if debug:
             from pprint import pprint
 
