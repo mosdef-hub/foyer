@@ -213,7 +213,7 @@ class Forcefield(object):
         remove_untyped_connections : bool, optional, default=True
             If True, Foyer will remove an untyped connection (i.e., bond, angle,
             etc.) from the top if the associated assert statement
-            (e.g., assert_bond_params, assert_angle_params) is False.
+            (e.g., assert_bond_params, assert_angle_params, etc.) is False.
         """
         if self.atomTypeDefinitions == {}:
             raise FoyerError(
