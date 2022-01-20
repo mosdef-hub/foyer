@@ -103,32 +103,42 @@ class TestGeneralForcefield(BaseTest):
 
         assert ethane.box_vectors == mol2.box_vectors
         """
+
     def test_remove_untyped(self):
         mol2 = mb.load(get_fn("ethane.mol2"), backend="parmed")
-        
+
         # test removal of untyped each class of connection seperately
-        oplsaa_bond = Forcefield(forcefield_files=get_fn('ethane-missing_bond.xml'),
-                                 strict=False)
-        oplsaa_angle = Forcefield(forcefield_files=get_fn('ethane-missing_angle.xml'),
-                                 strict=False)
-        oplsaa_dihedral = Forcefield(forcefield_files=get_fn('ethane-missing_dihedral.xml'),
-                                 strict=False)
+        oplsaa_bond = Forcefield(
+            forcefield_files=get_fn("ethane-missing_bond.xml"), strict=False
+        )
+        oplsaa_angle = Forcefield(
+            forcefield_files=get_fn("ethane-missing_angle.xml"), strict=False
+        )
+        oplsaa_dihedral = Forcefield(
+            forcefield_files=get_fn("ethane-missing_dihedral.xml"), strict=False
+        )
 
-        ethane1 = oplsaa_bond.apply(mol2,
-                                    assert_improper_params=False,
-                                    assert_bond_params=False,
-                                    remove_untyped_connections=True)
+        ethane1 = oplsaa_bond.apply(
+            mol2,
+            assert_improper_params=False,
+            assert_bond_params=False,
+            remove_untyped_connections=True,
+        )
 
-        ethane2 = oplsaa_angle.apply(mol2,
-                                     assert_improper_params=False,
-                                     assert_angle_params=False,
-                                     remove_untyped_connections=True)
+        ethane2 = oplsaa_angle.apply(
+            mol2,
+            assert_improper_params=False,
+            assert_angle_params=False,
+            remove_untyped_connections=True,
+        )
 
-        ethane3 = oplsaa_dihedral.apply(mol2,
-                                        assert_improper_params=False,
-                                        assert_dihedral_params=False,
-                                        remove_untyped_connections=True)
-    
+        ethane3 = oplsaa_dihedral.apply(
+            mol2,
+            assert_improper_params=False,
+            assert_dihedral_params=False,
+            remove_untyped_connections=True,
+        )
+
         assert ethane1.n_bonds == 1
         assert ethane2.n_angles == 6
         assert ethane3.n_dihedrals == 0
@@ -305,7 +315,7 @@ class TestGeneralForcefield(BaseTest):
             assert_angle_params=False,
             assert_dihedral_params=False,
             assert_improper_params=False,
-            remove_untyped_connections =False
+            remove_untyped_connections=False,
         )
         assert len(struc.impropers) == 1
         assert len(struc.dihedrals) == 0
