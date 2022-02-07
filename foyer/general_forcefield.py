@@ -44,7 +44,8 @@ def preprocess_forcefield_files(forcefield_files=None, backend="gmso"):
                 )
             except:
                 warnings.warn(
-                    f"Could not convert {str(file)}, attempt to read in as is."
+                    f"Could not convert {str(file)} as a foyer XML,"
+                    f"attempt to read in as a GMSO XML."
                 )
                 shutil.copyfile(file, tempfile.name)
             tmp_processed_files.append(tempfile.name)
