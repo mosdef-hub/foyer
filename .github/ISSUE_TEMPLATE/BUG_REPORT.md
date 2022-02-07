@@ -21,6 +21,6 @@ Please include a code snippet that can be used to reproduce this bug.
 
 **Software versions**
 
-- Which version of Foyer are you using? (`python -c "import foyer; print(foyer.version)"`)
+- Which version of Foyer are you using? (`python -c "import foyer; print(foyer.__version__)"`)
 - Which version of Python (`python --version`)?
 - Which operating system?
