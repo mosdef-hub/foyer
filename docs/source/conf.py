@@ -29,11 +29,11 @@ import foyer
 
 # -- Project information -----------------------------------------------------
 
-project = u"foyer"
-copyright = u"2014-2020, Vanderbilt University"
+project = "foyer"
+copyright = "2014-2020, Vanderbilt University"
 
 # The short X.Y version
-version = "0.9.4"
+version = "0.10.0"
 # The full version, including alpha/beta/rc tags
 release = version
 
@@ -211,7 +211,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ("index", "foyer.tex", u"foyer Documentation", u"Author", "manual"),
+    ("index", "foyer.tex", "foyer Documentation", "Author", "manual"),
 ]
 
 
@@ -219,7 +219,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [("index", "foyer", u"foyer Documentation", [u"Author"], 1)]
+man_pages = [("index", "foyer", "foyer Documentation", ["Author"], 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -231,8 +231,8 @@ texinfo_documents = [
     (
         "index",
         "foyer",
-        u"foyer Documentation",
-        u"Author",
+        "foyer Documentation",
+        "Author",
         "foyer",
         "One line description of project.",
         "Miscellaneous",
@@ -242,10 +242,10 @@ texinfo_documents = [
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u"foyer"
-epub_author = u"Author"
-epub_publisher = u"Author"
-epub_copyright = u"2020, Author"
+epub_title = "foyer"
+epub_author = "Author"
+epub_publisher = "Author"
+epub_copyright = "2020, Author"
 
 # The basename for the epub file. It defaults to the project name.
 # epub_basename = u'foyer'

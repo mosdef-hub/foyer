@@ -82,12 +82,12 @@ To learn more about using `foyer` with docker, please refer to the documentation
 
 
 #### Getting started with SMARTS-based atom-typing
-* [SMARTS-based atomtyping](docs/smarts.rst)
+* [SMARTS-based atomtyping](docs/source/topic_guides/smarts.rst)
 * [Supported SMARTS Grammar](https://github.com/mosdef-hub/foyer/issues/63)
 
 #### Defining force fields:
-* [Defining force field parameters](docs/parameter_definitions.rst)
-* [Force field file validation](docs/validation.rst)
+* [Defining force field parameters](docs/source/topic_guides/parameter_definitions.rst)
+* [Force field file validation](docs/source/reference/validation.rst)
 
 
 #### Example foyer force field files:
@@ -104,15 +104,15 @@ Example template for disseminating force fields:
 
 
 #### Using Foyer to perform atom typing:
-* [Basic usage examples](docs/usage_examples.rst)
+* [Basic usage examples](docs/source/topic_guides/usage_examples.rst)
 * [Detailed Jupyter notebook tutorials, including integration with mBuild](https://github.com/mosdef-hub/foyer_tutorials)
-* [Jupyter notebook tutorials](https://github.com/mosdef-hub/foyer/tree/master/docs/examples), from [our paper](https://arxiv.org/abs/1812.06779)
+* [Jupyter notebook tutorials](https://github.com/mosdef-hub/foyer_tutorials/tree/master), from [our paper](https://arxiv.org/abs/1812.06779)
 
 ### Documentation:
 * Documentation website: http://foyer.mosdef.org
 
 ### Installation instructions
-* [Installation instructions](docs/installation.rst)
+* [Installation instructions](docs/source/getting_started/install.rst)
 
 ### Citing Foyer:
 * If you use this package, please cite [our paper](https://www.sciencedirect.com/science/article/pii/S0927025619303040) published in [Computational Materials Science](https://www.journals.elsevier.com/computational-materials-science).

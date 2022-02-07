@@ -348,11 +348,19 @@ def _error_or_warn(error, msg):
         warnings.warn(msg)
 
 
-def _check_bonds(data, structure, assert_bond_params):
+def _check_bonds(data, structure, verbose, assert_bond_params):
     """Check if any bonds lack paramters."""
     if data.bonds:
         missing = [b for b in structure.bonds if b.type is None]
         if missing:
+            if verbose:
+                for bond in missing:
+                    a1 = bond.atom1
+                    a2 = bond.atom2
+                    print(
+                        f"Missing bond with ids {(a1.idx, a2.idx)} and types "
+                        f"{[a1.type, a2.type]}."
+                    )
             nmissing = len(structure.bonds) - len(missing)
             msg = (
                 "Parameters have not been assigned to all bonds. "
@@ -859,7 +867,7 @@ class Forcefield(app.ForceField):
         if box_vectors is not None:
             structure.box_vectors = box_vectors
 
-        _check_bonds(data, structure, assert_bond_params)
+        _check_bonds(data, structure, verbose, assert_bond_params)
         _check_angles(data, structure, verbose, assert_angle_params)
         _check_dihedrals(
             data,
@@ -1638,10 +1646,9 @@ class Forcefield(app.ForceField):
     def _get_periodic_torsion_params(torsion):
         params = {"periodicity": [], "phase": [], "k": []}
         for i in range(len(torsion.phase)):
-            if torsion.k[i] != 0:
-                params["periodicity"].append(torsion.periodicity[i])
-                params["phase"].append(torsion.phase[i])
-                params["k"].append(torsion.k[i])
+            params["periodicity"].append(torsion.periodicity[i])
+            params["phase"].append(torsion.phase[i])
+            params["k"].append(torsion.k[i])
 
         return params
 
