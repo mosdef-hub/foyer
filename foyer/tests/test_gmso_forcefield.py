@@ -63,6 +63,11 @@ class TestGeneralForcefield(BaseTest):
             ff4 = Forcefield(name='oplsaa', forcefield_files=FORCEFIELDS, strict=False)
     """
 
+    def test_load_gmso_xml(self):
+        spce_water = get_fn("gmso_spce_water.xml")
+        ff1 = Forcefield(forcefield_files=spce_water, strict=False)
+        assert len(ff1.atomTypeDesc) > 0
+
     def test_missing_type_definitions(self):
         with pytest.raises(FoyerError):
             FF = Forcefield()
