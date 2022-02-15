@@ -29,6 +29,7 @@ from openmm.app.forcefield import (
     RBTorsionGenerator,
     _convertParameterToNumber,
 )
+from parmed.gromacs.gromacstop import _Defaults
 from pkg_resources import iter_entry_points, resource_filename
 
 import foyer.element as custom_elem
@@ -902,6 +903,20 @@ class Forcefield(app.ForceField):
                 "Structure's total charge: {}".format(total_charge)
             )
 
+        # Start storing scaling factors and combining rule to parmed structure
+        # Utilizing parmed gromactop's _Default class
+
+        # Note: nb_func = 1 (LJ) or 2 (Buckingham), foyer forcefield only support 1 at the moment
+        # Combining rule follow GROMACS scheme, where "lorentz" is 2 and "geometric" is 3
+        combining_rules = {"lorentz": 2, "geometric": 3}
+        gen_pairs = "yes" if structure.adjusts else "no"
+        structure.defaults = _Defaults(
+            nbfunc=1,
+            comb_rule=combining_rules[self.combining_rule],
+            gen_pairs=gen_pairs,
+            fudgeLJ=self.lj14scale,
+            fudgeQQ=self.coulomb14scale,
+        )
         return structure
 
     def createSystem(
