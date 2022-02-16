@@ -2,6 +2,7 @@
 import collections
 import glob
 import os
+import shutil
 import warnings
 from copy import deepcopy
 from tempfile import NamedTemporaryFile
@@ -14,9 +15,10 @@ from pkg_resources import resource_filename
 
 from foyer import smarts
 from foyer.atomtyper import find_atomtypes
-from foyer.exceptions import FoyerError
+from foyer.exceptions import FoyerError, ValidationError
 from foyer.utils.external import get_ref
 from foyer.utils.io import import_
+from foyer.validator import Validator
 
 
 # Copy from original forcefield.py
@@ -34,17 +36,19 @@ def preprocess_forcefield_files(forcefield_files=None, backend="gmso"):
             _, suffix = os.path.split(file)
             tempfile = NamedTemporaryFile(suffix=suffix, delete=False)
             try:
+                Validator(ff_file_name=file, debug=False)
                 from_foyer_xml(
                     foyer_xml=str(file),
                     gmso_xml=str(tempfile.name),
                     overwrite=True,
                 )
-                tmp_processed_files.append(tempfile.name)
-            except Exception:
+            except:
                 warnings.warn(
-                    f"Could not convert {str(file)}, attempt to read in as is."
+                    f"Could not convert {str(file)} as a foyer XML,"
+                    f"attempt to read in as a GMSO XML."
                 )
-                tmp_processed_files.append(str(file))
+                shutil.copyfile(file, tempfile.name)
+            tmp_processed_files.append(tempfile.name)
     else:
         raise FoyerError("Backend not supported." 'Supports backend: "gmso".')
 
@@ -385,8 +389,12 @@ class Forcefield(object):
         # Assign ImproperTypes
         for improper in top.impropers:
             self._connection_type_lookup(improper)
-        # Assign combining rules
+        # Assign combining rules and mixing rules
         top.combining_rule = combining_rule
+        for key in self.ff.scaling_factors.keys():
+            msg = f"Incorrect scaling_factors key word provided: {key}"
+            assert key in top.scaling_factors.keys(), msg
+        top.scaling_factors.update(self.ff.scaling_factors)
         return top
 
     def _connection_type_lookup(self, connection):
