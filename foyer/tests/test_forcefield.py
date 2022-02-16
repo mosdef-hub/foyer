@@ -439,7 +439,7 @@ class TestForcefield(BaseTest):
         with pytest.warns(ValidationWarning):
             ff = Forcefield(forcefield_files=get_fn("empty_def.xml"))
 
-        with pytest.warns():
+        with pytest.warns(UserWarning):
             typed = ff.apply(ethane)
         assert typed.defaults is None
 
