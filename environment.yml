@@ -6,7 +6,7 @@ dependencies:
   - lxml
   - gmso
   - networkx>=2.5
-  - openmm>=7.6
+  - openmm>=7.7
   - parmed>=3.4.3
   - ele
   - requests
