@@ -2,6 +2,7 @@
 import collections
 import glob
 import os
+import shutil
 import warnings
 from copy import deepcopy
 from tempfile import NamedTemporaryFile
@@ -14,9 +15,10 @@ from pkg_resources import resource_filename
 
 from foyer import smarts
 from foyer.atomtyper import find_atomtypes
-from foyer.exceptions import FoyerError
+from foyer.exceptions import FoyerError, ValidationError
 from foyer.utils.external import get_ref
 from foyer.utils.io import import_
+from foyer.validator import Validator
 
 
 # Copy from original forcefield.py
@@ -34,17 +36,19 @@ def preprocess_forcefield_files(forcefield_files=None, backend="gmso"):
             _, suffix = os.path.split(file)
             tempfile = NamedTemporaryFile(suffix=suffix, delete=False)
             try:
+                Validator(ff_file_name=file, debug=False)
                 from_foyer_xml(
                     foyer_xml=str(file),
                     gmso_xml=str(tempfile.name),
                     overwrite=True,
                 )
-                tmp_processed_files.append(tempfile.name)
-            except Exception:
+            except:
                 warnings.warn(
-                    f"Could not convert {str(file)}, attempt to read in as is."
+                    f"Could not convert {str(file)} as a foyer XML,"
+                    f"attempt to read in as a GMSO XML."
                 )
-                tmp_processed_files.append(str(file))
+                shutil.copyfile(file, tempfile.name)
+            tmp_processed_files.append(tempfile.name)
     else:
         raise FoyerError("Backend not supported." 'Supports backend: "gmso".')
 
@@ -175,6 +179,7 @@ class Forcefield(object):
         assert_improper_params=True,
         combining_rule="geometric",
         debug=False,
+        remove_untyped_connections=True,
         *args,
         **kwargs,
     ):
@@ -209,6 +214,10 @@ class Forcefield(object):
         debug : bool, optional, default=False
             If True, Foyer will print debug-level information about notable or
             potential problematic details it encounters.
+        remove_untyped_connections : bool, optional, default=True
+            If True, Foyer will remove an untyped connection (i.e., bond, angle,
+            etc.) from the top if the associated assert statement
+            (e.g., assert_bond_params, assert_angle_params, etc.) is False.
         """
         if self.atomTypeDefinitions == {}:
             raise FoyerError(
@@ -237,6 +246,7 @@ class Forcefield(object):
             assert_improper_params=assert_improper_params,
             debug=debug,
             combining_rule=combining_rule,
+            remove_untyped_connections=remove_untyped_connections,
             *args,
             **kwargs,
         )
@@ -279,6 +289,7 @@ class Forcefield(object):
         assert_improper_params=True,
         combining_rule="geometric",
         debug=False,
+        remove_untyped_connections=True,
         **kwargs,
     ):
         """Parametrize the Topology from the typemap provided.
@@ -314,6 +325,10 @@ class Forcefield(object):
         debug : bool, optional, default=False
             If True, Foyer will print debug-level information about notable or
             potential problematic details it encounters.
+        remove_untyped_connections : bool, optional, default=True
+            If True, Foyer will remove an untyped connection (i.e., bond, angle,
+            etc.) from the top if the associated assert statement
+            (e.g., assert_bond_params, assert_angle_params) is False.
 
         Returns
         -------
@@ -340,6 +355,7 @@ class Forcefield(object):
             assert_dihedral_params,
             assert_improper_params,
             debug,
+            remove_untyped_connections,
         )
 
         if references_file:
@@ -373,8 +389,12 @@ class Forcefield(object):
         # Assign ImproperTypes
         for improper in top.impropers:
             self._connection_type_lookup(improper)
-        # Assign combining rules
+        # Assign combining rules and mixing rules
         top.combining_rule = combining_rule
+        for key in self.ff.scaling_factors.keys():
+            msg = f"Incorrect scaling_factors key word provided: {key}"
+            assert key in top.scaling_factors.keys(), msg
+        top.scaling_factors.update(self.ff.scaling_factors)
         return top
 
     def _connection_type_lookup(self, connection):
@@ -433,6 +453,7 @@ class Forcefield(object):
         assert_dihedral_params=True,
         assert_improper_params=True,
         debug=False,
+        remove_untyped_connections=True,
     ):
         """Check if the parameters are fulfilled.
 
@@ -451,6 +472,10 @@ class Forcefield(object):
         debug : bool, optional, default=False
             If True, Foyer will print debug-level information about notable or
             potential problematic details it encounters.
+        remove_untyped_connections : bool, optional, default=True
+            If True, Foyer will remove an untyped connection (i.e., bond, angle,
+            etc.) from the top if the associated assert statement
+            (e.g., assert_bond_params, assert_angle_params) is False.
         """
         missing_bond_params = dict()
         missing_angle_params = dict()
@@ -477,6 +502,24 @@ class Forcefield(object):
                 missing_improper_params[improper.name] = [
                     a.atom_type.name for a in improper.connection_members
                 ]
+
+        if remove_untyped_connections:
+            if assert_bond_params == False and missing_bond_params:
+                for i in range(top.n_bonds - 1, -1, -1):
+                    if not top.bonds[i].bond_type:
+                        top._bonds.pop(i)
+            if assert_angle_params == False and missing_angle_params:
+                for i in range(top.n_angles - 1, -1, -1):
+                    if not top.angles[i].angle_type:
+                        top._angles.pop(i)
+            if assert_dihedral_params == False and missing_dihedral_params:
+                for i in range(top.n_dihedrals - 1, -1, -1):
+                    if not top.dihedrals[i].dihedral_type:
+                        top._dihedrals.pop(i)
+            if assert_improper_params == False and missing_improper_params:
+                for i in range(top.n_impropers - 1, -1, -1):
+                    if not top.impropers[i].improper_type:
+                        top._impropers.pop(i)
 
         if debug:
             from pprint import pprint
