@@ -29,6 +29,7 @@ from openmm.app.forcefield import (
     RBTorsionGenerator,
     _convertParameterToNumber,
 )
+from parmed.gromacs.gromacstop import _Defaults
 from pkg_resources import iter_entry_points, resource_filename
 
 import foyer.element as custom_elem
@@ -782,7 +783,7 @@ class Forcefield(app.ForceField):
 
         self._apply_typemap(structure, typemap)
 
-        return self.parametrize_system(
+        structure = self.parametrize_system(
             structure=structure,
             references_file=references_file,
             assert_bond_params=assert_bond_params,
@@ -793,6 +794,31 @@ class Forcefield(app.ForceField):
             *args,
             **kwargs,
         )
+
+        # Start storing scaling factors and combining rule to parmed structure
+        # Utilizing parmed gromactop's _Default class
+
+        # Note: nb_func = 1 (LJ) or 2 (Buckingham), foyer forcefield only support 1 at the moment
+        # Combining rule follow GROMACS scheme, where "lorentz" is 2 and "geometric" is 3
+        combining_rules = {"lorentz": 2, "geometric": 3}
+        gen_pairs = "yes" if structure.adjusts else "no"
+        try:
+            lj14scale = self.lj14scale
+            coulomb14scale = self.coulomb14scale
+            structure.defaults = _Defaults(
+                nbfunc=1,
+                comb_rule=combining_rules[self.combining_rule],
+                gen_pairs=gen_pairs,
+                fudgeLJ=lj14scale,
+                fudgeQQ=coulomb14scale,
+            )
+        except AttributeError:
+            warnings.warn(
+                "Missing lj14scale or coulomb14scale, could not set structure metadata."
+            )
+            structure.defaults = None
+
+        return structure
 
     def run_atomtyping(self, structure, use_residue_map=True, **kwargs):
         """Atomtype the topology.
