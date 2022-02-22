@@ -10,14 +10,14 @@ dependencies:
   - mbuild
   - gmso
   - networkx>=2.5
-  - openmm>=7.6
+  - openmm>=7.7
   - parmed>=3.4.3
   - pip
   - pytest
   - pytest-azurepipelines
   - pytest-cov
   - pytest-timeout
-  - python<=3.8
+  - python>=3.7
   - requests
   - requests-mock
   - pip:

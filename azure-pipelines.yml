@@ -28,19 +28,24 @@ stages:
       - job: NoBleeding
         strategy:
           matrix:
-            Python36Ubuntu:
-              imageName: 'ubuntu-latest'
-              python.version: 3.6
             Python37Ubuntu:
               imageName: 'ubuntu-latest'
               python.version: 3.7
-            Python36macOS:
-              imageName: 'macOS-latest'
-              python.version: 3.6
+            Python38Ubuntu:
+              imageName: 'ubuntu-latest'
+              python.version: 3.8
+            Python39Ubuntu:
+              imageName: 'ubuntu-latest'
+              python.version: 3.9
             Python37macOS:
               imageName: 'macOS-latest'
               python.version: 3.7
-
+            Python38macOS:
+              imageName: 'macOS-latest'
+              python.version: 3.8
+            Python39macOS:
+              imageName: 'macOS-latest'
+              python.version: 3.9
         pool:
           vmImage: $(imageName)
 
@@ -88,10 +93,12 @@ stages:
           vmImage: 'windows-latest'
         strategy:
           matrix:
-            Python36:
-              python.version: 3.6
             Python37:
               python.version: 3.7
+            Python38:
+              python.version: 3.8
+            Python39:
+              python.version: 3.9
 
         steps:
           - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
@@ -115,7 +122,7 @@ stages:
               python -m pytest -v --cov=foyer --color=yes --pyargs foyer
             displayName: Run Tests
 
-      - job: LinuxBleedingMbuild
+      - job: LinuxBleeding
 
         pool:
           vmImage: 'ubuntu-latest'
@@ -128,15 +135,15 @@ stages:
               conda config --set always_yes yes --set changeps1 no
               conda install -c conda-forge mamba
               git clone https://github.com/mosdef-hub/mbuild.git
+              git clone https://github.com.mosdef-hub/gmso.git
               mamba env create --name bleeding --file environment-dev.yml
               source activate bleeding
-              cd mbuild
-              mamba env update --name bleeding --file environment.yml
+              mamba env update --name bleeding --file mbuild/environment.yml
+              pip install -e mbuild
+              mamba env update --name bleeding --file gmso/environment.yml
+              pip install -e gmso
               pip install -e .
-              cd ..
-              pip install -e .
-              cd src/antefoyer
-              pip install -e .
+              pip install -e src/antefoyer
             displayName: Create a new bleeding test environment
 
           - bash: |
