@@ -1,0 +1,79 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Foyer: A package for atom-typing as well as
+  applying and disseminating forcefields
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Christoph
+    family-names: Klein
+    affiliation: Vanderbilt University
+  - given-names: Andrew
+    family-names: Z. Summers
+    affiliation: Vanderbilt University
+    orcid: 'https://orcid.org/0000-0001-8477-3059'
+  - given-names: Matthew
+    family-names: W. Thompson
+    affiliation: Vanderbilt University
+    orcid: 'https://orcid.org/0000-0002-1460-3983'
+  - given-names: Justin
+    family-names: B. Gilmer
+    affiliation: Vanderbilt University
+    orcid: 'https://orcid.org/0000-0002-6915-5591'
+  - given-names: Co
+    family-names: D. Quach
+    affiliation: Vanderbilt University
+    orcid: 'https://orcid.org/0000-0002-1255-4161'
+  - given-names: Umesh
+    family-names: Timalsina
+    affiliation: Vanderbilt University
+    orcid: 'https://orcid.org/0000-0002-5430-3993'
+  - given-names: Janos
+    family-names: Sallai
+    affiliation: Vanderbilt University
+  - given-names: Chris R.
+    family-names: Iacovella
+    affiliation: Vanderbilt University
+    orcid: 'https://orcid.org/0000-0003-0557-0427'
+  - given-names: Clare M.
+    family-names: McCabe
+    affiliation: Vanderbilt University
+    orcid: 'https://orcid.org/0000-0002-8552-9135'
+  - given-names: Peter T.
+    family-names: Cummings
+    affiliation: Vanderbilt University
+    orcid: 'https://orcid.org/0000-0002-9766-2216'
+  - given-names: Peter
+    family-names: Volgyesi
+    orcid: 'https://orcid.org/0000-0002-7478-4317'
+    affiliation: Vanderbilt University
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.6229092
+    description: Zenodo Doi
+repository-code: 'https://github.com/mosdef-hub/foyer'
+url: 'https://foyer.mosdef.org'
+repository: 'https://github.com/mosdef-hub/foyer'
+repository-artifact: 'https://github.com/mosdef-hub/foyer/releases'
+abstract: >-
+  Foyer is an open-source Python tool for defining
+  and applying force field atom-typing rules in a
+  format that is both human- and machine-readable. It
+  parametrizes chemical topologies, generating,
+  syntactically correct input files for various
+  simulation engines. Foyer provides a framework for
+  force field dissemination, helping to eliminate
+  ambiguity in atom-typing and improving
+  reproducibility.
+keywords:
+  - atom-typing
+  - reproducibility
+  - 'TRUE'
+  - mosdef
+  - python
+license: MIT
