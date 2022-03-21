@@ -13,26 +13,30 @@ authors:
   - given-names: Christoph
     family-names: Klein
     affiliation: Vanderbilt University
-  - given-names: Andrew
-    family-names: Z. Summers
+  - given-names: Andrew Z.
+    family-names: Summers
     affiliation: Vanderbilt University
     orcid: 'https://orcid.org/0000-0001-8477-3059'
-  - given-names: Matthew
-    family-names: W. Thompson
+  - given-names: Matthew W.
+    family-names: Thompson
     affiliation: Vanderbilt University
     orcid: 'https://orcid.org/0000-0002-1460-3983'
-  - given-names: Justin
-    family-names: B. Gilmer
+  - given-names: Justin B.
+    family-names: Gilmer
     affiliation: Vanderbilt University
     orcid: 'https://orcid.org/0000-0002-6915-5591'
-  - given-names: Co
-    family-names: D. Quach
+  - given-names: Co D.
+    family-names: Quach
     affiliation: Vanderbilt University
     orcid: 'https://orcid.org/0000-0002-1255-4161'
   - given-names: Umesh
     family-names: Timalsina
     affiliation: Vanderbilt University
     orcid: 'https://orcid.org/0000-0002-5430-3993'
+  - given-names: Peter
+    family-names: Volgyesi
+    orcid: 'https://orcid.org/0000-0002-7478-4317'
+    affiliation: Vanderbilt University
   - given-names: Janos
     family-names: Sallai
     affiliation: Vanderbilt University
@@ -48,10 +52,6 @@ authors:
     family-names: Cummings
     affiliation: Vanderbilt University
     orcid: 'https://orcid.org/0000-0002-9766-2216'
-  - given-names: Peter
-    family-names: Volgyesi
-    orcid: 'https://orcid.org/0000-0002-7478-4317'
-    affiliation: Vanderbilt University
 identifiers:
   - type: doi
     value: 10.5281/zenodo.6229092
@@ -77,3 +77,42 @@ keywords:
   - mosdef
   - python
 license: MIT
+references:
+  - type: article
+  - authors:
+    - given-names: Christoph
+      family-names: Klein
+      affiliation: Vanderbilt University
+    - given-names: Andrew Z.
+      family-names: Summers
+      affiliation: Vanderbilt University
+      orcid: 'https://orcid.org/0000-0001-8477-3059'
+    - given-names: Matthew W.
+      family-names: Thompson
+      affiliation: Vanderbilt University
+      orcid: 'https://orcid.org/0000-0002-1460-3983'
+    - given-names: Justin B.
+      family-names: Gilmer
+      affiliation: Vanderbilt University
+      orcid: 'https://orcid.org/0000-0002-6915-5591'
+    - given-names: Clare M.
+      family-names: McCabe
+      affiliation: Vanderbilt University
+      orcid: 'https://orcid.org/0000-0002-8552-9135'
+    - given-names: Peter T.
+      family-names: Cummings
+      affiliation: Vanderbilt University
+      orcid: 'https://orcid.org/0000-0002-9766-2216'
+    - given-names: Janos
+      family-names: Sallai
+      affiliation: Vanderbilt University
+    - given-names: Chris R.
+      family-names: Iacovella
+      affiliation: Vanderbilt University
+      orcid: 'https://orcid.org/0000-0003-0557-0427'
+  - title: "Formalizing atom-typing and the dissemination of force fields with foyer"
+  - journal: "Comput. Mater. Sci."
+  - volume: 167
+  - pages: 12
+  - year: 2019
+  - doi: "https://doi.org/10.1016/j.commatsci.2019.05.026"
