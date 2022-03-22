@@ -7,7 +7,7 @@ title: >-
   applying and disseminating forcefields
 message: >-
   If you use this software, please cite it using the
-  metadata from this file.
+  metadata from this file and the preferred citation.
 type: software
 authors:
   - given-names: Christoph
@@ -77,7 +77,7 @@ keywords:
   - mosdef
   - python
 license: MIT
-references:
+preferred-citation:
   - type: article
   - authors:
     - given-names: Christoph
