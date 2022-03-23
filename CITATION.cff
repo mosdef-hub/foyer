@@ -78,8 +78,8 @@ keywords:
   - python
 license: MIT
 preferred-citation:
-  - type: article
-  - authors:
+  type: article
+  authors:
     - given-names: Christoph
       family-names: Klein
       affiliation: "Vanderbilt University"
@@ -110,9 +110,9 @@ preferred-citation:
       family-names: Iacovella
       affiliation: "Vanderbilt University"
       orcid: 'https://orcid.org/0000-0003-0557-0427'
-  - title: "Formalizing atom-typing and the dissemination of force fields with foyer"
-  - journal: "Comput. Mater. Sci."
-  - volume: 167
-  - pages: 12
-  - year: 2019
-  - doi: "https://doi.org/10.1016/j.commatsci.2019.05.026"
+  title: "Formalizing atom-typing and the dissemination of force fields with foyer"
+  journal: "Comput. Mater. Sci."
+  volume: "167"
+  pages: "12"
+  year: "2019"
+  doi: "10.1016/j.commatsci.2019.05.026"
