@@ -80,7 +80,8 @@ jobs:
       - name: Install Packages from Source
         run: |
           pip install -e mbuild
-          pip install -e foyer
+          pip install -e gmso
+          pip install -e .
 
       - name: Run Bleeding Edge Tests
         run: |
