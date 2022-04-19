@@ -67,14 +67,14 @@ jobs:
       - name: Clone mBuild and GMSO
         run: |
           git clone https://github.com/mosdef-hub/mbuild.git
-          git clone https://github.com.mosdef-hub/gmso.git
+          git clone https://github.com/mosdef-hub/gmso.git
 
-      - name: Update Environment With mbuild/gmso Dependencies
+      - name: Update Environment with mbuild/gmso Dependencies
         run: |
           mamba env update --name foyer-dev --file mbuild/environment.yml
           mamba env update --name foyer-dev --file gmso/environment.yml
 
-      - name: Install packages from source
+      - name: Install Packages from Source
         run: |
           pip install -e mbuild
           pip install -e foyer
