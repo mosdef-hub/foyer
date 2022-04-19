@@ -74,8 +74,8 @@ jobs:
 
       - name: Update Environment with mbuild/gmso Dependencies
         run: |
-          mamba env update --name foyer-dev --file mbuild/environment.yml
-          mamba env update --name foyer-dev --file gmso/environment.yml
+          micromamba env update --name foyer-dev --file mbuild/environment.yml
+          micromamba env update --name foyer-dev --file gmso/environment.yml
 
       - name: Install Packages from Source
         run: |
