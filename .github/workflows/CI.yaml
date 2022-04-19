@@ -52,6 +52,9 @@ jobs:
     if: github.event.pull_request.draft == false
     name: Bleeding Edge mosdef Tests for Foyer
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
 
     steps:
       - uses: actions/checkout@v2
@@ -82,8 +85,6 @@ jobs:
       - name: Run Bleeding Edge Tests
         run: |
           python -m pytest -v --color yes --pyargs foyer
-
-
 
   docker:
     runs-on: ubuntu-latest
