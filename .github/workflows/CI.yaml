@@ -49,6 +49,7 @@ jobs:
 
       - name: Test (OS -> ${{ matrix.os }} / Python -> ${{ matrix.python-version }})
         run: python -m pytest -v --cov=foyer --cov-report=xml --cov-append --cov-config=setup.cfg --color yes --pyargs foyer
+        continue-on-error: true
 
       - name: Upload Coverage Report
         uses: codecov/codecov-action@v2
