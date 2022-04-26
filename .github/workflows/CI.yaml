@@ -19,6 +19,9 @@ jobs:
       matrix:
         os: [macOS-latest, ubuntu-latest, windows-latest]
         python-version: [3.7, 3.8, 3.9]
+        exclude:
+          - os: windows-latest
+            python-version: 3.8
 
     defaults:
       run:
@@ -49,7 +52,6 @@ jobs:
 
       - name: Test (OS -> ${{ matrix.os }} / Python -> ${{ matrix.python-version }})
         run: python -m pytest -v --cov=foyer --cov-report=xml --cov-append --cov-config=setup.cfg --color yes --pyargs foyer
-        continue-on-error: true
 
       - name: Upload Coverage Report
         uses: codecov/codecov-action@v2
