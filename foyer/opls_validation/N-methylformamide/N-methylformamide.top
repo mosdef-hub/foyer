@@ -76,8 +76,8 @@ N-methylformamide  3
     6     5     7     9     3
 
 ; Added DvdS 2010-12-21
-7 9 5 8 1    180     4.6     2
-5 1 7 6 1    180     4.6     2
+7 9 5 8 4    180     4.6     2
+5 1 7 6 4    180     4.6     2
 [ system ]
 N-methylformamide GAS
 [ molecules ]

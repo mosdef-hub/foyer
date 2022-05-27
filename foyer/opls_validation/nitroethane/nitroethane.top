@@ -89,7 +89,7 @@ nitroethane  3
     7     5     8    10     3
 
 [ dihedrals ]
-8 9 10 5 1      improper_X_NO_ON_NO
+8 9 10 5 4      improper_X_NO_ON_NO
 [ system ]
 nitroethane GAS
 [ molecules ]
