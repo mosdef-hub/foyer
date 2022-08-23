@@ -58,9 +58,9 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     ----------
     structure : parmed.Structure, or gmso.Topology, or TopologyGraph
         The topology that we are trying to atomtype. If a parmed.Structure or
-        gmso.Topology is provided, it will be convert to a TopologyGraph before
+        gmso.Topology is provided, it will be converted to a TopologyGraph before
         atomtyping.
-    forcefield : AtomTypingRulesProvider, foyer.ForceField, foyer.general_forcefield.Forcefield
+    forcefield : AtomTypingRulesProvider, foyer.ForceField
         The atomtyping rules provider object/foyer forcefield.
     max_iter : int, optional, default=10
         The maximum number of iterations.
@@ -69,7 +69,6 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     #  for a less painful conversion process
 
     from foyer.forcefield import Forcefield
-    from foyer.general_forcefield import Forcefield as GeneralForcefield
 
     topology_graph = structure
 
@@ -78,8 +77,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     elif isinstance(structure, Topology):
         topology_graph = TopologyGraph.from_gmso_topology(structure)
 
-    if isinstance(forcefield, (Forcefield, GeneralForcefield)):
-        forcefield = AtomTypingRulesProvider.from_foyer_forcefield(forcefield)
+    forcefield = AtomTypingRulesProvider.from_foyer_forcefield(forcefield)
 
     typemap = {
         atom_index: {"whitelist": set(), "blacklist": set(), "atomtype": None}
