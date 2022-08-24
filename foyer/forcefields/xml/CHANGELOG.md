@@ -31,7 +31,7 @@ v0.0.4 - August 24, 2022
  - update atomlass for all atomtype entries in the XML (source from https://github.com/gromacs/gromacs/blob/main/share/top/oplsaa.ff/ffnonbonded.itp)
  - Code to transfer the atomclass:
  ```python
- import lxml as etree
+ from lxml import etree
 
  with open("ffnonbonded.itp", "r") as f:
     ref = f.readlines()
