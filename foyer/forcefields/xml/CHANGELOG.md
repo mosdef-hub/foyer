@@ -48,7 +48,7 @@ root = xml.getroot()
 for child in root.iterchildren():
     if child.tag == "AtomTypes":
         for gchild in child.iterchildren():
-            if (type(gchild)==etree.Element and
+            if (type(gchild)==etree._Element and
             gchild.attrib["name"] in skimmed_ref):
             gchild.attrib["class"] = skimmed_ref[gchild.attrib["name"]]
 
