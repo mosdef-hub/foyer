@@ -1,5 +1,7 @@
 name: foyer-dev
 channels:
+  - conda-forge/label/openff-toolkit_rc
+  - conda-forge/label/openff-interchange_rc
   - conda-forge
 dependencies:
   - bump2version
@@ -12,9 +14,7 @@ dependencies:
   - openmm>=7.7
   - parmed>=3.4.3
   - ele
-  - openff-toolkit
-  - cachetools
-  - cached-property
+  - openff-toolkit >=0.11.0rc3
   - gmso
   - pip
   - pre-commit
@@ -27,4 +27,3 @@ dependencies:
   - requests-mock
   - pip:
     - "--editable=git+https://github.com/rsdefever/antefoyer.git#egg=antefoyer"
-    - git+https://github.com/openforcefield/openff-toolkit.git@topology-biopolymer-refactor
