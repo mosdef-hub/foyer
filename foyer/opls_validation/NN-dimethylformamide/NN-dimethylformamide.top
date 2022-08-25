@@ -98,8 +98,8 @@ NN-dimethylformamide  3
     6     5    10    12     3
 
 ; Added DvdS 2010-12-21
-10 12 5 11 1   180     4.6     2
- 5  1 6 10 1   180     4.6     2
+10 12 5 11 4   180     4.6     2
+ 5  1 6 10 4   180     4.6     2
  [ system ]
 NN-dimethylformamide GAS
 [ molecules ]

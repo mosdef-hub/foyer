@@ -7,6 +7,7 @@ from typing import List
 import parmed as pmd
 import pytest
 from lxml import etree as ET
+from parmed.gromacs.gromacstop import _Defaults
 from pkg_resources import resource_filename
 
 from foyer import Forcefield, forcefields
@@ -93,6 +94,17 @@ class TestForcefield(BaseTest):
         ethane = oplsaa.apply(mol2)
 
         assert ethane.box_vectors == mol2.box_vectors
+
+    def test_structure_meta(self, oplsaa):
+        mol2 = pmd.load_file(get_fn("ethane.mol2"), structure=True)
+        ethane = oplsaa.apply(mol2)
+
+        assert isinstance(ethane.defaults, _Defaults)
+        assert ethane.defaults.nbfunc == 1
+        assert ethane.defaults.comb_rule == 3
+        assert ethane.defaults.fudgeLJ == oplsaa.lj14scale
+        assert ethane.defaults.fudgeQQ == oplsaa.coulomb14scale
+        assert ethane.defaults.gen_pairs == "yes"
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
     def test_from_mbuild(self, oplsaa):
@@ -426,7 +438,10 @@ class TestForcefield(BaseTest):
         ethane = mb.load(get_fn("ethane.mol2"))
         with pytest.warns(ValidationWarning):
             ff = Forcefield(forcefield_files=get_fn("empty_def.xml"))
-        ff.apply(ethane)
+
+        with pytest.warns(UserWarning):
+            typed = ff.apply(ethane)
+        assert typed.defaults is None
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
     def test_assert_bonds(self):
