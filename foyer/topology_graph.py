@@ -2,7 +2,6 @@
 from typing import TYPE_CHECKING, Optional
 
 import networkx as nx
-
 from parmed import Structure
 
 from foyer.exceptions import FoyerError
