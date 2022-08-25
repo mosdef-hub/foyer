@@ -3,10 +3,7 @@ from typing import TYPE_CHECKING, Optional
 
 import networkx as nx
 
-# OpenFF Units in the future may provide dead-simple atomic number : element symbol mapping
-# with a lighter import load than ParmEd: https://github.com/openforcefield/openff-units/pull/14
 from parmed import Structure
-from parmed import periodic_table as pt
 
 from foyer.exceptions import FoyerError
 
@@ -200,6 +197,8 @@ class TopologyGraph(nx.Graph):
         top_graph = cls()
 
         if uses_old_api:
+            from parmed import periodic_table as pt
+
             for top_atom in openff_topology.topology_atoms:
                 atom = top_atom.atom
                 element_symbol = pt.Element[atom.atomic_number]
@@ -219,9 +218,11 @@ class TopologyGraph(nx.Graph):
             return top_graph
 
         else:
+            from openff.units.elements import SYMBOLS
+
             for atom in openff_topology.atoms:
                 atom_index = openff_topology.atom_index(atom)
-                element_symbol = pt.Element[atom.atomic_number]
+                element_symbol = SYMBOLS[atomic_number]
                 top_graph.add_atom(
                     name=atom.name,
                     index=atom_index,
