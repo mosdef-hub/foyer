@@ -27,30 +27,6 @@ v0.0.2 - June 24, 2021
 v0.0.3 - August 7, 2021
  - update SMARTS string for opls_154 (from `[O;X2]H` to `[O;X2](H)([!H])`)
 
-v0.0.4 - August 24, 2022
- - update atomlass for all atomtype entries in the XML (source from https://github.com/gromacs/gromacs/blob/main/share/top/oplsaa.ff/ffnonbonded.itp)
- - Code to transfer the atomclass:
- ```python
- from lxml import etree
-
- with open("ffnonbonded.itp", "r") as f:
-    ref = f.readlines()
-
-skimmed_ref = dict()
-for line in ref:
-    if "opls_" in line:
-        tmp = line.strip().split()[0:2]
-        skimmed_ref[tmp[0]] = tmp[1]
-
-oplsaa_xml = etree.parse("oplsaa.xml")
-root = xml.getroot()
-
-for child in root.iterchildren():
-    if child.tag == "AtomTypes":
-        for gchild in child.iterchildren():
-            if (type(gchild)==etree._Element and
-            gchild.attrib["name"] in skimmed_ref):
-            gchild.attrib["class"] = skimmed_ref[gchild.attrib["name"]]
 
 xml.write("oplsaa.xml")
  ```
