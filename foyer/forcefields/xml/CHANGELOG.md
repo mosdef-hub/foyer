@@ -27,6 +27,10 @@ v0.0.2 - June 24, 2021
 v0.0.3 - August 7, 2021
  - update SMARTS string for opls_154 (from `[O;X2]H` to `[O;X2](H)([!H])`)
 
+
+xml.write("oplsaa.xml")
+ ```
+
 ----
 ## Trappe-UA
 
