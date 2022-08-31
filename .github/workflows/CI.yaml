@@ -24,7 +24,7 @@ jobs:
             python-version: "3.8"
             # These OpenMM builds are broken as of 8/22
           - os: macOS-latest
-            python-vesion: "3.10"
+            python-version: "3.10"
 
     defaults:
       run:
