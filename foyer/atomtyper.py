@@ -51,7 +51,7 @@ class AtomTypingRulesProvider:
         )
 
 
-def find_atomtypes(structure, forcefield, max_iter=10):
+def find_atomtypes(structure, atomtype_rules, max_iter=10):
     """Determine atomtypes for all atoms.
 
     Parameters
@@ -60,7 +60,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
         The topology that we are trying to atomtype. If a parmed.Structure or
         gmso.Topology is provided, it will be converted to a TopologyGraph before
         atomtyping.
-    forcefield : AtomTypingRulesProvider, foyer.ForceField
+    atomtype_rules : AtomTypingRulesProvider, foyer.ForceField
         The atomtyping rules provider object/foyer forcefield.
     max_iter : int, optional, default=10
         The maximum number of iterations.
@@ -77,14 +77,17 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     elif isinstance(structure, Topology):
         topology_graph = TopologyGraph.from_gmso_topology(structure)
 
-    forcefield = AtomTypingRulesProvider.from_foyer_forcefield(forcefield)
+    if isinstance(atomtype_rules, Forcefield):
+        atomtype_rules = AtomTypingRulesProvider.from_foyer_forcefield(
+            atomtype_rules
+        )
 
     typemap = {
         atom_index: {"whitelist": set(), "blacklist": set(), "atomtype": None}
         for atom_index in topology_graph.atoms(data=False)
     }
 
-    rules = _load_rules(forcefield, typemap)
+    rules = _load_rules(atomtype_rules, typemap)
 
     # Only consider rules for elements found in topology
     subrules = dict()
@@ -94,7 +97,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
         # First add non-element types, which are strings, then elements
         name = atom_data.name
         if name.startswith("_"):
-            if name in forcefield.non_element_types:
+            if name in atomtype_rules.non_element_types:
                 system_elements.add(name)
         else:
             atomic_number = atom_data.atomic_number
@@ -143,7 +146,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
 
 
 def _load_rules(rules_provider, typemap):
-    """Load atomtyping rules from a forcefield into SMARTSGraphs."""
+    """Load atomtyping rules from a AtomTypingRulesProvider into SMARTSGraphs."""
     rules = dict()
     # For every SMARTS string in the force field,
     # create a SMARTSGraph object
