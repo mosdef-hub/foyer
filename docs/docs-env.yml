@@ -2,9 +2,8 @@ name: foyer-docs
 channels:
   - jaimergp/label/unsupported-cudatoolkit-shim
   - conda-forge
-  - omnia
 dependencies:
-  - python=3.7
+  - python>=3.8
   - gmso
   - openmm>=7.6
   - parmed>=3.4.3
