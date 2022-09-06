@@ -60,8 +60,7 @@ class TopologyGraph(nx.Graph):
         index: int,
         name: str,
         atomic_number: Optional[int] = None,
-        # consider renaming to `symbol`, `element` implies a custom object
-        element: Optional[str] = None,
+        symbol: Optional[str] = None,
         **kwargs,
     ):
         """Add an atom to the topology graph.
@@ -75,7 +74,7 @@ class TopologyGraph(nx.Graph):
             the name must start with an underscore (_)
         atomic_number: optional, int, default=None
             The atomic number if the atom represents an element
-        element: optional, str, default=None
+        symbol: optional, str, default=None
             The element symbol associated with the atom
             if it represents an element
         **kwargs
@@ -86,13 +85,13 @@ class TopologyGraph(nx.Graph):
         foyer.topology_graph.AtomData
             The class used to store atom data
         """
-        if not name.startswith("_") and not (atomic_number and element):
+        if not name.startswith("_") and not (atomic_number and symbol):
             raise FoyerError(
                 "For atoms representing an element, please include "
-                "both the atomic_number or element symbol for the atom"
+                "both the atomic_number or symbol for the atom"
             )
 
-        atom_data = AtomData(index, name, atomic_number, element, **kwargs)
+        atom_data = AtomData(index, name, atomic_number, symbol, **kwargs)
         self.add_node(index, atom_data=atom_data)
 
     def add_bond(self, atom_1_index, atom_2_index):
@@ -145,16 +144,16 @@ class TopologyGraph(nx.Graph):
         for atom in structure.atoms:
             if atom.name.startswith("_"):
                 atomic_number = None
-                element = None
+                symbol = None
             else:
                 atomic_number = atom.atomic_number
-                element = atom.element_name
+                symbol = atom.element_name
 
             topology_graph.add_atom(
                 name=atom.name,
                 index=atom.idx,
                 atomic_number=atomic_number,
-                element=element,
+                symbol=symbol,
             )
 
         for bond in structure.bonds:
@@ -205,7 +204,7 @@ class TopologyGraph(nx.Graph):
                     name=atom.name,
                     index=top_atom.topology_atom_index,
                     atomic_number=atom.atomic_number,
-                    element=element_symbol,
+                    symbol=element_symbol,
                 )
 
             for top_bond in openff_topology.topology_bonds:
@@ -226,7 +225,7 @@ class TopologyGraph(nx.Graph):
                     name=atom.name,
                     index=atom_index,
                     atomic_number=atom.atomic_number,
-                    element=element_symbol,
+                    symbol=element_symbol,
                 )
 
             for bond in openff_topology.bonds:
@@ -272,7 +271,7 @@ class TopologyGraph(nx.Graph):
                         name=atom.name,
                         index=gmso_topology.get_index(atom),
                         atomic_number=None,
-                        element=atom.name,
+                        symbol=atom.name,
                     )
 
                 else:
@@ -280,7 +279,7 @@ class TopologyGraph(nx.Graph):
                         name=atom.name,
                         index=gmso_topology.get_index(atom),
                         atomic_number=atom.element.atomic_number,
-                        element=atom.element.symbol,
+                        symbol=atom.element.symbol,
                     )
 
         for top_bond in gmso_topology.bonds:
