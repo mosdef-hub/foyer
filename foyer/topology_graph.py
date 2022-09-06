@@ -221,7 +221,7 @@ class TopologyGraph(nx.Graph):
 
             for atom in openff_topology.atoms:
                 atom_index = openff_topology.atom_index(atom)
-                element_symbol = SYMBOLS[atomic_number]
+                element_symbol = SYMBOLS[atom.atomic_number]
                 top_graph.add_atom(
                     name=atom.name,
                     index=atom_index,
