@@ -1,5 +1,6 @@
 name: foyer-docs
 channels:
+  - jaimergp/label/unsupported-cudatoolkit-shim
   - conda-forge
   - omnia
 dependencies:
