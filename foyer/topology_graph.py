@@ -1,9 +1,17 @@
 """Module to represent chemical systems as graph structures."""
+from typing import TYPE_CHECKING, Optional
+
 import networkx as nx
 from parmed import Structure
-from parmed import periodic_table as pt
 
 from foyer.exceptions import FoyerError
+
+if TYPE_CHECKING:
+    from openff.toolkit.topology import Topology as OpenFFTopology
+
+    from foyer.utils.io import import_
+
+    gmso = import_("gmso")
 
 
 class AtomData:
@@ -47,7 +55,14 @@ class TopologyGraph(nx.Graph):
     def __init__(self, *args, **kwargs):
         super(TopologyGraph, self).__init__(*args, **kwargs)
 
-    def add_atom(self, index, name, atomic_number=None, element=None, **kwargs):
+    def add_atom(
+        self,
+        index: int,
+        name: str,
+        atomic_number: Optional[int] = None,
+        symbol: Optional[str] = None,
+        **kwargs,
+    ):
         """Add an atom to the topology graph.
 
         Parameters
@@ -59,7 +74,7 @@ class TopologyGraph(nx.Graph):
             the name must start with an underscore (_)
         atomic_number: optional, int, default=None
             The atomic number if the atom represents an element
-        element: optional, str, default=None
+        symbol: optional, str, default=None
             The element symbol associated with the atom
             if it represents an element
         **kwargs
@@ -70,13 +85,13 @@ class TopologyGraph(nx.Graph):
         foyer.topology_graph.AtomData
             The class used to store atom data
         """
-        if not name.startswith("_") and not (atomic_number and element):
+        if not name.startswith("_") and not (atomic_number and symbol):
             raise FoyerError(
                 "For atoms representing an element, please include "
-                "both the atomic_number or element symbol for the atom"
+                "both the atomic_number or symbol for the atom"
             )
 
-        atom_data = AtomData(index, name, atomic_number, element, **kwargs)
+        atom_data = AtomData(index, name, atomic_number, symbol, **kwargs)
         self.add_node(index, atom_data=atom_data)
 
     def add_bond(self, atom_1_index, atom_2_index):
@@ -129,16 +144,16 @@ class TopologyGraph(nx.Graph):
         for atom in structure.atoms:
             if atom.name.startswith("_"):
                 atomic_number = None
-                element = None
+                symbol = None
             else:
                 atomic_number = atom.atomic_number
-                element = atom.element_name
+                symbol = atom.element_name
 
             topology_graph.add_atom(
                 name=atom.name,
                 index=atom.idx,
                 atomic_number=atomic_number,
-                element=element,
+                symbol=symbol,
             )
 
         for bond in structure.bonds:
@@ -147,7 +162,7 @@ class TopologyGraph(nx.Graph):
         return topology_graph
 
     @classmethod
-    def from_openff_topology(cls, openff_topology):
+    def from_openff_topology(cls, openff_topology: "OpenFFTopology"):
         """Return a TopologyGraph with relevant attributes from an openForceField topology.
 
         Parameters
@@ -161,38 +176,68 @@ class TopologyGraph(nx.Graph):
 
             The equivalent TopologyGraph of the openFF Topology `openff_topology`
         """
-        from foyer.utils.io import import_
+        try:
+            from openff.toolkit.topology import Topology
+        except ImportError as e:
+            raise ImportError(
+                "`TopologyGraph.from_openff_topology` requires that "
+                "the OpenFF Toolkit is installed."
+            ) from e
 
-        openff_toolkit = import_(
-            "openff.toolkit"
-        )  # This might only be required for type checking
-        if not isinstance(openff_topology, openff_toolkit.topology.Topology):
+        if not isinstance(openff_topology, Topology):
             raise TypeError(
-                f"Expected `openff_topology` to be of type {openff_toolkit.topology.Topology}. "
+                f"Expected `openff_topology` to be of type {Topology}. "
                 f"Got {type(openff_topology).__name__} instead"
             )
 
+        uses_old_api = hasattr(Topology(), "_topology_molecules")
+
         top_graph = cls()
-        for top_atom in openff_topology.topology_atoms:
-            atom = top_atom.atom
-            element = pt.Element[atom.atomic_number]
-            top_graph.add_atom(
-                name=atom.name,
-                index=top_atom.topology_atom_index,
-                atomic_number=atom.atomic_number,
-                element=element,
-            )
 
-        for top_bond in openff_topology.topology_bonds:
-            atoms_indices = [
-                atom.topology_atom_index for atom in top_bond.atoms
-            ]
-            top_graph.add_bond(atoms_indices[0], atoms_indices[1])
+        if uses_old_api:
+            from parmed import periodic_table as pt
 
-        return top_graph
+            for top_atom in openff_topology.topology_atoms:
+                atom = top_atom.atom
+                element_symbol = pt.Element[atom.atomic_number]
+                top_graph.add_atom(
+                    name=atom.name,
+                    index=top_atom.topology_atom_index,
+                    atomic_number=atom.atomic_number,
+                    symbol=element_symbol,
+                )
+
+            for top_bond in openff_topology.topology_bonds:
+                atoms_indices = [
+                    atom.topology_atom_index for atom in top_bond.atoms
+                ]
+                top_graph.add_bond(atoms_indices[0], atoms_indices[1])
+
+            return top_graph
+
+        else:
+            from openff.units.elements import SYMBOLS
+
+            for atom in openff_topology.atoms:
+                atom_index = openff_topology.atom_index(atom)
+                element_symbol = SYMBOLS[atom.atomic_number]
+                top_graph.add_atom(
+                    name=atom.name,
+                    index=atom_index,
+                    atomic_number=atom.atomic_number,
+                    symbol=element_symbol,
+                )
+
+            for bond in openff_topology.bonds:
+                atoms_indices = [
+                    openff_topology.atom_index(atom) for atom in bond.atoms
+                ]
+                top_graph.add_bond(*atoms_indices)
+
+            return top_graph
 
     @classmethod
-    def from_gmso_topology(cls, gmso_topology):
+    def from_gmso_topology(cls, gmso_topology: "gmso.Topology"):
         """Return a TopologyGraph with relevant attributes from an GMSO topology.
 
         Parameters
@@ -205,13 +250,16 @@ class TopologyGraph(nx.Graph):
         TopologyGraph
             The equivalent TopologyGraph of the openFF Topology `openff_topology`
         """
-        from foyer.utils.io import import_
-
-        gmso = import_("gmso")  # This might only be required for type checking
+        try:
+            import gmso
+        except ImportError as e:
+            raise ImportError(
+                "`TopologyGraph.from_gmso_topology` requires that GMSO is installed."
+            ) from e
 
         if not isinstance(gmso_topology, gmso.Topology):
             raise TypeError(
-                f"Expected `openff_topology` to be of type {gmso.Topology}. "
+                f"Expected `gmso_topology` to be of type {gmso.Topology}. "
                 f"Got {type(gmso_topology).__name__} instead"
             )
 
@@ -223,7 +271,7 @@ class TopologyGraph(nx.Graph):
                         name=atom.name,
                         index=gmso_topology.get_index(atom),
                         atomic_number=None,
-                        element=atom.name,
+                        symbol=atom.name,
                     )
 
                 else:
@@ -231,7 +279,7 @@ class TopologyGraph(nx.Graph):
                         name=atom.name,
                         index=gmso_topology.get_index(atom),
                         atomic_number=atom.element.atomic_number,
-                        element=atom.element.symbol,
+                        symbol=atom.element.symbol,
                     )
 
         for top_bond in gmso_topology.bonds:

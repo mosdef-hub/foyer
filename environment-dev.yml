@@ -12,7 +12,7 @@ dependencies:
   - openmm>=7.7
   - parmed>=3.4.3
   - ele
-  - openff-toolkit
+  - openff-toolkit >=0.11.0
   - gmso
   - pip
   - pre-commit
@@ -20,7 +20,7 @@ dependencies:
   - pytest-azurepipelines
   - pytest-cov
   - pytest-timeout
-  - python>=3.7
+  - python>=3.8
   - requests
   - requests-mock
   - pip:

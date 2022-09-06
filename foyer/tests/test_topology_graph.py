@@ -122,3 +122,12 @@ class TestTopologyGraph(BaseTest):
 
         with pytest.raises(TypeError):
             TopologyGraph.from_parmed("NonParmedStructure")
+
+    def test_from_openff_topology(self):
+        from openff.toolkit.topology import Molecule
+
+        topology = Molecule.from_smiles("CCO").to_topology()
+        topology_graph = TopologyGraph.from_openff_topology(topology)
+
+        assert topology_graph.number_of_nodes() == topology.n_atoms
+        assert topology_graph.number_of_edges() == topology.n_bonds
