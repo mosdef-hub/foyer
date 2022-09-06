@@ -20,7 +20,7 @@ dependencies:
   - pytest-azurepipelines
   - pytest-cov
   - pytest-timeout
-  - python>=3.7
+  - python>=3.8
   - requests
   - requests-mock
   - pip:
