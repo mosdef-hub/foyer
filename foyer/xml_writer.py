@@ -461,6 +461,10 @@ def _infer_lj14scale(struct, combining_rule: str):
     """Infer the Lennard-Jones 1-4 scaling factor in the structure."""
     lj14scale = list()
 
+    if struct.defaults:
+        combining_rules = {2: "lorentz", 3: "geometric"}
+        return combining_rules[struct.defaults.comb_rule]
+
     for adj in struct.adjusts:
         type1 = adj.atom1.atom_type
         type2 = adj.atom2.atom_type
