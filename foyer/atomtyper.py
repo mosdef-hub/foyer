@@ -84,7 +84,9 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     elif isinstance(forcefield, AtomTypingRulesProvider):
         atomtype_rules = forcefield
     else:
-        raise TypeError("Invalid forcefield (must be of type Forcefield or AtomTypingRulesProvider).")
+        raise TypeError(
+            "Invalid forcefield (must be of type Forcefield or AtomTypingRulesProvider)."
+        )
 
     typemap = {
         atom_index: {"whitelist": set(), "blacklist": set(), "atomtype": None}
