@@ -2,7 +2,6 @@ import numpy as np
 import parmed as pmd
 import pytest
 
-from foyer import Forcefield
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import get_fn
 from foyer.utils.nbfixes import apply_nbfix

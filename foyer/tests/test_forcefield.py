@@ -1,6 +1,5 @@
 import difflib
 import glob
-import itertools as it
 import os
 from typing import List
 
@@ -19,7 +18,6 @@ from foyer.exceptions import (
 from foyer.forcefield import (
     _check_independent_residues,
     _structure_from_residue,
-    generate_topology,
 )
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import get_fn, register_mock_request
