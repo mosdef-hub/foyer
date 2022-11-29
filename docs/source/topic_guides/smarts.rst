@@ -46,7 +46,7 @@ While this approach works, it becomes more challenging to maintain the
 correct ordering of rules as the number of atomtypes grows. Foyer
 iteratively runs all rules on all atoms and each atom maintains a
 whitelist (rules that apply) and a blacklist (rules that have been
-superceded by another rule). The set difference between the white- and
+superseded by another rule). The set difference between the white- and
 blacklists yields the correct atomtype if the force field is implemented
 correctly.
 
@@ -70,7 +70,7 @@ If we’re atomtyping a benzene molecule, the carbon atoms will match the
 SMARTS patterns for both ``opls_142`` and ``opls_145``. Without the
 ``overrides`` attribute, foyer will notify you that multiple atomtypes
 were found for each carbon. Providing the ``overrides`` indicates that
-if the ``opls_145`` pattern matches, it should supercede the specified
+if the ``opls_145`` pattern matches, it should supersede the specified
 rules.
 
 Supported SMARTS Grammar

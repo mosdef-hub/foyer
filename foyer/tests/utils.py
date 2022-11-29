@@ -123,7 +123,7 @@ def is_running_on_windows():
 
 
 try:
-    import openff.tookit
+    import openff.toolkit
 
     has_openff_toolkit = True
 except ImportError:

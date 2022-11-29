@@ -350,7 +350,7 @@ def _error_or_warn(error, msg):
 
 
 def _check_bonds(data, structure, verbose, assert_bond_params):
-    """Check if any bonds lack paramters."""
+    """Check if any bonds lack parameters."""
     if data.bonds:
         missing = [b for b in structure.bonds if b.type is None]
         if missing:
@@ -745,7 +745,7 @@ class Forcefield(app.ForceField):
             Store atomtyped topologies of residues to a dictionary that maps
             them to residue names.  Each topology, including atomtypes, will be
             copied to other residues with the same name. This avoids repeatedly
-            calling the subgraph isomorphism on idential residues and should
+            calling the subgraph isomorphism on identical residues and should
             result in better performance for systems with many identical
             residues, i.e. a box of water. Note that for this to be applied to
             independent molecules, they must each be saved as different
@@ -769,7 +769,7 @@ class Forcefield(app.ForceField):
         if self.atomTypeDefinitions == {}:
             raise FoyerError(
                 "Attempting to atom-type using a force field "
-                "with no atom type defitions."
+                "with no atom type definitions."
             )
 
         if not isinstance(structure, pmd.Structure):
@@ -831,7 +831,7 @@ class Forcefield(app.ForceField):
             Store atomtyped topologies of residues to a dictionary that maps
             them to residue names.  Each topology, including atomtypes, will be
             copied to other residues with the same name. This avoids repeatedly
-            calling the subgraph isomorphism on idential residues and should
+            calling the subgraph isomorphism on identical residues and should
             result in better performance for systems with many identical
             residues, i.e. a box of water. Note that for this to be applied to
             independent molecules, they must each be saved as different
