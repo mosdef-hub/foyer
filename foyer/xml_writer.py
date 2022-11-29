@@ -26,7 +26,7 @@ def write_foyer(
     Information from a ParmEd Structure is used to create a Foyer force
     field XML. If the Forcefield used to parameterize the Structure is
     passed to this function through the `forcefield` argument then the
-    resulting XML should be able to be used to exacty reproduce the
+    resulting XML should be able to be used to exactly reproduce the
     parameterization. Otherwise, all topological information will be
     written, but the `AtomTypes` section will be missing information
     (such as SMARTS definitions).
