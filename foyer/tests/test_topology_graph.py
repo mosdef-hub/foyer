@@ -2,7 +2,6 @@ import networkx as nx
 import pytest
 
 from foyer.atomtyper import find_atomtypes
-from foyer.forcefield import Forcefield
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import (
     has_gmso,

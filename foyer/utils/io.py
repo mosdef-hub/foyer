@@ -1,16 +1,12 @@
 """File I/O support module."""
 from __future__ import division, print_function
 
-import glob
 import importlib
 import inspect
 import os
 import sys
 import textwrap
-from os.path import abspath, join, split
 from unittest import SkipTest
-
-import numpy as np
 
 
 class DelayImportError(ImportError, SkipTest):
