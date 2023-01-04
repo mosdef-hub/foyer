@@ -21,13 +21,13 @@ repos:
     - id: black
       args: [--line-length=80]
 - repo: https://github.com/pycqa/isort
-  rev: 5.11.1
+  rev: 5.11.4
   hooks:
     - id: isort
       name: isort (python)
       args: [--profile=black, --line-length=80]
 - repo: https://github.com/pycqa/pydocstyle
-  rev: '6.1.1'
+  rev: '6.2.0'
   hooks:
     - id: pydocstyle
       exclude: ^(foyer/tests/|docs/|devtools/|setup.py)
