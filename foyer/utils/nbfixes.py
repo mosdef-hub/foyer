@@ -1,5 +1,5 @@
 """Support non-bonded fixes for various interactions."""
-from copy import deepcopy
+from parmed import Structure
 
 
 def apply_nbfix(struct, atom_type1, atom_type2, sigma, epsilon):
@@ -23,7 +23,7 @@ def apply_nbfix(struct, atom_type1, atom_type2, sigma, epsilon):
     struct : parmed.structure.Structure
         The input structure with the nbfix applied.
     """
-    struct_copy = deepcopy(struct)
+    struct_copy = struct.copy(cls=Structure, split_dihedrals=True)
 
     atom_types = list({a.atom_type for a in struct_copy.atoms})
     for atom_type in sorted(atom_types, key=lambda a: a.name):
