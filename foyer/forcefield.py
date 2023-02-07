@@ -1649,7 +1649,7 @@ class Forcefield(app.ForceField):
                 # Prefer specific definitions over ones with wildcards
                 continue
             if atom_1_type in types1:
-                for (t2, t3, t4) in itertools.permutations(
+                for t2, t3, t4 in itertools.permutations(
                     ((atom_2_type, 1), (atom_3_type, 2), (atom_4_type, 3))
                 ):
                     if t2[0] in types2 and t3[0] in types3 and t4[0] in types4:
