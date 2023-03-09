@@ -14,7 +14,7 @@ generating, syntactically correct input files for various simulation engines. Fo
 dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility
 (for more information, see [our paper](https://www.sciencedirect.com/science/article/pii/S0927025619303040) or its corresponding [pre-print](https://arxiv.org/pdf/1812.06779.pdf)).
 
-_About the name:_ foyer was inspired by the [antechamber](http://ambermd.org/antechamber/ac.html) tool in the [Amber](https://ambermd.org/) ecosystem. Foyer plays a similar role to antechamber, hence the tongue in cheek, shared vestibular reference.
+_About the name:_ foyer was inspired by the [antechamber](http://ambermd.org/antechamber/ac.html) tool in the [Amber](https://ambermd.org/) ecosystem. Foyer plays a similar role to antechamber, hence the tongue-in-cheek, shared vestibular reference.
 
 #### Foyer within the MoSDeF Ecosystem
 <p align="center">
