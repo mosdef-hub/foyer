@@ -1,7 +1,8 @@
+import os
+
 import numpy as np
 import parmed as pmd
 import pytest
-import os 
 
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import get_fn
@@ -10,7 +11,7 @@ from foyer.utils.nbfixes import apply_nbfix
 
 class TestUtils(BaseTest):
     @pytest.mark.skipif(
-        "win" in os.platform() 
+        "win" in os.platform()
         or pmd.version.major < 4
         or (
             pmd.version.major == 4
