@@ -1,5 +1,3 @@
-import os
-
 import numpy as np
 import parmed as pmd
 import pytest
