@@ -8,6 +8,7 @@ dependencies:
   - lark-parser
   - lxml
   - mbuild
+  - treelib
   - gmso
   - networkx>=2.5
   - openmm=7.7
@@ -20,5 +21,5 @@ dependencies:
   - python>=3.8
   - requests
   - requests-mock
- # - pip:
- #   - "--editable=git+https://github.com/rsdefever/antefoyer.git#egg=antefoyer"
+  - pip:
+    - "--editable=git+https://github.com/rsdefever/antefoyer.git#egg=antefoyer"
