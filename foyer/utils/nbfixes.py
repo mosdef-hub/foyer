@@ -42,5 +42,4 @@ def apply_nbfix(struct, atom_type1, atom_type2, sigma, epsilon):
         if atom_type.name == atom_type2:
             atom_type.add_nbfix(atom_type1, rmin, epsilon)
 
-
     return struct_copy
