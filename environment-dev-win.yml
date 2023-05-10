@@ -11,7 +11,7 @@ dependencies:
   - treelib
   - gmso
   - networkx>=2.5
-  - openmm=7.7
+  - openmm
   - parmed>=3.4.3
   - pip
   - pytest
