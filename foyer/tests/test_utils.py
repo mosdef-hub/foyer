@@ -15,7 +15,7 @@ class TestUtils(BaseTest):
         or pmd.version.major < 4
         or (
             pmd.version.major == 4
-            and pmd.verion.minor == pmd.version.patchlvel == 0
+            and pmd.version.minor == pmd.version.patchlevel == 0
         ),
         reason="obsolete parmed version",
     )
