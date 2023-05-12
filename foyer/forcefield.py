@@ -723,7 +723,7 @@ class Forcefield(app.ForceField):
         self,
         structure,
         references_file=None,
-        use_residue_map=True,
+        use_residue_map=False,
         assert_bond_params=True,
         assert_angle_params=True,
         assert_dihedral_params=True,
@@ -741,7 +741,7 @@ class Forcefield(app.ForceField):
         references_file : str, optional, default=None
             Name of file where force field references will be written (in Bibtex
             format)
-        use_residue_map : boolean, optional, default=True
+        use_residue_map : boolean, optional, default=False
             Store atomtyped topologies of residues to a dictionary that maps
             them to residue names.  Each topology, including atomtypes, will be
             copied to other residues with the same name. This avoids repeatedly
