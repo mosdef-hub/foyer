@@ -1,6 +1,5 @@
 ARG PY_VERSION=3.10
 FROM continuumio/miniconda3:4.10.3-alpine AS builder
-ARG PY_VERSION
 
 EXPOSE 8888
 
@@ -14,6 +13,7 @@ USER root
 ADD . /foyer
 
 WORKDIR /foyer
+ARG PY_VERSION=3.10
 
 # Create a group and user
 RUN addgroup -S anaconda && adduser -S anaconda -G anaconda
