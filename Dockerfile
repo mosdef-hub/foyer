@@ -1,5 +1,5 @@
-ARG PY_VERSION=3.10
 FROM continuumio/miniconda3:4.10.3-alpine AS builder
+ARG PY_VERSION=3.10
 
 EXPOSE 8888
 
