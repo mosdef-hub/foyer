@@ -22,10 +22,7 @@ RUN  micromamba install -c conda-forge nomkl jupyter python="3.10"
 RUN  python setup.py install
 RUN  echo "source activate foyer-dev" >> /home/.bashrc
 RUN  micromamba clean -afy
-RUN  mkdir -p /home/micromamba/data
-RUN  chown -R micromamba:micromamba /foyer
-RUN  chown -R micromamba:micromamba /opt
-RUN  chown -R micromamba:micromamba /home
+RUN  mkdir -p /home/data
 
 
 ENTRYPOINT ["/usr/local/bin/_entrypoint.sh"]
