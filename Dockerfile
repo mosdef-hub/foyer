@@ -5,7 +5,7 @@ EXPOSE 8888
 LABEL maintainer.name="mosdef-hub"\
   maintainer.url="https://mosdef.org"
 
-ENV PATH /opt/conda/bin:$PATH
+ENV PATH /opt/micromamba/bin:$PATH
 
 USER root
 
