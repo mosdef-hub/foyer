@@ -15,7 +15,7 @@ WORKDIR /foyer
 
 RUN apt-get update && apt-get install -y git
 
-RUN micromamba create --file environment-env.yml
+RUN micromamba create --file environment-dev.yml
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
 RUN  micromamba activate foyer-dev
