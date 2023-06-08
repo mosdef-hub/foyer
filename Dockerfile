@@ -13,8 +13,7 @@ ADD . /foyer
 
 WORKDIR /foyer
 
-RUN micromamba install --yes --file environment-dev.yml && \
-    micromamba clean --all --yes
+RUN micromamba create --file environment-dev.yml
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
 RUN  micromamba activate foyer-dev
