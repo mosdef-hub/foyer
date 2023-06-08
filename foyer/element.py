@@ -1,4 +1,6 @@
 """Element support in foyer."""
+import os
+
 import openmm.app.element as elem
 
 
