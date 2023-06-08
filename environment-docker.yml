@@ -1,0 +1,28 @@
+name: foyer-dev
+channels:
+  - conda-forge
+dependencies:
+  - bump2version
+  - codecov
+  - lark-parser
+  - lxml
+  - mbuild
+  - treelib
+  - gmso
+  - networkx>=2.5
+  - openmm
+  - parmed>=3.4.3
+  - ele
+  - openff-toolkit >=0.11.0
+  - gmso
+  - pip
+  - pre-commit
+  - pytest
+  - pytest-azurepipelines
+  - pytest-cov
+  - pytest-timeout
+  - python>=3.8
+  - requests
+  - requests-mock
+  - pip:
+    - "--editable=git+https://github.com/rsdefever/antefoyer.git#egg=antefoyer"
