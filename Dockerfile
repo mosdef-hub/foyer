@@ -20,12 +20,12 @@ ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
 RUN  micromamba install -c conda-forge nomkl jupyter python="3.10"
 RUN  python setup.py install
-RUN  echo "source activate foyer-dev" >> /home/micromamba/.profile
+RUN  echo "source activate foyer-dev" >> /home/.bashrc
 RUN  micromamba clean -afy
 RUN  mkdir -p /home/micromamba/data
 RUN  chown -R micromamba:micromamba /foyer
 RUN  chown -R micromamba:micromamba /opt
-RUN  chown -R micromamba:micromamba /home/micromamba
+RUN  chown -R micromamba:micromamba /home
 
 
 ENTRYPOINT ["/usr/local/bin/_entrypoint.sh"]
