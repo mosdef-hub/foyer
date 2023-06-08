@@ -13,7 +13,9 @@ ADD . /foyer
 
 WORKDIR /foyer
 
-RUN micromamba create --file environment-docker.yml
+RUN apt-get update && apt-get install -y git
+
+RUN micromamba create --file environment-env.yml
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
 RUN  micromamba activate foyer-dev
