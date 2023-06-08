@@ -18,15 +18,14 @@ RUN apt-get update && apt-get install -y git
 RUN micromamba create --file environment-dev.yml
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
-RUN  micromamba activate foyer-dev
 RUN  micromamba install -c conda-forge nomkl jupyter python="3.10"
 RUN  python setup.py install
-RUN  echo "source activate foyer-dev" >> /home/anaconda/.profile
+RUN  echo "source activate foyer-dev" >> /home/micromamba/.profile
 RUN  micromamba clean -afy
-RUN  mkdir -p /home/anaconda/data
-RUN  chown -R anaconda:anaconda /foyer
-RUN  chown -R anaconda:anaconda /opt
-RUN  chown -R anaconda:anaconda /home/anaconda
+RUN  mkdir -p /home/micromamba/data
+RUN  chown -R micromamba:micromamba /foyer
+RUN  chown -R micromamba:micromamba /opt
+RUN  chown -R micromamba:micromamba /home/micromamba
 
 
 ENTRYPOINT ["/usr/local/bin/_entrypoint.sh"]
