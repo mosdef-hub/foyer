@@ -197,7 +197,7 @@ class TopologyGraph(nx.Graph):
         if uses_old_api:
             from parmed import periodic_table as pt
 
-            for top_atom in openff_topology.topology_atoms:
+            for top_atom in openff_topology.atoms:
                 atom = top_atom.atom
                 element_symbol = pt.Element[atom.atomic_number]
                 top_graph.add_atom(
