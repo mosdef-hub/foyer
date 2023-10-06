@@ -15,4 +15,5 @@ dependencies:
   - pytest-azurepipelines
   - pytest-cov
   - pytest-timeout
+  - pytest-xdist
   - python<=3.8
