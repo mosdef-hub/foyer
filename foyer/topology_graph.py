@@ -190,51 +190,27 @@ class TopologyGraph(nx.Graph):
                 f"Got {type(openff_topology).__name__} instead"
             )
 
-        uses_old_api = hasattr(Topology(), "_topology_molecules")
-
         top_graph = cls()
 
-        if uses_old_api:
-            from parmed import periodic_table as pt
+        from openff.units.elements import SYMBOLS
 
-            for top_atom in openff_topology.atoms:
-                atom = top_atom.atom
-                element_symbol = pt.Element[atom.atomic_number]
-                top_graph.add_atom(
-                    name=atom.name,
-                    index=top_atom.topology_atom_index,
-                    atomic_number=atom.atomic_number,
-                    symbol=element_symbol,
-                )
+        for atom in openff_topology.atoms:
+            atom_index = openff_topology.atom_index(atom)
+            element_symbol = SYMBOLS[atom.atomic_number]
+            top_graph.add_atom(
+                name=atom.name,
+                index=atom_index,
+                atomic_number=atom.atomic_number,
+                symbol=element_symbol,
+            )
 
-            for top_bond in openff_topology.topology_bonds:
-                atoms_indices = [
-                    atom.topology_atom_index for atom in top_bond.atoms
-                ]
-                top_graph.add_bond(atoms_indices[0], atoms_indices[1])
+        for bond in openff_topology.bonds:
+            atoms_indices = [
+                openff_topology.atom_index(atom) for atom in bond.atoms
+            ]
+            top_graph.add_bond(*atoms_indices)
 
-            return top_graph
-
-        else:
-            from openff.units.elements import SYMBOLS
-
-            for atom in openff_topology.atoms:
-                atom_index = openff_topology.atom_index(atom)
-                element_symbol = SYMBOLS[atom.atomic_number]
-                top_graph.add_atom(
-                    name=atom.name,
-                    index=atom_index,
-                    atomic_number=atom.atomic_number,
-                    symbol=element_symbol,
-                )
-
-            for bond in openff_topology.bonds:
-                atoms_indices = [
-                    openff_topology.atom_index(atom) for atom in bond.atoms
-                ]
-                top_graph.add_bond(*atoms_indices)
-
-            return top_graph
+        return top_graph
 
     @classmethod
     def from_gmso_topology(cls, gmso_topology: "gmso.Topology"):

@@ -50,7 +50,7 @@ jobs:
         run: python -m pip install -e .
 
       - name: Test (OS -> ${{ matrix.os }} / Python -> ${{ matrix.python-version }})
-        run: python -m pytest -v --cov=foyer --cov-report=xml --cov-append --cov-config=setup.cfg --color yes --pyargs foyer
+        run: python -m pytest -v -nauto --cov=foyer --cov-report=xml --cov-append --cov-config=setup.cfg --color yes --pyargs foyer
 
       - name: Upload Coverage Report
         uses: codecov/codecov-action@v2
@@ -95,7 +95,7 @@ jobs:
 
       - name: Run Bleeding Edge Tests
         run: |
-          python -m pytest -v --color yes --pyargs foyer
+          python -m pytest -v -nauto --color yes --pyargs foyer
 
   docker:
     runs-on: ubuntu-latest
