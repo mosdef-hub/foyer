@@ -1,7 +1,7 @@
 ### Foyer: A package for atom-typing as well as applying and disseminating forcefields
 
 [![Gitter chat](https://badges.gitter.im/mosdef-hub/gitter.svg)](https://gitter.im/mosdef-hub/Lobby)
-[![AZP Build Status](https://dev.azure.com/mosdef/mosdef/_apis/build/status/mosdef-hub.foyer?branchName=master)](https://dev.azure.com/mosdef/mosdef/_build/latest?definitionId=2&branchName=master)
+[![CI](https://github.com/mosdef-hub/foyer/actions/workflows/CI.yaml/badge.svg)](https://github.com/mosdef-hub/foyer/actions/workflows/CI.yaml)
 [![Anaconda Badge](https://anaconda.org/conda-forge/foyer/badges/version.svg)](https://anaconda.org/conda-forge/foyer)
 [![codecov](https://codecov.io/gh/mosdef-hub/foyer/branch/master/graph/badge.svg)](https://codecov.io/gh/mosdef-hub/foyer)
 [![DOI](https://zenodo.org/badge/34077879.svg)](https://zenodo.org/badge/latestdoi/34077879)
@@ -13,6 +13,8 @@ rules in a format that is both human- and machine-readable.  It parametrizes che
 generating, syntactically correct input files for various simulation engines. Foyer provides a framework for force field
 dissemination, helping to eliminate ambiguity in atom-typing and improving reproducibility
 (for more information, see [our paper](https://www.sciencedirect.com/science/article/pii/S0927025619303040) or its corresponding [pre-print](https://arxiv.org/pdf/1812.06779.pdf)).
+
+_About the name:_ foyer was inspired by the [antechamber](http://ambermd.org/antechamber/ac.html) tool in the [Amber](https://ambermd.org/) ecosystem. Foyer plays a similar role to antechamber, hence the tongue-in-cheek, shared vestibular reference.
 
 #### Foyer within the MoSDeF Ecosystem
 <p align="center">
@@ -39,7 +41,7 @@ Foyer can apply the forcefield to arbitrary chemical topologies. We currently su
 * [ParmEd.Structure](http://parmed.github.io/ParmEd/html/structure.html)
 * [mBuild.Compound](http://mosdef-hub.github.io/mbuild/data_structures.html)
 * [gmso.Topology](https://gmso.mosdef.org/en/stable/data_structures.html#gmso.Topology)
-* [openff.tookit.topology.Topology](https://open-forcefield-toolkit.readthedocs.io/en/0.9.2/api/generated/openff.toolkit.topology.Topology.html#openff-toolkit-topology-topology)
+* [openff.toolkit.topology.Topology](https://open-forcefield-toolkit.readthedocs.io/en/0.9.2/api/generated/openff.toolkit.topology.Topology.html#openff-toolkit-topology-topology)
 
 Application of a force field can be as simple as:
 ```python
@@ -56,7 +58,7 @@ ethane.save('ethane.gro')
 ```
 
 The `Foyer` package is part of the [Molecular Simulation Design Framework (MoSDeF) project](http://mosdef.org/).
-Libraries in the MoSDeF ecosystem are designed to provide utilities neccessary to streamline
+Libraries in the MoSDeF ecosystem are designed to provide utilities necessary to streamline
 a researcher's simulation workflow. When setting up simulation studies,
 we also recommend users to follow the [TRUE](https://www.tandfonline.com/doi/full/10.1080/00268976.2020.1742938)
 (Transparent, Reproducible, Usable-by-others, and Extensible) standard, which is a set of common
@@ -82,12 +84,12 @@ To learn more about using `foyer` with docker, please refer to the documentation
 
 
 #### Getting started with SMARTS-based atom-typing
-* [SMARTS-based atomtyping](docs/smarts.rst)
+* [SMARTS-based atomtyping](docs/source/topic_guides/smarts.rst)
 * [Supported SMARTS Grammar](https://github.com/mosdef-hub/foyer/issues/63)
 
 #### Defining force fields:
-* [Defining force field parameters](docs/parameter_definitions.rst)
-* [Force field file validation](docs/validation.rst)
+* [Defining force field parameters](docs/source/topic_guides/parameter_definitions.rst)
+* [Force field file validation](docs/source/reference/validation.rst)
 
 
 #### Example foyer force field files:
@@ -104,15 +106,15 @@ Example template for disseminating force fields:
 
 
 #### Using Foyer to perform atom typing:
-* [Basic usage examples](docs/usage_examples.rst)
+* [Basic usage examples](docs/source/topic_guides/usage_examples.rst)
 * [Detailed Jupyter notebook tutorials, including integration with mBuild](https://github.com/mosdef-hub/foyer_tutorials)
-* [Jupyter notebook tutorials](https://github.com/mosdef-hub/foyer/tree/master/docs/examples), from [our paper](https://arxiv.org/abs/1812.06779)
+* [Jupyter notebook tutorials](https://github.com/mosdef-hub/foyer_tutorials/tree/master), from [our paper](https://arxiv.org/abs/1812.06779)
 
 ### Documentation:
 * Documentation website: http://foyer.mosdef.org
 
 ### Installation instructions
-* [Installation instructions](docs/installation.rst)
+* [Installation instructions](docs/source/getting_started/install.rst)
 
 ### Citing Foyer:
 * If you use this package, please cite [our paper](https://www.sciencedirect.com/science/article/pii/S0927025619303040) published in [Computational Materials Science](https://www.journals.elsevier.com/computational-materials-science).

@@ -6,7 +6,6 @@ import parmed as pmd
 import pytest
 from pkg_resources import resource_filename
 
-from foyer import Forcefield, forcefields
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import atomtype
 
@@ -88,6 +87,43 @@ class TestOPLS(BaseTest):
         assert len(parametrized.rb_torsions) == 24
         assert all(x.type for x in parametrized.dihedrals)
         assert parametrized.combining_rule == "geometric"
+
+    def test_improper_in_structure(self):
+        files_with_impropers = [
+            ("o-xylene", 6),
+            ("nitroethane", 1),
+            ("fluorobenzene", 6),
+            ("N-methylformamide", 2),
+            ("formamide", 2),
+            ("toluene", 6),
+            ("3-methylphenol", 6),
+            ("4-methylphenol", 6),
+            ("2-methylphenol", 6),
+            ("nitrobenzene", 7),
+            ("dimethylformamide", 2),
+            ("nitromethane", 1),
+            ("NN-dimethylformamide", 2),
+            ("124-trimethylbenzene", 6),
+            ("phenol", 6),
+            ("ethylbenzene", 6),
+            ("NN-dimethylacetamide", 2),
+            ("13-difluorobenzene", 6),
+        ]  # found in the "impropers" sections of molecule_name.top
+        for molecule, n_impropers in files_with_impropers:
+            top = os.path.join(
+                OPLS_TESTFILES_DIR, molecule + "/" + molecule + ".top"
+            )
+            gro = os.path.join(
+                OPLS_TESTFILES_DIR, molecule + "/" + molecule + ".gro"
+            )
+            structure = pmd.load_file(top, xyz=gro)
+            impropers = []
+            [
+                impropers.append(dihedral)
+                for dihedral in structure.dihedrals
+                if dihedral.improper
+            ]
+            assert len(impropers) == n_impropers
 
 
 if __name__ == "__main__":

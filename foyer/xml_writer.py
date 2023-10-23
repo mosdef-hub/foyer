@@ -26,7 +26,7 @@ def write_foyer(
     Information from a ParmEd Structure is used to create a Foyer force
     field XML. If the Forcefield used to parameterize the Structure is
     passed to this function through the `forcefield` argument then the
-    resulting XML should be able to be used to exacty reproduce the
+    resulting XML should be able to be used to exactly reproduce the
     parameterization. Otherwise, all topological information will be
     written, but the `AtomTypes` section will be missing information
     (such as SMARTS definitions).
@@ -446,6 +446,9 @@ def _elements_equal(e1, e2):
 
 def _infer_coulomb14scale(struct):
     """Attempt to infer the coulombic 1-4 scaling factor in the structure."""
+    if struct.defaults:
+        return struct.defaults.fudgeQQ
+
     coul14 = [t.type.chgscale for t in struct.adjusts]
 
     if len(set(coul14)) == 1:
@@ -460,6 +463,9 @@ def _infer_coulomb14scale(struct):
 def _infer_lj14scale(struct, combining_rule: str):
     """Infer the Lennard-Jones 1-4 scaling factor in the structure."""
     lj14scale = list()
+
+    if struct.defaults:
+        return struct.defaults.fudgeLJ
 
     for adj in struct.adjusts:
         type1 = adj.atom1.atom_type

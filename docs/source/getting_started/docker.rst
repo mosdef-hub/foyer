@@ -24,7 +24,7 @@ The docker container will exit upon notebook shutdown.
 
 .. warning::
 
-    Containers by nature are ephemeral, so filesystem changes (e.g., adding a new notebook) only persist until the end of the container's lifecyle.
+    Containers by nature are ephemeral, so filesystem changes (e.g., adding a new notebook) only persist until the end of the container's lifecycle.
     If the container is removed, any changes or code addition will not persist.
     See the section below for persistent data.
 

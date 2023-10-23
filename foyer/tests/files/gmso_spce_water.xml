@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ForceField name="spce" version="0.0.1">
+  <FFMetaData electrostatics14Scale="0" nonBonded14Scale="0">
+    <Units energy="kJ/mol" mass="amu" charge="elementary_charge" distance="nm"/>
+  </FFMetaData>
+  <AtomTypes expression="4 * epsilon * ((sigma/r)**12 - (sigma/r)**6)">
+    <ParametersUnitDef parameter="epsilon" unit="kJ/mol"/>
+    <ParametersUnitDef parameter="sigma" unit="nm"/>
+    <AtomType name="o_spce" atomclass="OW" element="O" charge="-0.8476" mass="15.999" definition="O">
+      <Parameters>
+        <Parameter name="epsilon" value="0.650194"/>
+        <Parameter name="sigma" value="0.316557"/>
+      </Parameters>
+    </AtomType>
+    <AtomType name="h_spce" atomclass="HW" element="H" charge="0.4238" mass="1.008" definition="H">
+      <Parameters>
+        <Parameter name="epsilon" value="0.0"/>
+        <Parameter name="sigma" value="0.1"/>
+      </Parameters>
+    </AtomType>
+  </AtomTypes>
+  <BondTypes expression="0.5 * k * (r-r_eq)**2">
+    <ParametersUnitDef parameter="k" unit="kJ/mol/nm**2"/>
+    <ParametersUnitDef parameter="r_eq" unit="nm"/>
+    <BondType name="BondType1" class1="OW" class2="HW">
+      <Parameters>
+        <Parameter name="k" value="345000.0"/>
+        <Parameter name="r_eq" value="0.1"/>
+      </Parameters>
+    </BondType>
+  </BondTypes>
+  <AngleTypes expression="0.5 * k * (theta - theta_eq)**2">
+    <ParametersUnitDef parameter="k" unit="kJ/mol/rad**2"/>
+    <ParametersUnitDef parameter="theta_eq" unit="degree"/>
+    <AngleType name="AngleType1" class1="HW" class2="OW" class3="HW">
+      <Parameters>
+        <Parameter name="k" value="383.0"/>
+        <Parameter name="theta_eq" value="109.47"/>
+      </Parameters>
+    </AngleType>
+  </AngleTypes>
+</ForceField>

@@ -29,6 +29,7 @@ from openmm.app.forcefield import (
     RBTorsionGenerator,
     _convertParameterToNumber,
 )
+from parmed.gromacs.gromacstop import _Defaults
 from pkg_resources import iter_entry_points, resource_filename
 
 import foyer.element as custom_elem
@@ -348,11 +349,19 @@ def _error_or_warn(error, msg):
         warnings.warn(msg)
 
 
-def _check_bonds(data, structure, assert_bond_params):
-    """Check if any bonds lack paramters."""
+def _check_bonds(data, structure, verbose, assert_bond_params):
+    """Check if any bonds lack parameters."""
     if data.bonds:
         missing = [b for b in structure.bonds if b.type is None]
         if missing:
+            if verbose:
+                for bond in missing:
+                    a1 = bond.atom1
+                    a2 = bond.atom2
+                    print(
+                        f"Missing bond with ids {(a1.idx, a2.idx)} and types "
+                        f"{[a1.type, a2.type]}."
+                    )
             nmissing = len(structure.bonds) - len(missing)
             msg = (
                 "Parameters have not been assigned to all bonds. "
@@ -714,7 +723,7 @@ class Forcefield(app.ForceField):
         self,
         structure,
         references_file=None,
-        use_residue_map=True,
+        use_residue_map=False,
         assert_bond_params=True,
         assert_angle_params=True,
         assert_dihedral_params=True,
@@ -732,11 +741,11 @@ class Forcefield(app.ForceField):
         references_file : str, optional, default=None
             Name of file where force field references will be written (in Bibtex
             format)
-        use_residue_map : boolean, optional, default=True
+        use_residue_map : boolean, optional, default=False
             Store atomtyped topologies of residues to a dictionary that maps
             them to residue names.  Each topology, including atomtypes, will be
             copied to other residues with the same name. This avoids repeatedly
-            calling the subgraph isomorphism on idential residues and should
+            calling the subgraph isomorphism on identical residues and should
             result in better performance for systems with many identical
             residues, i.e. a box of water. Note that for this to be applied to
             independent molecules, they must each be saved as different
@@ -760,7 +769,7 @@ class Forcefield(app.ForceField):
         if self.atomTypeDefinitions == {}:
             raise FoyerError(
                 "Attempting to atom-type using a force field "
-                "with no atom type defitions."
+                "with no atom type definitions."
             )
 
         if not isinstance(structure, pmd.Structure):
@@ -774,7 +783,7 @@ class Forcefield(app.ForceField):
 
         self._apply_typemap(structure, typemap)
 
-        return self.parametrize_system(
+        structure = self.parametrize_system(
             structure=structure,
             references_file=references_file,
             assert_bond_params=assert_bond_params,
@@ -785,6 +794,31 @@ class Forcefield(app.ForceField):
             *args,
             **kwargs,
         )
+
+        # Start storing scaling factors and combining rule to parmed structure
+        # Utilizing parmed gromactop's _Default class
+
+        # Note: nb_func = 1 (LJ) or 2 (Buckingham), foyer forcefield only support 1 at the moment
+        # Combining rule follow GROMACS scheme, where "lorentz" is 2 and "geometric" is 3
+        combining_rules = {"lorentz": 2, "geometric": 3}
+        gen_pairs = "yes" if structure.adjusts else "no"
+        try:
+            lj14scale = self.lj14scale
+            coulomb14scale = self.coulomb14scale
+            structure.defaults = _Defaults(
+                nbfunc=1,
+                comb_rule=combining_rules[self.combining_rule],
+                gen_pairs=gen_pairs,
+                fudgeLJ=lj14scale,
+                fudgeQQ=coulomb14scale,
+            )
+        except AttributeError:
+            warnings.warn(
+                "Missing lj14scale or coulomb14scale, could not set structure metadata."
+            )
+            structure.defaults = None
+
+        return structure
 
     def run_atomtyping(self, structure, use_residue_map=True, **kwargs):
         """Atomtype the topology.
@@ -797,7 +831,7 @@ class Forcefield(app.ForceField):
             Store atomtyped topologies of residues to a dictionary that maps
             them to residue names.  Each topology, including atomtypes, will be
             copied to other residues with the same name. This avoids repeatedly
-            calling the subgraph isomorphism on idential residues and should
+            calling the subgraph isomorphism on identical residues and should
             result in better performance for systems with many identical
             residues, i.e. a box of water. Note that for this to be applied to
             independent molecules, they must each be saved as different
@@ -859,7 +893,7 @@ class Forcefield(app.ForceField):
         if box_vectors is not None:
             structure.box_vectors = box_vectors
 
-        _check_bonds(data, structure, assert_bond_params)
+        _check_bonds(data, structure, verbose, assert_bond_params)
         _check_angles(data, structure, verbose, assert_angle_params)
         _check_dihedrals(
             data,
@@ -1615,7 +1649,7 @@ class Forcefield(app.ForceField):
                 # Prefer specific definitions over ones with wildcards
                 continue
             if atom_1_type in types1:
-                for (t2, t3, t4) in itertools.permutations(
+                for t2, t3, t4 in itertools.permutations(
                     ((atom_2_type, 1), (atom_3_type, 2), (atom_4_type, 3))
                 ):
                     if t2[0] in types2 and t3[0] in types3 and t4[0] in types4:
@@ -1638,10 +1672,9 @@ class Forcefield(app.ForceField):
     def _get_periodic_torsion_params(torsion):
         params = {"periodicity": [], "phase": [], "k": []}
         for i in range(len(torsion.phase)):
-            if torsion.k[i] != 0:
-                params["periodicity"].append(torsion.periodicity[i])
-                params["phase"].append(torsion.phase[i])
-                params["k"].append(torsion.k[i])
+            params["periodicity"].append(torsion.periodicity[i])
+            params["phase"].append(torsion.phase[i])
+            params["k"].append(torsion.k[i])
 
         return params
 

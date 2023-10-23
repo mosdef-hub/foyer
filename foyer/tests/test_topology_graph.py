@@ -2,7 +2,6 @@ import networkx as nx
 import pytest
 
 from foyer.atomtyper import find_atomtypes
-from foyer.forcefield import Forcefield
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import (
     has_gmso,
@@ -122,3 +121,12 @@ class TestTopologyGraph(BaseTest):
 
         with pytest.raises(TypeError):
             TopologyGraph.from_parmed("NonParmedStructure")
+
+    def test_from_openff_topology(self):
+        from openff.toolkit.topology import Molecule
+
+        topology = Molecule.from_smiles("CCO").to_topology()
+        topology_graph = TopologyGraph.from_openff_topology(topology)
+
+        assert topology_graph.number_of_nodes() == topology.n_atoms
+        assert topology_graph.number_of_edges() == topology.n_bonds

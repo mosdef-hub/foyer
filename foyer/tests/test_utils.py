@@ -1,14 +1,24 @@
+import platform
+
 import numpy as np
 import parmed as pmd
 import pytest
 
-from foyer import Forcefield
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import get_fn
 from foyer.utils.nbfixes import apply_nbfix
 
 
 class TestUtils(BaseTest):
+    @pytest.mark.skipif(
+        platform.system() == "Windows"
+        or pmd.version.major < 4
+        or (
+            pmd.version.major == 4
+            and pmd.version.minor == pmd.version.patchlevel == 0
+        ),
+        reason="obsolete parmed version",
+    )
     def test_apply_nbfix(self, oplsaa):
         ethane = pmd.load_file(get_fn("ethane.mol2"), structure=True)
         ethane = oplsaa.apply(ethane)

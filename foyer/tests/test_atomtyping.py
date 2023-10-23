@@ -37,10 +37,10 @@ class TestRunAtomTyping(BaseTest):
         # during the atomtyping step
         top_graph = TopologyGraph()
         top_graph.add_atom(
-            name="C", index=0, atomic_number=atomic_num, element=symbol
+            name="C", index=0, atomic_number=atomic_num, symbol=symbol
         )
         for i in range(1, 5):
-            top_graph.add_atom(name="H", index=i, atomic_number=1, element="H")
+            top_graph.add_atom(name="H", index=i, atomic_number=1, symbol="H")
             top_graph.add_bond(0, i)
 
         with pytest.raises(FoyerError):

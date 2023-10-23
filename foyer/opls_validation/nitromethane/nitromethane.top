@@ -59,7 +59,7 @@ nitromethane  3
     4     1     5     7     3
 
 [ dihedrals ]
-5 6 7 1 1      improper_X_NO_ON_NO
+5 6 7 1 4      improper_X_NO_ON_NO
 
 [ system ]
 nitromethane GAS

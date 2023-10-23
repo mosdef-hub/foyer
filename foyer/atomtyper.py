@@ -7,8 +7,48 @@ from gmso import Topology
 from parmed import Structure
 
 from foyer.exceptions import FoyerError
+from foyer.smarts import SMARTS
 from foyer.smarts_graph import SMARTSGraph
 from foyer.topology_graph import TopologyGraph
+
+
+class AtomTypingRulesProvider:
+    """A generic rules provider for atomtyping, agnostic of the forcefield.
+
+    Parameters
+    ----------
+    atomtype_definitions: dict, required
+        The smarts definition for the atomtypes
+    atomtype_overrides: dict, required
+        The overrides for particular atomtypes
+    non_element_types: set, required
+        The non-element types used for atomtyping
+    parser: The chemical grammar parser, default=None
+        The parser for the SMARTS strings. If not provided foyer.smarts.SMARTS
+        instance will be used.
+    """
+
+    def __init__(
+        self,
+        atomtype_definitions,
+        atomtype_overrides,
+        non_element_types,
+        parser=None,
+    ):
+        self.atomtype_definitions = atomtype_definitions
+        self.atomtype_overrides = atomtype_overrides
+        self.non_element_types = non_element_types
+        self.parser = parser or SMARTS(self.non_element_types)
+
+    @classmethod
+    def from_foyer_forcefield(cls, ff):
+        """Create an instance of the rules provider for a foyer-forcefield."""
+        return cls(
+            atomtype_definitions=ff.atomTypeDefinitions,
+            atomtype_overrides=ff.atomTypeOverrides,
+            non_element_types=ff.non_element_types,
+            parser=ff.parser,
+        )
 
 
 def find_atomtypes(structure, forcefield, max_iter=10):
@@ -18,14 +58,18 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     ----------
     structure : parmed.Structure, or gmso.Topology, or TopologyGraph
         The topology that we are trying to atomtype. If a parmed.Structure or
-        gmso.Topology is provided, it will be convert to a TopologyGraph before
+        gmso.Topology is provided, it will be converted to a TopologyGraph before
         atomtyping.
-    forcefield : foyer.Forcefield
-        The forcefield object.
+    forcefield : AtomTypingRulesProvider, foyer.ForceField
+        The atomtyping rules provider object/foyer forcefield.
     max_iter : int, optional, default=10
         The maximum number of iterations.
-
     """
+    # ToDo: This function eventually should be refactored into chunks
+    #  for a less painful conversion process
+
+    from foyer.forcefield import Forcefield
+
     topology_graph = structure
 
     if isinstance(structure, Structure):
@@ -33,12 +77,23 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     elif isinstance(structure, Topology):
         topology_graph = TopologyGraph.from_gmso_topology(structure)
 
+    if isinstance(forcefield, Forcefield):
+        atomtype_rules = AtomTypingRulesProvider.from_foyer_forcefield(
+            forcefield
+        )
+    elif isinstance(forcefield, AtomTypingRulesProvider):
+        atomtype_rules = forcefield
+    else:
+        raise TypeError(
+            "Invalid forcefield (must be of type Forcefield or AtomTypingRulesProvider)."
+        )
+
     typemap = {
         atom_index: {"whitelist": set(), "blacklist": set(), "atomtype": None}
         for atom_index in topology_graph.atoms(data=False)
     }
 
-    rules = _load_rules(forcefield, typemap)
+    rules = _load_rules(atomtype_rules, typemap)
 
     # Only consider rules for elements found in topology
     subrules = dict()
@@ -48,7 +103,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
         # First add non-element types, which are strings, then elements
         name = atom_data.name
         if name.startswith("_"):
-            if name in forcefield.non_element_types:
+            if name in atomtype_rules.non_element_types:
                 system_elements.add(name)
         else:
             atomic_number = atom_data.atomic_number
@@ -96,22 +151,22 @@ def find_atomtypes(structure, forcefield, max_iter=10):
     return typemap
 
 
-def _load_rules(forcefield, typemap):
-    """Load atomtyping rules from a forcefield into SMARTSGraphs."""
+def _load_rules(rules_provider, typemap):
+    """Load atomtyping rules from a AtomTypingRulesProvider into SMARTSGraphs."""
     rules = dict()
     # For every SMARTS string in the force field,
     # create a SMARTSGraph object
-    for rule_name, smarts in forcefield.atomTypeDefinitions.items():
+    for rule_name, smarts in rules_provider.atomtype_definitions.items():
         if not smarts:  # We want to skip over empty smarts definitions
             continue
-        overrides = forcefield.atomTypeOverrides.get(rule_name)
+        overrides = rules_provider.atomtype_overrides.get(rule_name)
         if overrides is not None:
             overrides = set(overrides)
         else:
             overrides = set()
         rules[rule_name] = SMARTSGraph(
             smarts_string=smarts,
-            parser=forcefield.parser,
+            parser=rules_provider.parser,
             name=rule_name,
             overrides=overrides,
             typemap=typemap,
@@ -170,7 +225,6 @@ def _resolve_atomtypes(topology_graph, typemap):
                 )
             )
         else:
-
             raise FoyerError(
                 "Found no types for atom {} ({}).".format(
                     atom_id, atoms[atom_id].atomic_number

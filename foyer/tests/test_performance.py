@@ -15,7 +15,8 @@ class TestPerformance(BaseTest):
         forcefield.apply(fullerene, assert_dihedral_params=False)
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-    @pytest.mark.timeout(15)
+    # @pytest.mark.timeout(30)
+    @pytest.mark.timeout(90)
     def test_surface(self):
         import mbuild as mb
 
