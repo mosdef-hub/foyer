@@ -1,4 +1,5 @@
 """Module to represent chemical systems as graph structures."""
+import enum
 from typing import TYPE_CHECKING, Optional
 
 import networkx as nx
@@ -41,6 +42,24 @@ class AtomData:
         self.element = element
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+
+class BondOrder(enum.Enum):
+    """Enum to represent various bond orders from multiple sources."""
+
+    SINGLE = "1"
+    DOUBLE = "2"
+    TRIPLE = "3"
+    AMIDE = "am"
+    AROMATIC = "ar"
+    DUMMY = "du"
+    NOTCONNECTED = "nc"
+    UNKNOWN = "un"
+
+    @classmethod
+    def _missing_(cls, value):
+        """If value cannot be found, default to unknown."""
+        return cls.UNKNOWN
 
 
 class TopologyGraph(nx.Graph):
@@ -94,7 +113,7 @@ class TopologyGraph(nx.Graph):
         atom_data = AtomData(index, name, atomic_number, symbol, **kwargs)
         self.add_node(index, atom_data=atom_data)
 
-    def add_bond(self, atom_1_index, atom_2_index):
+    def add_bond(self, atom_1_index, atom_2_index, bond_type=BondOrder.SINGLE):
         """Add a bond(edge) between two atoms in this TopologyGraph.
 
         Parameters
@@ -103,8 +122,18 @@ class TopologyGraph(nx.Graph):
             The index of the first atom that forms this bond
         atom_2_index: int
             The index of the second atom that forms this bond
+        bond_type: str, default = BondOrder.SINGLE
+            The type of bond being added, can be:
+            "1": single,
+            "2": double,
+            "3": triple,
+            "am": amide,
+            "ar": aromatic,
+            "un": unknown,
+            "du": dummy
+            "nc": not connected
         """
-        self.add_edge(atom_1_index, atom_2_index)
+        self.add_edge(atom_1_index, atom_2_index, {"bond_type": bond_type})
 
     def atoms(self, data=False):
         """Iterate through atoms in the TopologyGraph."""
@@ -155,9 +184,21 @@ class TopologyGraph(nx.Graph):
                 atomic_number=atomic_number,
                 symbol=symbol,
             )
-
+        bond_type_dict = {
+            round(1, 2): BondOrder.SINGLE,
+            round(2, 2): BondOrder.DOUBLE,
+            round(3, 2): BondOrder.TRIPLE,
+            round(1.5, 2): BondOrder.AROMATIC,
+            round(1.25, 2): BondOrder.AMIDE,
+        }
         for bond in structure.bonds:
-            topology_graph.add_bond(bond.atom1.idx, bond.atom2.idx)
+            topology_graph.add_bond(
+                bond.atom1.idx,
+                bond.atom2.idx,
+                bond_type=bond_type_dict.get(
+                    round(bond.order, 2), BondOrder.UNKNOWN
+                ),
+            )
 
         return topology_graph
 
@@ -204,11 +245,23 @@ class TopologyGraph(nx.Graph):
                 symbol=element_symbol,
             )
 
+        bond_type_dict = {
+            "Single": BondOrder.SINGLE,
+            "Double": BondOrder.DOUBLE,
+            "Triple": BondOrder.TRIPLE,
+            "Aromatic": BondOrder.AROMATIC,
+            "Amide": BondOrder.AMIDE,
+        }
+
         for bond in openff_topology.bonds:
             atoms_indices = [
                 openff_topology.atom_index(atom) for atom in bond.atoms
             ]
-            top_graph.add_bond(*atoms_indices)
+            top_graph.add_bond(
+                atoms_indices[0],
+                atoms_indices[1],
+                bond_type=bond_type_dict.get(top_bond.type, BondOrder.UNKNOWN),
+            )
 
         return top_graph
 
@@ -257,12 +310,14 @@ class TopologyGraph(nx.Graph):
                         atomic_number=atom.element.atomic_number,
                         symbol=atom.element.symbol,
                     )
-
+        # until gmso has bond orders, assume single bonds
         for top_bond in gmso_topology.bonds:
             atoms_indices = [
                 gmso_topology.get_index(atom)
                 for atom in top_bond.connection_members
             ]
-            top_graph.add_bond(atoms_indices[0], atoms_indices[1])
+            top_graph.add_bond(
+                atoms_indices[0], atoms_indices[1], bond_type=BondOrder.SINGLE
+            )
 
         return top_graph
