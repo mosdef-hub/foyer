@@ -24,5 +24,3 @@ dependencies:
   - python>=3.8
   - requests
   - requests-mock
-  - pip:
-    - "--editable=git+https://github.com/rsdefever/antefoyer.git#egg=antefoyer"
