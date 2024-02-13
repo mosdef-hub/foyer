@@ -1,4 +1,5 @@
 """Module for SMARTSGraph and SMARTS matching logic."""
+
 import itertools
 from collections import OrderedDict, defaultdict
 

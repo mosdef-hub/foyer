@@ -1,4 +1,5 @@
 """Example script for a parametrized ethane molecule."""
+
 import parmed as pmd
 
 from foyer import Forcefield

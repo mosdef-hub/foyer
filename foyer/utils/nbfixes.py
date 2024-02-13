@@ -1,4 +1,5 @@
 """Support non-bonded fixes for various interactions."""
+
 from parmed import Structure
 
 

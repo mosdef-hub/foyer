@@ -1,4 +1,5 @@
 """Determine proper atom types for chemical systems."""
+
 from warnings import warn
 
 import ele

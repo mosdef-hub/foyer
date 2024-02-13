@@ -1,4 +1,5 @@
 """Foyer ForceField class and utility methods."""
+
 import collections
 import glob
 import itertools

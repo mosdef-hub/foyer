@@ -1,4 +1,5 @@
 """Utility methods for foyer examples."""
+
 import glob
 from os.path import abspath, join, split
 

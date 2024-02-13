@@ -1,4 +1,5 @@
 """Utility to modify a silica/oplsaa xml."""
+
 from lxml import etree
 
 root = etree.fromstring(open("oplsaa_with_silica.xml", "r").read())
