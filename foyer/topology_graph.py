@@ -1,4 +1,5 @@
 """Module to represent chemical systems as graph structures."""
+
 from typing import TYPE_CHECKING, Optional
 
 import networkx as nx
