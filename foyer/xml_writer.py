@@ -1,4 +1,5 @@
 """Write foyer XMLs from a parametrized structure."""
+
 from __future__ import division
 
 import collections
@@ -313,15 +314,15 @@ def _write_periodic_torsions(root, dihedrals, unique):
                 n = 1
                 while "periodicity{}".format(n) in last_dihedral_force.attrib:
                     n += 1
-                last_dihedral_force.attrib[
-                    "periodicity{}".format(n)
-                ] = dihedral_force.attrib["periodicity1"]
-                last_dihedral_force.attrib[
-                    "phase{}".format(n)
-                ] = dihedral_force.attrib["phase1"]
-                last_dihedral_force.attrib[
-                    "k{}".format(n)
-                ] = dihedral_force.attrib["k1"]
+                last_dihedral_force.attrib["periodicity{}".format(n)] = (
+                    dihedral_force.attrib["periodicity1"]
+                )
+                last_dihedral_force.attrib["phase{}".format(n)] = (
+                    dihedral_force.attrib["phase1"]
+                )
+                last_dihedral_force.attrib["k{}".format(n)] = (
+                    dihedral_force.attrib["k1"]
+                )
                 periodic_torsion_forces.remove(dihedral_force)
             else:
                 last_dihedral_force = dihedral_force

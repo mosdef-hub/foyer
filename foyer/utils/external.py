@@ -1,4 +1,5 @@
 """Methods that require external access to function."""
+
 import requests
 
 

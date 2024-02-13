@@ -1,4 +1,5 @@
 """Utility methods/classes for SMARTS grammar."""
+
 import lark
 
 from foyer.exceptions import FoyerError
