@@ -226,7 +226,7 @@ def _resolve_atomtypes(topology_graph, typemap):
             )
         else:
             raise FoyerError(
-                "Found no types for atom {} ({}). Forcefield file does not support it.".format(
+                "Found no types for atom numbered {} which is atomic number {}. Forcefield file is missing this atomtype, so try to add SMARTS definitions to account for this atom.".format(
                     atom_id, atoms[atom_id].atomic_number
                 )
             )
