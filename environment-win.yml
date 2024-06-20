@@ -6,7 +6,7 @@ dependencies:
   - lark-parser
   - lxml
   - networkx>=2.5
-  - openmm>=7.6
+  - openmm
   - parmed>=3.4.3
   - ele
   - requests
@@ -16,4 +16,4 @@ dependencies:
   - pytest-cov
   - pytest-timeout
   - pytest-xdist
-  - python<=3.8
+  - python>=3.9
