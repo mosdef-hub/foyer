@@ -19,6 +19,6 @@ dependencies:
   - pytest-cov
   - pytest-timeout
   - pytest-xdist
-  - python>=3.8
+  - python>=3.9
   - requests
   - requests-mock
