@@ -75,7 +75,7 @@ jobs:
         uses: mamba-org/setup-micromamba@v1
         with:
           environment-file: environment-dev.yml
-          create-args: python=3.10
+          create-args: python=3.12
       - name: Clone mBuild and GMSO
         run: |
           git clone https://github.com/mosdef-hub/mbuild.git
@@ -85,6 +85,7 @@ jobs:
         run: |
           micromamba update --name foyer-dev --file mbuild/environment.yml
           micromamba update --name foyer-dev --file gmso/environment.yml
+          micromamba install -c conda-forge hoomd
 
       - name: Install Packages from Source
         run: |
