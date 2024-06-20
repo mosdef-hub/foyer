@@ -6,7 +6,7 @@ dependencies:
   - codecov
   - lark-parser
   - lxml
-  - mbuild
+  - mbuild>=0.17
   - treelib
   - gmso
   - networkx>=2.5
