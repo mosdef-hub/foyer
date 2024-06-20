@@ -685,10 +685,7 @@ class TestForcefield(BaseTest):
         mol2.name = "COC"
 
         box = mb.fill_box(
-                [mol1, mol2],
-                n_compounds=[2, 2],
-                overlap=0.01,
-                density=700
+            [mol1, mol2], n_compounds=[2, 2], overlap=0.01, density=700
         )
 
         all_substructures = []
