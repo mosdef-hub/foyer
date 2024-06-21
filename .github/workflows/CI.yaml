@@ -85,7 +85,6 @@ jobs:
         run: |
           micromamba update --name foyer-dev --file mbuild/environment.yml
           micromamba update --name foyer-dev --file gmso/environment.yml
-          micromamba install -c conda-forge hoomd
 
       - name: Install Packages from Source
         run: |
