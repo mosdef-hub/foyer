@@ -11,7 +11,7 @@ on:
     - cron:  "0 0 * * *"
 
 jobs:
-  python-test:
+  test:
     if: github.event.pull_request.draft == false
     name: Foyer Tests (python)
     runs-on: ${{ matrix.os }}
@@ -47,7 +47,8 @@ jobs:
           name: Foyer-Coverage
           verbose: true
           files: ./coverage.xml
-  os-test:
+
+  arch-test:
     if: github.event.pull_request.draft == false
     name: Foyer Tests (arch)
     runs-on: ${{ matrix.os }}
