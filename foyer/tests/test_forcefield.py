@@ -684,7 +684,9 @@ class TestForcefield(BaseTest):
         mol1.name = "CCC"
         mol2.name = "COC"
 
-        box = mb.fill_box([mol1, mol2], n_compounds=[2, 2], density=700)
+        box = mb.fill_box(
+            [mol1, mol2], n_compounds=[2, 2], overlap=0.01, density=700
+        )
 
         all_substructures = []
         structure = box.to_parmed(residues=["CCC", "COC"])

@@ -6,7 +6,7 @@ dependencies:
   - codecov
   - lark-parser
   - lxml
-  - mbuild
+  - mbuild>=0.17
   - treelib
   - gmso
   - networkx>=2.5
@@ -22,6 +22,6 @@ dependencies:
   - pytest-cov
   - pytest-timeout
   - pytest-xdist
-  - python>=3.8
+  - python>=3.9
   - requests
   - requests-mock
