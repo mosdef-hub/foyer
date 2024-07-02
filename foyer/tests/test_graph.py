@@ -38,9 +38,7 @@ class TestGraph(BaseTest):
 
         ring_tokens = ["R1", "r6"]
         for token in ring_tokens:
-            rule = SMARTSGraph(
-                smarts_string="[C;{}]".format(token), typemap=typemap
-            )
+            rule = SMARTSGraph(smarts_string="[C;{}]".format(token), typemap=typemap)
             list(rule.find_matches(TopologyGraph.from_parmed(mol2), typemap))
             assert all(["cycles" in typemap[a.idx] for a in mol2.atoms])
 
@@ -51,9 +49,7 @@ class TestGraph(BaseTest):
             for atom in mol2.atoms
         }
 
-        _prepare_atoms(
-            TopologyGraph.from_parmed(mol2), typemap, compute_cycles=True
-        )
+        _prepare_atoms(TopologyGraph.from_parmed(mol2), typemap, compute_cycles=True)
         cycle_lengths = [
             list(map(len, typemap[atom.idx]["cycles"])) for atom in mol2.atoms
         ]

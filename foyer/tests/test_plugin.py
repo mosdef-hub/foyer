@@ -14,7 +14,7 @@ class TestPlugin(BaseTest):
                 eval("foyer.forcefields." + func)()
 
     def test_load_forcefield(self):
-        OPLSAA = foyer.forcefields.get_forcefield(name="oplsaa")
-        TRAPPE_UA = foyer.forcefields.get_forcefield(name="trappe-ua")
+        foyer.forcefields.get_forcefield(name="oplsaa")
+        foyer.forcefields.get_forcefield(name="trappe-ua")
         with pytest.raises(ValueError):
             foyer.forcefields.get_forcefield("bogus_name")

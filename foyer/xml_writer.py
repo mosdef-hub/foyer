@@ -5,7 +5,6 @@ from __future__ import division
 import collections
 import warnings
 
-import gmso
 import networkx as nx
 import numpy as np
 import parmed as pmd
@@ -66,9 +65,7 @@ def write_foyer(
     # Assume if a Structure has a bond and bond type that the Structure is
     # parameterized. ParmEd uses the same logic to denote parameterization.
     if not (len(self.bonds) > 0 and self.bonds[0].type is not None):
-        raise Exception(
-            "Cannot write Foyer XML from an unparametrized " "Structure."
-        )
+        raise Exception("Cannot write Foyer XML from an unparametrized " "Structure.")
 
     root = ET.Element("ForceField")
     # Write Forcefield information
@@ -87,11 +84,11 @@ def write_foyer(
             _write_rb_torsions(root, self.rb_torsions, unique)
 
     # TO DO
-    elif isinstance(self, gmso.Topology):
-        raise FoyerError(
-            "Currently, cannot write foyer XML file from a gmso.Topology. "
-            "This feature will be implemented in future releases."
-        )
+    # elif isinstance(self, gmso.Topology):
+    #    raise FoyerError(
+    #        "Currently, cannot write foyer XML file from a gmso.Topology. "
+    #        "This feature will be implemented in future releases."
+    #    )
 
     _remove_duplicate_elements(root, unique)
 
@@ -175,12 +172,8 @@ def _update_defs(atomtypes, nonbonded, forcefield):
     smarts_list = list()
     smarts_parser = forcefield.parser
     for smarts_string, name in zip(def_list, name_list):
-        smarts_graph = SMARTSGraph(
-            smarts_string, parser=smarts_parser, name=name
-        )
-        for atom_expr in nx.get_node_attributes(
-            smarts_graph, name="atom"
-        ).values():
+        smarts_graph = SMARTSGraph(smarts_string, parser=smarts_parser, name=name)
+        for atom_expr in nx.get_node_attributes(smarts_graph, name="atom").values():
             labels = atom_expr.find_data("has_label")
             for label in labels:
                 atom_type = label.children[0][1:]
@@ -225,8 +218,7 @@ def _write_angles(root, angles, unique):
     for angle in angles:
         angle_force = ET.SubElement(angle_forces, "Angle")
         atypes = [
-            atype
-            for atype in [angle.atom1.type, angle.atom2.type, angle.atom3.type]
+            atype for atype in [angle.atom1.type, angle.atom2.type, angle.atom3.type]
         ]
         if unique:
             # Sort the first and last atom types
@@ -237,9 +229,7 @@ def _write_angles(root, angles, unique):
             angle_force.set("id3", str(angle.atom3.idx))
         for id in range(3):
             angle_force.set("type{}".format(id + 1), atypes[id])
-        angle_force.set(
-            "angle", str(round(angle.type.theteq * (np.pi / 180), 10))
-        )
+        angle_force.set("angle", str(round(angle.type.theteq * (np.pi / 180), 10)))
         angle_force.set("k", str(round(angle.type.k * 4.184 * 2, 3)))
 
 
@@ -284,9 +274,7 @@ def _write_periodic_torsions(root, dihedrals, unique):
         for id in range(4):
             dihedral_force.set("type{}".format(id + 1), atypes[id])
         dihedral_force.set("periodicity1", str(dihedral.type.per))
-        dihedral_force.set(
-            "phase1", str(round(dihedral.type.phase * (np.pi / 180), 8))
-        )
+        dihedral_force.set("phase1", str(round(dihedral.type.phase * (np.pi / 180), 8)))
         dihedral_force.set("k1", str(round(dihedral.type.phi_k * 4.184, 3)))
         if last_dihedral_force is not None:
             # Check to see if this current dihedral force needs to be
@@ -317,12 +305,12 @@ def _write_periodic_torsions(root, dihedrals, unique):
                 last_dihedral_force.attrib["periodicity{}".format(n)] = (
                     dihedral_force.attrib["periodicity1"]
                 )
-                last_dihedral_force.attrib["phase{}".format(n)] = (
-                    dihedral_force.attrib["phase1"]
-                )
-                last_dihedral_force.attrib["k{}".format(n)] = (
-                    dihedral_force.attrib["k1"]
-                )
+                last_dihedral_force.attrib["phase{}".format(n)] = dihedral_force.attrib[
+                    "phase1"
+                ]
+                last_dihedral_force.attrib["k{}".format(n)] = dihedral_force.attrib[
+                    "k1"
+                ]
                 periodic_torsion_forces.remove(dihedral_force)
             else:
                 last_dihedral_force = dihedral_force
@@ -389,11 +377,7 @@ def _write_rb_torsions(root, rb_torsions, unique):
         for c_id in range(6):
             rb_torsion_force.set(
                 "c{}".format(c_id),
-                str(
-                    round(
-                        getattr(rb_torsion.type, "c{}".format(c_id)) * 4.184, 4
-                    )
-                ),
+                str(round(getattr(rb_torsion.type, "c{}".format(c_id)) * 4.184, 4)),
             )
 
 
@@ -482,9 +466,7 @@ def _infer_lj14scale(struct, combining_rule: str):
             raise ValueError(
                 "Unexpected 1-4 sigma value found in adj {}. Expected {}"
                 "and found {}. This estimate was made assuming a combining "
-                "rule of {}".format(
-                    adj, adj.type.sigma, expected_sigma, combining_rule
-                )
+                "rule of {}".format(adj, adj.type.sigma, expected_sigma, combining_rule)
             )
 
         lj14scale.append(adj.type.epsilon / expected_epsilon)
