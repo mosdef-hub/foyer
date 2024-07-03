@@ -79,7 +79,7 @@ def import_(module):
                 + module
                 + " package"
             )
-            ImportError("No module named %s" % module)
+            raise ImportError("No module named %s" % module)
 
         (
             frame,
