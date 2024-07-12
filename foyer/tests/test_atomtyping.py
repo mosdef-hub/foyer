@@ -1,6 +1,5 @@
 import parmed as pmd
 import pytest
-from pkg_resources import resource_filename
 
 from foyer import Forcefield
 from foyer.exceptions import FoyerError

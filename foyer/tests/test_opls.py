@@ -1,19 +1,19 @@
 import glob
+import importlib.resources as resources
 import itertools as it
 import os
 
 import parmed as pmd
 import pytest
-from pkg_resources import resource_filename
 
 from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import atomtype
 
-OPLS_TESTFILES_DIR = resource_filename("foyer", "opls_validation")
+OPLS_TESTFILES_DIR = resources.files("foyer").joinpath("opls_validation")
 
 
+@pytest.fixture(autouse=True)
 class TestOPLS(BaseTest):
-    @pytest.fixture(autouse=True)
     def initdir(self, tmpdir):
         tmpdir.chdir()
 
