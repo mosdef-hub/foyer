@@ -5,7 +5,7 @@ channels:
 dependencies:
   - bump2version
   - codecov
-  - lark-parser
+  - lark
   - lxml
   - mbuild>=0.17
   - treelib
