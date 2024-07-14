@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - omnia
 dependencies:
-  - lark-parser
+  - lark
   - lxml
   - networkx>=2.5
   - openmm
