@@ -12,8 +12,8 @@ from foyer.tests.utils import atomtype
 OPLS_TESTFILES_DIR = resources.files("foyer").joinpath("opls_validation")
 
 
-@pytest.fixture(autouse=True)
 class TestOPLS(BaseTest):
+    @pytest.fixture(autouse=True)
     def initdir(self, tmpdir):
         tmpdir.chdir()
 
