@@ -26,7 +26,7 @@ jobs:
         shell: bash -l {0}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba (Linux)
@@ -42,7 +42,7 @@ jobs:
         run: python -m pytest -v -nauto --cov=foyer --cov-report=xml --cov-append --cov-config=setup.cfg --color yes --pyargs foyer
 
       - name: Upload Coverage Report
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v4
         with:
           name: Foyer-Coverage
           verbose: true
@@ -63,7 +63,7 @@ jobs:
         shell: bash -l {0}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba (Linux)
@@ -95,7 +95,7 @@ jobs:
         shell: bash -l {0}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba
