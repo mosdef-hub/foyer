@@ -414,7 +414,7 @@ def _elements_equal(e1, e2):
     Note: This was grabbed, basically verbatim, from:
     https://stackoverflow.com/questions/7905380/testing-equivalence-of-xml-etree-elementtree
     """
-    if type(e1) != type(e2):
+    if type(e1) is not type(e2):
         return False
     if e1.tag != e2.tag:
         return False
