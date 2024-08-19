@@ -4,7 +4,7 @@ channels:
 dependencies:
   - bump2version
   - codecov
-  - lark-parser
+  - lark
   - lxml
   - mbuild>=0.17
   - treelib
@@ -14,7 +14,6 @@ dependencies:
   - parmed>=3.4.3
   - ele
   - openff-toolkit >=0.11
-  - gmso
   - pip
   - pre-commit
   - pytest

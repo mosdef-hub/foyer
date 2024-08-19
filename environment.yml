@@ -2,7 +2,7 @@ name: foyer
 channels:
   - conda-forge
 dependencies:
-  - lark-parser
+  - lark
   - lxml
   - gmso
   - networkx>=2.5
