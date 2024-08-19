@@ -18,14 +18,14 @@ import os
 import pathlib
 import sys
 
+import sphinx_rtd_theme
+
 sys.path.insert(0, os.path.abspath("../.."))
 sys.path.insert(0, os.path.abspath("sphinxext"))
 
 base_path = pathlib.Path(__file__).parent
 os.system("python {} --name".format((base_path / "../../setup.py").resolve()))
 
-
-import foyer
 
 # -- Project information -----------------------------------------------------
 
@@ -147,7 +147,6 @@ pygments_style = "sphinx"
 # a list of builtin themes.
 #
 # html_theme = 'alabaster'
-import sphinx_rtd_theme
 
 html_theme = "sphinx_rtd_theme"
 hhtml_theme_path = [sphinx_rtd_theme.get_html_theme_path()]

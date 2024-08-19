@@ -79,9 +79,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
         topology_graph = TopologyGraph.from_gmso_topology(structure)
 
     if isinstance(forcefield, Forcefield):
-        atomtype_rules = AtomTypingRulesProvider.from_foyer_forcefield(
-            forcefield
-        )
+        atomtype_rules = AtomTypingRulesProvider.from_foyer_forcefield(forcefield)
     elif isinstance(forcefield, AtomTypingRulesProvider):
         atomtype_rules = forcefield
     else:
@@ -110,9 +108,7 @@ def find_atomtypes(structure, forcefield, max_iter=10):
             atomic_number = atom_data.atomic_number
             atomic_symbol = atom_data.element
             try:
-                element_from_num = ele.element_from_atomic_number(
-                    atomic_number
-                ).symbol
+                element_from_num = ele.element_from_atomic_number(atomic_number).symbol
                 element_from_sym = ele.element_from_symbol(atomic_symbol).symbol
                 assert element_from_num == element_from_sym
                 system_elements.add(element_from_num)
@@ -210,13 +206,9 @@ def _iterate_rules(rules, topology_graph, typemap, max_iter):
 
 def _resolve_atomtypes(topology_graph, typemap):
     """Determine the final atomtypes from the white- and blacklists."""
-    atoms = {
-        atom_idx: data for atom_idx, data in topology_graph.atoms(data=True)
-    }
+    atoms = {atom_idx: data for atom_idx, data in topology_graph.atoms(data=True)}
     for atom_id, atom in typemap.items():
-        atomtype = [
-            rule_name for rule_name in atom["whitelist"] - atom["blacklist"]
-        ]
+        atomtype = [rule_name for rule_name in atom["whitelist"] - atom["blacklist"]]
         if len(atomtype) == 1:
             atom["atomtype"] = atomtype[0]
         elif len(atomtype) > 1:

@@ -1,3 +1,4 @@
+# ruff: noqa: F401
 import platform
 
 import numpy as np
@@ -14,8 +15,7 @@ class TestUtils(BaseTest):
         platform.system() == "Windows"
         or pmd.version.major < 4
         or (
-            pmd.version.major == 4
-            and pmd.version.minor == pmd.version.patchlevel == 0
+            pmd.version.major == 4 and pmd.version.minor == pmd.version.patchlevel == 0
         ),
         reason="obsolete parmed version",
     )

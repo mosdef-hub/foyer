@@ -17,9 +17,7 @@ class DelayImportError(ImportError, SkipTest):
 
 
 MESSAGES = dict()
-MESSAGES[
-    "mbuild"
-] = """
+MESSAGES["mbuild"] = """
 
 The code at {filename}:{line_number} requires the "mbuild" package
 
@@ -29,9 +27,7 @@ mbuild can be installed using:
 
 """
 
-MESSAGES[
-    "gmso"
-] = """
+MESSAGES["gmso"] = """
 
 The code at {filename}:{line_number} requires the "gmso" package
 
@@ -40,9 +36,7 @@ gmso can be installed using:
 # conda install -c conda-forge gmso
 """
 
-MESSAGES[
-    "openff.toolkit"
-] = """
+MESSAGES["openff.toolkit"] = """
 
 The code at {filename}:{line_number} requires the "openff-toolkit" package
 
@@ -76,7 +70,7 @@ def import_(module):
     """
     try:
         return importlib.import_module(module)
-    except ImportError as e:
+    except ImportError:
         try:
             message = MESSAGES[module]
         except KeyError:
@@ -85,7 +79,7 @@ def import_(module):
                 + module
                 + " package"
             )
-            e = ImportError("No module named %s" % module)
+            raise ImportError("No module named %s" % module)
 
         (
             frame,
@@ -96,9 +90,7 @@ def import_(module):
             index,
         ) = inspect.getouterframes(inspect.currentframe())[1]
 
-        m = message.format(
-            filename=os.path.basename(filename), line_number=line_number
-        )
+        m = message.format(filename=os.path.basename(filename), line_number=line_number)
         m = textwrap.dedent(m)
 
         bar = (
