@@ -5,7 +5,7 @@ from __future__ import print_function
 from setuptools import find_packages, setup
 
 #####################################
-VERSION = "0.12.1"
+VERSION = "1.0.0"
 ISRELEASED = True
 if ISRELEASED:
     __version__ = VERSION
