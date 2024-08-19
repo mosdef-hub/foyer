@@ -206,9 +206,7 @@ class TopologyGraph(nx.Graph):
             )
 
         for bond in openff_topology.bonds:
-            atoms_indices = [
-                openff_topology.atom_index(atom) for atom in bond.atoms
-            ]
+            atoms_indices = [openff_topology.atom_index(atom) for atom in bond.atoms]
             top_graph.add_bond(*atoms_indices)
 
         return top_graph
@@ -261,8 +259,7 @@ class TopologyGraph(nx.Graph):
 
         for top_bond in gmso_topology.bonds:
             atoms_indices = [
-                gmso_topology.get_index(atom)
-                for atom in top_bond.connection_members
+                gmso_topology.get_index(atom) for atom in top_bond.connection_members
             ]
             top_graph.add_bond(atoms_indices[0], atoms_indices[1])
 

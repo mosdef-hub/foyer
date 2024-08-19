@@ -46,7 +46,7 @@ class SMARTSGraph(nx.Graph):
         overrides=None,
         typemap=None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super(SMARTSGraph, self).__init__(*args, **kwargs)
 
@@ -120,23 +120,17 @@ class SMARTSGraph(nx.Graph):
         elif atom_expr.data in ("and_expression", "weak_and_expression"):
             return self._atom_expr_matches(
                 atom_expr.children[0], atom, bond_partners
-            ) and self._atom_expr_matches(
-                atom_expr.children[1], atom, bond_partners
-            )
+            ) and self._atom_expr_matches(atom_expr.children[1], atom, bond_partners)
         elif atom_expr.data == "or_expression":
             return self._atom_expr_matches(
                 atom_expr.children[0], atom, bond_partners
-            ) or self._atom_expr_matches(
-                atom_expr.children[1], atom, bond_partners
-            )
+            ) or self._atom_expr_matches(atom_expr.children[1], atom, bond_partners)
         elif atom_expr.data == "atom_id":
             return self._atom_id_matches(
                 atom_expr.children[0], atom, bond_partners, self.typemap
             )
         elif atom_expr.data == "atom_symbol":
-            return self._atom_id_matches(
-                atom_expr, atom, bond_partners, self.typemap
-            )
+            return self._atom_id_matches(atom_expr, atom, bond_partners, self.typemap)
         else:
             raise TypeError(
                 "Expected atom_id, atom_symbol, and_expression, "
@@ -162,9 +156,7 @@ class SMARTSGraph(nx.Graph):
             else:
                 return atomic_num == pt.AtomicNum[str(atom_id.children[0])]
         elif atom_id.data == "has_label":
-            label = atom_id.children[0][
-                1:
-            ]  # Strip the % sign from the beginning.
+            label = atom_id.children[0][1:]  # Strip the % sign from the beginning.
             return label in typemap[atom_idx]["whitelist"]
         elif atom_id.data == "neighbor_count":
             return len(bond_partners) == int(atom_id.children[0])
@@ -205,9 +197,7 @@ class SMARTSGraph(nx.Graph):
         """
         # Note: Needs to be updated in sync with the grammar in `smarts.py`.
         ring_tokens = ["ring_size", "ring_count"]
-        has_ring_rules = any(
-            list(self.ast.find_data(token)) for token in ring_tokens
-        )
+        has_ring_rules = any(list(self.ast.find_data(token)) for token in ring_tokens)
         topology_graph.add_bond_partners()
         _prepare_atoms(topology_graph, typemap, compute_cycles=has_ring_rules)
 
@@ -220,9 +210,7 @@ class SMARTSGraph(nx.Graph):
                     element = next(atom.find_data("atom_symbol")).children[0]
                 except IndexError:
                     try:
-                        atomic_num = next(
-                            atom.find_data("atomic_num")
-                        ).children[0]
+                        atomic_num = next(atom.find_data("atomic_num")).children[0]
                         element = pt.Element[int(atomic_num)]
                     except IndexError:
                         element = None
@@ -275,9 +263,7 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
         else:
             # First we determine the candidate node for G2
             other_node = min(G2_nodes - set(self.core_2))
-            host_nodes = (
-                self.valid_nodes if other_node == 0 else self.G1.nodes()
-            )
+            host_nodes = self.valid_nodes if other_node == 0 else self.G1.nodes()
             for node in host_nodes:
                 if node not in self.core_1:
                     yield node, other_node
@@ -326,23 +312,17 @@ def _find_chordless_cycles(bond_graph, max_cycle_size):
                 """
                 new_possible_rings = []
                 for possible_ring in possible_rings:
-                    next_neighbors = list(
-                        bond_graph.neighbors(possible_ring[-1])
-                    )
+                    next_neighbors = list(bond_graph.neighbors(possible_ring[-1]))
                     for next_neighbor in next_neighbors:
                         if next_neighbor != possible_ring[-2]:
-                            new_possible_rings.append(
-                                possible_ring + [next_neighbor]
-                            )
+                            new_possible_rings.append(possible_ring + [next_neighbor])
                 possible_rings = new_possible_rings
 
                 for possible_ring in possible_rings:
                     if bond_graph.has_edge(possible_ring[-1], last_node):
                         if any(
                             [
-                                bond_graph.has_edge(
-                                    possible_ring[-1], internal_node
-                                )
+                                bond_graph.has_edge(possible_ring[-1], internal_node)
                                 for internal_node in possible_ring[1:-2]
                             ]
                         ):
@@ -351,10 +331,7 @@ def _find_chordless_cycles(bond_graph, max_cycle_size):
                             cycles[i].append(possible_ring)
                             connected = True
 
-                if (
-                    not possible_rings
-                    or len(possible_rings[0]) == max_cycle_size
-                ):
+                if not possible_rings or len(possible_rings[0]) == max_cycle_size:
                     break
 
     return cycles

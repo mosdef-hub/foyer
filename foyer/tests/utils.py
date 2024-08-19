@@ -1,3 +1,4 @@
+# ruff: noqa: F401
 import glob
 import platform
 import urllib.parse as parseurl
