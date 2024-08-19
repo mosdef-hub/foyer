@@ -147,7 +147,7 @@ def generate_topology(non_omm_topology, non_element_types=None, residues=None):
         return _topology_from_parmed(non_omm_topology, non_element_types)
     elif has_mbuild:
         mb = import_("mbuild")
-        if (non_omm_topology, mb.Compound):
+        if all([non_omm_topology, mb.Compound]):
             pmd_comp_struct = non_omm_topology.to_parmed(residues=residues)
             return _topology_from_parmed(pmd_comp_struct, non_element_types)
     else:
@@ -163,16 +163,12 @@ def generate_topology(non_omm_topology, non_element_types=None, residues=None):
 def _structure_from_residue(residue, parent_structure):
     """Convert a ParmEd Residue to an equivalent Structure."""
     structure = pmd.Structure()
-    orig_to_copy = (
-        dict()
-    )  # Clone a lot of atoms to avoid any of parmed's tracking
+    orig_to_copy = dict()  # Clone a lot of atoms to avoid any of parmed's tracking
     for atom in residue.atoms:
         new_atom = copy(atom)
         new_atom._idx = atom.idx
         orig_to_copy[atom] = new_atom
-        structure.add_atom(
-            new_atom, resname=residue.name, resnum=residue.number
-        )
+        structure.add_atom(new_atom, resname=residue.name, resnum=residue.number)
 
     for bond in parent_structure.bonds:
         if bond.atom1 in residue.atoms and bond.atom2 in residue.atoms:
@@ -199,10 +195,7 @@ def _topology_from_parmed(structure, non_element_types):
         if pmd_atom.name in non_element_types:
             element = non_element_types[pmd_atom.name]
         else:
-            if (
-                isinstance(pmd_atom.atomic_number, int)
-                and pmd_atom.atomic_number != 0
-            ):
+            if isinstance(pmd_atom.atomic_number, int) and pmd_atom.atomic_number != 0:
                 element = elem.Element.getByAtomicNumber(pmd_atom.atomic_number)
             else:
                 element = elem.Element.getBySymbol(pmd_atom.name)
@@ -222,9 +215,7 @@ def _topology_from_parmed(structure, non_element_types):
         topology.addBond(atom1, atom2)
         atom1.bond_partners.append(atom2)
         atom2.bond_partners.append(atom1)
-    if structure.box_vectors and np.any(
-        [x._value for x in structure.box_vectors]
-    ):
+    if structure.box_vectors and np.any([x._value for x in structure.box_vectors]):
         topology.setPeriodicBoxVectors(structure.box_vectors)
 
     positions = structure.positions
@@ -294,9 +285,7 @@ def _unwrap_typemap(structure, residue_map):
         for res_ref, val in residue_map.items():
             if id(res.name) == id(res_ref):
                 for i, atom in enumerate(res.atoms):
-                    master_typemap[int(atom.idx)]["atomtype"] = val[i][
-                        "atomtype"
-                    ]
+                    master_typemap[int(atom.idx)]["atomtype"] = val[i]["atomtype"]
     return master_typemap
 
 
@@ -326,9 +315,7 @@ def _separate_urey_bradleys(system, topology):
                 ) not in bonds:
                     ub_force.addBond(*force.getBondParameters(bond_idx))
                 else:
-                    harmonic_bond_force.addBond(
-                        *force.getBondParameters(bond_idx)
-                    )
+                    harmonic_bond_force.addBond(*force.getBondParameters(bond_idx))
             system.removeForce(force_idx)
 
     system.addForce(harmonic_bond_force)
@@ -500,9 +487,7 @@ class Forcefield(app.ForceField):
 
     """
 
-    def __init__(
-        self, forcefield_files=None, name=None, validation=True, debug=False
-    ):
+    def __init__(self, forcefield_files=None, name=None, validation=True, debug=False):
         self.atomTypeDefinitions = dict()
         self.atomTypeOverrides = dict()
         self.atomTypeDesc = dict()
@@ -540,13 +525,9 @@ class Forcefield(app.ForceField):
         if len(preprocessed_files) == 1:
             self._version = self._parse_version_number(preprocessed_files[0])
             self._name = self._parse_name(preprocessed_files[0])
-            self._combining_rule = self._parse_combining_rule(
-                preprocessed_files[0]
-            )
+            self._combining_rule = self._parse_combining_rule(preprocessed_files[0])
         elif len(preprocessed_files) > 1:
-            self._version = [
-                self._parse_version_number(f) for f in preprocessed_files
-            ]
+            self._version = [self._parse_version_number(f) for f in preprocessed_files]
             self._name = [self._parse_name(f) for f in preprocessed_files]
             self._combining_rule = [
                 self._parse_combining_rule(f) for f in preprocessed_files
@@ -640,9 +621,7 @@ class Forcefield(app.ForceField):
             try:
                 return root.attrib["name"]
             except KeyError:
-                warnings.warn(
-                    "No force field name found in force field XML file."
-                )
+                warnings.warn("No force field name found in force field XML file.")
                 return None
 
     def _parse_combining_rule(self, forcefield_file):
@@ -652,9 +631,7 @@ class Forcefield(app.ForceField):
             try:
                 return root.attrib["combining_rule"]
             except KeyError:
-                warnings.warn(
-                    "No combining rule found in force field XML file."
-                )
+                warnings.warn("No combining rule found in force field XML file.")
                 return "lorentz"
 
     def _create_element(self, element, mass):
@@ -680,9 +657,7 @@ class Forcefield(app.ForceField):
         """Register a new atom type."""
         name = parameters["name"]
         if name in self._atomTypes:
-            raise ValueError(
-                "Found multiple definitions for atom type: " + name
-            )
+            raise ValueError("Found multiple definitions for atom type: " + name)
         atom_class = parameters["class"]
         mass = _convertParameterToNumber(parameters["mass"])
         element = None
@@ -847,10 +822,7 @@ class Forcefield(app.ForceField):
 
                 # Need to call this only once and store results for later id() comparisons
                 for res_id, res in enumerate(structure.residues):
-                    if (
-                        structure.residues[res_id].name
-                        not in residue_map.keys()
-                    ):
+                    if structure.residues[res_id].name not in residue_map.keys():
                         tmp_res = _structure_from_residue(res, structure)
                         typemap = find_atomtypes(tmp_res, forcefield=self)
                         residue_map[res.name] = typemap
@@ -878,9 +850,7 @@ class Forcefield(app.ForceField):
         **kwargs,
     ):
         """Create system based on resulting typemapping."""
-        topology, positions = _topology_from_parmed(
-            structure, self.non_element_types
-        )
+        topology, positions = _topology_from_parmed(structure, self.non_element_types)
 
         system = self.createSystem(topology, *args, **kwargs)
 
@@ -919,9 +889,7 @@ class Forcefield(app.ForceField):
                 )
 
         if self.combining_rule == "geometric":
-            self._patch_parmed_adjusts(
-                structure, combining_rule=self.combining_rule
-            )
+            self._patch_parmed_adjusts(structure, combining_rule=self.combining_rule)
 
         total_charge = sum([atom.charge for atom in structure.atoms])
         if not np.allclose(total_charge, 0):
@@ -1033,9 +1001,7 @@ class Forcefield(app.ForceField):
                     elem.hydrogen,
                     None,
                 ):
-                    transfer_mass = hydrogenMass - sys.getParticleMass(
-                        atom2.index
-                    )
+                    transfer_mass = hydrogenMass - sys.getParticleMass(atom2.index)
                     sys.setParticleMass(atom2.index, hydrogenMass)
                     mass = sys.getParticleMass(atom1.index) - transfer_mass
                     sys.setParticleMass(atom1.index, mass)
@@ -1092,9 +1058,7 @@ class Forcefield(app.ForceField):
             bonded_to = data.bondedToAtom[atom]
             if len(bonded_to) > 2:
                 for subset in itertools.combinations(bonded_to, 3):
-                    data.impropers.append(
-                        (atom, subset[0], subset[1], subset[2])
-                    )
+                    data.impropers.append((atom, subset[0], subset[1], subset[2]))
 
         # Identify bonds that should be implemented with constraints
         if constraints == AllBonds or constraints == HAngles:
@@ -1189,15 +1153,9 @@ class Forcefield(app.ForceField):
                         site.originWeights[1],
                         site.originWeights[2],
                     ),
-                    mm.Vec3(
-                        site.xWeights[0], site.xWeights[1], site.xWeights[2]
-                    ),
-                    mm.Vec3(
-                        site.yWeights[0], site.yWeights[1], site.yWeights[2]
-                    ),
-                    mm.Vec3(
-                        site.localPos[0], site.localPos[1], site.localPos[2]
-                    ),
+                    mm.Vec3(site.xWeights[0], site.xWeights[1], site.xWeights[2]),
+                    mm.Vec3(site.yWeights[0], site.yWeights[1], site.yWeights[2]),
+                    mm.Vec3(site.localPos[0], site.localPos[1], site.localPos[2]),
                 )
                 sys.setVirtualSite(index, local_coord_site)
 
@@ -1264,9 +1222,7 @@ class Forcefield(app.ForceField):
         for atomtype, dois in atomtype_references.items():
             for doi in dois:
                 unique_references[doi].append(atomtype)
-        unique_references = collections.OrderedDict(
-            sorted(unique_references.items())
-        )
+        unique_references = collections.OrderedDict(sorted(unique_references.items()))
         with open(references_file, "w") as f:
             for doi, atomtypes in unique_references.items():
                 url = "http://api.crossref.org/works/{}/transform/application/x-bibtex".format(
@@ -1339,11 +1295,7 @@ class Forcefield(app.ForceField):
         if group not in param_extractors:
             raise ValueError(f"Cannot extract parameters for {group}")
 
-        key = (
-            [key]
-            if isinstance(key, str) or not isinstance(key, Iterable)
-            else key
-        )
+        key = [key] if isinstance(key, str) or not isinstance(key, Iterable) else key
 
         validate_type(key, str)
 
@@ -1368,18 +1320,14 @@ class Forcefield(app.ForceField):
 
             atom_type = atom_type[0]
 
-        non_bonded_forces_gen = self.get_generator(
-            ff=self, gen_type=NonbondedGenerator
-        )
+        non_bonded_forces_gen = self.get_generator(ff=self, gen_type=NonbondedGenerator)
 
         non_bonded_params = non_bonded_forces_gen.params.paramsForType
 
         try:
             return non_bonded_params[atom_type]
         except KeyError:
-            raise MissingParametersError(
-                f"Missing parameters for atom {atom_type}"
-            )
+            raise MissingParametersError(f"Missing parameters for atom {atom_type}")
 
     def _extract_harmonic_bond_params(self, atom_types):
         """Return parameters for a specific HarmonicBondForce between atom types."""
@@ -1549,9 +1497,7 @@ class Forcefield(app.ForceField):
                 f"be extracted for four atoms. Provided {len(atom_types)}"
             )
 
-        rb_torsion_force_gen = self.get_generator(
-            ff=self, gen_type=RBTorsionGenerator
-        )
+        rb_torsion_force_gen = self.get_generator(ff=self, gen_type=RBTorsionGenerator)
 
         wildcard = self._atomClasses[""]
         (
@@ -1601,9 +1547,7 @@ class Forcefield(app.ForceField):
                 f"be extracted for four atoms. Provided {len(atom_types)}"
             )
 
-        rb_torsion_force_gen = self.get_generator(
-            ff=self, gen_type=RBTorsionGenerator
-        )
+        rb_torsion_force_gen = self.get_generator(ff=self, gen_type=RBTorsionGenerator)
 
         match = self._match_impropers(atom_types, rb_torsion_force_gen)
 
@@ -1623,9 +1567,7 @@ class Forcefield(app.ForceField):
             # When to do this substitution with wildcards?
             substitution = self._atomClasses.get(key)
             if not substitution:
-                raise ValueError(
-                    f"Atom class {key} is missing from the Forcefield"
-                )
+                raise ValueError(f"Atom class {key} is missing from the Forcefield")
             atom_type_keys.append(next(iter(substitution)))
 
         return atom_type_keys
@@ -1716,9 +1658,7 @@ class Forcefield(app.ForceField):
     @staticmethod
     def substitute_wildcards(atom_types, wildcard):
         """Return possible wildcard options."""
-        return tuple(
-            atom_type or next(iter(wildcard)) for atom_type in atom_types
-        )
+        return tuple(atom_type or next(iter(wildcard)) for atom_type in atom_types)
 
 
 pmd.Structure.write_foyer = write_foyer

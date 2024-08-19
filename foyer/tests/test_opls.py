@@ -49,9 +49,7 @@ class TestOPLS(BaseTest):
         assert oplsaa.combining_rule == "geometric"
 
     @pytest.mark.parametrize("mol_name", correctly_implemented)
-    def test_atomtyping(
-        self, mol_name, oplsaa, testfiles_dir=OPLS_TESTFILES_DIR
-    ):
+    def test_atomtyping(self, mol_name, oplsaa, testfiles_dir=OPLS_TESTFILES_DIR):
         files = glob.glob(os.path.join(testfiles_dir, mol_name, "*"))
         for mol_file in files:
             _, ext = os.path.splitext(mol_file)
@@ -60,9 +58,7 @@ class TestOPLS(BaseTest):
                 gro_filename = "{}.gro".format(mol_name)
                 top_path = os.path.join(testfiles_dir, mol_name, top_filename)
                 gro_path = os.path.join(testfiles_dir, mol_name, gro_filename)
-                structure = pmd.load_file(
-                    top_path, xyz=gro_path, parametrize=False
-                )
+                structure = pmd.load_file(top_path, xyz=gro_path, parametrize=False)
             elif ext == ".mol2":
                 mol2_path = os.path.join(testfiles_dir, mol_name, mol_file)
                 structure = pmd.load_file(mol2_path, structure=True)
@@ -74,12 +70,8 @@ class TestOPLS(BaseTest):
         structure = pmd.load_file(top, xyz=gro)
         parametrized = oplsaa.apply(structure)
 
-        assert (
-            sum((1 for at in parametrized.atoms if at.type == "opls_145")) == 6
-        )
-        assert (
-            sum((1 for at in parametrized.atoms if at.type == "opls_146")) == 6
-        )
+        assert sum((1 for at in parametrized.atoms if at.type == "opls_145")) == 6
+        assert sum((1 for at in parametrized.atoms if at.type == "opls_146")) == 6
         assert len(parametrized.bonds) == 12
         assert all(x.type for x in parametrized.bonds)
         assert len(parametrized.angles) == 18
@@ -110,12 +102,8 @@ class TestOPLS(BaseTest):
             ("13-difluorobenzene", 6),
         ]  # found in the "impropers" sections of molecule_name.top
         for molecule, n_impropers in files_with_impropers:
-            top = os.path.join(
-                OPLS_TESTFILES_DIR, molecule + "/" + molecule + ".top"
-            )
-            gro = os.path.join(
-                OPLS_TESTFILES_DIR, molecule + "/" + molecule + ".gro"
-            )
+            top = os.path.join(OPLS_TESTFILES_DIR, molecule + "/" + molecule + ".top")
+            gro = os.path.join(OPLS_TESTFILES_DIR, molecule + "/" + molecule + ".gro")
             structure = pmd.load_file(top, xyz=gro)
             impropers = []
             [

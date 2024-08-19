@@ -81,9 +81,7 @@ class TestSMARTS(BaseTest):
             for atom in not_ring_mol2.atoms
         }
 
-        rule_match(
-            not_ring_mol2_graph, typemap, "[#6]1[#6][#6][#6][#6][#6]1", False
-        )
+        rule_match(not_ring_mol2_graph, typemap, "[#6]1[#6][#6][#6][#6][#6]1", False)
 
     def test_fused_ring(self, smarts_parser):
         mol2 = pmd.load_file(get_fn("fused.mol2"), structure=True)
@@ -248,11 +246,11 @@ class TestSMARTS(BaseTest):
     def test_optional_names_bad_syntax(self):
         bad_optional_names = ["_C", "XXX", "C"]
         with pytest.raises(FoyerError):
-            S = SMARTS(optional_names=bad_optional_names)
+            SMARTS(optional_names=bad_optional_names)
 
     def test_optional_names_good_syntax(self):
         good_optional_names = ["_C", "_CH2", "_CH"]
-        S = SMARTS(optional_names=good_optional_names)
+        SMARTS(optional_names=good_optional_names)
 
     def test_optional_name_parser(self):
         optional_names = ["_C", "_CH2", "_CH"]
