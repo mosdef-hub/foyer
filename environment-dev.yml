@@ -13,7 +13,7 @@ dependencies:
   - openmm
   - parmed>=3.4.3
   - ele
-  - openff-toolkit >=0.11
+  - openff-toolkit-base >=0.11
   - pip
   - pre-commit
   - pytest
