@@ -66,15 +66,17 @@ def preprocess_forcefield_files(forcefield_files=None):
 
     for xml_file in forcefield_files:
         if not hasattr(xml_file, "read"):
-            f = open(xml_file)
+            try:
+                f = open(xml_file, encoding="utf-8")
+                xml_contents = f.read()
+            finally:
+                f.close()
+
             _, suffix = os.path.split(xml_file)
         else:
-            f = xml_file
+            xml_contents = xml_file.read()
             suffix = ""
 
-        # read and preprocess
-        xml_contents = f.read()
-        f.close()
         xml_contents = re.sub(
             r"(def\w*=\w*[\"\'])(.*)([\"\'])",
             lambda m: m.group(1)
