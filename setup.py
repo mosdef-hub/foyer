@@ -1,11 +1,11 @@
-"""Foyer: Atomtyping and forcefield applying. """
+"""Foyer: Atomtyping and forcefield applying."""
 
 from __future__ import print_function
 
 from setuptools import find_packages, setup
 
 #####################################
-VERSION = "0.12.1"
+VERSION = "1.0.0"
 ISRELEASED = True
 if ISRELEASED:
     __version__ = VERSION
@@ -22,9 +22,7 @@ setup(
     author="Janos Sallai, Christoph Klein",
     author_email="janos.sallai@vanderbilt.edu, christoph.klein@vanderbilt.edu",
     url="https://github.com/mosdef-hub/foyer",
-    download_url="https://github.com/mosdef-hub/foyer/tarball/{}".format(
-        __version__
-    ),
+    download_url="https://github.com/mosdef-hub/foyer/tarball/{}".format(__version__),
     packages=find_packages(),
     package_data={
         "foyer": [

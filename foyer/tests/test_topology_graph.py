@@ -12,9 +12,7 @@ from foyer.topology_graph import TopologyGraph
 
 
 @pytest.mark.skipif(
-    condition=(
-        is_running_on_windows() or (not (has_gmso or has_openff_toolkit))
-    ),
+    condition=(is_running_on_windows() or (not (has_gmso or has_openff_toolkit))),
     reason="openff-toolkit and gmso not installed",
 )
 class TestTopologyGraph(BaseTest):
@@ -101,13 +99,9 @@ class TestTopologyGraph(BaseTest):
         oplsaa,
     ):
         # ToDo: More robust testing for atomtyping
-        openff_typemap = find_atomtypes(
-            openff_topology_graph, forcefield=oplsaa
-        )
+        openff_typemap = find_atomtypes(openff_topology_graph, forcefield=oplsaa)
         gmso_typemap = find_atomtypes(gmso_topology_graph, forcefield=oplsaa)
-        parmed_typemap = find_atomtypes(
-            parmed_topology_graph, forcefield=oplsaa
-        )
+        parmed_typemap = find_atomtypes(parmed_topology_graph, forcefield=oplsaa)
         assert openff_typemap
         assert gmso_typemap
         assert parmed_typemap
