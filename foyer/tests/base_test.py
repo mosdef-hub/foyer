@@ -1,3 +1,4 @@
+import importlib.resources as resources
 from pathlib import Path
 
 import parmed as pmd
@@ -6,7 +7,9 @@ import pytest
 from foyer import forcefields
 from foyer.smarts import SMARTS
 
-OPLS_TEST_FILE_DIR = Path(resource_filename("foyer", "opls_validation")).resolve()
+OPLS_TEST_FILE_DIR = Path(
+    resources.files("foyer").joinpath("opls_validation")
+).resolve()
 
 
 class BaseTest:
