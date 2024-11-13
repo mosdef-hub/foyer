@@ -9,7 +9,7 @@ dependencies:
   - parmed>=3.4.3
   - ele
   - pip:
-    - sphinx<8.0
+    - sphinx
     - sphinx_rtd_theme
     - sphinxcontrib-svg2pdfconverter
     - nbsphinx
