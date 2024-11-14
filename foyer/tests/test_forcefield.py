@@ -1,5 +1,6 @@
 import difflib
 import glob
+import importlib.resources as resources
 import os
 from typing import List
 
@@ -7,7 +8,6 @@ import parmed as pmd
 import pytest
 from lxml import etree as ET
 from parmed.gromacs.gromacstop import _Defaults
-from pkg_resources import resource_filename
 
 from foyer import Forcefield, forcefields
 from foyer.exceptions import (
@@ -23,7 +23,7 @@ from foyer.tests.base_test import BaseTest
 from foyer.tests.utils import get_fn, register_mock_request
 from foyer.utils.io import has_mbuild
 
-FF_DIR = resource_filename("foyer", "forcefields")
+FF_DIR = resources.files("foyer").joinpath("forcefields")
 FORCEFIELDS = glob.glob(os.path.join(FF_DIR, "xml/*.xml"))
 
 RESPONSE_BIB_ETHANE_JA962170 = """@article{Jorgensen_1996,
