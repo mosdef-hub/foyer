@@ -107,10 +107,10 @@ _python_doc_base = "http://docs.python.org/3.7"
 
 
 intersphinx_mapping = {
-    _python_doc_base: None,
-    "http://docs.scipy.org/doc/numpy": None,
-    "http://docs.scipy.org/doc/scipy/reference": None,
-    "http://scikit-learn.org/stable": None,
+    "python": ("https://docs.python.org/3.11", None),
+    "numpy": ("https://numpy.org/doc/stable", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
+    "scikit-learn": ("https://scikit-learn.org/stable", None),
 }
 
 # Add any paths that contain templates here, relative to this directory.
