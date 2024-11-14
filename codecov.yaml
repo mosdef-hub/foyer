@@ -26,6 +26,7 @@ comment:
   require_changes: no
 
 ignore:
-  - "foyer/docs"
+  - "docs"
+  - "foyer/examples"
   - "foyer/tests"
   - "setup.py"
