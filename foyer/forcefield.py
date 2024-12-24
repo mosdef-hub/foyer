@@ -2,12 +2,14 @@
 
 import collections
 import glob
+import importlib.resources as resources
 import itertools
 import os
 import re
 import warnings
 import xml.etree.ElementTree as ET
 from copy import copy
+from importlib.metadata import entry_points
 from tempfile import NamedTemporaryFile
 from typing import Callable, Iterable, List
 
@@ -31,7 +33,6 @@ from openmm.app.forcefield import (
     _convertParameterToNumber,
 )
 from parmed.gromacs.gromacstop import _Defaults
-from pkg_resources import iter_entry_points, resource_filename
 
 import foyer.element as custom_elem
 from foyer import smarts
@@ -133,7 +134,7 @@ def preprocess_forcefield_files(forcefield_files=None):
 def get_available_forcefield_loaders() -> List[Callable]:
     """Get a list of available force field loader functions."""
     available_ff_paths = []
-    for entry_point in iter_entry_points(group="foyer.forcefields"):
+    for entry_point in entry_points(group="foyer.forcefields"):
         available_ff_paths.append(entry_point.load())
 
     return available_ff_paths
@@ -566,7 +567,7 @@ class Forcefield(app.ForceField):
         if any(self._included_forcefields):
             return self._included_forcefields
 
-        ff_dir = resource_filename("foyer", "forcefields")
+        ff_dir = resources.files("foyer").joinpath("forcefields")
         ff_filepaths = set(glob.glob(os.path.join(ff_dir, "xml/*.xml")))
 
         for ff_filepath in ff_filepaths:
