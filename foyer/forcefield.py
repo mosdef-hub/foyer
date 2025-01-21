@@ -1216,9 +1216,7 @@ class Forcefield(app.ForceField):
             try:
                 atomtype_references[atype] = self.atomTypeRefs[atype]
             except KeyError:
-                warnings.warn(
-                    "Reference not found for atom type '{}'." "".format(atype)
-                )
+                warnings.warn("Reference not found for atom type '{}'.".format(atype))
         unique_references = collections.defaultdict(list)
         for atomtype, dois in atomtype_references.items():
             for doi in dois:
