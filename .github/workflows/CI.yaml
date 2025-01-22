@@ -30,7 +30,7 @@ jobs:
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba (Linux)
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: environment-dev.yml
           create-args: python=${{ matrix.python-version }}
@@ -42,7 +42,7 @@ jobs:
         run: python -m pytest -v -nauto --cov=foyer --cov-report=xml --cov-append --cov-config=setup.cfg --color yes --pyargs foyer
 
       - name: Upload Coverage Report
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           name: Foyer-Coverage
           verbose: true
@@ -67,14 +67,14 @@ jobs:
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba (Linux)
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: environment-dev.yml
           create-args: python=${{ matrix.python-version }}
         if: runner.os != 'Windows'
 
       - name: Install Mamba (Windows)
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: environment-dev-win.yml
           create-args: python=${{ matrix.python-version }}
@@ -99,25 +99,18 @@ jobs:
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: environment-dev.yml
           create-args: python=3.12
-      - name: Clone mBuild and GMSO
-        run: |
-          git clone https://github.com/mosdef-hub/mbuild.git
-          git clone https://github.com/mosdef-hub/gmso.git
-
-      - name: Update Environment with mbuild/gmso Dependencies
-        run: |
-          micromamba update --name foyer-dev --file mbuild/environment.yml
-          micromamba update --name foyer-dev --file gmso/environment.yml
 
       - name: Install Packages from Source
         run: |
-          pip install -e mbuild
-          pip install -e gmso
           pip install -e .
+
+      - name: Check environment
+        run: |
+          micromamba list
 
       - name: Run Bleeding Edge Tests
         run: |
