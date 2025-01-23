@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=61.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "foyer"
+description = "Atomtyping and application of forcefields."
+readme = "README.md"
+authors = [
+  {name = "Janos Sallai", email = "janos.sallai@vanderbilt.edu"},
+  {name = "Christopher Klein", email = "christoph.klein@vanderbilt.edu"},
+]
+maintainers = [
+  {name = "Nicholas Craven", email = "nicholas.c.craven@vanderbilt.edu"},
+  {name = "Chris Jones", email = "chrisjones4@u.boisestate.edu"},
+]
+license= {text = "MIT"}
+classifiers=[
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
+]
+urls = {Homepage = "https://github.com/mosdef-hub/foyer"}
+requires-python = ">=3.9"
+dynamic = ["version"]
+
+[tool.setuptools]
+zip-safe = false
+include-package-data = true
+license-files = ["LICENSE"]
+
+[tool.setuptools.packages]
+find = {namespaces = false}
+
+[tool.setuptools.package-data]
+foyer = [
+  '"examples/files/*"',
+  '"foyer/forcefields/*.xml"',
+  '"foyer/forcefields/*.xml"',
+  '"opls_validation/*.top"',
+  '"opls_validation/*.gro"',
+  '"opls_validation/*.mol2"',
+  '"opls_validation//oplsaa.ff/*"',
+]
+
+[project.entry-points."foyer.forcefields"]
+load_OPLSAA = "foyer.forcefields.forcefields:load_OPLSAA"
+load_TRAPPE_UA = "foyer.forcefields.forcefields:load_TRAPPE_UA"
+
+[tool.setuptools.dynamic]
+version = {attr = "foyer.__version__"}
