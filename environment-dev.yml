@@ -2,25 +2,45 @@ name: foyer-dev
 channels:
   - conda-forge
 dependencies:
-  - bump2version
-  - codecov
-  - lark
+  - python>=3.9,<=3.12
+  - boltons
+  - numpy=1.26.4
+  - sympy
+  - unyt>=2.9.5
+  - boltons
+  - lark>=1.2
   - lxml
-  - mbuild>=0.17
-  - treelib
-  - gmso
-  - networkx>=2.5
-  - openmm
-  - parmed>=3.4.3
-  - ele
-  - openff-toolkit-base >=0.11
-  - pip
-  - pre-commit
+  - intermol
+  - mdtraj
+  - pydantic>=2
+  - networkx
+  - nglview>=3
   - pytest
-  - pytest-azurepipelines
+  - garnett>=0.7.1
+  - openbabel>=3.0.0
+  - openff-toolkit-base >=0.11,<0.16.7
+  - openmm
+  - gsd>=2.9
+  - parmed>=3.4.3
+  - packmol>=20
   - pytest-cov
-  - pytest-timeout
-  - pytest-xdist
-  - python>=3.10
+  - pycifrw
+  - rdkit>=2021
   - requests
   - requests-mock
+  - scipy
+  - treelib
+  - codecov
+  - matplotlib
+  - ipywidgets
+  - ele>=0.2.0
+  - pre-commit
+  - pandas
+  - symengine
+  - python-symengine
+  - hoomd>=4.0,<5.0
+  - importlib_resources
+  - pip:
+      - git+https://github.com/mosdef-hub/mbuild.git@main
+      - git+https://github.com/mosdef-hub/gmso.git@main
+      - git+https://github.com/mosdef-hub/forcefield-utilities.git@main
