@@ -29,7 +29,7 @@ def apply_nbfix(struct, atom_type1, atom_type2, sigma, epsilon):
     atypes_name = set(a.atom_type.name for a in struct_copy.atoms)
     if atom_type1 not in atypes_name or atom_type2 not in atypes_name:
         raise ValueError(
-            "Atom types {} and {} not found " "in structure.".format(
+            "Atom types {} and {} not found in structure.".format(
                 atom_type1, atom_type2
             )
         )
