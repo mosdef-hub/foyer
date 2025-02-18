@@ -110,7 +110,7 @@ jobs:
 
       - name: Check environment
         run: |
-          micromamba list
+          mamba list
 
       - name: Run Bleeding Edge Tests
         run: |
