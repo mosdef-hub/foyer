@@ -32,6 +32,7 @@ jobs:
       - name: Install Mamba (Linux)
         uses: conda-incubator/setup-miniconda@v3
         with:
+          miniforge-variant: Miniforge3
           environment-file: environment-dev.yml
           create-args: python=${{ matrix.python-version }}
 
@@ -69,6 +70,7 @@ jobs:
       - name: Install Mamba (Linux)
         uses: conda-incubator/setup-miniconda@v3
         with:
+          miniforge-variant: Miniforge3
           environment-file: environment-dev.yml
           create-args: python=${{ matrix.python-version }}
         if: runner.os != 'Windows'
@@ -76,6 +78,7 @@ jobs:
       - name: Install Mamba (Windows)
         uses: conda-incubator/setup-miniconda@v3
         with:
+          miniforge-variant: Miniforge3
           environment-file: environment-dev-win.yml
           create-args: python=${{ matrix.python-version }}
         if: runner.os == 'Windows'
@@ -101,6 +104,7 @@ jobs:
       - name: Install Mamba
         uses: conda-incubator/setup-miniconda@v3
         with:
+          miniforge-variant: Miniforge3
           environment-file: environment-dev.yml
           create-args: python=3.13
 
@@ -110,7 +114,7 @@ jobs:
 
       - name: Check environment
         run: |
-          mamba list
+          conda list
 
       - name: Run Bleeding Edge Tests
         run: |
