@@ -83,7 +83,7 @@ jobs:
           miniforge-variant: Miniforge3
           use_mamba: true
           environment-file: environment-dev-win.yml
-          python-version: {{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
         if: runner.os == 'Windows'
 
       - name: Install Package
