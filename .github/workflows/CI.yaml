@@ -34,7 +34,8 @@ jobs:
         with:
           miniforge-variant: Miniforge3
           environment-file: environment-dev.yml
-          create-args: python=${{ matrix.python-version }}
+          use_mamba: true
+          python-version: ${{ matrix.python-version }}
 
       - name: Install Package
         run: python -m pip install -e .
@@ -71,16 +72,18 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-variant: Miniforge3
+          use_mamba: true
           environment-file: environment-dev.yml
-          create-args: python=${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
         if: runner.os != 'Windows'
 
       - name: Install Mamba (Windows)
         uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-variant: Miniforge3
+          use_mamba: true
           environment-file: environment-dev-win.yml
-          create-args: python=${{ matrix.python-version }}
+          python-version: {{ matrix.python-version }}
         if: runner.os == 'Windows'
 
       - name: Install Package
@@ -105,8 +108,9 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-variant: Miniforge3
+          use_mamba: true
           environment-file: environment-dev.yml
-          create-args: python=3.13
+          python-version: 3.13
 
       - name: Install Packages from Source
         run: |
