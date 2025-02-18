@@ -30,7 +30,7 @@ jobs:
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba (Linux)
-        uses: mamba-org/setup-micromamba@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
           environment-file: environment-dev.yml
           create-args: python=${{ matrix.python-version }}
@@ -67,14 +67,14 @@ jobs:
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba (Linux)
-        uses: mamba-org/setup-micromamba@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
           environment-file: environment-dev.yml
           create-args: python=${{ matrix.python-version }}
         if: runner.os != 'Windows'
 
       - name: Install Mamba (Windows)
-        uses: mamba-org/setup-micromamba@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
           environment-file: environment-dev-win.yml
           create-args: python=${{ matrix.python-version }}
@@ -99,7 +99,7 @@ jobs:
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba
-        uses: mamba-org/setup-micromamba@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
           environment-file: environment-dev.yml
           create-args: python=3.13
