@@ -17,10 +17,10 @@ dependencies:
   - nglview>=3
   - pytest
   - garnett>=0.7.1
-  - openbabel>=3.0.0
+  # openbabel>=3.0.0
   # openff-toolkit-base >=0.11,<0.16.7
   - openmm
-  - gsd>=2.9
+  - gsd~=3.4
   - parmed>=3.4.3
   - packmol>=20
   - pytest-cov
