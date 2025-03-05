@@ -2,9 +2,9 @@ name: foyer-dev
 channels:
   - conda-forge
 dependencies:
-  - python>=3.9,<=3.12
+  - python
   - boltons
-  - numpy=1.26.4
+  - numpy>=1.26.4
   - sympy
   - unyt>=2.9.5
   - boltons
@@ -12,15 +12,15 @@ dependencies:
   - lxml
   - intermol
   - mdtraj
-  - pydantic>=2
+  - pydantic=2
   - networkx
   - nglview>=3
   - pytest
   - garnett>=0.7.1
-  - openbabel>=3.0.0
-  - openff-toolkit-base >=0.11,<0.16.7
+  # openbabel>=3.0.0
+  # openff-toolkit-base >=0.11,<0.16.7
   - openmm
-  - gsd>=2.9
+  - gsd~=3.4
   - parmed>=3.4.3
   - packmol>=20
   - pytest-cov
