@@ -1,6 +1,6 @@
 """Plugin support for forcefields."""
 
-from pkg_resources import iter_entry_points
+from importlib.metadata import entry_points
 
 
 class ForceFields:
@@ -11,5 +11,5 @@ class ForceFields:
 
 forcefields = ForceFields()
 
-for entry_point in iter_entry_points(group="foyer.forcefields", name=None):
+for entry_point in entry_points(group="foyer.forcefields"):
     setattr(forcefields, entry_point.name, entry_point.load())

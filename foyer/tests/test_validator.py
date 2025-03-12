@@ -1,9 +1,9 @@
 import glob
+import importlib.resources as resources
 import os
 
 import pytest
 from lxml.etree import DocumentInvalid, XMLSyntaxError
-from pkg_resources import resource_filename
 
 from foyer.exceptions import (
     MultipleValidationError,
@@ -21,7 +21,7 @@ ERRORS = {
     "documentinvalid": DocumentInvalid,
 }
 
-FF_DIR = resource_filename("foyer", "forcefields")
+FF_DIR = resources.files("foyer").joinpath("forcefields")
 FORCEFIELDS = glob.glob(os.path.join(FF_DIR, "xml/*.xml"))
 
 
