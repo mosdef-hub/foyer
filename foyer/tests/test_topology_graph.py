@@ -16,6 +16,8 @@ from foyer.topology_graph import TopologyGraph
     reason="openff-toolkit and gmso not installed",
 )
 class TestTopologyGraph(BaseTest):
+    pytest.importorskip("openff.toolkit")
+
     @pytest.fixture(scope="session")
     def openff_topology_graph(self):
         from openff.toolkit.topology import Molecule, Topology
