@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
 
     defaults:
       run:
@@ -30,10 +30,12 @@ jobs:
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba (Linux)
-        uses: mamba-org/setup-micromamba@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
+          miniforge-variant: Miniforge3
           environment-file: environment-dev.yml
-          create-args: python=${{ matrix.python-version }}
+          use-mamba: true
+          python-version: ${{ matrix.python-version }}
 
       - name: Install Package
         run: python -m pip install -e .
@@ -56,7 +58,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macOS-latest, macOS-13, ubuntu-latest, windows-latest]
-        python-version: ["3.12"]
+        python-version: ["3.13"]
 
     defaults:
       run:
@@ -67,17 +69,21 @@ jobs:
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba (Linux)
-        uses: mamba-org/setup-micromamba@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
+          miniforge-variant: Miniforge3
+          use-mamba: true
           environment-file: environment-dev.yml
-          create-args: python=${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
         if: runner.os != 'Windows'
 
       - name: Install Mamba (Windows)
-        uses: mamba-org/setup-micromamba@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
+          miniforge-variant: Miniforge3
+          use-mamba: true
           environment-file: environment-dev-win.yml
-          create-args: python=${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
         if: runner.os == 'Windows'
 
       - name: Install Package
@@ -99,10 +105,12 @@ jobs:
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba
-        uses: mamba-org/setup-micromamba@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
+          miniforge-variant: Miniforge3
+          use-mamba: true
           environment-file: environment-dev.yml
-          create-args: python=3.12
+          python-version: 3.13
 
       - name: Install Packages from Source
         run: |
@@ -110,7 +118,7 @@ jobs:
 
       - name: Check environment
         run: |
-          micromamba list
+          conda list
 
       - name: Run Bleeding Edge Tests
         run: |
