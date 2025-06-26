@@ -57,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macOS-latest, macOS-13, ubuntu-latest, windows-latest]
+        os: [macOS-latest, macOS-13, ubuntu-latest]
         python-version: ["3.13"]
 
     defaults:
@@ -123,6 +123,36 @@ jobs:
       - name: Run Bleeding Edge Tests
         run: |
           python -m pytest -v --color yes --pyargs foyer
+
+    wsl-test:
+    if: github.event.pull_request.draft == false
+    name: Foyer Tests (WSL)
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout Branch / Pull Request
+
+      - uses: Vampire/setup-wsl@v4
+        with:
+          distribution: Ubuntu-24.04
+          wsl-shell-user: runner
+        name: Set up WSL
+
+      - name: Install Foyer and run pytest
+        shell: wsl-bash {0}
+        run: |
+          wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O $HOME/Miniforge3.sh
+          bash $HOME/Miniforge3.sh -b -p $HOME/miniforge
+          echo 'export PATH=$HOME/miniforge/bin:$PATH' >> ~/.bashrc
+          export PATH=$HOME/miniforge/bin:$PATH
+          source ~/.bashrc
+          source $HOME/miniforge/etc/profile.d/conda.sh
+          mamba update -n base --all -y
+          mamba env create -f environment-dev.yml python=3.12 -y
+          conda activate foyer-dev
+          pip install -e . --prefix=$HOME/tmp_egginfo --no-build-isolation
+          python -m pytest -v --color yes --pyargs foyer 
 
   docker:
     runs-on: ubuntu-latest
