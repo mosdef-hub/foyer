@@ -124,7 +124,7 @@ jobs:
         run: |
           python -m pytest -v --color yes --pyargs foyer
 
-    wsl-test:
+  wsl-test:
     if: github.event.pull_request.draft == false
     name: Foyer Tests (WSL)
     runs-on: windows-latest
