@@ -107,7 +107,9 @@ jobs:
           mamba update -n base --all -y
           mamba env create -f environment-dev.yml python=3.12 -y
           conda activate foyer-dev
+          mamba list foyer
           pip install -e . --prefix=$HOME/tmp_egginfo --no-build-isolation
+          mamba list foyer
           python -m pytest -v --color yes --pyargs foyer
 
   docker:
