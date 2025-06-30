@@ -5,9 +5,10 @@ dependencies:
   - lark
   - lxml
   - gmso
+  - numpy>=2.0,<2.3
   - networkx>=2.5
   - openmm
   - parmed>=3.4.3
   - ele
   - requests
-  - python>=3.9
+  - python>=3.10,<=3.13
