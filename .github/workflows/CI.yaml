@@ -107,8 +107,9 @@ jobs:
           mamba update -n base --all -y
           mamba env create -f environment-dev.yml python=3.12 -y
           conda activate foyer-dev
-          pip cache purge
-          pip install -e . --prefix=$HOME/tmp_egginfo --no-build-isolation
+          #pip cache purge
+          #pip install -e . --prefix=$HOME/tmp_egginfo --no-build-isolation
+          pip install -e . --no-build-isolation
           #python -m pytest -v --color yes --pyargs foyer
           python -c 'import importlib.metadata; print(importlib.metadata.entry_points(group="foyer.forcefields"))'
 
