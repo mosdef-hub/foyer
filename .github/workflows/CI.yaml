@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
 
     defaults:
       run:
@@ -33,7 +33,8 @@ jobs:
         uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: environment-dev.yml
-          create-args: python=${{ matrix.python-version }}
+          create-args: >-
+            python=${{ matrix.python-version }}
 
       - name: Install Package
         run: python -m pip install -e .
@@ -55,8 +56,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macOS-latest, macOS-13, ubuntu-latest, windows-latest]
-        python-version: ["3.12"]
+        os: [macOS-latest, macOS-13, ubuntu-latest]
+        python-version: ["3.13"]
 
     defaults:
       run:
@@ -70,50 +71,43 @@ jobs:
         uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: environment-dev.yml
-          create-args: python=${{ matrix.python-version }}
-        if: runner.os != 'Windows'
-
-      - name: Install Mamba (Windows)
-        uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-file: environment-dev-win.yml
-          create-args: python=${{ matrix.python-version }}
-        if: runner.os == 'Windows'
+          create-args: >-
+            python=${{ matrix.python-version }}
 
       - name: Install Package
         run: python -m pip install -e .
 
       - name: Test (OS -> ${{ matrix.os }} / Python -> ${{ matrix.python-version }})
-        run: python -m pytest -v --color yes --pyargs foyer
+        run: python -m pytest -v --cov=foyer --cov-report=xml --cov-append --cov-config=setup.cfg --color yes --pyargs foyer
 
-  bleeding-edge-test:
+  wsl-test:
     if: github.event.pull_request.draft == false
-    name: Bleeding Edge mosdef Tests for Foyer
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
+    name: Foyer Tests (WSL)
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
         name: Checkout Branch / Pull Request
 
-      - name: Install Mamba
-        uses: mamba-org/setup-micromamba@v2
+      - uses: Vampire/setup-wsl@v5
         with:
-          environment-file: environment-dev.yml
-          create-args: python=3.12
+          distribution: Ubuntu-24.04
+          wsl-shell-user: runner
+        name: Set up WSL
 
-      - name: Install Packages from Source
+      - name: Install foyer and run pytest
+        shell: wsl-bash {0}
         run: |
-          pip install -e .
-
-      - name: Check environment
-        run: |
-          micromamba list
-
-      - name: Run Bleeding Edge Tests
-        run: |
+          wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O $HOME/Miniforge3.sh
+          bash $HOME/Miniforge3.sh -b -p $HOME/miniforge
+          echo 'export PATH=$HOME/miniforge/bin:$PATH' >> ~/.bashrc
+          export PATH=$HOME/miniforge/bin:$PATH
+          source ~/.bashrc
+          source $HOME/miniforge/etc/profile.d/conda.sh
+          mamba update -n base --all -y
+          mamba env create -f environment-dev.yml python=3.12 -y
+          conda activate foyer-dev
+          pip install -e . --no-build-isolation
           python -m pytest -v --color yes --pyargs foyer
 
   docker:
@@ -123,9 +117,6 @@ jobs:
     if: github.event_name != 'pull_request'
 
     steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -150,7 +141,7 @@ jobs:
           echo Docker Image tags: ${DOCKER_TAGS}
 
       - name: Build and Push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: true
           tags: ${{ env.DOCKER_TAGS }}

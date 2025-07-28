@@ -1,10 +1,9 @@
 """Support user-created forcefield XML files."""
 
 import glob
+import importlib.resources as resources
 import os
 import warnings
-
-from pkg_resources import resource_filename
 
 from foyer import Forcefield
 from foyer.validator import ValidationWarning
@@ -12,7 +11,8 @@ from foyer.validator import ValidationWarning
 
 def get_ff_path():
     """Return path to forcefield locations."""
-    return [resource_filename("foyer", "forcefields")]
+    ff_dir = resources.files("foyer").joinpath("forcefields")
+    return [ff_dir]
 
 
 def get_forcefield_paths(forcefield_name=None):
