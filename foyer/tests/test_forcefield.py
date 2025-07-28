@@ -616,13 +616,13 @@ class TestForcefield(BaseTest):
 
     def test_load_metadata_from_internal_forcefield_plugin_loader(self):
         from_xml_ff = forcefields.load_OPLSAA()
-        assert from_xml_ff.version == "0.0.3"
+        assert from_xml_ff.version == "0.1.0"
         assert from_xml_ff.name == "OPLS-AA"
         assert from_xml_ff.combining_rule == "geometric"
 
     def test_load_metadata_from_internal_name(self):
         from_xml_ff = Forcefield(name="oplsaa")
-        assert from_xml_ff.version == "0.0.3"
+        assert from_xml_ff.version == "0.1.0"
         assert from_xml_ff.name == "OPLS-AA"
         assert from_xml_ff.combining_rule == "geometric"
 
