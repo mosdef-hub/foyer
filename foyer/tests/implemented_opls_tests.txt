@@ -1,5 +1,6 @@
 1-butanol
 1-chlorobutane
+1-chloronaphthalene
 1-octanol
 1-pentanol
 11-dichloroethane

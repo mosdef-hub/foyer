@@ -150,7 +150,7 @@
   <Type name="opls_145" class="CA" element="C" mass="12.01100" def="[C;X3;r6]1[C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6][C;X3;r6]1" overrides="opls_141,opls_142" doi="10.1021/ja9621760"/>
   <Type name="opls_145B" class="C!" element="C" mass="12.01100"/>
   <Type name="opls_146" class="HA" element="H" mass="1.00800"  def="[H][C;%opls_145]" overrides="opls_144" desc="benzene H" doi="10.1021/ja9621760"/>
-  <Type name="opls_147" class="CA" element="C" mass="12.011" def="[C;X3;r6]([C;X3;r6](Cl))" desc="Naphthalene fusion C" overrides="opls_145" doi="https://doi.org/10.1021/ct200731v"/>
+  <Type name="opls_147" class="CA" element="C" mass="12.011" def="[C;R2;X3]([C,%opls_263])([C;R2;X3])" desc="Naphthalene ring fusion C" overrides="opls_145" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_148" class="CT" element="C" mass="12.01100"   def="[C;X4]([C;%opls_145])(H)(H)H" desc="toluene CH3" overrides="opls_149,opls_135" doi="10.1021/ja9621760"/>
   <Type name="opls_149" class="CT" element="C" mass="12.01100"   def="[C;X4]([C;%opls_145])(H)(H)*" desc="ethyl benzene CH2" overrides="opls_136" doi="10.1021/ja9621760"/>
   <Type name="opls_150" class="opls_150" element="C" mass="12.011"/>
@@ -187,7 +187,7 @@
   <Type name="opls_182" class="CT" element="C" mass="12.01100" def="[C;X4]([O;%opls_180])(H)(H)C" desc="C(H2OR), methyl ether" doi="10.1021/ja9621760"/>
   <Type name="opls_183" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_180])(C)(C)H" desc = "Central Carbon in Isopropyl group attached to Oxygen in ether" doi="10.1021/ja9621760"/>
   <Type name="opls_184" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_180])(C)(C)(C)" desc = "Central Carbon in t-butyl group attached to Oxygen in ether" doi="10.1021/ja9621760"/>
-  <Type name="opls_185" class="HC" element="C" mass="1.00800"   def="HC[O;%opls_180]" desc="H(COR), alpha H ether" overrides="opls_144, opls_176" doi="10.1021/ja9621760"/>
+  <Type name="opls_185" class="HC" element="C" mass="1.00800"   def="HC[O;%opls_180]" desc="H(COR), alpha H ether" overrides="opls_144, opls_176, opls_140" doi="10.1021/ja9621760"/>
   <Type name="opls_186" class="OS" element="O" mass="15.9994" def="[O;X2][C;%opls_193](O)(C)H" desc="O: acetal ether" overrides="opls_180" doi="10.1021/ja9621760"/>
   <Type name="opls_187" class="opls_187" element="O" mass="15.9994"/>
   <Type name="opls_188" class="opls_188" element="H" mass="1.008"/>
@@ -474,7 +474,7 @@
   <Type name="opls_466" class="O_2" element="O" mass="15.9994" def="[O;X1]([C;%opls_465]([O;%opls_467]))" overrides="opls_278" desc="O in C=O in ester" doi="10.1002/jcc.1092"/>
   <Type name="opls_467" class="OS" element="O" mass="15.9994" def="[O;X2]([C;%opls_465])([!H])" overrides='opls_180' desc="O connected to R of O=C-O-R in esters" doi="10.1002/jcc.1092"/>
   <Type name="opls_468" class="CT" element="C" mass="12.011" def="[C;X4]([O;%opls_467])(H)(H)H" overrides='opls_181' desc="methoxy C in esters" doi="10.1002/jcc.1092"/>
-  <Type name="opls_469" class="HC" element="H" mass="1.008" def="H[C;%opls_468,%opls_490]" overrides='opls_185' desc="methoxy Hs in esters; alpha-alkoxy hydrogen" doi="10.1002/jcc.1092"/>
+  <Type name="opls_469" class="HC" element="H" mass="1.008" def="H[C;%opls_468,%opls_490]" overrides='opls_185, opls_140' desc="methoxy Hs in esters; alpha-alkoxy hydrogen" doi="10.1002/jcc.1092"/>
   <Type name="opls_470" class="opls_470" element="C" mass="12.011"/>
   <Type name="opls_471" class="C" element="C" mass="12.011" def="[C;X3]([O;X2]([C;X4](H)(H)(H)))([O;X1])([C;X3;r6])" overrides="opls_465" desc="Co in methyl benzoate, aryl ester" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_472" class="CA" element="C" mass="12.011" def="[C;X3;r6]([O;%opls_473])" overrides="opls_145" desc="Aromatic C bonded to opls_473" doi="https://doi.org/10.1021/ct200731v"/>
