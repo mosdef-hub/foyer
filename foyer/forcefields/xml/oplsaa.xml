@@ -176,8 +176,8 @@
   <Type name="opls_170" class="opls_170" element="H" mass="1.008"/>
   <Type name="opls_171" class="OH" element="O" mass="15.9994" def="[O;X2]([%opls_173,%opls_174])(H)" desc="O in triols" overrides="opls_154" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_172" class="HO" element="H" mass="1.008" def="[H;X1]([O;%opls_171])" desc="H(O) in triols" overrides="opls_155" doi="https://doi.org/10.1021/ct200731v"/>
-  <Type name="opls_173" class="CT" element="C" mass="12.011" def="[C;X4]([H])([H])([O;X2]([H]))([C;X4]([O]))" desc="C(H2)(OH) in triols" overrides="opls_157, opls_158" doi="https://doi.org/10.1021/ct200731v"/>
-  <Type name="opls_174" class="CT" element="C" mass="12.011" def="[C;X4]([H])([O;X2]([H]))([C;X4])([C;X4])" desc="C(HROH): triols" overrides="opls_158" doi="https://doi.org/10.1021/ct200731v"/>
+  <Type name="opls_173" class="CT" element="C" mass="12.011" def="[C;X4]([H])([H])([O;X2]([H]))([C;X4]([O;X2]([H])))" desc="C(H2)(OH) in triols" overrides="opls_157, opls_158" doi="https://doi.org/10.1021/ct200731v"/>
+  <Type name="opls_174" class="CT" element="C" mass="12.011" def="[C;X4]([H])([O;X2]([H]))([C;X4]([O;X2]))([C;X4]([O;X2]))" desc="C(HROH): triols" overrides="opls_158" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_175" class="opls_175" element="C" mass="12.011"/>
   <Type name="opls_176" class="HC" element="H" mass="1.008" def="[H][%opls_173,%opls_174]" desc="H(CXOH): triols" overrides="opls_140" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_178" class="opls_178" element="C" mass="12.011"/>
