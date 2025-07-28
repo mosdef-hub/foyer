@@ -68,6 +68,7 @@ ethanol
 ethylbenzene
 fluorobenzene
 formic-acid
+furan
 isobutane
 methane
 methanol

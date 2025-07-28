@@ -580,11 +580,11 @@
   <Type name="opls_563" class="opls_563" element="H" mass="1.008"/>
   <Type name="opls_564" class="opls_564" element="H" mass="1.008"/>
   <Type name="opls_565" class="opls_565" element="H" mass="1.008"/>
-  <Type name="opls_566" class="opls_566" element="O" mass="15.9994"/>
-  <Type name="opls_567" class="opls_567" element="C" mass="12.011"/>
-  <Type name="opls_568" class="opls_568" element="C" mass="12.011"/>
-  <Type name="opls_569" class="opls_569" element="H" mass="1.008"/>
-  <Type name="opls_570" class="opls_570" element="H" mass="1.008"/>
+  <Type name="opls_566" class="OS" element="O" mass="15.9994" def="[O;X2;r5]([C;X3;r5])([C;X3;r5])" desc="O in furan" overrides="opls_180" doi="https://doi.org/10.1021/ct200731v"/>
+  <Type name="opls_567" class="CW" element="C" mass="12.011" def="[C;X3;r5]([O&%opls_566])" desc="Aromatic C bonded to O in furan" overrides="opls_518" doi="https://doi.org/10.1021/ct200731v"/>
+  <Type name="opls_568" class="CS" element="C" mass="12.011" def="[C;X3;r5]([C;%opls_567])([C;X3;r5])" desc="Aromatic C not bonded to O in furan" overrides="opls_142" doi="https://doi.org/10.1021/ct200731v"/>
+  <Type name="opls_569" class="HA" element="H" mass="1.008" def="[H]([C&%opls_567])" desc="H bonded to opls_567 in furan" overrides="opls_185" doi="https://doi.org/10.1021/ct200731v"/>
+  <Type name="opls_570" class="HA" element="H" mass="1.008" def="[H]([C&%opls_568])" desc="H bonded to opls_568 in furan" overrides="opls_144" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_571" class="opls_571" element="O" mass="15.9994"/>
   <Type name="opls_572" class="opls_572" element="C" mass="12.011"/>
   <Type name="opls_573" class="opls_573" element="N" mass="14.0067"/>
