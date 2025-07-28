@@ -157,10 +157,10 @@
   <Type name="opls_151" class="Cl" element="Cl" mass="35.453" def="[Cl][C;X4]" overrides="opls_401" desc="Cl in alkyl chlorides" doi="10.1021/jp0484579"/>
   <Type name="opls_152" class="CT" element="C" mass="12.011" def="[C;X4]([Cl,Br,I])([Cl,C,H])([Cl,C,H])([Cl,C,H])" desc="RCH2Cl in alkyl chlorides or alkyl bromides or alkyl iodides" doi="10.1021/jp0484579"/>
   <Type name="opls_153" class="HC" element="H" mass="1.008" def="[H][C;X4]([Cl,Br,I])([Cl,C,H])([Cl,C,H])" overrides="opls_140" desc="H in alkyl chlorides or alkyl bromides" doi="10.1021/jp0484579"/>
-  <Type name="opls_154" class="OH" element="O" mass="15.9994"   def="[O;X2](H)([!H])" desc="all-atom O: mono alcohols" doi="10.1021/ja9621760"/>
-  <Type name="opls_155" class="HO" element="H" mass="1.00800"   def="H[O;%opls_154]" desc="all-atom H(O): mono alcohols, OP(=O)2" doi="10.1021/ja9621760"/>
+  <Type name="opls_154" class="OH" element="O" mass="15.9994" def="[O;X2](H)([C])" desc="all-atom O: mono alcohols" doi="10.1021/ja9621760"/>
+  <Type name="opls_155" class="HO" element="H" mass="1.00800" def="H[O;%opls_154]" desc="all-atom H(O): mono alcohols, OP(=O)2" doi="10.1021/ja9621760"/>
   <Type name="opls_156" class="HC" element="H" mass="1.008" def="HC(H)(H)OH" desc="all-atom H(C): methanol" overrides="opls_140" doi="10.1021/ja9621760"/>
-  <Type name="opls_157" class="CT" element="C" mass="12.01100"   def="[C;X4]([H])([H])([*])[O;%opls_154]" desc="all-atom C: CH3 and CH2, alcohols" overrides="opls_136, opls_159, opls_158" doi="10.1021/ja9621760"/>
+  <Type name="opls_157" class="CT" element="C" mass="12.01100" def="[C;X4]([H])([H])([*])[O;%opls_154]" desc="all-atom C: CH3 and CH2, alcohols" overrides="opls_136, opls_159, opls_158" doi="10.1021/ja9621760"/>
   <Type name="opls_158" class="CT" element="C" mass="12.011" def="[C;X4]([H])[O;%opls_154]" desc="Carbon in 2R-C(H)-OH" overrides="opls_136, opls_159" doi="10.1021/ja9621760"/>
   <Type name="opls_159" class="CT" element="C" mass="12.011" def="[C;X4][O;%opls_154]" desc="Carbon in 3R-C-OH" overrides="opls_136" doi="10.1021/ja9621760"/>
   <Type name="opls_160" class="opls_160" element="C" mass="12.011"/>
@@ -174,12 +174,12 @@
   <Type name="opls_168" class="HO" element="H" mass="1.008" def="H[O;%opls_167]" overrides="opls_155" doi="10.1021/ja9621760"/>
   <Type name="opls_169" class="opls_169" element="O" mass="15.9994"/>
   <Type name="opls_170" class="opls_170" element="H" mass="1.008"/>
-  <Type name="opls_171" class="OH" element="O" mass="15.9994" def="[O;X2]([H])([C;X4]([C;X4](O)[C;X4](O)(H)))" desc="O in triols" overrides="opls_154" doi="https://doi.org/10.1021/ct200731v"/>
+  <Type name="opls_171" class="OH" element="O" mass="15.9994" def="[O;X2]([%opls_173,%opls_174])(H)" desc="O in triols" overrides="opls_154" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_172" class="HO" element="H" mass="1.008" def="[H;X1]([O;%opls_171])" desc="H(O) in triols" overrides="opls_155" doi="https://doi.org/10.1021/ct200731v"/>
-  <Type name="opls_173" class="CT" element="C" mass="12.011" def="[C;X4]([H])([H])([O;X2]([H]))([C;X4])" desc="C(H2)(OH) in triols" overrides="opls_157, opls_158" doi="https://doi.org/10.1021/ct200731v"/>
+  <Type name="opls_173" class="CT" element="C" mass="12.011" def="[C;X4]([H])([H])([O;X2]([H]))([C;X4]([O]))" desc="C(H2)(OH) in triols" overrides="opls_157, opls_158" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_174" class="CT" element="C" mass="12.011" def="[C;X4]([H])([O;X2]([H]))([C;X4])([C;X4])" desc="C(HROH): triols" overrides="opls_158" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_175" class="opls_175" element="C" mass="12.011"/>
-  <Type name="opls_176" class="HC" element="H" mass="1.008" def="[H][C;X4](O)" desc="H(CXOH): triols" overrides="opls_140" doi="https://doi.org/10.1021/ct200731v"/>
+  <Type name="opls_176" class="HC" element="H" mass="1.008" def="[H][%opls_173,%opls_174]" desc="H(CXOH): triols" overrides="opls_140" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_178" class="opls_178" element="C" mass="12.011"/>
   <Type name="opls_179" class="OS" element="O" mass="15.9994" def="[O;X2]([C;X3;r6])([C;X4])" desc="ether oxygen bonded to an alkyl and aryl group (anisole)" overrides="opls_180" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_180" class="OS" element="O" mass="15.9994"  def="[O;X2](C)C" desc="O, dialkyl ether" doi="10.1021/ja9621760"/>
