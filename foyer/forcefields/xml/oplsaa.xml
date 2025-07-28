@@ -238,7 +238,7 @@
   <Type name="opls_230" class="opls_230" element="C" mass="12.011"/>
   <Type name="opls_231" class="opls_231" element="C" mass="12.011"/>
   <Type name="opls_232" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([C;X3])[H]" desc="Carbon in C=0 group of benzaldehyde,acetophenone" overrides="opls_277" doi="https://doi.org/10.1021/ct200731v"/>
-  <Type name="opls_233" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])(C)C" desc="Carbonyl carbon in acetophenone" overrides="opls_280" doi="https://doi.org/10.1021/ct200731v"/>
+  <Type name="opls_233" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([C;X3&r6])(C)" desc="Carbonyl carbon in acetophenone" overrides="opls_280" doi="https://doi.org/10.1021/ct200731v"/>
   <Type name="opls_234" class="opls_234" element="C" mass="12.011"/>
   <Type name="opls_235" class="C" element="C" mass="12.011" def="[C;X3]([O;X1])[N;X3]" desc="C=O in amide, dmf, peptide bond" overrides="opls_277" doi="10.1021/ja9621760"/>
   <Type name="opls_236" class="O" element="O" mass="15.9994" def="O[C;%opls_235]" desc="O: C=O in amide.   Acyl R on C in amide is neutral -" overrides="opls_278" doi="10.1021/ja9621760"/>
@@ -287,7 +287,7 @@
   <Type name="opls_279" class="HC"  element="H" mass="1.00800"  def="H[C;X3][O;X1]" desc="H-alpha in aldehyde and formamide" overrides="opls_185, opls_144, opls_485" doi="10.1021/ja9621760"/>
   <Type name="opls_280" class="C_2" element="C" mass="12.01100" def="[C;X3]([O;X1])(C)C" desc="C in ketone" doi="10.1021/ja9621760"/>
   <Type name="opls_281" class="O_2" element="O" mass="15.9994"  def="[O;X1]([C;%opls_280])" desc="O in ketone" doi="10.1021/ja9621760"/>
-  <Type name="opls_282" class="HC"  element="H" mass="1.00800"  def="HC[C;%opls_277,%opls_280,%opls_465;!%opls_267]" desc="H on C-alpha in ketone and aldehyde" overrides="opls_140,opls_144" doi="10.1021/ja9621760"/>
+  <Type name="opls_282" class="HC"  element="H" mass="1.00800"  def="HC[C;%opls_277,%opls_280,%opls_465;!%opls_267;!%opls_233]" desc="H on C-alpha in ketone and aldehyde" overrides="opls_140,opls_144" doi="10.1021/ja9621760"/>
   <Type name="opls_283" class="opls_283" element="C" mass="12.011"/>
   <Type name="opls_284" class="opls_284" element="C" mass="12.011"/>
   <Type name="opls_285" class="opls_285" element="C" mass="12.011"/>

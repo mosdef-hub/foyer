@@ -30,6 +30,7 @@ acetate
 2-acetyloxyethyl-acetate
 4-acetyloxybutyl-acetate
 acetone
+acetophenone
 benzene
 benzonitrile
 chloride
