@@ -7,8 +7,10 @@
 111-trifluoropropane
 112-trichloroethane
 1122-tetrachloroethane
+123-propanetriol
 1234-tetrafluorobenzene
 12-dichloroethane
+12-difluorobenzene
 12-ethanediamine
 123-propanetriol
 124-trimethylbenzene
