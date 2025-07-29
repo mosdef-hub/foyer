@@ -1153,6 +1153,7 @@
   <Bond class1="SY2" class2="CT" length="0.17700" k="284512.0"/>
   <Bond class1="CT" class2="I" length="0.21450" k="205016.0"/>
   <Bond class1="CM" class2="CL" length="0.17250" k="251040.0"/>
+  <Bond class1="C_2" class2="CY" length="0.1490" k="334720.0"/>
  </HarmonicBondForce>
  <HarmonicAngleForce>
   <Angle class1="HW" class2="OW" class3="HW" angle="1.91113553093" k="627.6"/>
