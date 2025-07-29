@@ -1,3 +1,4 @@
+1-bromobutane
 1-butanol
 1-chlorobutane
 1-chloronaphthalene
@@ -7,6 +8,7 @@
 111-trifluoropropane
 112-trichloroethane
 1122-tetrachloroethane
+12-dibromoethane
 12-dichloroethane
 12-difluorobenzene
 12-ethanediamine
@@ -46,6 +48,7 @@ benzene
 benzenethiol
 benzonitrile
 benzyl-alcohol
+bromoethane
 bromomethane
 chloride
 chloroethane
@@ -54,6 +57,7 @@ cyclohexane
 cyclohexanone
 cyclohexylamine
 cyclopentanone
+dibromomethane
 dibutyl-ether
 dichloromethane
 diethylene-glycol
