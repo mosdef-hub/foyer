@@ -231,7 +231,7 @@
   <Type name="opls_224B" class="opls_224B" element="C" mass="12.011"/>
   <Type name="opls_225" class="opls_225" element="C" mass="12.011"/>
   <Type name="opls_225B" class="opls_225B" element="C" mass="12.011"/>
-  <Type name="opls_226" class="CL" element="Cl" mass="35.453" def="[Cl;X1]([C;%opls_227])" desc="chloroalkene Cl" overrides="opls_401" doi="10.1021/ct200731v"/>
+  <Type name="opls_226" class="Cl" element="Cl" mass="35.453" def="[Cl;X1]([C;%opls_227])" desc="chloroalkene Cl" overrides="opls_401" doi="10.1021/ct200731v"/>
   <Type name="opls_227" class="CM" element="C" mass="12.011" def="[C;X3;!r6]([C;X3;!r6](H)(H))(Cl)(Cl)" desc="chloroalkene C (ClH-C=)" doi="10.1021/ct200731v"/>
   <Type name="opls_228" class="opls_228" element="C" mass="12.011"/>
   <Type name="opls_229" class="opls_229" element="C" mass="12.011"/>
@@ -2101,9 +2101,32 @@
   <Angle class1="I" class2="CT" class3="I" angle="1.9495328" k="652.704"/>
   <Angle class1="HC" class2="CT" class3="I" angle="1.8779743" k="426.768"/>
   <Angle class1="CA" class2="CA" class3="I" angle="2.0944" k="627.600"/>
-  <Angle class1="CM" class2="CM" class3="CL" angle="2.120575" k="627.600"/>
-  <Angle class1="CL" class2="CM" class3="CL" angle="1.989675" k="502.080"/>
+  <Angle class1="CM" class2="CM" class3="Cl" angle="2.120575" k="627.600"/>
+  <Angle class1="Cl" class2="CM" class3="Cl" angle="1.989675" k="502.080"/>
   <Angle class1="O_2" class2="C" class3="OS" angle="2.153736" k="694.544"/>
+  <Angle class1="NT" class2="CZ" class3="NZ" angle="3.141592" k="1255.200"/>
+  <Angle class1="HC" class2="CZ" class3="NZ" angle="3.141592" k="1255.200"/>
+  <Angle class1="CM" class2="CZ" class3="NZ" angle="3.141592" k="1255.200"/>
+  <Angle class1="CM" class2="C_2" class3="OS" angle="2.18690" k="669.440"/>
+  <Angle class1="C_2" class2="OS" class3="CM" angle="2.0403" k="694.544"/>
+  <Angle class1="C_2" class2="OS" class3="C_2" angle="2.0403" k="694.544"/>
+  <Angle class1="CY" class2="C_2" class3="CT" angle="2.02458" k="585.760"/>
+  <Angle class1="CY" class2="C_2" class3="CY" angle="1.0472" k="251.040"/>
+  <Angle class1="CY" class2="C_2" class3="O_2" angle="2.11883" k="669.440"/>
+  <Angle class1="CY" class2="CY" class3="C_2" angle="2.045526" k="313.800"/>
+  <Angle class1="HC" class2="CY" class3="C_2" angle="1.994911" k="292.880"/>
+  <Angle class1="F" class2="CT" class3="CL" angle="1.93732" k="652.704"/>
+  <Angle class1="CA" class2="CA" class3="HC" angle="2.0944" k="292.880"/>
+  <Angle class1="HC" class2="CA" class3="HC" angle="2.0944" k="292.880"/>
+  <Angle class1="HC" class2="C_2" class3="HC" angle="1.9111355" k="276.144"/>
+  <Angle class1="CM" class2="CM" class3="CZ" angle="2.16421" k="585.760"/>
+  <Angle class1="CZ" class2="ZM" class3="HC" angle="2.151991" k="292.880"/>
+  <Angle class1="CZ" class2="NT" class3="H" angle="1.93732" k="292.880"/>
+  <Angle class1="OS" class2="C" class3="OS" angle="2.1537363" k="694.544"/>
+  <Angle class1="OS" class2="C_2" class3="OS" angle="2.1537363" k="694.544"/>
+  <Angle class1="O_2" class2="C" class3="OS" angle="2.1537363" k="694.544"/>
+  <Angle class1="CO" class2="OS" class3="CO" angle="1.9111355" k="502.080"/>
+  <Angle class1="C_2" class2="CT" class3="C_2" angle="1.939061" k="527.184"/>
 
  </HarmonicAngleForce>
  <RBTorsionForce>
@@ -3160,8 +3183,14 @@
     Parameters were obtained from the OPLS files at https://virtualchemistry.org/ff.php
   -->
   <Proper class1="CT" class2="OS" class3="C" class4="O_2" c0="21.43881" c1="0.0" c2="-21.43881" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="C_2" class2="OS" class3="C_2" class4="O_2" c0="21.43881" c1="0.0" c2="-21.43881" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="CT" class2="OS" class3="C_2" class4="O_2" c0="21.43881" c1="0.0" c2="-21.43881" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="CM" class2="OS" class3="C_2" class4="O_2" c0="21.43881" c1="0.0" c2="-21.43881" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="CT" class2="OS" class3="C" class4="OS" c0="20.92000" c1="0.0" c2="-20.92000" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="CA" class2="CA" class3="C_2" class4="O_2" c0="8.78640" c1="0.0" c2="-8.7864" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="CM" class2="OS" class3="CT" class4="CT" c0="1.71544" c1="2.84512" c2="1.04600" c3="-5.60656" c4="0.0" c5="0.0"/>
+  <Proper class1="CO" class2="OS" class3="CO" class4="CT" c0="1.71544" c1="2.84512" c2="1.04600" c3="-5.60656" c4="0.0" c5="0.0"/>
+  <Proper class1="CO" class2="OS" class3="CO" class4="HC" c0="1.58992" c1="4.76976" c2="0.0" c3="-6.35968" c4="0.0" c5="0.0"/>
   <Proper class1="HC" class2="CT" class3="CA" class4="NC" c0="-4.09614" c1="5.08775" c2="2.96645" c3="-3.95806" c4="0.0" c5="0.0"/>
   <Proper class1="HC" class2="CT" class3="CA" class4="NC" c0="-4.09614" c1="5.08775" c2="2.96645" c3="-3.95806" c4="0.0" c5="0.0"/>
   <Proper class1="I" class2="CT" class3="CT" class4="HC" c0="0.83680" c1="2.51040" c2="0.0" c3="-3.34720" c4="0.0" c5="0.0"/>
@@ -3169,6 +3198,24 @@
   <Proper class1="CA" class2="C_2" class3="CT" class4="HC" c0="0.75312" c1="2.25936" c2="0.0" c3="-3.01248" c4="0.0" c5="0.0"/>
   <Proper class1="CA" class2="CA" class3="CM" class4="HC" c0="-1.79284" c1="-0.42886" c2="2.22170" c3="0.0" c4="0.0" c5="0.0"/>
   <Proper class1="NT" class2="CT" class3="CT" class4="OS" c0="2.92880" c1="-1.46440" c2="0.20920" c3="-1.67360" c4="0.0" c5="0.0"/>
+  <Proper class1="CM" class2="CM" class3="CZ" class4="NZ" c0="4.18400" c1="-4.18400" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="CM" class2="C_2" class3="OS" class4="CT" c0="5.23000" c1="7.32200" c2="-12.55200" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="CM" class2="CM" class3="OS" class4="C_2" c0="5.23000" c1="7.32200" c2="-12.55200" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="CM" class2="CM" class3="C_2" class4="OS" c0="-1.15688" c1="-3.47063" c2="0.0" c3="4.62750" c4="0.0" c5="0.0"/>
+  <Proper class1="CT" class2="CM" class3="C_2" class4="OS" c0="-1.15688" c1="-3.47063" c2="0.0" c3="4.62750" c4="0.0" c5="0.0"/>
+  <Proper class1="C_2" class2="CT" class3="C_2" class4="OS" c0="-1.15688" c1="-3.47063" c2="0.0" c3="4.62750" c4="0.0" c5="0.0"/>
+  <Proper class1="C_2" class2="CM" class3="CT" class4="HC" c0="-0.15899" c1="-0.47698" c2="0.0" c3="0.63596" c4="0.0" c5="0.0"/>
+  <Proper class1="C_2" class2="CT" class3="C_2" class4="CT" c0="-4.23421" c1="7.22159" c2="1.90790" c3="-4.89528" c4="0.0" c5="0.0"/>
+  <Proper class1="C_2" class2="OS" class3="C_2" class4="CT" c0="-2.1966" c1="5.20071" c2="0.52719" c3="-3.5313" c4="0.0" c5="0.0"/>
+  <Proper class1="CT" class2="C_2" class3="CT" class4="OS" c0="2.87441" c1="0.58158" c2="2.09200" c3="-5.54799" c4="0.0" c5="0.0"/>
+  <Proper class1="CT" class2="CT" class3="CT" class4="CZ" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="CY" class2="CY" class3="C_2" class4="O_2" c0="3.10662" c1="-3.77606" c2="-5.13795" c3="5.80739" c4="0.0" c5="0.0"/>
+  <Proper class1="CM" class2="CM" class3="C_2" class4="O_2" c0="3.10662" c1="-3.77606" c2="-5.13795" c3="5.80739" c4="0.0" c5="0.0"/>
+  <Proper class1="C_2" class2="CT" class3="C_2" class4="O_2" c0="3.10662" c1="-3.77606" c2="-5.13795" c3="5.80739" c4="0.0" c5="0.0"/>
+  <Proper class1="CT" class2="CM" class3="C_2" class4="O_2" c0="3.10662" c1="-3.77606" c2="-5.13795" c3="5.80739" c4="0.0" c5="0.0"/>
+  <Proper class1="CY" class2="C_2" class3="CY" class4="CY" c0="2.92880" c1="-1.46440" c2="0.20920" c3="-1.67360" c4="0.0" c5="0.0"/>
+  <Proper class1="C_2" class2="OS" class3="CM" class4="HC" c0="1.58992" c1="4.76976" c2="0.0" c3="-6.35968" c4="0.0" c5="0.0"/>
+  <Proper class1="CO" class2="OS" class3="CO" class4="OS" c0="-6.45801" c1="0.80961" c2="5.68187" c3="-0.03347" c4="0.0" c5="0.0"/>
 
 
  </RBTorsionForce>
