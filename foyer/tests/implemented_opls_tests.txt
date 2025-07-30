@@ -73,6 +73,7 @@ ethane
 ethanol
 ethylbenzene
 fluorobenzene
+formaldehyde
 formic-acid
 furan
 isobutane
