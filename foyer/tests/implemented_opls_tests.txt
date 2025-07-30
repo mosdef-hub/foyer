@@ -17,6 +17,7 @@
 124-trimethylbenzene
 13-dichloropropane
 13-difluorobenzene
+13-dioxolane
 14-butanediol
 14-dichlorobutane
 15-pentanediol
