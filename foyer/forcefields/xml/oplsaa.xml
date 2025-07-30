@@ -137,7 +137,7 @@
   <Type name="opls_130" class="opls_130" element="He" mass="4.0026"/>
   <Type name="opls_131" class="opls_131" element="C" mass="12.011"/>
   <Type name="opls_132" class="opls_132" element="C" mass="15.035"/>
-  <Type name="opls_135" class="CT" element="C" mass="12.01100" def="[C;X4]([C;!r6])(H)(H)H" desc="alkane CH3" doi="10.1021/ja9621760"/>
+  <Type name="opls_135" class="CT" element="C" mass="12.01100" def="[C;X4](C)(H)(H)H" desc="alkane CH3" doi="10.1021/ja9621760"/>
   <Type name="opls_136" class="CT" element="C" mass="12.01100" def="[C;X4](C)(C)(H)H" desc="alkane CH2" doi="10.1021/ja9621760"/>
   <Type name="opls_137" class="CT" element="C" mass="12.01100" def="[C;X4](C)(C)(C)H" desc="alkane CH" doi="10.1021/ja9621760"/>
   <Type name="opls_138" class="CT" element="C" mass="12.01100" def="[C;X4](H)(H)(H)H" desc="alkane CH4" doi="10.1021/ja9621760"/>
@@ -673,7 +673,7 @@
   <Type name="opls_656" class="opls_656" element="H" mass="1.008"/>
   <Type name="opls_670" class="CT" element="C" mass="12.011" def="[C;X4]([C;%opls_521])(H)(H)(H)" desc="CH3,2-methyl pyridine" overrides="opls_135" doi="10.1021/ct200731v"/>
   <Type name="opls_671" class="opls_671" element="C" mass="12.011"/>
-  <Type name="opls_672" class="CT" element="C" mass="12.011" def="[C;X4]([C;%opls_522])(H)(H)(H)" desc="CH3, 3-methyl pyridazine" doi="10.1021/ct200731v"/>
+  <Type name="opls_672" class="CT" element="C" mass="12.011" def="[C;X4]([C;%opls_522])(H)(H)(H)" desc="CH3, 3-methyl pyridazine" overrides="opls_135" doi="10.1021/ct200731v"/>
   <Type name="opls_673" class="opls_673" element="C" mass="12.011"/>
   <Type name="opls_674" class="CT" element="C" mass="12.011" def="[C;X4]([C;X3;r6]([C;X3;r6]([C;X3;r6](N))))(H)(H)(H)" desc="CH3, 4-methyl pyrimidine" overrides="opls_135" doi="10.1021/ct200731v"/>
   <Type name="opls_675" class="opls_675" element="C" mass="12.011"/>

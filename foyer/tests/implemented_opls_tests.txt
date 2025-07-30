@@ -94,6 +94,7 @@ nitromethane
 NN-dimethylacetamide
 NN-dimethylformamide
 o-xylene
+paraldehyde
 pentachloroethane
 pentanenitrile
 phenol
