@@ -1153,8 +1153,12 @@
   <Bond class1="SY2" class2="CT" length="0.17700" k="284512.0"/>
   <Bond class1="CT" class2="I" length="0.21450" k="205016.0"/>
   <Bond class1="CM" class2="CL" length="0.17250" k="251040.0"/>
+  <Bond class1="CM" class2="CZ" length="0.12100" k="962320.0"/>
+  <Bond class1="CZ" class2="NT" length="0.11570" k="543920.0"/>
   <Bond class1="C_2" class2="CY" length="0.1490" k="334720.0"/>
+  <Bond class1="CA" class2="HC" length="0.10800" k="307105.6"/>
  </HarmonicBondForce>
+
  <HarmonicAngleForce>
   <Angle class1="HW" class2="OW" class3="HW" angle="1.91113553093" k="627.6"/>
   <Angle class1="HW" class2="OW" class3="LP" angle="0.955567765467" k="418.4"/>
@@ -3192,7 +3196,6 @@
   <Proper class1="CO" class2="OS" class3="CO" class4="CT" c0="1.71544" c1="2.84512" c2="1.04600" c3="-5.60656" c4="0.0" c5="0.0"/>
   <Proper class1="CO" class2="OS" class3="CO" class4="HC" c0="1.58992" c1="4.76976" c2="0.0" c3="-6.35968" c4="0.0" c5="0.0"/>
   <Proper class1="HC" class2="CT" class3="CA" class4="NC" c0="-4.09614" c1="5.08775" c2="2.96645" c3="-3.95806" c4="0.0" c5="0.0"/>
-  <Proper class1="HC" class2="CT" class3="CA" class4="NC" c0="-4.09614" c1="5.08775" c2="2.96645" c3="-3.95806" c4="0.0" c5="0.0"/>
   <Proper class1="I" class2="CT" class3="CT" class4="HC" c0="0.83680" c1="2.51040" c2="0.0" c3="-3.34720" c4="0.0" c5="0.0"/>
   <Proper class1="I" class2="CT" class3="CT" class4="CT" c0="0.83680" c1="2.51040" c2="0.0" c3="-3.34720" c4="0.0" c5="0.0"/>
   <Proper class1="CA" class2="C_2" class3="CT" class4="HC" c0="0.75312" c1="2.25936" c2="0.0" c3="-3.01248" c4="0.0" c5="0.0"/>
@@ -3216,9 +3219,16 @@
   <Proper class1="CY" class2="C_2" class3="CY" class4="CY" c0="2.92880" c1="-1.46440" c2="0.20920" c3="-1.67360" c4="0.0" c5="0.0"/>
   <Proper class1="C_2" class2="OS" class3="CM" class4="HC" c0="1.58992" c1="4.76976" c2="0.0" c3="-6.35968" c4="0.0" c5="0.0"/>
   <Proper class1="CO" class2="OS" class3="CO" class4="OS" c0="-6.45801" c1="0.80961" c2="5.68187" c3="-0.03347" c4="0.0" c5="0.0"/>
-
-
+  <Proper class1="CT" class2="C_2" class3="CY" class4="CY" c0="0.81797" c1="-7.90567" c2="0.60250" c3="6.48520" c4="0.0" c5="0.0"/>
+  <Proper class1="CT" class2="C_2" class3="CY" class4="HC" c0="0.57530" c1="1.72590" c2="0.0" c3="-2.30120" c4="0.0" c5="0.0"/>
+  <Proper class1="CT" class2="C_2" class3="OS" class4="CM" c0="31.20637" c1="-9.76754" c2="-21.43881" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="CT" class2="SZ" class3="CT" class4="HC" c0="0.7322" c1="2.1966" c2="0.0" c3="-2.9288" c4="0.0" c5="0.0"/>
+  <Proper class1="CY" class2="C_2" class3="CY" class4="HC" c0="0.6276" c1="1.8828" c2="0.0" c3="-2.5104" c4="0.0" c5="0.0"/>
+  <Proper class1="HC" class2="CT" class3="CO" class4="HC" c0="0.6276" c1="1.8828" c2="0.0" c3="-2.5104" c4="0.0" c5="0.0"/>
+  <Proper class1="CT" class2="CT" class3="CT" class4="NO" c0="-0.4707" c1="-1.4121" c2="0.0" c3="1.8828" c4="0.0" c5="0.0"/>
+  <Proper class1="HC" class2="CT" class3="SZ" class4="OY" c0="0.7322" c1="2.1966" c2="0.0" c3="-2.9288" c4="0.0" c5="0.0"/>
  </RBTorsionForce>
+
  <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
   <Atom type="opls_001" charge="0.5" sigma="0.375" epsilon="0.43932"/>
   <Atom type="opls_002" charge="-0.5" sigma="0.296" epsilon="0.87864"/>
