@@ -477,7 +477,7 @@
   <Type name="opls_469" class="HC" element="H" mass="1.008" def="H[C;%opls_468,%opls_490]" overrides='opls_185, opls_140' desc="methoxy Hs in esters; alpha-alkoxy hydrogen" doi="10.1002/jcc.1092"/>
   <Type name="opls_470" class="opls_470" element="C" mass="12.011"/>
   <Type name="opls_471" class="C" element="C" mass="12.011" def="[C;X3]([O;X2]([C;X4](H)(H)(H)))([O;X1])([C;X3;r6])" overrides="opls_465" desc="Co in methyl benzoate, aryl ester" doi="10.1021/ct200731v"/>
-  <Type name="opls_472" class="CA" element="C" mass="12.011" def="[C;X3;r6]([O;%opls_473])" overrides="opls_145" desc="Aromatic C bonded to opls_473" doi="10.1021/ct200731v"/>
+  <Type name="opls_472" class="CA" element="C" mass="12.011" def="[C;X3;r6]([O;%opls_473])" overrides="opls_145,opls_147" desc="Aromatic C bonded to opls_473" doi="10.1021/ct200731v"/>
   <Type name="opls_473" class="OS" element="O" mass="15.9994" def="[O;X2]([C;X3;r6])([C;X3;r6])" overrides="opls_180" desc="O linkage in phenyl ether" doi="10.1021/ct200731v"/>
   <Type name="opls_474" class="opls_474" element="S" mass="32.06"/>
   <Type name="opls_475" class="opls_475" element="O" mass="15.9994"/>
