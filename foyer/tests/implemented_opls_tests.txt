@@ -79,6 +79,7 @@ formaldehyde
 formic-acid
 furan
 isobutane
+isopropylamine
 methane
 methanol
 methyl-salicylate
