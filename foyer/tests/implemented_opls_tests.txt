@@ -101,6 +101,7 @@ propanenitrile
 propene
 propionic-acid
 propylamine
+propylene-carbonate
 propyne
 pyridine
 pyrimidine
