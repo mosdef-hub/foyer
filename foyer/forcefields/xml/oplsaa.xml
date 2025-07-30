@@ -829,8 +829,8 @@
   <Type name="opls_956" class="opls_956" element="F" mass="18.9984"/>
   <Type name="opls_957" class="opls_957" element="C" mass="12.011"/>
   <Type name="opls_958" class="opls_958" element="H" mass="1.008"/>
-  <Type name="opls_959" class="opls_959" element="C" mass="12.011" def="[C;X4](F)(H)([Cl,Br])" desc="R2CHF in monoalkyl fluorides" doi="10.1021/ct200731v"/>
-  <Type name="opls_960" class="opls_960" element="C" mass="12.011" def="[C;X4](F)([!H])([Cl,Br])([Cl,Br])" desc="R3CF in monoalkyl fluorides" doi="10.1021/ct200731v"/>
+  <Type name="opls_959" class="CT" element="C" mass="12.011" def="[C;X4](F)(H)([Cl,Br])" desc="R2CHF in monoalkyl fluorides" doi="10.1021/ct200731v"/>
+  <Type name="opls_960" class="CT" element="C" mass="12.011" def="[C;X4](F)([!H])([Cl,Br])([Cl,Br])" desc="R3CF in monoalkyl fluorides" doi="10.1021/ct200731v"/>
   <Type name="opls_961" class="CT" element="C" mass="12.01100" def="[C;X4](F)(F)(F)*" desc="perfluoroalkane CF3" overrides="opls_962" doi="10.1021/jp004071w"/>
   <Type name="opls_962" class="CT" element="C" mass="12.01100" def="[C;X4](F)(F)(*)*" desc="perfluoroalkane CF2" doi="10.1021/jp004071w"/>
   <Type name="opls_963" class="opls_963" element="C" mass="12.011"/>
