@@ -67,6 +67,7 @@ diethylene-glycol-dimethyl-ether
 diisopropylamine
 dimethylether
 dimethylformamide
+diethyl-malonate
 dimethoxymethane
 diphenyl-ether
 ethane
