@@ -3165,7 +3165,12 @@
   <Proper class1="HC" class2="CT" class3="CA" class4="NC" c0="-4.09614" c1="5.08775" c2="2.96645" c3="-3.95806" c4="0.0" c5="0.0"/>
   <Proper class1="HC" class2="CT" class3="CA" class4="NC" c0="-4.09614" c1="5.08775" c2="2.96645" c3="-3.95806" c4="0.0" c5="0.0"/>
   <Proper class1="I" class2="CT" class3="CT" class4="HC" c0="0.83680" c1="2.51040" c2="0.0" c3="-3.34720" c4="0.0" c5="0.0"/>
+  <Proper class1="I" class2="CT" class3="CT" class4="CT" c0="0.83680" c1="2.51040" c2="0.0" c3="-3.34720" c4="0.0" c5="0.0"/>
   <Proper class1="CA" class2="C_2" class3="CT" class4="HC" c0="0.75312" c1="2.25936" c2="0.0" c3="-3.01248" c4="0.0" c5="0.0"/>
+  <Proper class1="CA" class2="CA" class3="CM" class4="HC" c0="-1.79284" c1="-0.42886" c2="2.22170" c3="0.0" c4="0.0" c5="0.0"/>
+  <Proper class1="NT" class2="CT" class3="CT" class4="OS" c0="2.92880" c1="-1.46440" c2="0.20920" c3="-1.67360" c4="0.0" c5="0.0"/>
+
+
  </RBTorsionForce>
  <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
   <Atom type="opls_001" charge="0.5" sigma="0.375" epsilon="0.43932"/>
