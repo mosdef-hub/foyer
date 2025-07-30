@@ -12,7 +12,7 @@ dichlorofluoromethane                 3
 [ atoms ]
 ;   nr       type  resnr residue  atom   cgnr     charge       mass  typeB    chargeB      massB
          1  opls_151         1       LIG        CL         1     -0.06    35.453
-         2  opls_152         1       LIG         C         2     0.137    12.011
+         2  opls_959         1       LIG         C         2     0.137    12.011
          3  opls_153         1       LIG         H         3     0.103     1.008
          4  opls_151         1       LIG        CL         4     -0.06    35.453
          5  opls_965         1       LIG         F         5     -0.12   18.9984

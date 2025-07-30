@@ -2115,7 +2115,7 @@
   <Angle class1="CY" class2="C_2" class3="O_2" angle="2.11883" k="669.440"/>
   <Angle class1="CY" class2="CY" class3="C_2" angle="2.045526" k="313.800"/>
   <Angle class1="HC" class2="CY" class3="C_2" angle="1.994911" k="292.880"/>
-  <Angle class1="F" class2="CT" class3="CL" angle="1.93732" k="652.704"/>
+  <Angle class1="F" class2="CT" class3="Cl" angle="1.93732" k="652.704"/>
   <Angle class1="CA" class2="CA" class3="HC" angle="2.0944" k="292.880"/>
   <Angle class1="HC" class2="CA" class3="HC" angle="2.0944" k="292.880"/>
   <Angle class1="HC" class2="C_2" class3="HC" angle="1.9111355" k="276.144"/>

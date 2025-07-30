@@ -58,6 +58,7 @@ cyclohexane
 cyclohexanone
 cyclohexylamine
 cyclopentanone
+dichlorofluoromethane
 dibromomethane
 dibutyl-ether
 dichloromethane
