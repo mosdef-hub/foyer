@@ -581,9 +581,9 @@
   <Type name="opls_564" class="opls_564" element="H" mass="1.008"/>
   <Type name="opls_565" class="opls_565" element="H" mass="1.008"/>
   <Type name="opls_566" class="OS" element="O" mass="15.9994" def="[O;X2;r5]([C;X3;r5])([C;X3;r5])" desc="O in furan" overrides="opls_180" doi="10.1021/ct200731v"/>
-  <Type name="opls_567" class="CW" element="C" mass="12.011" def="[C;X3;r5]([O&%opls_566])" desc="Aromatic C bonded to O in furan" overrides="opls_518" doi="10.1021/ct200731v"/>
-  <Type name="opls_568" class="CS" element="C" mass="12.011" def="[C;X3;r5]([C;%opls_567])([C;X3;r5])" desc="Aromatic C not bonded to O in furan" overrides="opls_142" doi="10.1021/ct200731v"/>
-  <Type name="opls_569" class="HA" element="H" mass="1.008" def="[H]([C&%opls_567])" desc="H bonded to opls_567 in furan" overrides="opls_185" doi="10.1021/ct200731v"/>
+  <Type name="opls_567" class="CW" element="C" mass="12.011" def="[C;X3;r5]([%opls_633,%opls_566])" desc="Aromatic C bonded to O in furan or S in thiophene" overrides="opls_518" doi="10.1021/ct200731v"/>
+  <Type name="opls_568" class="CS" element="C" mass="12.011" def="[C;X3;r5]([C;%opls_567])([C;X3;r5])" desc="Aromatic C not bonded to O in furan or S in thiophene" overrides="opls_142" doi="10.1021/ct200731v"/>
+  <Type name="opls_569" class="HA" element="H" mass="1.008" def="[H]([C&%opls_567])" desc="H bonded to opls_567 in furan" overrides="opls_185,opls_144" doi="10.1021/ct200731v"/>
   <Type name="opls_570" class="HA" element="H" mass="1.008" def="[H]([C&%opls_568])" desc="H bonded to opls_568 in furan" overrides="opls_144" doi="10.1021/ct200731v"/>
   <Type name="opls_571" class="opls_571" element="O" mass="15.9994"/>
   <Type name="opls_572" class="opls_572" element="C" mass="12.011"/>
@@ -647,7 +647,7 @@
   <Type name="opls_630" class="opls_630" element="H" mass="1.008"/>
   <Type name="opls_631" class="opls_631" element="H" mass="1.008"/>
   <Type name="opls_632" class="opls_632" element="H" mass="1.008"/>
-  <Type name="opls_633" class="opls_633" element="S" mass="32.06"/>
+  <Type name="opls_633" class="S" element="S" mass="32.06" def="[S;r5;X2]([C;r5;X3])([C;r5;X3])" desc="Sulfur in thiophene or thiazole" overrides="opls_202" doi="10.1021/ct200731v"/>
   <Type name="opls_634" class="opls_634" element="C" mass="12.011"/>
   <Type name="opls_635" class="opls_635" element="N" mass="14.0067"/>
   <Type name="opls_636" class="opls_636" element="C" mass="12.011"/>

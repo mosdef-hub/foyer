@@ -107,6 +107,7 @@ pyrrolidine
 sulfolane
 tetrahydrofuran
 tert-butylamine
+thiophene
 toluene
 trichloromethane
 triethylamine
