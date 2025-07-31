@@ -220,10 +220,10 @@
   <Type name="opls_215" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_203])(H)" desc="C in 2R-CH-S-S-*"  overrides="opls_216, opls_211" doi="10.1021/ja9621760"/>
   <Type name="opls_216" class="CT" element="C" mass="12.011" def="[C;X4][S;%opls_203]" desc="C in 3R-C-S-S-*" overrides="opls_212" doi="10.1021/ja9621760"/>
   <Type name="opls_217" class="CT" element="C" mass="12.011" def="[C;X4]([S;%opls_200])(H)(H)(H)" desc="C in CH3-S-H (methanethiol)" overrides="opls_211, opls_207, opls_209, opls_206" doi="10.1021/ja9621760"/>
-  <Type name="opls_218" class="CT" element="C" mass="12.011" def="[C;X4]([C;%opls_221])(O)(H)(H)" overrides="opls_149, opls_157, opls_158"/>
+  <Type name="opls_218" class="CT" element="C" mass="12.011" def="[C;X4]([C;%opls_221])(O)(H)(H)" desc="C in CH2OH in benzyl alcohols" overrides="opls_149,opls_157,opls_158" doi="10.1021/ct200731v"/>
   <Type name="opls_219" class="opls_219" element="C" mass="12.011"/>
   <Type name="opls_220" class="opls_220" element="C" mass="12.011"/>
-  <Type name="opls_221" class="CA" element="C" mass="12.011" def="[C;X3;r6]([C;X3;r6])([C;X3;r6])([C;X4](O)(H)(H))" overrides="opls_145"/>
+  <Type name="opls_221" class="CA" element="C" mass="12.011" def="[C;X3;r6]([C;X3;r6])([C;X3;r6])([C;X4](O)(H)(H))" desc="Aromatic C(CH2OH) in benzyl alcohols" overrides="opls_145" doi="10.1021/ct200731v"/>
   <Type name="opls_222" class="opls_222" element="S" mass="32.06"/>
   <Type name="opls_223" class="opls_223" element="C" mass="12.011"/>
   <Type name="opls_223B" class="opls_223B" element="C" mass="12.011"/>
