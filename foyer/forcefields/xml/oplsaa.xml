@@ -232,7 +232,7 @@
   <Type name="opls_225" class="opls_225" element="C" mass="12.011"/>
   <Type name="opls_225B" class="opls_225B" element="C" mass="12.011"/>
   <Type name="opls_226" class="Cl" element="Cl" mass="35.453" def="[Cl;X1]([C;%opls_227])" desc="chloroalkene Cl" overrides="opls_401" doi="10.1021/ct200731v"/>
-  <Type name="opls_227" class="CM" element="C" mass="12.011" def="[C;X3;!r6]([C;X3;!r6](H)(H))(Cl)(Cl)" desc="chloroalkene C (ClH-C=)" doi="10.1021/ct200731v"/>
+  <Type name="opls_227" class="CM" element="C" mass="12.011" def="[C;X3;!r6;!r5]([C;X3;!r6;!r5](H)(H))(Cl)(Cl)" desc="chloroalkene C (ClH-C=)" doi="10.1021/ct200731v"/>
   <Type name="opls_228" class="opls_228" element="C" mass="12.011"/>
   <Type name="opls_229" class="opls_229" element="C" mass="12.011"/>
   <Type name="opls_230" class="opls_230" element="C" mass="12.011"/>
@@ -686,8 +686,8 @@
     carbons and the charge is simply adjusted to preserve molecular charge
     neutrality.
   -->
-  <Type name="opls_678" class="CT" element="C" mass="12.01100"   def="[C;X4](H)(H)(H)[C;%opls_543]" desc="CH3, 2-methyl pyrrole" overrides="opls_679"/>
-  <Type name="opls_679" class="CT" element="C" mass="12.01100"   def="[C;X4](H)(H)[C;%opls_543]" desc="CH2, 2-ethyl pyrrole" overrides="opls_136"/>
+  <Type name="opls_678" class="CT" element="C" mass="12.01100" def="[C;X4](H)(H)(H)[C;%opls_543]" desc="CH3, 2-methyl pyrrole" overrides="opls_679"/>
+  <Type name="opls_679" class="CT" element="C" mass="12.01100" def="[C;X4](H)(H)[C;%opls_543]" desc="CH2, 2-ethyl pyrrole" overrides="opls_136"/>
   <Type name="opls_680" class="opls_680" element="C" mass="12.011"/>
   <Type name="opls_681" class="opls_681" element="C" mass="12.011"/>
   <Type name="opls_697" class="opls_697" element="Ac" mass="227.03"/>
@@ -732,7 +732,7 @@
   <Type name="opls_732" class="I" element="I" mass="126.9045" def="[I;X1][C;X4](C)(C)(H)" desc="I in Iodopropane" doi="10.1021/ct200731v"/>
   <Type name="opls_733" class="opls_733" element="C" mass="12.011"/>
   <Type name="opls_734" class="SH" element="S" mass="32.06" def="[S;X2]([C;X3;r6])(H)" overrides="opls_200" desc="Thiol with R group in aromatic ring" doi="10.1021/ct200731v"/>
-  <Type name="opls_735" class="CA" element="C" mass="12.011" def="[C;X3;r6]([S]([H]))([C;X3;r6])([C;X3;r6])" overrides="opls_145"  desc="Aromatic C bonded to SH (opls_734)" doi="10.1021/ct200731v"/>
+  <Type name="opls_735" class="CA" element="C" mass="12.011" def="[C;X3;r6]([S]([H]))([C;X3;r6])([C;X3;r6])" overrides="opls_145" desc="Aromatic C bonded to SH (opls_734)" doi="10.1021/ct200731v"/>
   <Type name="opls_736" class="opls_736" element="C" mass="12.011"/>
   <Type name="opls_737" class="opls_737" element="C" mass="12.011"/>
   <Type name="opls_738" class="opls_738" element="C" mass="12.011"/>
