@@ -237,7 +237,7 @@
   <Type name="opls_229" class="opls_229" element="C" mass="12.011"/>
   <Type name="opls_230" class="opls_230" element="C" mass="12.011"/>
   <Type name="opls_231" class="opls_231" element="C" mass="12.011"/>
-  <Type name="opls_232" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([C;X3])[H]" desc="Carbon in C=0 group of benzaldehyde,acetophenone" overrides="opls_277" doi="10.1021/ct200731v"/>
+  <Type name="opls_232" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([C;X3&r6])[H]" desc="Carbon in C=0 group of benzaldehyde,acetophenone" overrides="opls_277" doi="10.1021/ct200731v"/>
   <Type name="opls_233" class="C_2" element="C" mass="12.011" def="[C;X3]([O;X1])([C;X3&r6])(C)" desc="Carbonyl carbon in acetophenone" overrides="opls_280" doi="10.1021/ct200731v"/>
   <Type name="opls_234" class="opls_234" element="C" mass="12.011"/>
   <Type name="opls_235" class="C" element="C" mass="12.011" def="[C;X3]([O;X1])[N;X3]" desc="C=O in amide, dmf, peptide bond" overrides="opls_277" doi="10.1021/ja9621760"/>
