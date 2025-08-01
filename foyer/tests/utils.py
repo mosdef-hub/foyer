@@ -40,7 +40,7 @@ def atomtype(structure, forcefield, **kwargs):
     both = zip(generated_atom_types, known_types)
     non_matches = []
     for a, b in both:
-        for letter in ["a", "b", "c"]:
+        for letter in ["a", "b", "c", "d", "e"]:
             a = a.strip(letter)
         if a != b:
             non_matches.append((a, b))

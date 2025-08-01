@@ -158,14 +158,16 @@
   <Type name="opls_151a" class="Cl" element="Cl" mass="35.453" def="[Cl][C;X4]([Cl])([C,H])(H)" overrides="opls_401" desc="Cl in double-substituted alkyl chlorides" doi="10.1021/jp0484579"/>
   <Type name="opls_151b" class="Cl" element="Cl" mass="35.453" def="[Cl][C;X4]([Cl])([Cl])([C,H])" overrides="opls_401" desc="Cl in triple-substituted alkyl chlorides" doi="10.1021/jp0484579"/>
   <Type name="opls_151c" class="Cl" element="Cl" mass="35.453" def="[Cl][C;X4]([Cl])([F])([C,H])" overrides="opls_401" desc="Cl in chloro-fluoro alkyl" doi="10.1021/jp0484579"/>
-  <Type name="opls_152" class="CT" element="C" mass="12.011" def="[C;X4]([Cl,Br])([C,H])(H)(H)" desc="RCH2Cl in singly-substituted alkyl chlorides or bromides" doi="10.1021/jp0484579"/>
+  <Type name="opls_152" class="CT" element="C" mass="12.011" def="[C;X4]([Cl])([C,H])(H)(H)" desc="RCH2Cl in singly-substituted alkyl chlorides" doi="10.1021/jp0484579"/>
   <Type name="opls_152a" class="CT" element="C" mass="12.011" def="[C;X4]([I])(C)([C,H])H" desc="R-CH2-I in singly-substituted alkyl iodides" doi="10.1021/jp0484579"/>
-  <Type name="opls_152b" class="CT" element="C" mass="12.011" def="[C;X4]([Cl,Br])([Cl,Br])([C,H])(H)" desc="RCHCl in double-substituted alkyl chlorides and bromides" doi="10.1021/jp0484579"/>
-  <Type name="opls_152c" class="CT" element="C" mass="12.011" def="[C;X4]([Cl,Br])([Cl,Br])([Cl,Br])([C,H])" desc="RCHCl in triple-substituted alkyl chlorides and bromides" doi="10.1021/jp0484579"/>
-  <Type name="opls_153" class="HC" element="H" mass="1.008" def="[H][C;%opls_152]" overrides="opls_140" desc="H in singly-substituted alkyl chlorides or bromides" doi="10.1021/jp0484579"/>
+  <Type name="opls_152b" class="CT" element="C" mass="12.011" def="[C;X4]([Cl])([Cl])([C,H])(H)" desc="RCHCl2 in double-substituted alkyl chlorides" doi="10.1021/jp0484579"/>
+  <Type name="opls_152c" class="CT" element="C" mass="12.011" def="[C;X4]([Cl])([Cl])([Cl])([C,H])" desc="RCHCl3 in triple-substituted alkyl chlorides" doi="10.1021/jp0484579"/>
+  <Type name="opls_152d" class="CT" element="C" mass="12.011" def="[C;X4]([Br])([C,H])(H)(H)" desc="RCH2Br in singly-substituted alkyl bromides" doi="10.1021/jp0484579"/>
+  <Type name="opls_152e" class="CT" element="C" mass="12.011" def="[C;X4]([Br])([Br])([C,H])(H)" desc="RCHBr2 in double-substituted alkyl bromides" doi="10.1021/jp0484579"/>
+  <Type name="opls_153" class="HC" element="H" mass="1.008" def="[H][C;%opls_152,%opls_152d]" overrides="opls_140" desc="H in singly-substituted alkyl chlorides and bromides" doi="10.1021/jp0484579"/>
   <Type name="opls_153a" class="HC" element="H" mass="1.008" def="[H]([C;X4;%opls_152a])" overrides="opls_140" desc="H in alkyl iodides" doi="10.1021/jp0484579"/>
-  <Type name="opls_153b" class="HC" element="H" mass="1.008" def="[H]([C;X4;%opls_152b,%opls_959])" overrides="opls_140" desc="H in double-substituded alkyl chlorides and bromides" doi="10.1021/jp0484579"/>
-  <Type name="opls_153c" class="HC" element="H" mass="1.008" def="[H]([C;X4;%opls_152c])" overrides="opls_140" desc="H in triple-substituded alkyl chlorides and bromides" doi="10.1021/jp0484579"/>
+  <Type name="opls_153b" class="HC" element="H" mass="1.008" def="[H]([C;X4;%opls_152b,%opls_152e,%opls_959])" overrides="opls_140" desc="H in double-substituded alkyl chlorides and bromides" doi="10.1021/jp0484579"/>
+  <Type name="opls_153c" class="HC" element="H" mass="1.008" def="[H]([C;X4;%opls_152c])" overrides="opls_140" desc="H in triple-substituded alkyl chlorides" doi="10.1021/jp0484579"/>
   <Type name="opls_154" class="OH" element="O" mass="15.9994" def="[O;X2](H)([C])" desc="all-atom O: mono alcohols" doi="10.1021/ja9621760"/>
   <Type name="opls_155" class="HO" element="H" mass="1.00800" def="H[O;%opls_154]" desc="all-atom H(O): mono alcohols, OP(=O)2" doi="10.1021/ja9621760"/>
   <Type name="opls_156" class="HC" element="H" mass="1.008" def="HC(H)(H)OH" desc="all-atom H(C): methanol" overrides="opls_140" doi="10.1021/ja9621760"/>
@@ -729,7 +731,8 @@
   <Type name="opls_719" class="F" element="F" mass="18.9984" def="F[C;%opls_718]" overrides="opls_965" desc="F(C) in fluorobenzene" doi="10.1021/jp0484579"/>
   <Type name="opls_720" class="CA" element="C" mass="12.011" def="[C;X3;r6]([F])([C;r6](F))([C;r6](F))" overrides="opls_145,opls_718,opls_727" desc="Central C-ar in c(F)-c(F)-c(F) (tetra, hexafluorobenzene)" doi="10.1021/ct200731v"/>
   <Type name="opls_721" class="F" element="F" mass="18.9984" def="[F;X1]([C;%opls_720])" overrides="opls_719,opls_728" desc="F(C) in hexafluorobenzene" doi="10.1021/ct200731v"/>
-  <Type name="opls_722" class="Br" element="Br" mass="79.904" def="[Br;X1]([C;%opls_152,%opls_152b])" desc="Br in alkyl bromide" doi="10.1021/ct200731v"/>
+  <Type name="opls_722" class="Br" element="Br" mass="79.904" def="[Br;X1]([C;%opls_152d])" desc="Br in single-substituted alkyl bromide" doi="10.1021/ct200731v"/>
+  <Type name="opls_722a" class="Br" element="Br" mass="79.904" def="[Br;X1]([C;%opls_152e])" desc="Br in alkyl bromide" doi="10.1021/ct200731v"/>
   <Type name="opls_724" class="CA" element="C" mass="12.011" def="[C;X3;r6]([C;%opls_725])([C;X3;r6])([C;X3;r6])" desc="Benzene C bonded to -CF3 (opls_725)" overrides="opls_145" doi="10.1021/ct200731v"/>
   <Type name="opls_725" class="CT" element="C" mass="12.011" def="[C;X4](F)(F)(F)([C;X3;r6])" overrides="opls_672, opls_961" desc="C in F3-C-benzene (trifluoro benzene)" doi="10.1021/ct200731v"/>
   <Type name="opls_726" class="F" element="F" mass="18.9984" def="[F;X1]([C;%opls_725])" overrides="opls_965" desc="F in tri-fluoro methyl groups" doi="10.1021/ct200731v"/>
@@ -3394,7 +3397,9 @@
   <Atom type="opls_152" charge="-0.006" sigma="0.35" epsilon="0.276144"/>
   <Atom type="opls_152a" charge="-0.003" sigma="0.35" epsilon="0.276144"/>
   <Atom type="opls_152b" charge="0.097" sigma="0.35" epsilon="0.276144"/>
-  <Atom type="opls_152c" charge="-0.3336" sigma="0.35" epsilon="0.276144"/>
+  <Atom type="opls_152c" charge="0.21" sigma="0.35" epsilon="0.276144"/>
+  <Atom type="opls_152d" charge="-0.089" sigma="0.35" epsilon="0.276144"/>
+  <Atom type="opls_152e" charge="0.02" sigma="0.35" epsilon="0.276144"/>
   <Atom type="opls_153" charge="0.103" sigma="0.25" epsilon="0.12552"/>
   <Atom type="opls_153a" charge="0.053" sigma="0.25" epsilon="0.12552"/>
   <Atom type="opls_153b" charge="0.103" sigma="0.25" epsilon="0.12552"/>
@@ -3939,6 +3944,7 @@
   <Atom type="opls_720" charge="0.13" sigma="0.355" epsilon="0.29288"/>
   <Atom type="opls_721" charge="-0.13" sigma="0.285" epsilon="0.255224"/>
   <Atom type="opls_722" charge="-0.22" sigma="0.347" epsilon="1.96648"/>
+  <Atom type="opls_722a" charge="-0.11" sigma="0.347" epsilon="1.96648"/>
   <Atom type="opls_724" charge="0.15" sigma="0.355" epsilon="0.29288"/>
   <Atom type="opls_725" charge="0.45" sigma="0.325" epsilon="0.259408"/>
   <Atom type="opls_726" charge="-0.2" sigma="0.294" epsilon="0.255224"/>
