@@ -88,8 +88,8 @@ and then apply the force field parameters.
     import foyer
     import parmed
 
-    mol = parmed.load("hfc125.gro")
-    ff = foyer.ForceField("ff_custom.xml")
+    mol = parmed.load_file("hfc125.gro")
+    ff = foyer.Forcefield("ff_custom.xml")
 
     mol_ff = ff.apply(mol)
 
