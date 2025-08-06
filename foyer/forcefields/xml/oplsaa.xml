@@ -2116,7 +2116,6 @@
   <Angle class1="I" class2="CT" class3="I" angle="1.9495328" k="652.704"/>
   <Angle class1="HC" class2="CT" class3="I" angle="1.8779743" k="426.768"/>
   <Angle class1="CA" class2="CA" class3="I" angle="2.0944" k="627.600"/>
-  <Angle class1="CM" class2="CM" class3="Cl" angle="2.120575" k="627.600"/>
   <Angle class1="Cl" class2="CM" class3="Cl" angle="1.989675" k="502.080"/>
   <Angle class1="O_2" class2="C" class3="OS" angle="2.153736" k="694.544"/>
   <Angle class1="NT" class2="CZ" class3="NZ" angle="3.141592" k="1255.200"/>
@@ -2130,12 +2129,12 @@
   <Angle class1="CY" class2="C_2" class3="O_2" angle="2.11883" k="669.440"/>
   <Angle class1="CY" class2="CY" class3="C_2" angle="2.045526" k="313.800"/>
   <Angle class1="HC" class2="CY" class3="C_2" angle="1.994911" k="292.880"/>
-  <Angle class1="F" class2="CT" class3="Cl" angle="1.93732" k="652.704"/>
+  <Angle class1="F" class2="CT" class3="Cl" angle="1.9495328" k="652.704"/>
   <Angle class1="CA" class2="CA" class3="HC" angle="2.0944" k="292.880"/>
   <Angle class1="HC" class2="CA" class3="HC" angle="2.0944" k="292.880"/>
   <Angle class1="HC" class2="C_2" class3="HC" angle="1.9111355" k="276.144"/>
   <Angle class1="CM" class2="CM" class3="CZ" angle="2.16421" k="585.760"/>
-  <Angle class1="CZ" class2="ZM" class3="HC" angle="2.151991" k="292.880"/>
+  <Angle class1="CZ" class2="CM" class3="HC" angle="2.151991" k="292.880"/>
   <Angle class1="CZ" class2="NT" class3="H" angle="1.93732" k="292.880"/>
   <Angle class1="OS" class2="C" class3="OS" angle="2.1537363" k="694.544"/>
   <Angle class1="OS" class2="C_2" class3="OS" angle="2.1537363" k="694.544"/>
