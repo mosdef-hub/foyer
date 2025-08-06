@@ -1164,7 +1164,6 @@
   <Bond class1="SY2" class2="OY" length="0.14400" k="585760.0"/>
   <Bond class1="SY2" class2="CT" length="0.17700" k="284512.0"/>
   <Bond class1="CT" class2="I" length="0.21450" k="205016.0"/>
-  <Bond class1="CM" class2="CL" length="0.17250" k="251040.0"/>
   <Bond class1="CM" class2="CZ" length="0.12100" k="962320.0"/>
   <Bond class1="CZ" class2="NT" length="0.11570" k="543920.0"/>
   <Bond class1="C_2" class2="CY" length="0.1490" k="334720.0"/>
