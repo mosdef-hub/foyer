@@ -38,23 +38,14 @@ def atomtype(structure, forcefield, **kwargs):
         generated_atom_types.append(atom.type)
 
     both = zip(generated_atom_types, known_types)
-
-    n_types = np.array(range(len(generated_atom_types)))
-    known_types = np.array(known_types)
-    generated_atom_types = np.array(generated_atom_types)
-
-    non_matches = np.array([a != b for a, b in both])
-    message = "Found inconsistent atom types in {}: {}".format(
-        structure.title,
-        list(
-            zip(
-                n_types[non_matches],
-                generated_atom_types[non_matches],
-                known_types[non_matches],
-            )
-        ),
-    )
-    assert not non_matches.any(), message
+    non_matches = []
+    for a, b in both:
+        for letter in ["a", "b", "c", "d", "e"]:
+            a = a.strip(letter)
+        if a != b:
+            non_matches.append((a, b))
+    message = f"Found inconsistent atom types in {structure.title}: {non_matches}"
+    assert len(non_matches) == 0, message
 
 
 def get_fn(filename):

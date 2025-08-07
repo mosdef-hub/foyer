@@ -14,17 +14,17 @@ acetic-anhydride  3
 [ atoms ]
 ;   nr       type  resnr residue  atom   cgnr     charge       mass  typeB    chargeB      massB
          1  opls_135         1       LIG         C         1     -0.18    12.011
-         2  opls_140         1       LIG         H         2      0.06     1.008
-         3  opls_140         1       LIG         H         3      0.06     1.008
-         4  opls_140         1       LIG         H         4      0.06     1.008
+         2  opls_282         1       LIG         H         2      0.06     1.008
+         3  opls_282         1       LIG         H         3      0.06     1.008
+         4  opls_282         1       LIG         H         4      0.06     1.008
          5  opls_465         1       LIG         C         5      0.51    12.011
          6  opls_466         1       LIG         O         6     -0.43   15.9994
          7  opls_467         1       LIG         O         7     -0.16   15.9994
          8  opls_465         1       LIG         C         8      0.51    12.011
          9  opls_135         1       LIG         C         9     -0.18    12.011
-        10  opls_140         1       LIG         H        10      0.06     1.008
-        11  opls_140         1       LIG         H        11      0.06     1.008
-        12  opls_140         1       LIG         H        12      0.06     1.008
+        10  opls_282         1       LIG         H        10      0.06     1.008
+        11  opls_282         1       LIG         H        11      0.06     1.008
+        12  opls_282         1       LIG         H        12      0.06     1.008
         13  opls_466         1       LIG         O        13     -0.43   15.9994
 
 [ bonds ]
