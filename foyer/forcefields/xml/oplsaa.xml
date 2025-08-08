@@ -686,7 +686,7 @@
   <Type name="opls_671" class="opls_671" element="C" mass="12.011"/>
   <Type name="opls_672" class="CT" element="C" mass="12.011" def="[C;X4]([C;%opls_522])(H)(H)(H)" desc="CH3, 3-methyl pyridazine" overrides="opls_135" doi="10.1021/ct200731v"/>
   <Type name="opls_673" class="opls_673" element="C" mass="12.011"/>
-  <Type name="opls_674" class="CT" element="C" mass="12.011" def="[C;X4]([C;X3;r6]([C;X3;r6]([C;X3;r6](N))))(H)(H)(H)" desc="CH3, 4-methyl pyrimidine" overrides="opls_135" doi="10.1021/ct200731v"/>
+  <Type name="opls_674" class="CT" element="C" mass="12.011" def="[C;X4]([C;X3;r6]([C;X3;r6]([C;X3;r6](N))))(H)(H)(H)" desc="CH3, 4-methyl pyrimidine" overrides="opls_135,opls_148" doi="10.1021/ct200731v"/>
   <Type name="opls_675" class="opls_675" element="C" mass="12.011"/>
   <Type name="opls_676" class="opls_676" element="C" mass="12.011"/>
   <Type name="opls_677" class="opls_677" element="C" mass="12.011"/>
