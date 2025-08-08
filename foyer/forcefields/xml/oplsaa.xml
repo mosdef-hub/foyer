@@ -2137,11 +2137,8 @@
   <Angle class1="CZ" class2="CM" class3="HC" angle="2.151991" k="292.880"/>
   <Angle class1="CZ" class2="NT" class3="H" angle="1.93732" k="292.880"/>
   <Angle class1="OS" class2="C" class3="OS" angle="2.1537363" k="694.544"/>
-  <Angle class1="OS" class2="C_2" class3="OS" angle="2.1537363" k="694.544"/>
-  <Angle class1="O_2" class2="C" class3="OS" angle="2.1537363" k="694.544"/>
   <Angle class1="CO" class2="OS" class3="CO" angle="1.9111355" k="502.080"/>
   <Angle class1="C_2" class2="CT" class3="C_2" angle="1.939061" k="527.184"/>
-
  </HarmonicAngleForce>
  <RBTorsionForce>
   <Proper class1="Br" class2="C" class3="CB" class4="CT" c0="0.0" c1="0.0" c2="0.0" c3="0.0" c4="0.0" c5="0.0"/>
