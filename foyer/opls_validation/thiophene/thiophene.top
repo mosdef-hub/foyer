@@ -19,7 +19,7 @@ thiophene  3
          6  opls_570         1       LIG         H         6     0.126     1.008
          7  opls_567         1       LIG         C         7    -0.019    12.011
          8  opls_569         1       LIG         H         8     0.142     1.008
-         9  opls_202         1       LIG         S         9     -0.19     32.06
+         9  opls_633         1       LIG         S         9     -0.19     32.06
 
 [ bonds ]
 ;  ai    aj funct            c0            c1            c2            c3
