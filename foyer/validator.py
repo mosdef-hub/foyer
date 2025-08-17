@@ -1,17 +1,19 @@
 """Validaton of force field XML files."""
 
+import logging
 import os
 from collections import Counter
 from os.path import abspath, join, split
-from warnings import warn
 
 import lark
 import networkx as nx
 from lxml import etree
 from lxml.etree import DocumentInvalid
 
-from foyer.exceptions import ValidationError, ValidationWarning, raise_collected
+from foyer.exceptions import ValidationError, raise_collected
 from foyer.smarts_graph import SMARTSGraph
+
+logger = logging.getLogger(__name__)
 
 
 class Validator(object):
@@ -157,7 +159,7 @@ class Validator(object):
         for entry in self.atom_types:
             smarts_string = entry.attrib.get("def")
             if not smarts_string:
-                warn("You have empty smart definition(s)", ValidationWarning)
+                logger.info("You have empty smart definition(s)")
                 continue
             name = entry.attrib["name"]
             if smarts_string is None:
@@ -206,18 +208,14 @@ class Validator(object):
                         errors.append(undefined)
         raise_collected(errors)
         if missing_smarts and debug:
-            warn(
-                "The following atom types do not have smarts definitions: {}".format(
-                    ", ".join(missing_smarts)
-                ),
-                ValidationWarning,
+            logger.info(
+                f"The following atom types do not have smarts definitions: {', '.join(missing_smarts)}"
             )
         if missing_smarts and not debug:
-            warn(
-                "There are {} atom types that are missing a smarts definition. "
+            logger.info(
+                f"There are {len(missing_smarts)} atom types that are missing a smarts definition. "
                 "To view the missing atom types, re-run with debug=True when "
-                "applying the forcefield.".format(len(missing_smarts)),
-                ValidationWarning,
+                "applying the forcefield."
             )
 
     def validate_overrides(self):

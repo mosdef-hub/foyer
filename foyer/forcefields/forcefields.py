@@ -3,10 +3,8 @@
 import glob
 import importlib.resources as resources
 import os
-import warnings
 
 from foyer import Forcefield
-from foyer.validator import ValidationWarning
 
 
 def get_ff_path():
@@ -39,13 +37,9 @@ def get_forcefield(name=None):
 
 def load_OPLSAA():
     """Load internal forcefield XML for the packaged OPLS-AA forcefield."""
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", category=ValidationWarning)
-        return get_forcefield(name="oplsaa")
+    return get_forcefield(name="oplsaa")
 
 
 def load_TRAPPE_UA():
     """Load internal forcefield XML for the packaged TRAPPE-UA forcefield."""
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", category=UserWarning)
-        return get_forcefield(name="trappe-ua")
+    return get_forcefield(name="trappe-ua")

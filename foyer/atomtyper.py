@@ -1,6 +1,6 @@
 """Determine proper atom types for chemical systems."""
 
-from warnings import warn
+import logging
 
 import ele
 from ele.exceptions import ElementError
@@ -11,6 +11,8 @@ from foyer.exceptions import FoyerError
 from foyer.smarts import SMARTS
 from foyer.smarts_graph import SMARTSGraph
 from foyer.topology_graph import TopologyGraph
+
+logger = logging.getLogger(__name__)
 
 
 class AtomTypingRulesProvider:
@@ -200,7 +202,7 @@ def _iterate_rules(rules, topology_graph, typemap, max_iter):
         if not found_something:
             break
     else:
-        warn("Reached maximum iterations. Something probably went wrong.")
+        logger.warning("Reached maximum iterations. Something probably went wrong.")
     return typemap
 
 
