@@ -3,7 +3,7 @@
 from __future__ import division
 
 import collections
-import warnings
+import logging
 
 import networkx as nx
 import numpy as np
@@ -11,6 +11,8 @@ import parmed as pmd
 from lxml import etree as ET
 
 from foyer.smarts_graph import SMARTSGraph
+
+logger = logging.getLogger(__name__)
 
 
 def write_foyer(
@@ -184,10 +186,8 @@ def _update_defs(atomtypes, nonbonded, forcefield):
     for extra in extra_types:
         for i, definition in enumerate(def_list):
             if extra in definition:
-                warnings.warn(
-                    "Removing undefined atom type `{}` from SMARTS string `{}`".format(
-                        extra, definition
-                    )
+                logger.info(
+                    f"Removing undefined atom type `{extra}` from SMARTS string `{definition}`"
                 )
                 extra_edit = "%" + extra
                 extra_index = definition.find(extra_edit)

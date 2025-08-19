@@ -1,6 +1,7 @@
 import difflib
 import glob
 import importlib.resources as resources
+import logging
 import os
 from typing import List
 
@@ -13,7 +14,6 @@ from foyer import Forcefield, forcefields
 from foyer.exceptions import (
     FoyerError,
     UnimplementedCombinationRuleError,
-    ValidationWarning,
 )
 from foyer.forcefield import (
     _check_independent_residues,
@@ -171,7 +171,7 @@ class TestForcefield(BaseTest):
         assert not diff
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-    def test_write_bad_ref(self, requests_mock):
+    def test_write_bad_ref(self, requests_mock, caplog):
         import mbuild as mb
 
         register_mock_request(
@@ -183,8 +183,11 @@ class TestForcefield(BaseTest):
         )
         mol2 = mb.load(get_fn("ethane.mol2"))
         oplsaa = Forcefield(forcefield_files=get_fn("refs-bad.xml"))
-        with pytest.warns(UserWarning):
+        with caplog.at_level(logging.INFO, logger="foyer"):
             oplsaa.apply(mol2, references_file="ethane.bib")
+        assert (
+            "Could not get ref for doi 10.1021/garbage_bad_44444444jjjj" in caplog.text
+        )
 
     def test_preserve_resname(self, oplsaa):
         untyped_ethane = pmd.load_file(get_fn("ethane.mol2"), structure=True)
@@ -383,7 +386,7 @@ class TestForcefield(BaseTest):
             ("ethane-dihedral-typo.xml", {"assert_dihedral_params": False}),
         ],
     )
-    def test_missing_topo_params(self, ff_filename, kwargs):
+    def test_missing_topo_params(self, ff_filename, kwargs, caplog):
         """Test that the user is notified if not all topology parameters are found."""
         import mbuild as mb
 
@@ -391,8 +394,16 @@ class TestForcefield(BaseTest):
         oplsaa_with_typo = Forcefield(forcefield_files=get_fn(ff_filename))
         with pytest.raises(Exception):
             ethane = oplsaa_with_typo.apply(ethane)
-        with pytest.warns(UserWarning):
+        with caplog.at_level(logging.INFO, logger="foyer"):
             ethane = oplsaa_with_typo.apply(ethane, **kwargs)
+        if "angle" in list(kwargs.keys())[0]:
+            assert "Parameters have not been assigned to all angles" in caplog.text
+        else:  # dihedrals missing
+            assert (
+                "Parameters have not been assigned to all proper dihedrals"
+                in caplog.text
+            )
+        caplog.clear()
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
     def test_overrides_space(self):
@@ -404,15 +415,18 @@ class TestForcefield(BaseTest):
         assert typed_ethane.atoms[0].type == "CT3"
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-    def test_allow_empty_def(self):
+    def test_allow_empty_def(self, caplog):
         import mbuild as mb
 
         ethane = mb.load(get_fn("ethane.mol2"))
-        with pytest.warns(ValidationWarning):
+        with caplog.at_level(logging.INFO, logger="foyer"):
             ff = Forcefield(forcefield_files=get_fn("empty_def.xml"))
+        assert "You have empty smart definition(s)" in caplog.text
+        caplog.clear()
 
-        with pytest.warns(UserWarning):
+        with caplog.at_level(logging.INFO, logger="foyer"):
             typed = ff.apply(ethane)
+        assert "Missing lj14scale or coulomb14scale" in caplog.text
         assert typed.defaults is None
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
@@ -462,12 +476,16 @@ class TestForcefield(BaseTest):
             assert ang1.type == ang2.type
 
     @pytest.mark.skipif(not has_mbuild, reason="mbuild is not installed")
-    def test_non_zero_charge(self, oplsaa):
+    def test_non_zero_charge(self, oplsaa, caplog):
         import mbuild as mb
 
         compound = mb.load("C1=CC=C2C(=C1)C(C3=CC=CC=C3O2)C(=O)O", smiles=True)
-        with pytest.warns(UserWarning):
+        with caplog.at_level(logging.INFO, logger="foyer"):
             oplsaa.apply(compound, assert_dihedral_params=False)
+        assert (
+            "Parametrized structure has non-zero charge.Structure's total charge: 0.05"
+            in caplog.text
+        )
 
     @pytest.mark.parametrize("filename", ["ethane.mol2", "benzene.mol2"])
     def test_write_xml(self, filename, oplsaa):

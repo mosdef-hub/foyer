@@ -4,9 +4,9 @@ import collections
 import glob
 import importlib.resources as resources
 import itertools
+import logging
 import os
 import re
-import warnings
 import xml.etree.ElementTree as ET
 from copy import copy
 from importlib.metadata import entry_points
@@ -48,6 +48,8 @@ from foyer.utils.io import has_mbuild, import_
 from foyer.utils.misc import validate_type
 from foyer.validator import Validator
 from foyer.xml_writer import write_foyer
+
+logger = logging.getLogger(__name__)
 
 force_for = {
     NonbondedGenerator: "NonBondedForce",
@@ -115,7 +117,7 @@ def preprocess_forcefield_files(forcefield_files=None):
             This indicates a bad XML file, which will be passed on to the
             Validator to yield a more descriptive error message.
             """
-            warnings.warn(
+            logger.info(
                 "Invalid XML detected. Could not auto-sort topology "
                 "objects by precedence."
             )
@@ -337,7 +339,7 @@ def _error_or_warn(error, msg):
     if error:
         raise Exception(msg)
     else:
-        warnings.warn(msg)
+        logger.warn(msg)
 
 
 def _check_bonds(data, structure, verbose, assert_bond_params):
@@ -443,7 +445,7 @@ def _check_dihedrals(
                     len(data.propers),
                 )
             )
-            warnings.warn(msg)
+            logger.info(msg)
         else:
             msg = (
                 "Parameters have not been assigned to all proper dihedrals. "
@@ -611,7 +613,7 @@ class Forcefield(app.ForceField):
             try:
                 return root.attrib["version"]
             except KeyError:
-                warnings.warn(
+                logger.info(
                     "No force field version number found in force field XML file."
                 )
                 return None
@@ -623,7 +625,7 @@ class Forcefield(app.ForceField):
             try:
                 return root.attrib["name"]
             except KeyError:
-                warnings.warn("No force field name found in force field XML file.")
+                logger.info("No force field name found in force field XML file.")
                 return None
 
     def _parse_combining_rule(self, forcefield_file):
@@ -633,7 +635,7 @@ class Forcefield(app.ForceField):
             try:
                 return root.attrib["combining_rule"]
             except KeyError:
-                warnings.warn("No combining rule found in force field XML file.")
+                logger.info("No combining rule found in force field XML file.")
                 return "lorentz"
 
     def _create_element(self, element, mass):
@@ -643,7 +645,7 @@ class Forcefield(app.ForceField):
             except KeyError:
                 # Enables support for non-atomistic "element types"
                 if element not in self.non_element_types:
-                    warnings.warn(
+                    logger.info(
                         "Non-atomistic element type detected. "
                         "Creating custom element for {}".format(element)
                     )
@@ -792,7 +794,7 @@ class Forcefield(app.ForceField):
                 fudgeQQ=coulomb14scale,
             )
         except AttributeError:
-            warnings.warn(
+            logger.info(
                 "Missing lj14scale or coulomb14scale, could not set structure metadata."
             )
             structure.defaults = None
@@ -895,7 +897,7 @@ class Forcefield(app.ForceField):
 
         total_charge = sum([atom.charge for atom in structure.atoms])
         if not np.allclose(total_charge, 0):
-            warnings.warn(
+            logger.info(
                 "Parametrized structure has non-zero charge."
                 "Structure's total charge: {}".format(total_charge)
             )
@@ -1217,7 +1219,7 @@ class Forcefield(app.ForceField):
             try:
                 atomtype_references[atype] = self.atomTypeRefs[atype]
             except KeyError:
-                warnings.warn("Reference not found for atom type '{}'.".format(atype))
+                logger.warning("Reference not found for atom type '{}'.".format(atype))
         unique_references = collections.defaultdict(list)
         for atomtype, dois in atomtype_references.items():
             for doi in dois:
@@ -1231,7 +1233,7 @@ class Forcefield(app.ForceField):
                 headers = {"accept": "application/x-bibtex"}
                 bibtex_ref = get_ref(url, headers=headers)
                 if bibtex_ref is None:
-                    warnings.warn("Could not get ref for doi {}".format(doi))
+                    logger.info("Could not get ref for doi {}".format(doi))
                     continue
                 else:
                     bibtex_text = bibtex_ref.text
