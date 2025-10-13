@@ -1,0 +1,29 @@
+ <ForceField>
+ <AtomTypes>
+    <Type name="CSingle" class="CT" element="C" mass="12.01100" def="[C;X4](-C)(-[C])" overrides="" desc="" doi=""/>
+    <Type name="CDouble" class="CT" element="C" mass="12.01100" def="[C;X4](=C)" overrides="CSingle" desc="" doi=""/>
+    <Type name="CTriple" class="CT" element="C" mass="12.01100" def="[C;X4](#[C;X2])" overrides="CSingle" desc="" doi=""/>
+    <Type name="CAromatic" class="CT" element="C" mass="12.01100" def="[C]:C" overrides="CSingle" desc="" doi=""/>
+    <Type name="CWild" class="CT" element="C" mass="12.01100" def="[C;X4]~O" desc="" doi=""/>
+    <Type name="O" class="CT" element="O" mass="16" def="O" desc="" doi=""/>
+    <Type name="opls_140" class="CT" element="H" mass="1.00800" def="H" desc="" doi=""/>
+ </AtomTypes>
+ <HarmonicBondForce>
+    <Bond class1="CT" class2="CT" length="19" k="1"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+    <Angle class1="CT" class2="CT" class3="CT" angle="1" k="1"/>
+ </HarmonicAngleForce>
+ <RBTorsionForce>
+    <Proper class1="CT" class2="CT" class3="CT" class4="CT" c0="0.6276" c1="1.8828" c2="0.0" c3="-2.5104" c4="0.0" c5="0.0"/>
+ </RBTorsionForce>
+ <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
+     <Atom type="CSingle" charge="0" sigma="1" epsilon="1"/>
+     <Atom type="CDouble" charge="0" sigma="1" epsilon="1"/>
+     <Atom type="CTriple" charge="0" sigma="1" epsilon="1"/>
+     <Atom type="CAromatic" charge="0" sigma="1" epsilon="1"/>
+     <Atom type="CWild" charge="0" sigma="1" epsilon="1"/>
+     <Atom type="O" charge="0" sigma="1" epsilon="1"/>
+     <Atom type="opls_140" charge="0.06" sigma="0.25" epsilon="0.12552"/>
+ </NonbondedForce>
+</ForceField>

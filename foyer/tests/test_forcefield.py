@@ -731,3 +731,15 @@ class TestForcefield(BaseTest):
         found_14_sigma = adj.type.sigma
 
         assert abs(found_14_sigma - expected_14_sigma) < 1e-10
+
+    def test_load_bond_orders(self):
+        import parmed.rdkit as prd
+
+        ff = Forcefield(get_fn("bond_orders.xml"))
+
+        smiles_string = "C=CC#C"  # propene
+        structure = prd.from_smiles(smiles_string)
+        pmd_obj = ff.apply(structure)
+        atypes = list(ff._atomTypes.keys())
+        for site in pmd_obj.atoms:
+            assert site.atom_type.name in atypes
