@@ -737,9 +737,16 @@ class TestForcefield(BaseTest):
 
         ff = Forcefield(get_fn("bond_orders.xml"))
 
-        smiles_string = "C=CC#C"  # propene
+        smiles_string = "CC=CC#C"  # propene
         structure = prd.from_smiles(smiles_string)
         pmd_obj = ff.apply(structure)
-        atypes = list(ff._atomTypes.keys())
-        for site in pmd_obj.atoms:
-            assert site.atom_type.name in atypes
+        atypes = ["CSingle", "CDouble", "CDouble", "CTriple", "CTriple"]
+        for site, atype in zip(pmd_obj.atoms, atypes):
+            assert site.atom_type.name == atype
+
+        "C1=CC=CC=C1"
+
+        smiles_string = "C1=CC=CC=C1"  # propene
+        structure = prd.from_smiles(smiles_string)
+        pmd_obj = ff.apply(structure)
+        assert "CAromatic" == pmd_obj.atoms[0].atom_type.name
