@@ -733,20 +733,23 @@ class TestForcefield(BaseTest):
         assert abs(found_14_sigma - expected_14_sigma) < 1e-10
 
     def test_load_bond_orders(self):
-        import parmed.rdkit as prd
+        import mbuild as mb
 
         ff = Forcefield(get_fn("bond_orders.xml"))
 
-        smiles_string = "CC=CC#C"  # propene
-        structure = prd.from_smiles(smiles_string)
-        pmd_obj = ff.apply(structure)
+        smiles_string = "C=C"  # ethene
+        cpd = mb.load(smiles_string, smiles=True)
+        pmd_obj = ff.apply(cpd)
+        assert "CDouble" == pmd_obj.atoms[0].atom_type.name
+
+        smiles_string = "CC=CC#C"  # all carbon types
+        cpd = mb.load(smiles_string, smiles=True)
+        pmd_obj = ff.apply(cpd)
         atypes = ["CSingle", "CDouble", "CDouble", "CTriple", "CTriple"]
         for site, atype in zip(pmd_obj.atoms, atypes):
             assert site.atom_type.name == atype
 
-        "C1=CC=CC=C1"
-
-        smiles_string = "C1=CC=CC=C1"  # propene
-        structure = prd.from_smiles(smiles_string)
-        pmd_obj = ff.apply(structure)
+        smiles_string = "C1=CC=CC=C1"  # benzene
+        cpd = mb.load(smiles_string, smiles=True)
+        pmd_obj = ff.apply(cpd)
         assert "CAromatic" == pmd_obj.atoms[0].atom_type.name

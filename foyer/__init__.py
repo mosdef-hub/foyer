@@ -124,4 +124,4 @@ class foyerLogger:
 
 # Example usage in __init__.py
 foyer_logger = foyerLogger()
-foyer_logger.library_logger.setLevel(logging.INFO)
+foyer_logger.library_logger.setLevel(logging.WARNING)

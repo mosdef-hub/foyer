@@ -261,10 +261,11 @@ class TestSMARTS(BaseTest):
             assert name in symbols
 
     def test_bond_order(self, rule_match_count):
-        import parmed.rdkit as prd
+        import mbuild as mb
 
         smiles_string = "C=CC"  # propene
-        structure = prd.from_smiles(smiles_string)
+        cpd = mb.load(smiles_string, smiles=True)
+        structure = cpd.to_parmed()
 
         typemap = {
             atom.idx: {"whitelist": set(), "blacklist": set(), "atomtype": None}
@@ -274,7 +275,7 @@ class TestSMARTS(BaseTest):
         mol2_graph = TopologyGraph.from_parmed(structure)
 
         checks = {
-            "[C](=C)(H)(H)H": 1,
+            "[C](=C)(H)(H)": 1,
             "[C](-C)=C": 1,
             "[C](-C)(H)(H)H": 1,
         }

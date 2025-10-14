@@ -54,6 +54,13 @@ class SMARTSGraph(nx.Graph):
         self.name = name
         self.overrides = overrides
         self.typemap = typemap
+        self._borderDict = {
+            "single_bond": 1.0,
+            "double_bond": 2.0,
+            "triple_bond": 3.0,
+            "aromatic_bond": 1.5,
+            "wildcard_bond": 0.0,
+        }
 
         if parser is None:
             self.ast = SMARTS().parse(smarts_string)
@@ -74,18 +81,30 @@ class SMARTSGraph(nx.Graph):
             self.add_node(n, atom=atom)
             self._atom_indices[id(atom)] = n
 
-    def _add_edges(self, ast_node, trunk=None):
+    def _add_edges(self, ast_node, trunk=None, bond_order=0.0):
         """Add all bonds in the SMARTS string as edges in the graph."""
         atom_indices = self._atom_indices
+
         for ast_child in ast_node.children:
             if ast_child.data == "atom":
                 atom_idx = atom_indices[id(ast_child)]
                 if trunk is not None:
                     trunk_idx = atom_indices[id(trunk)]
-                    self.add_edge(atom_idx, trunk_idx)
+                    bond_data = list(ast_child.find_data("bond_symbol"))
+                    if bond_data:
+                        bond_order = self._borderDict[
+                            bond_data[0].children[0].data.value
+                        ]
+                    self.add_edge(atom_idx, trunk_idx, bond_order=bond_order)
                 trunk = ast_child
             elif ast_child.data == "branch":
-                self._add_edges(ast_child, trunk)
+                bond_data = list(ast_child.find_data("bond_symbol"))
+                if bond_data:
+                    bond_order = self._borderDict[bond_data[0].children[0].data.value]
+                self._add_edges(ast_child, trunk, bond_order=bond_order)
+                bond_order = 0.0
+            elif ast_child.data == "bond_symbol":
+                bond_order = self._borderDict[ast_child.children[0].data.value]
 
     def _add_label_edges(self):
         """Add edges between all atoms with the same atom_label in rings."""
@@ -110,6 +129,19 @@ class SMARTSGraph(nx.Graph):
         atom = host["atom_data"]
         bond_partners = host["bond_partners"]
         return self._atom_expr_matches(atom_expr, atom, bond_partners)
+
+    def _edge_match(self, host_edge, pattern_edge):
+        """Determine if two graph edges are equal based on bond orders, used for subgraph_isomorphisms."""
+        # If either edge has no bond type specified, match any bond
+        if not pattern_edge.get("bond_order", 0.0) or not host_edge.get(
+            "bond_order", 0.0
+        ):
+            return True
+
+        pattern_bond_order = pattern_edge["bond_order"]
+        host_bond_order = host_edge.get("bond_order", 1)  # Default to single bond
+
+        return host_bond_order == pattern_bond_order
 
     def _atom_expr_matches(self, atom_expr, atom, bond_partners):
         """Evaluate SMARTS string expressions."""
@@ -220,6 +252,7 @@ class SMARTSGraph(nx.Graph):
                 topology_graph,
                 self,
                 node_match=self._node_match,
+                edge_match=self._edge_match,
                 element=element,
                 typemap=typemap,
             )
@@ -240,9 +273,10 @@ class SMARTSGraph(nx.Graph):
 class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
     """Inherits and implements VF2 for a SMARTSGraph."""
 
-    def __init__(self, G1, G2, node_match, element, typemap):
-        super(SMARTSMatcher, self).__init__(G1, G2, node_match)
+    def __init__(self, G1, G2, node_match, edge_match, element, typemap):
+        super(SMARTSMatcher, self).__init__(G1, G2, node_match, edge_match)
         self.element = element
+        self.typemap = typemap
         # TODO: Parse out nodes containing other elements (see git history)
         self.valid_nodes = G1.nodes()
 
