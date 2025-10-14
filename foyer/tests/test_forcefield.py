@@ -749,8 +749,8 @@ class TestForcefield(BaseTest):
         smiles_string = "CC=CC#C"  # all carbon types
         cpd = mb.load(smiles_string, smiles=True)
         structure = cpd.to_parmed()
-        structure.bonds[1].order = 2.0  # manually set
-        structure.bonds[3].order = 3.0  # manually set
+        structure.bonds[4].order = 2.0  # manually set
+        structure.bonds[8].order = 3.0  # manually set
         pmd_obj = ff.apply(structure)
         atypes = ["CSingle", "CDouble", "CDouble", "CTriple", "CTriple"]
         for site, atype in zip(pmd_obj.atoms, atypes):
@@ -759,7 +759,8 @@ class TestForcefield(BaseTest):
         smiles_string = "C1=CC=CC=C1"  # benzene
         cpd = mb.load(smiles_string, smiles=True)
         structure = cpd.to_parmed()
-        for i in range(6):
-            structure.bonds[i].order = 1.5  # manually set
+        structure.bonds[0].order = 1.5  # manually set
+        for i in range(5):
+            structure.bonds[int(2 * i + 1)].order = 1.5  # manually set
         pmd_obj = ff.apply(structure)
         assert "CAromatic" == pmd_obj.atoms[0].atom_type.name
