@@ -266,6 +266,7 @@ class TestSMARTS(BaseTest):
         smiles_string = "C=CC"  # propene
         cpd = mb.load(smiles_string, smiles=True)
         structure = cpd.to_parmed()
+        structure.bonds[0].order = 2.0
 
         typemap = {
             atom.idx: {"whitelist": set(), "blacklist": set(), "atomtype": None}

@@ -739,7 +739,11 @@ class TestForcefield(BaseTest):
 
         smiles_string = "C=C"  # ethene
         cpd = mb.load(smiles_string, smiles=True)
-        pmd_obj = ff.apply(cpd)
+        structure = cpd.to_parmed()
+        structure.bonds[
+            0
+        ].order = 2.0  # manually set bond order until mbuild #1274 is merged
+        pmd_obj = ff.apply(structure)
         assert "CDouble" == pmd_obj.atoms[0].atom_type.name
 
         smiles_string = "CC=CC#C"  # all carbon types
