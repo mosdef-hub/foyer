@@ -95,7 +95,7 @@ class TopologyGraph(nx.Graph):
         atom_data = AtomData(index, name, atomic_number, symbol, **kwargs)
         self.add_node(index, atom_data=atom_data)
 
-    def add_bond(self, atom_1_index, atom_2_index):
+    def add_bond(self, atom_1_index, atom_2_index, bond_order=0):
         """Add a bond(edge) between two atoms in this TopologyGraph.
 
         Parameters
@@ -104,8 +104,10 @@ class TopologyGraph(nx.Graph):
             The index of the first atom that forms this bond
         atom_2_index: int
             The index of the second atom that forms this bond
+        bond_order: int, default 0
+            The bond order of the edge
         """
-        self.add_edge(atom_1_index, atom_2_index)
+        self.add_edge(atom_1_index, atom_2_index, bond_order=bond_order)
 
     def atoms(self, data=False):
         """Iterate through atoms in the TopologyGraph."""
@@ -158,7 +160,9 @@ class TopologyGraph(nx.Graph):
             )
 
         for bond in structure.bonds:
-            topology_graph.add_bond(bond.atom1.idx, bond.atom2.idx)
+            topology_graph.add_bond(
+                bond.atom1.idx, bond.atom2.idx, bond_order=bond.order
+            )
 
         return topology_graph
 
@@ -207,7 +211,7 @@ class TopologyGraph(nx.Graph):
 
         for bond in openff_topology.bonds:
             atoms_indices = [openff_topology.atom_index(atom) for atom in bond.atoms]
-            top_graph.add_bond(*atoms_indices)
+            top_graph.add_bond(*atoms_indices, bond_order=bond.bond_order)
 
         return top_graph
 
@@ -261,6 +265,11 @@ class TopologyGraph(nx.Graph):
             atoms_indices = [
                 gmso_topology.get_index(atom) for atom in top_bond.connection_members
             ]
-            top_graph.add_bond(atoms_indices[0], atoms_indices[1])
+            # Assume default value if no bond_order is 0.0 for a wildcard
+            top_graph.add_bond(
+                atoms_indices[0],
+                atoms_indices[1],
+                bond_order=getattr(top_bond, "bond_order", 0.0),
+            )
 
         return top_graph

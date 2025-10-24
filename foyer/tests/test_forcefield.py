@@ -731,3 +731,36 @@ class TestForcefield(BaseTest):
         found_14_sigma = adj.type.sigma
 
         assert abs(found_14_sigma - expected_14_sigma) < 1e-10
+
+    def test_load_bond_orders(self):
+        import mbuild as mb
+
+        ff = Forcefield(get_fn("bond_orders.xml"))
+
+        smiles_string = "C=C"  # ethene
+        cpd = mb.load(smiles_string, smiles=True)
+        structure = cpd.to_parmed()
+        structure.bonds[
+            0
+        ].order = 2.0  # manually set bond order until mbuild #1274 is merged
+        pmd_obj = ff.apply(structure)
+        assert "CDouble" == pmd_obj.atoms[0].atom_type.name
+
+        smiles_string = "CC=CC#C"  # all carbon types
+        cpd = mb.load(smiles_string, smiles=True)
+        structure = cpd.to_parmed()
+        structure.bonds[4].order = 2.0  # manually set
+        structure.bonds[8].order = 3.0  # manually set
+        pmd_obj = ff.apply(structure)
+        atypes = ["CSingle", "CDouble", "CDouble", "CTriple", "CTriple"]
+        for site, atype in zip(pmd_obj.atoms, atypes):
+            assert site.atom_type.name == atype
+
+        smiles_string = "C1=CC=CC=C1"  # benzene
+        cpd = mb.load(smiles_string, smiles=True)
+        structure = cpd.to_parmed()
+        structure.bonds[0].order = 1.5  # manually set
+        for i in range(5):
+            structure.bonds[int(2 * i + 1)].order = 1.5  # manually set
+        pmd_obj = ff.apply(structure)
+        assert "CAromatic" == pmd_obj.atoms[0].atom_type.name

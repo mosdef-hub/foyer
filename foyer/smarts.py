@@ -9,12 +9,18 @@ GRAMMAR = r"""
 
     // Rules
     _string: _chain _nonlastbranch* _lastbranch?
-    _chain: atom _chain | atom
+    _chain: atom (bond_symbol? atom)*
     _nonlastbranch: "(" branch ")"
     _lastbranch: branch
-    branch: _string
+    branch: bond_symbol? _string
     atom: ("[" weak_and_expression "]" | atom_symbol) atom_label?
     atom_label: NUM
+    bond_symbol: wildcard_bond | single_bond | double_bond | triple_bond | aromatic_bond
+    wildcard_bond: "~"
+    single_bond: "-"
+    double_bond: "="
+    triple_bond: "#"
+    aromatic_bond: ":"
     ?weak_and_expression: (weak_and_expression ";")? or_expression
     ?or_expression: (or_expression ",")? and_expression
     ?and_expression: (and_expression "&")? (atom_id | not_expression)

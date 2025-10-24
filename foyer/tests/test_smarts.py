@@ -259,3 +259,27 @@ class TestSMARTS(BaseTest):
         symbols = [a.children[0] for a in ast.find_data("atom_symbol")]
         for name in optional_names:
             assert name in symbols
+
+    def test_bond_order(self, rule_match_count):
+        import mbuild as mb
+
+        smiles_string = "C=CC"  # propene
+        cpd = mb.load(smiles_string, smiles=True)
+        structure = cpd.to_parmed()
+        structure.bonds[0].order = 2.0
+
+        typemap = {
+            atom.idx: {"whitelist": set(), "blacklist": set(), "atomtype": None}
+            for atom in structure.atoms
+        }
+
+        mol2_graph = TopologyGraph.from_parmed(structure)
+
+        checks = {
+            "[C](=C)(H)(H)": 1,
+            "[C](-C)=C": 1,
+            "[C](-C)(H)(H)H": 1,
+        }
+
+        for smart, result in checks.items():
+            rule_match_count(mol2_graph, typemap, smart, result)
