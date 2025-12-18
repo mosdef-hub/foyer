@@ -18,7 +18,7 @@ dependencies:
   - pytest
   - garnett>=0.7.1
   - openff-toolkit-base>0.16.7
-  - openmm
+  - openmm<8.4
   - gsd>=2.9
   - freud>=3.2
   - parmed>=3.4.3
