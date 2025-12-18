@@ -7,7 +7,7 @@ dependencies:
   - gmso
   - numpy>=2.0,<2.3
   - networkx>=2.5
-  - openmm
+  - openmm<8.4
   - parmed>=3.4.3
   - ele
   - requests
