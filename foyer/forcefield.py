@@ -82,9 +82,9 @@ def preprocess_forcefield_files(forcefield_files=None):
 
         xml_contents = re.sub(
             r"(def\w*=\w*[\"\'])(.*)([\"\'])",
-            lambda m: m.group(1)
-            + re.sub(r"&(?!amp;)", r"&amp;", m.group(2))
-            + m.group(3),
+            lambda m: (
+                m.group(1) + re.sub(r"&(?!amp;)", r"&amp;", m.group(2)) + m.group(3)
+            ),
             xml_contents,
         )
 
