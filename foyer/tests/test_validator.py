@@ -1,7 +1,7 @@
 import glob
-import importlib.resources as resources
 import logging
 import os
+from importlib import resources
 
 import pytest
 from lxml.etree import DocumentInvalid, XMLSyntaxError

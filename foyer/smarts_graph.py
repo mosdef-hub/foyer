@@ -48,7 +48,7 @@ class SMARTSGraph(nx.Graph):
         *args,
         **kwargs,
     ):
-        super(SMARTSGraph, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.smarts_string = smarts_string
         self.name = name
@@ -167,7 +167,7 @@ class SMARTSGraph(nx.Graph):
             raise TypeError(
                 "Expected atom_id, atom_symbol, and_expression, "
                 "or_expression, or not_expression. "
-                "Got {}".format(atom_expr.data)
+                f"Got {atom_expr.data}"
             )
 
     @staticmethod
@@ -274,7 +274,7 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
     """Inherits and implements VF2 for a SMARTSGraph."""
 
     def __init__(self, G1, G2, node_match, edge_match, element, typemap):
-        super(SMARTSMatcher, self).__init__(G1, G2, node_match, edge_match)
+        super().__init__(G1, G2, node_match, edge_match)
         self.element = element
         self.typemap = typemap
         # TODO: Parse out nodes containing other elements (see git history)

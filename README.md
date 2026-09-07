@@ -48,13 +48,13 @@ Application of a force field can be as simple as:
 from foyer import Forcefield
 import parmed as pmd
 
-untyped_ethane = pmd.load_file('ethane.mol2', structure=True)
-oplsaa = Forcefield(forcefield_files='oplsaa.xml')
+untyped_ethane = pmd.load_file("ethane.mol2", structure=True)
+oplsaa = Forcefield(forcefield_files="oplsaa.xml")
 ethane = oplsaa.apply(untyped_ethane)
 
 # Save to any format supported by ParmEd
-ethane.save('ethane.top')
-ethane.save('ethane.gro')
+ethane.save("ethane.top")
+ethane.save("ethane.gro")
 ```
 
 The `Foyer` package is part of the [Molecular Simulation Design Framework (MoSDeF) project](http://mosdef.org/).

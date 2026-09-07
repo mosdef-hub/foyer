@@ -1,8 +1,8 @@
 """Support user-created forcefield XML files."""
 
 import glob
-import importlib.resources as resources
 import os
+from importlib import resources
 
 from foyer import Forcefield
 

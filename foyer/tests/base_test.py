@@ -1,4 +1,4 @@
-import importlib.resources as resources
+from importlib import resources
 from pathlib import Path
 
 import parmed as pmd
