@@ -29,10 +29,8 @@ def atomtype(structure, forcefield, **kwargs):
     generated_atom_types = list()
     for i, atom in enumerate(typed_structure.atoms):
         message = (
-            "Found multiple or no atom types for atom {} in {}: {}\n"
-            "Should be atomtype: {}".format(
-                i, structure.title, atom.type, known_types[i]
-            )
+            f"Found multiple or no atom types for atom {i} in {structure.title}: {atom.type}\n"
+            f"Should be atomtype: {known_types[i]}"
         )
         assert atom.type, message
         generated_atom_types.append(atom.type)

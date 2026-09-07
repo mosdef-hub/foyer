@@ -9,7 +9,7 @@ from foyer.forcefields import forcefields
 
 __version__ = "1.2.0"
 
-__all__ = ("Forcefield", "forcefields", "__version__")
+__all__ = ("Forcefield", "__version__", "forcefields")
 
 
 class DeduplicationFilter(logging.Filter):

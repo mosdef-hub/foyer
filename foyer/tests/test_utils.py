@@ -1,4 +1,3 @@
-# ruff: noqa: F401
 import platform
 
 import numpy as np

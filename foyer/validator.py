@@ -16,7 +16,7 @@ from foyer.smarts_graph import SMARTSGraph
 logger = logging.getLogger(__name__)
 
 
-class Validator(object):
+class Validator:
     """Verifies formatting of force field XML."""
 
     def __init__(self, ff_file_name, debug=False):
@@ -80,13 +80,12 @@ class Validator(object):
                 for keyword in error_texts:
                     if keyword in message:
                         raise create_error(keyword, message, line)
-                else:
-                    raise ValidationError(
-                        "Unhandled XML validation error. "
-                        "Please consider submitting a bug report.",
-                        ex,
-                        line,
-                    )
+                raise ValidationError(
+                    "Unhandled XML validation error. "
+                    "Please consider submitting a bug report.",
+                    ex,
+                    line,
+                )
             raise
 
     def validate_class_type_exclusivity(self, ff_tree):
@@ -101,10 +100,10 @@ class Validator(object):
         for element, num_atoms in sections.items():
             valid_attribs = set()
             for n in range(1, num_atoms + 1):
-                valid_attribs.add("class{}".format(n))
-                valid_attribs.add("type{}".format(n))
+                valid_attribs.add(f"class{n}")
+                valid_attribs.add(f"type{n}")
 
-            for entry in ff_tree.xpath("/ForceField/{}".format(element)):
+            for entry in ff_tree.xpath(f"/ForceField/{element}"):
                 attribs = [
                     valid
                     for valid in valid_attribs
@@ -113,7 +112,7 @@ class Validator(object):
                 if num_atoms != len(attribs):
                     error = ValidationError(
                         'Invalid number of "class" and/or "type" attributes for'
-                        " {} at line {}".format(element, entry.sourceline),
+                        f" {element} at line {entry.sourceline}",
                         None,
                         entry.sourceline,
                     )
@@ -122,9 +121,7 @@ class Validator(object):
                 if not all(1 == x for x in number_endings.values()):
                     error = ValidationError(
                         'Only one "class" or "type" attribute may be defined'
-                        " for each atom in a bonded force. See line {}".format(
-                            entry.sourceline
-                        ),
+                        f" for each atom in a bonded force. See line {entry.sourceline}",
                         None,
                         entry.sourceline,
                     )
@@ -171,14 +168,12 @@ class Validator(object):
             except lark.ParseError as ex:
                 if " col " in ex.args[0]:
                     column = ex.args[0][ex.args[0].find(" col ") + 5 :].strip()
-                    column = " at character {} of {}".format(column, smarts_string)
+                    column = f" at character {column} of {smarts_string}"
                 else:
                     column = ""
 
                 malformed = ValidationError(
-                    "Malformed SMARTS string{} on line {}".format(
-                        column, entry.sourceline
-                    ),
+                    f"Malformed SMARTS string{column} on line {entry.sourceline}",
                     ex,
                     entry.sourceline,
                 )
