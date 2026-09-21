@@ -1,9 +1,8 @@
 import difflib
 import glob
-import importlib.resources as resources
 import logging
 import os
-from typing import List
+from importlib import resources
 
 import parmed as pmd
 import pytest
@@ -78,8 +77,8 @@ class TestForcefield(BaseTest):
         mol2 = pmd.load_file(get_fn("ethane.mol2"), structure=True)
         ethane = oplsaa.apply(mol2)
 
-        assert sum((1 for at in ethane.atoms if at.type == "opls_135")) == 2
-        assert sum((1 for at in ethane.atoms if at.type == "opls_140")) == 6
+        assert sum(1 for at in ethane.atoms if at.type == "opls_135") == 2
+        assert sum(1 for at in ethane.atoms if at.type == "opls_140") == 6
         assert len(ethane.bonds) == 7
         assert all(x.type for x in ethane.bonds)
         assert len(ethane.angles) == 12
@@ -111,8 +110,8 @@ class TestForcefield(BaseTest):
         mol2 = mb.load(get_fn("ethane.mol2"))
         ethane = oplsaa.apply(mol2)
 
-        assert sum((1 for at in ethane.atoms if at.type == "opls_135")) == 2
-        assert sum((1 for at in ethane.atoms if at.type == "opls_140")) == 6
+        assert sum(1 for at in ethane.atoms if at.type == "opls_135") == 2
+        assert sum(1 for at in ethane.atoms if at.type == "opls_140") == 6
         assert len(ethane.bonds) == 7
         assert all(x.type for x in ethane.bonds)
         assert len(ethane.angles) == 12
@@ -213,8 +212,8 @@ class TestForcefield(BaseTest):
         customtype_ff = Forcefield(forcefield_files=get_fn("validate_customtypes.xml"))
         ethane = customtype_ff.apply(mol2)
 
-        assert sum((1 for at in ethane.atoms if at.type == "C3")) == 2
-        assert sum((1 for at in ethane.atoms if at.type == "Hb")) == 6
+        assert sum(1 for at in ethane.atoms if at.type == "C3") == 2
+        assert sum(1 for at in ethane.atoms if at.type == "Hb") == 6
         assert len(ethane.bonds) == 7
         assert all(x.type for x in ethane.bonds)
         assert len(ethane.angles) == 12
@@ -624,8 +623,8 @@ class TestForcefield(BaseTest):
 
     def test_load_metadata_list_xml(self):
         from_xml_ff = Forcefield(forcefield_files=[get_fn("lj.xml"), get_fn("lj2.xml")])
-        assert isinstance(from_xml_ff.version, List)
-        assert isinstance(from_xml_ff.name, List)
+        assert isinstance(from_xml_ff.version, list)
+        assert isinstance(from_xml_ff.name, list)
         assert all([x in from_xml_ff.version for x in ["0.4.1", "4.8.2"]])
         assert all([x in from_xml_ff.name for x in ["JL", "LJ"]])
 

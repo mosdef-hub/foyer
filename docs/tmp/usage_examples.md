@@ -13,8 +13,8 @@ import mbuild as mb
 from mbuild.examples import Ethane
 
 ethane_box = mb.fill_box(compound=Ethane(), n_compounds=100, box=[2, 2, 2])
-ethane_box.save('ethane-box.gro')
-ethane_box.save('ethane-box.top', forcefield_name='oplsaa')
+ethane_box.save("ethane-box.gro")
+ethane_box.save("ethane-box.top", forcefield_name="oplsaa")
 ```
 ----
 
@@ -27,14 +27,14 @@ that Foyer knows these particles are non-atomistic.
 import mbuild as mb
 
 ethane_UA = mb.Compound()
-ch3_1 = mb.Particle(name='_CH3', pos=[0, 0, 0])
-ch3_2 = mb.Particle(name='_CH3', pos=[0.15, 0, 0])
+ch3_1 = mb.Particle(name="_CH3", pos=[0, 0, 0])
+ch3_2 = mb.Particle(name="_CH3", pos=[0.15, 0, 0])
 ethane_UA.add([ch3_1, ch3_2])
 ethane_UA.add_bond((ch3_1, ch3_2))
 
 ethane_UA_box = mb.fill_box(ethane_UA, 100, box=[2, 2, 2])
-ethane_UA_box.save('ethane-UA-box.gro')
-ethane_UA_box.save('ethane-UA-box.top', forcefield_name='trappe-ua')
+ethane_UA_box.save("ethane-UA-box.gro")
+ethane_UA_box.save("ethane-UA-box.top", forcefield_name="trappe-ua")
 ```
 ----
 #### Combining force fields
@@ -55,20 +55,21 @@ from mbuild.lib.atoms import H
 from mbuild.lib.bulk_materials import AmorphousSilica
 
 interface = mb.SilicaInterface(bulk_silica=AmorphousSilica())
-interface = mb.Monolayer(surface=interface, chains=H(), guest_port_name='up')
+interface = mb.Monolayer(surface=interface, chains=H(), guest_port_name="up")
 
-box = mb.Box(mins=[0, 0, max(interface.xyz[:,2])],
-             maxs=interface.periodicity + [0, 0, 4])
+box = mb.Box(
+    mins=[0, 0, max(interface.xyz[:, 2])], maxs=interface.periodicity + [0, 0, 4]
+)
 
 ethane_box = mb.fill_box(compound=Ethane(), n_compounds=200, box=box)
 
-opls = Forcefield(name='oplsaa')
-opls_silica = Forcefield(forcefield_files=get_fn('opls-silica.xml'))
+opls = Forcefield(name="oplsaa")
+opls_silica = Forcefield(forcefield_files=get_fn("opls-silica.xml"))
 ethane_box = opls.apply(ethane_box)
 interface = opls_silica.apply(interface)
 
 system = interface + ethane_box
 
-system.save('ethane-silica.gro')
-system.save('ethane-silica.top')
+system.save("ethane-silica.gro")
+system.save("ethane-silica.top")
 ```

@@ -1,7 +1,7 @@
 import glob
-import importlib.resources as resources
 import itertools as it
 import os
+from importlib import resources
 
 import parmed as pmd
 import pytest
@@ -42,7 +42,7 @@ class TestTraPPE(BaseTest):
                     continue
                 else:
                     if mol_name not in self.correctly_implemented:
-                        fh.write("{}\n".format(mol_name))
+                        fh.write(f"{mol_name}\n")
 
     @pytest.mark.parametrize("mol_name", correctly_implemented)
     def test_atomtyping(self, mol_name, testfiles_dir=TRAPPE_TESTFILES_DIR):

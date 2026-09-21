@@ -1,7 +1,5 @@
 """File I/O support module."""
 
-from __future__ import division, print_function
-
 import importlib
 import inspect
 import os
@@ -12,8 +10,6 @@ from unittest import SkipTest
 
 class DelayImportError(ImportError, SkipTest):
     """Raise an appropriate error after first catching it."""
-
-    pass
 
 
 MESSAGES = dict()
@@ -99,7 +95,7 @@ def import_(module):
             + "\033[0m"
         )
 
-        print("", file=sys.stderr)
+        print(file=sys.stderr)
         print(bar, file=sys.stderr)
         print(m, file=sys.stderr)
         print(bar, file=sys.stderr)
