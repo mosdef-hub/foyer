@@ -26,7 +26,7 @@ jobs:
         shell: bash -l {0}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba (Linux)
@@ -59,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macOS-latest, macOS-14, ubuntu-latest]
+        os: [macOS-latest, macOS-15, ubuntu-latest]
         python-version: ["3.14"]
 
     defaults:
@@ -67,7 +67,7 @@ jobs:
         shell: bash -l {0}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         name: Checkout Branch / Pull Request
 
       - name: Install Mamba (Linux)
@@ -92,7 +92,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         name: Checkout Branch / Pull Request
 
       - uses: Vampire/setup-wsl@v7
