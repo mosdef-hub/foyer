@@ -302,6 +302,12 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
 
         # For all other cases, we don't have any candidate pairs.
 
+    def syntactic_feasibility(self, G1_node, G2_node):
+        """Check node attributes before the more expensive graph structure checks."""
+        if not self.node_match(self.G1.nodes[G1_node], self.G2.nodes[G2_node]):
+            return False
+        return super().syntactic_feasibility(G1_node, G2_node)
+
 
 def _find_chordless_cycles(bond_graph, max_cycle_size):
     """Find all chordless cycles (i.e. rings) in the bond graph.
