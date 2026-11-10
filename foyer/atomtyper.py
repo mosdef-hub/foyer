@@ -187,6 +187,11 @@ def _iterate_rules(rules, topology_graph, typemap, max_iter):
         The maximum number of iterations.
 
     """
+    label_rules = {
+        name: rule
+        for name, rule in rules.items()
+        if any(rule.ast.find_data("has_label"))
+    }
     for _ in range(max_iter):
         max_iter -= 1
         found_something = False
@@ -201,6 +206,7 @@ def _iterate_rules(rules, topology_graph, typemap, max_iter):
                     found_something = True
         if not found_something:
             break
+        rules = label_rules
     else:
         logger.warning("Reached maximum iterations. Something probably went wrong.")
     return typemap
