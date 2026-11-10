@@ -71,6 +71,8 @@ class SMARTSGraph(nx.Graph):
         self._add_nodes()
         self._add_edges(self.ast)
         self._add_label_edges()
+        for subtree in self.ast.iter_subtrees():
+            subtree.data = str(subtree.data)
         self._graph_matcher = None
 
     def _add_nodes(self):
