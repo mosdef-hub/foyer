@@ -7,7 +7,7 @@ from logging.handlers import RotatingFileHandler
 from foyer.forcefield import Forcefield
 from foyer.forcefields import forcefields
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 
 __all__ = ("Forcefield", "__version__", "forcefields")
 
