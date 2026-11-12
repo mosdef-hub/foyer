@@ -187,6 +187,16 @@ def _iterate_rules(rules, topology_graph, typemap, max_iter):
         The maximum number of iterations.
 
     """
+    # Only %label rules can match new atoms after the first pass: every other
+    # SMARTS primitive (element, X, rings, bonds) depends on state that never
+    # changes during typing. If a new primitive that reads typing state is
+    # added (e.g. recursive SMARTS `$(...)`, which could hide a %label from
+    # find_data), rules using it must also be kept here.
+    label_rules = {
+        name: rule
+        for name, rule in rules.items()
+        if any(rule.ast.find_data("has_label"))
+    }
     for _ in range(max_iter):
         max_iter -= 1
         found_something = False
@@ -201,6 +211,7 @@ def _iterate_rules(rules, topology_graph, typemap, max_iter):
                     found_something = True
         if not found_something:
             break
+        rules = label_rules
     else:
         logger.warning("Reached maximum iterations. Something probably went wrong.")
     return typemap

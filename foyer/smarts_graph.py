@@ -71,6 +71,8 @@ class SMARTSGraph(nx.Graph):
         self._add_nodes()
         self._add_edges(self.ast)
         self._add_label_edges()
+        for subtree in self.ast.iter_subtrees():
+            subtree.data = str(subtree.data)
         self._graph_matcher = None
 
     def _add_nodes(self):
@@ -301,6 +303,14 @@ class SMARTSMatcher(isomorphism.vf2userfunc.GraphMatcher):
                     yield node, other_node
 
         # For all other cases, we don't have any candidate pairs.
+
+    def syntactic_feasibility(self, G1_node, G2_node):
+        """Check node attributes before the more expensive graph structure checks."""
+        if self.node_match is not None and not self.node_match(
+            self.G1.nodes[G1_node], self.G2.nodes[G2_node]
+        ):
+            return False
+        return super().syntactic_feasibility(G1_node, G2_node)
 
 
 def _find_chordless_cycles(bond_graph, max_cycle_size):
